@@ -31,7 +31,6 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Botón derecho**: pide plato.
 - **Botón izquierdo**: dispara el primer y segundo tiro.
 - **Ayuda adelanto**: muestra u oculta el punto/área amarilla donde conviene llevar el tiro. Al ocultarla, la física y las correcciones siguen calculándose.
-- **Solista**: muestra u oculta la banda visual de la escopeta desde el ojo del tirador, inspirada en las fotos de referencia de la DT11.
 - **Zoom visual**: acerca la escena para pantallas pequeñas o usuarios con peor visión. El valor `1.00x` conserva la escala reglamentaria; valores mayores estrechan la lente visual sin cambiar distancias ni físicas.
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
@@ -176,7 +175,7 @@ La **ganancia de solista** modifica el punto efectivo de impacto. Visualmente:
 
 Esto permite representar la diferencia entre una escopeta plana, que obliga a tapar más el plato, y una configuración con ganancia, donde se puede apuntar algo por debajo porque el disparo sale más alto que el punto de mira. El rango actual llega hasta `0,96 grados` de elevación balística para que el efecto sea claramente visible durante el entrenamiento.
 
-El check **Solista** no pinta una escopeta completa. En un encare correcto, el arma se colapsa visualmente sobre el eje del ojo, así que solo se dibuja una pequeña línea negra de solista y un punto verde fosforito pegados al punto de encare. La ganancia no ensancha la solista; solo desplaza hacia arriba el punto físico de impacto.
+La representación gráfica de la solista queda desactivada por ahora para no confundir el entrenamiento visual. La ganancia sigue activa como cálculo balístico: no dibuja la escopeta, solo desplaza hacia arriba el punto físico de impacto.
 
 ## 10. Tirada de 25 Platos
 
