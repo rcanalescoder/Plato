@@ -788,7 +788,6 @@
       sim.station = sim.pendingStation;
       sim.pendingStation = null;
       ui.station.value = String(sim.station);
-      clearShotReview();
       updateEye();
       setAimToGuard();
     }
@@ -1265,7 +1264,8 @@
       });
       sim.fragments = sim.fragments.filter(fragment => fragment.age < fragmentDuration);
       sim.frozenCues.forEach(cue => cue.age += realDt);
-      if (!sim.pendingStation) {
+      const keepShotReview = sim.pendingStation || sim.mode === "tracking" || sim.mode === "falling" || sim.mode === "ended";
+      if (!keepShotReview) {
         sim.frozenCues = sim.frozenCues.filter(cue => cue.age <= analysisDuration());
       }
       if (sim.mode === "ended" && sim.pendingStation && sim.fragments.length === 0 && sim.bursts.length === 0 && sim.shots.length === 0) {
@@ -2148,7 +2148,7 @@
       if (axis === "lead") {
         if (abs < 0.12) return { text: "adelanto ok", color: "rgba(255,255,255,.72)" };
         return {
-          text: `${value > 0 ? "quita adelanto" : "adelanta"} ${abs.toFixed(2)} m`,
+          text: `${value > 0 ? "retrasa" : "adelanta"} ${abs.toFixed(2)} m`,
           color: value > 0 ? "rgba(125,183,255,.95)" : "rgba(255,180,84,.95)"
         };
       }
