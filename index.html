@@ -195,6 +195,11 @@
       pointer-events: none;
     }
 
+    .slow-note strong {
+      color: #ff6b68;
+      font-weight: 800;
+    }
+
     .controls {
       display: grid;
       grid-template-columns: repeat(11, minmax(74px, 1fr));
@@ -292,7 +297,7 @@
     <section class="scene" aria-label="Simulador desde el ojo del tirador">
       <canvas id="simCanvas"></canvas>
       <div class="banner" id="banner">PLATO</div>
-      <div class="slow-note">Camara lenta activa para analizar. Para probar tiempo real, sube Camara lenta a 1.00x.</div>
+      <div class="slow-note"><strong>Camara lenta</strong> activa para analizar. Para probar tiempo real, sube <strong>Camara lenta</strong> a 1.00x.</div>
     </section>
 
     <section class="controls" aria-label="Parametros fisicos">
