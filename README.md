@@ -33,6 +33,9 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Ayuda adelanto**: muestra u oculta el punto/área amarilla donde conviene llevar el tiro. Al ocultarla, la física y las correcciones siguen calculándose.
 - **Trayectoria**: muestra u oculta la línea naranja discontinua del vuelo del plato.
 - **Zoom visual**: acerca la escena para pantallas pequeñas o usuarios con peor visión. El valor `1.00x` conserva la escala reglamentaria; valores mayores estrechan la lente visual sin cambiar distancias ni físicas.
+- **Plomeo tiro 1 / Plomeo tiro 2**: ajustan la apertura del patrón de cada disparo, como una aproximación a chokes diferentes.
+- **Variación plomeo**: introduce irregularidad entre disparos: huecos, pequeñas agrupaciones y diferencias leves de velocidad entre perdigones.
+- **Análisis**: controla cuánto tiempo quedan visibles la corrección del disparo, los rastros y la rotura o caída del plato.
 - **Ayuda**: abre una explicación para principiantes sobre modalidades, velocidades, cartuchos, aperturas, trayectorias y lectura de los elementos de pantalla.
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
@@ -76,6 +79,7 @@ Fuentes consultadas:
 - [Beretta, DT11 International Trap](https://www.beretta.com/en-us/product/dt11-international-trap-FA0095)
 - [Beretta, guia de chokes OptimaChoke HP](https://estore.beretta.com/en-hu/utility/choke-tubes-guide)
 - [Beretta, guia de seleccion de choke](https://www.beretta.com/en-us/blog/how-to-choose-the-right-shotgun-choke-tube)
+- [Hunter-ed, Shotgun Choke and Shot String](https://www.hunter-ed.com/national/studyGuide/Shotgun-Choke-and-Shot-String/201099_92847/)
 
 ## 5. Salida del Plato
 
@@ -115,6 +119,15 @@ node scripts/verify-schemes.js
 ```
 
 La prueba recorre 185 lanzamientos teóricos: 50 de Universal y 135 de Olímpico. Falla si alguna fila no reproduce su altura a 10 m o si el alcance se sale de tolerancia: ±5 m para Universal y ±1 m para Olímpico.
+
+Esta prueba es importante porque evita que un cambio visual rompa la física normativa sin que se note. La aplicación muestra arriba los mismos conceptos que audita el test: velocidad inicial, máquina, ángulo, altura a 10 m, alcance y tiempo de vuelo. El texto `Cumple normativa` no es decorativo: sale de recalcular la trayectoria del plato actual contra los valores de su esquema.
+
+Los esquemas están definidos como datos dentro del propio `index.html`. Para añadir o revisar una tabla, el flujo correcto es:
+
+1. modificar las filas de máquinas, ángulos, alturas y distancias;
+2. ejecutar `node scripts/verify-schemes.js`;
+3. comprobar que la banda superior de la aplicación refleja los mismos valores;
+4. solo después ajustar la representación visual si hace falta.
 
 ## 6. Adelanto
 
@@ -158,7 +171,23 @@ radio_patron = 0.22 + apertura*0.0045 + distancia*(0.0035 + apertura*0.00003)
 
 Donde `apertura` es el valor del control correspondiente al tiro actual. Valores bajos representan chokes más cerrados.
 
-El control **Variación plomeo** añade realismo al patrón sin convertirlo en una lotería. Con valores bajos el patrón se parece más a una diana repetible; con valores altos aparecen microhuecos, pequeñas agrupaciones, periferia más irregular y ligeras diferencias de velocidad entre perdigones. Esto aproxima el comportamiento real de una carga de escopeta: al salir del cartucho los perdigones no forman un círculo matemático perfecto, sino una nube o "shot string" tridimensional. En el simulador se modela de forma contenida porque, a distancias de plato, el efecto dominante sigue siendo el adelanto, la apertura del choke y la posición del centro del plomeo.
+### 7.1. Variación Realista del Plomeo
+
+El control **Variación plomeo** añade realismo al patrón sin convertirlo en una lotería. Con valores bajos el patrón se parece más a una diana repetible; con valores altos aparecen microhuecos, pequeñas agrupaciones, periferia más irregular y ligeras diferencias de velocidad entre perdigones.
+
+Esto aproxima el comportamiento real de una carga de escopeta: al salir del cartucho los perdigones no forman un círculo matemático perfecto, sino una nube tridimensional o *shot string*. Hunter-ed describe el *shot string* como la dispersión tridimensional de los perdigones tras abandonar el cañón. En el simulador se modela de forma contenida porque, a distancias de plato, el efecto dominante sigue siendo el adelanto, la apertura del choke y la posición del centro del plomeo.
+
+La implementación usa una semilla distinta por disparo. Esa semilla altera:
+
+- la posición angular de cada perdigón dentro del cono;
+- el radio relativo de cada anillo del plomeo;
+- pequeñas agrupaciones y huecos;
+- una velocidad ligeramente menor en parte de los perdigones periféricos;
+- un retraso muy pequeño de algunos perdigones para que la nube tenga profundidad.
+
+El objetivo no es representar una simulación CFD completa del taco, el rozamiento entre perdigones y la deformación del plomo. Es una aproximación práctica: conserva un patrón entrenable y físicamente explicable, pero evita que el panel de plomeo parezca una plantilla sintética perfecta.
+
+### 7.2. Impacto Físico
 
 Cada disparo genera direcciones individuales para todos los perdigones. Para cada perdigón se simula su trayectoria y se comprueba si pasa a menos de 7,5 cm del centro del plato:
 
@@ -174,12 +203,19 @@ La comprobación de impacto usa un paso temporal fino (`0,00045 s`) para evitar 
 
 ## 8. Corrección Tras el Tiro
 
-Las dos ventanas superiores ayudan a entender el error de forma separada:
+El panel inferior izquierdo de corrección ayuda a entender por qué se ha roto o fallado el plato. Está dividido en **tiro 1** y **tiro 2**. Cada subpanel aparece solo cuando ese disparo existe, para no distraer antes de tiempo.
 
-- **Corrección lateral**: vista superior. Mide si el disparo quedó adelantado, retrasado o lateralmente fuera de línea respecto al punto ideal.
-- **Corrección superior**: vista lateral. Mide si el disparo quedó alto o bajo.
+Cada subpanel representa un plano perpendicular a la trayectoria de los perdigones en la zona del plato. Esta vista es más útil que una simple proyección superior/lateral, porque enseña el patrón real del disparo visto como si hubiera una diana colocada en el punto donde estaba el plato:
 
-Cada ventana está dividida en **tiro 1** y **tiro 2**, para comparar ambos intentos. La referencia amarilla es el punto físico recomendado; el punto rojo representa el encare del tirador; el azul claro representa el centro físico del plomeo del tiro actual. El aro amarillo y el aro azul se escalan por separado con su propia distancia 3D al ojo del tirador, porque pueden estar en profundidades distintas.
+- El plato se dibuja en naranja en el centro del plano de referencia.
+- Los puntos azul claro son perdigones individuales proyectados sobre ese plano.
+- Los puntos verdes son perdigones que han roto el plato.
+- El punto rojo indica el centro físico del disparo.
+- Las indicaciones de color explican si el disparo quedó alto, bajo, adelantado o retrasado respecto al plato.
+
+El eje de adelanto se calcula siguiendo la dirección real de vuelo del plato. Por eso cambia visualmente cuando el plato va hacia la derecha o hacia la izquierda: "adelantado" siempre significa por delante de la trayectoria del objetivo, no simplemente a la derecha o a la izquierda de la pantalla.
+
+La referencia amarilla es el punto físico recomendado; el punto rojo representa el encare del tirador; el azul claro representa el centro físico del plomeo del tiro actual. El aro amarillo y el aro azul se escalan por separado con su propia distancia 3D al ojo del tirador, porque pueden estar en profundidades distintas.
 
 El control **Analisis** define cuantos segundos quedan visibles las pistas congeladas, los fragmentos y los rastros tras el disparo. Es una ayuda visual: no altera la fisica ni cuenta platos. La camara lenta tambien es visual; para probar una tirada a tiempo real hay que subir **Camara lenta** a `1.00x`.
 
