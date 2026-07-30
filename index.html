@@ -1383,6 +1383,7 @@
       ctx.lineWidth = 2;
       drawWorldLine({ x: rangeMinX + 0.45, y: 0.06, z: TRENCH_FRONT }, { x: rangeMaxX - 0.45, y: 0.06, z: TRENCH_FRONT });
       const count = params.mode === "universal" ? 5 : 15;
+      const showReleaseGuide = sim.target && sim.mode !== "ended" && sim.shotCount < 2;
       for (let i = 0; i < count; i += 1) {
         const bank = Math.floor(i / 3);
         const within = i % 3;
@@ -1391,7 +1392,7 @@
           : (bank - 2) * OLYMPIC_MACHINE_GROUP_SPACING + (within - 1) * OLYMPIC_MACHINE_SPACING;
         if (ui.transparentGround.checked) {
           const p = projectPoint({ x, y: MACHINE_HEIGHT, z: MACHINE_Z });
-          const active = sim.target && sim.target.machineIndex === i;
+          const active = showReleaseGuide && sim.target.machineIndex === i;
           ctx.fillStyle = active ? "rgba(255,100,0,.95)" : "rgba(255,255,255,.5)";
           ctx.fillRect(p.x - 4, p.y - 8, 8, 14);
           if (active) {
@@ -1404,7 +1405,7 @@
           }
         }
       }
-      if (sim.target) {
+      if (showReleaseGuide) {
         const mouth = projectPoint({ x: lureX(), y: RELEASE_HEIGHT, z: TRENCH_FRONT });
         ctx.save();
         ctx.fillStyle = "rgba(255,100,0,.95)";
