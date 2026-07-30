@@ -111,6 +111,7 @@ El cartucho de referencia es RIO Star Team EVO Training. En la versión actual s
 - 306 perdigones, aproximación compatible con una carga de 1 1/8 oz de plomo #7.5.
 - Dispersión configurable por separado para tiro 1 y tiro 2.
 - Patrón de nube determinista, no gaussiano, para aproximar un flujo de perdigones con anillos y variaciones internas.
+- Un perdigón central que representa el núcleo del plomeo, más una nube distribuida alrededor.
 
 La referencia de escopeta es una Beretta DT11 de trap. Beretta documenta el DT11 dentro de la familia de cañones/chokes OptimaChoke HP, y las configuraciones de trap suelen trabajar con chokes cerrados. En el simulador se usan valores iniciales conservadores:
 
@@ -136,6 +137,8 @@ pz(t) = ojo.z + dir.z * velocidad * t
 ```
 
 El plato se rompe solo si algún perdigón intersecta físicamente su volumen simplificado. Por eso se puede apuntar cerca del área ideal y fallar: la nube tiene dispersión, el plato se mueve, el usuario puede quedar ligeramente retrasado/adelantado/alto/bajo y el cálculo se evalúa contra partículas individuales. Cuando el simulador indica `Roto borde`, significa que el centro del plomeo no iba perfectamente centrado, pero un perdigón periférico alcanzó el plato.
+
+La comprobación de impacto usa un paso temporal fino (`0,00045 s`) para evitar que un perdigón rápido salte de un lado a otro del plato entre dos muestras sin registrar la colisión.
 
 ## 8. Corrección Tras el Tiro
 

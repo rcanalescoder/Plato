@@ -677,7 +677,7 @@
 
     function centerShotClosest(dir, speed, shotTime) {
       const maxTime = 0.26;
-      const dt = 0.0025;
+      const dt = 0.0009;
       let best = { distance: Infinity, target: null, pellet: null, tau: 0 };
       for (let tau = 0; tau <= maxTime; tau += dt) {
         const target = targetDuringShot(shotTime, tau);
@@ -1080,10 +1080,10 @@
         y: forward.z * right.x - forward.x * right.z,
         z: forward.x * right.y - forward.y * right.x
       });
-      const dirs = [];
-      for (let i = 0; i < count; i += 1) {
+      const dirs = [forward];
+      for (let i = 1; i < count; i += 1) {
         const golden = i * 2.399963229728653;
-        const ring = Math.sqrt((i + 0.5) / count);
+        const ring = Math.sqrt((i - 0.5) / count);
         const densityWave = 0.78 + 0.18 * Math.sin(i * 12.9898);
         const angle = ring * coneAngle * densityWave;
         const x = Math.cos(golden) * Math.sin(angle);
@@ -1114,7 +1114,7 @@
     // recorded only when one physical pellet passes inside the clay radius.
     function pelletHitTarget(dir, speed, shotTime) {
       const maxTime = 0.24;
-      const dt = 0.0028;
+      const dt = 0.00045;
       const targetRadius = 0.075;
       let best = Infinity;
       let bestPoint = null;
