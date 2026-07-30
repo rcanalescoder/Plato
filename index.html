@@ -782,6 +782,7 @@
       sim.station = sim.pendingStation;
       sim.pendingStation = null;
       ui.station.value = String(sim.station);
+      clearShotReview();
       updateEye();
       setAimToGuard();
     }
@@ -809,6 +810,18 @@
     function normalize(v) {
       const m = Math.hypot(v.x, v.y, v.z) || 1;
       return { x: v.x / m, y: v.y / m, z: v.z / m };
+    }
+
+    function dot(a, b) {
+      return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+    function cross(a, b) {
+      return {
+        x: a.y * b.z - a.z * b.y,
+        y: a.z * b.x - a.x * b.z,
+        z: a.x * b.y - a.y * b.x
+      };
     }
 
     function anglesToDir(yaw, pitch) {
@@ -1241,8 +1254,10 @@
       });
       sim.fragments = sim.fragments.filter(fragment => fragment.age < fragmentDuration);
       sim.frozenCues.forEach(cue => cue.age += realDt);
-      sim.frozenCues = sim.frozenCues.filter(cue => cue.age <= analysisDuration());
-      if (sim.mode === "ended" && sim.pendingStation && sim.frozenCues.length === 0 && sim.fragments.length === 0 && sim.bursts.length === 0 && sim.shots.length === 0) {
+      if (!sim.pendingStation) {
+        sim.frozenCues = sim.frozenCues.filter(cue => cue.age <= analysisDuration());
+      }
+      if (sim.mode === "ended" && sim.pendingStation && sim.fragments.length === 0 && sim.bursts.length === 0 && sim.shots.length === 0) {
         applyPendingStation();
       }
     }
@@ -1372,6 +1387,38 @@
       };
     }
 
+    function shotPlanePattern(centerDir, pelletDirs, pelletSpeed, planePoint, clayVelocity, hitPellet) {
+      const normal = normalize(centerDir);
+      const clayInPlane = {
+        x: clayVelocity.x - normal.x * dot(clayVelocity, normal),
+        y: clayVelocity.y - normal.y * dot(clayVelocity, normal),
+        z: clayVelocity.z - normal.z * dot(clayVelocity, normal)
+      };
+      let leadAxis = normalize(clayInPlane);
+      if (Math.hypot(leadAxis.x, leadAxis.y, leadAxis.z) < 0.01) {
+        leadAxis = normalize(cross({ x: 0, y: 1, z: 0 }, normal));
+      }
+      let heightAxis = normalize(cross(normal, leadAxis));
+      if (heightAxis.y < 0) heightAxis = { x: -heightAxis.x, y: -heightAxis.y, z: -heightAxis.z };
+      const planeDistance = dot({
+        x: planePoint.x - eye.x,
+        y: planePoint.y - eye.y,
+        z: planePoint.z - eye.z
+      }, normal);
+      const pellets = pelletDirs.map((pelletDir, index) => {
+        const denom = Math.max(0.02, pelletSpeed * dot(pelletDir, normal));
+        const tau = clamp(planeDistance / denom, 0, 0.26);
+        const p = centerPelletAt(pelletDir, pelletSpeed, tau);
+        const d = { x: p.x - planePoint.x, y: p.y - planePoint.y, z: p.z - planePoint.z };
+        return {
+          u: dot(d, leadAxis),
+          v: dot(d, heightAxis),
+          hit: index === hitPellet
+        };
+      });
+      return { pellets, leadAxis, heightAxis };
+    }
+
     // Each pellet is advanced through the same moving-target timeline. A hit is
     // recorded only when one physical pellet passes inside the clay radius.
     function pelletHitTarget(dir, speed, shotTime) {
@@ -1441,6 +1488,7 @@
       const eventTau = hitInfo?.tau ?? nearest.tau ?? shotCenter.tau ?? 0;
       const shotCenterPoint = centerPelletAt(dir, pelletSpeed, eventTau);
       const idealPoint = recommended ? recommended.intercept : current;
+      const planePattern = shotPlanePattern(dir, dirs, pelletSpeed, impact, v, hitInfo?.pellet ?? -1);
       const cue = {
         age: 0,
         shot: sim.shotCount,
@@ -1455,6 +1503,7 @@
         intercept: { ...idealPoint },
         shotCenter: { ...shotCenterPoint },
         impact: { ...impact },
+        planePattern,
         eventTau,
         radius,
         idealRadius: patternRadius(distanceFromEye(idealPoint), shotNumber),
@@ -2077,7 +2126,6 @@
       ctx.textAlign = "left";
       ctx.fillText(label, x0 + 8, y0 + 14);
 
-      const metrics = correctionVectors(cue);
       const cx = x0 + bw / 2;
       const cy = y0 + bh / 2 + 18;
       const axisW = bw - 44;
@@ -2118,35 +2166,42 @@
       ctx.lineTo(cx, cy + axisH / 2);
       ctx.stroke();
 
-      const range = Math.max(0.35, Math.abs(metrics.lead), Math.abs(metrics.vertical), Math.abs(metrics.lateral) * 0.55) * 1.35;
-      const sx = (axisW / 2 - 12) / range;
-      const sy = (axisH / 2 - 12) / range;
-      const shotX = clamp(cx + metrics.lead * sx * leadScreenSign, cx - axisW / 2 + 10, cx + axisW / 2 - 10);
-      const shotY = clamp(cy - metrics.vertical * sy, cy - axisH / 2 + 10, cy + axisH / 2 - 10);
-      ctx.strokeStyle = "rgba(255,255,255,.55)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(shotX, shotY);
-      ctx.stroke();
-      ctx.fillStyle = "#d90000";
-      ctx.strokeStyle = cue.hit ? "rgba(155,230,111,.96)" : "rgba(255,255,255,.86)";
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      ctx.arc(shotX, shotY, 4.8, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.font = "500 10px system-ui";
-      const leadLabel = Math.abs(metrics.lead) < 0.005 ? "adelanto ok" : `${metrics.lead > 0 ? "adelantado" : "retrasado"} ${Math.abs(metrics.lead).toFixed(2)} m`;
-      const heightLabel = Math.abs(metrics.vertical) < 0.005 ? "altura ok" : `${metrics.vertical > 0 ? "alto" : "bajo"} ${Math.abs(metrics.vertical).toFixed(2)} m`;
-      const leadLabelX = metrics.lead * leadScreenSign >= 0 ? x0 + bw - 10 : x0 + 10;
-      const leadAlign = metrics.lead * leadScreenSign >= 0 ? "right" : "left";
-      ctx.textAlign = leadAlign;
-      ctx.fillStyle = metrics.lead >= 0 ? aheadColor : behindColor;
-      ctx.fillText(leadLabel, leadLabelX, y0 + bh - 28);
-      ctx.textAlign = "right";
-      ctx.fillStyle = metrics.vertical >= 0 ? highColor : lowColor;
-      ctx.fillText(heightLabel, x0 + bw - 10, metrics.vertical >= 0 ? y0 + 34 : y0 + bh - 12);
+      const pattern = cue.planePattern;
+      if (pattern?.pellets?.length) {
+        const shotDelta = {
+          x: cue.shotCenter.x - cue.impact.x,
+          y: cue.shotCenter.y - cue.impact.y,
+          z: cue.shotCenter.z - cue.impact.z
+        };
+        const shotU = dot(shotDelta, pattern.leadAxis);
+        const shotV = dot(shotDelta, pattern.heightAxis);
+        const maxPellet = Math.max(...pattern.pellets.map(p => Math.hypot(p.u, p.v)), 0.14, Math.hypot(shotU, shotV));
+        const scale = Math.min(axisW, axisH) * 0.43 / Math.max(0.16, maxPellet);
+        const clayR = clamp(0.075 * scale, 5, 13);
+        ctx.fillStyle = "rgba(255,112,18,.96)";
+        ctx.strokeStyle = "rgba(255,255,255,.9)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, clayR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        for (const pellet of pattern.pellets) {
+          const px = cx + pellet.u * scale;
+          const py = cy - pellet.v * scale;
+          if (px < x0 + 8 || px > x0 + bw - 8 || py < y0 + 24 || py > y0 + bh - 8) continue;
+          ctx.fillStyle = pellet.hit ? "rgba(155,230,111,.98)" : "rgba(215,237,255,.48)";
+          ctx.beginPath();
+          ctx.arc(px, py, pellet.hit ? 2.4 : 1.25, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.fillStyle = "#d90000";
+        ctx.strokeStyle = "rgba(255,255,255,.9)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(cx + shotU * scale, cy - shotV * scale, 3.7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
       ctx.restore();
     }
 
