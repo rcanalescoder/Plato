@@ -676,17 +676,13 @@
     function centerShotClosest(dir, speed, shotTime) {
       const maxTime = 0.26;
       const dt = 0.0025;
-      let best = { distance: Infinity, target: null, pellet: null };
+      let best = { distance: Infinity, target: null, pellet: null, tau: 0 };
       for (let tau = 0; tau <= maxTime; tau += dt) {
         const target = targetDuringShot(shotTime, tau);
         if (!target) continue;
-        const pellet = {
-          x: eye.x + dir.x * speed * tau,
-          y: eye.y + dir.y * speed * tau - 0.5 * g * 0.08 * tau * tau,
-          z: eye.z + dir.z * speed * tau
-        };
+        const pellet = centerPelletAt(dir, speed, tau);
         const distance = Math.hypot(pellet.x - target.x, pellet.y - target.y, pellet.z - target.z);
-        if (distance < best.distance) best = { distance, target, pellet };
+        if (distance < best.distance) best = { distance, target, pellet, tau };
         if (pellet.z > target.z + 2.5 && tau > 0.03) break;
       }
       return best;
@@ -1104,6 +1100,14 @@
       return targetAt(baseTime + tau);
     }
 
+    function centerPelletAt(dir, speed, tau) {
+      return {
+        x: eye.x + dir.x * speed * tau,
+        y: eye.y + dir.y * speed * tau - 0.5 * g * 0.08 * tau * tau,
+        z: eye.z + dir.z * speed * tau
+      };
+    }
+
     // Each pellet is advanced through the same moving-target timeline. A hit is
     // recorded only when one physical pellet passes inside the clay radius.
     function pelletHitTarget(dir, speed, shotTime) {
@@ -1112,23 +1116,21 @@
       const targetRadius = 0.075;
       let best = Infinity;
       let bestPoint = null;
+      let bestTau = 0;
       for (let tau = 0; tau <= maxTime; tau += dt) {
         const target = targetDuringShot(shotTime, tau);
         if (!target) continue;
-        const pellet = {
-          x: eye.x + dir.x * speed * tau,
-          y: eye.y + dir.y * speed * tau - 0.5 * g * 0.08 * tau * tau,
-          z: eye.z + dir.z * speed * tau
-        };
+        const pellet = centerPelletAt(dir, speed, tau);
         const d = Math.hypot(pellet.x - target.x, pellet.y - target.y, pellet.z - target.z);
         if (d < best) {
           best = d;
           bestPoint = target;
+          bestTau = tau;
         }
-        if (d <= targetRadius) return { hit: true, p: target, distance: d };
+        if (d <= targetRadius) return { hit: true, p: target, distance: d, tau };
         if (pellet.z > target.z + 2.5 && tau > 0.03) break;
       }
-      return { hit: false, p: bestPoint, distance: best };
+      return { hit: false, p: bestPoint, distance: best, tau: bestTau };
     }
 
     /*
@@ -1153,7 +1155,7 @@
       const dirs = pelletDirections(dir, pelletCount(), coneAngle);
       const renderedPellets = [];
       let hitInfo = null;
-      let nearest = { distance: Infinity, p: current };
+      let nearest = { distance: Infinity, p: current, tau: 0 };
       for (let i = 0; i < dirs.length; i += 1) {
         const result = pelletHitTarget(dirs[i], pelletSpeed, sim.t);
         const travel = Math.min(distance / pelletSpeed, 0.22);
@@ -1165,18 +1167,22 @@
           });
         }
         if (result.distance < nearest.distance) nearest = result;
-        if (result.hit && !hitInfo) hitInfo = { pellet: i, p: result.p, distance: result.distance };
+        if (result.hit && (!hitInfo || result.distance < hitInfo.distance)) {
+          hitInfo = { pellet: i, p: result.p, distance: result.distance, tau: result.tau };
+        }
       }
       sim.shotCount += 1;
       const hit = Boolean(hitInfo);
       const impact = hit ? hitInfo.p : nearest.p || current;
-      const shotCenterPoint = shotCenter.pellet || shotCenter.target || current;
+      const eventTau = hitInfo?.tau ?? nearest.tau ?? shotCenter.tau ?? 0;
+      const shotCenterPoint = centerPelletAt(dir, pelletSpeed, eventTau);
       const idealPoint = recommended ? recommended.intercept : current;
       const cue = {
         age: 0,
         shot: sim.shotCount,
         hit,
-        target: { ...current },
+        triggerTarget: { ...current },
+        target: { ...impact },
         velocity: { ...v },
         aimYaw: sim.gunYaw,
         aimPitch: sim.gunPitch,
@@ -1185,9 +1191,10 @@
         intercept: { ...idealPoint },
         shotCenter: { ...shotCenterPoint },
         impact: { ...impact },
+        eventTau,
         radius,
         idealRadius: patternRadius(distanceFromEye(idealPoint), shotNumber),
-        shotRadius: patternRadius(distanceFromEye(shotCenterPoint), shotNumber)
+        shotRadius: patternRadius(distanceFromEye(impact), shotNumber)
       };
       sim.frozenCues = [...sim.frozenCues.filter(item => item.shot !== cue.shot), cue].slice(-2);
       sim.debug = {
