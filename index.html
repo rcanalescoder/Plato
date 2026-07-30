@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laboratorio de Adelanto - Tiro al Plato</title>
+  <style>
+    :root {
+      --bg: #101416;
+      --panel: #172022;
+      --panel-2: #202a2d;
+      --text: #eef5ef;
+      --muted: #aebdb2;
+      --line: rgba(255,255,255,.16);
+      --sky: #7fbee9;
+      --field: #416f37;
+      --field-dark: #294f26;
+      --dirt: #8a6b42;
+      --dirt-dark: #59432b;
+      --clay: #ff6400;
+      --lead: #ffd451;
+      --shot: #d7edff;
+      --good: #9be66f;
+      --bad: #ff6b68;
+      --rib: #07090a;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    main {
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      overflow: hidden;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: max-content max-content minmax(0, 1fr) max-content;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .button-row,
+    .segmented,
+    .switch-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 6px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      border-color: rgba(255,255,255,.34);
+    }
+
+    button.primary {
+      background: #e9f5ee;
+      color: #0d1512;
+      border-color: transparent;
+      font-weight: 600;
+    }
+
+    button.danger {
+      background: #3a2020;
+      border-color: rgba(255,107,104,.35);
+    }
+
+    .segmented button[aria-pressed="true"] {
+      background: #e9f5ee;
+      color: #0d1512;
+      border-color: transparent;
+      font-weight: 600;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .switch-row label {
+      display: inline-flex;
+      gap: 7px;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .status {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(64px, 1fr));
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .stat {
+      min-width: 0;
+      padding: 5px 7px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .scene {
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+      background: #050607;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: none;
+    }
+
+    .banner {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 13px;
+      border-radius: 7px;
+      color: #101416;
+      background: rgba(255,255,255,.86);
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .18s ease;
+    }
+
+    .banner.show {
+      opacity: 1;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(10, minmax(78px, 1fr));
+      gap: 7px;
+      padding: 7px 10px;
+      background: var(--panel);
+      border-top: 1px solid var(--line);
+    }
+
+    .control {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .control span {
+      color: var(--text);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #e9f5ee;
+    }
+
+    select {
+      width: 100%;
+      padding: 5px;
+      color: var(--text);
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.2;
+    }
+
+    @media (max-width: 1040px) {
+      main {
+        grid-template-rows: auto 58vh auto;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .status,
+      .controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .status,
+      .controls {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="toolbar" aria-label="Controles principales">
+      <div class="button-row">
+        <button class="primary" id="callBtn" type="button">Pedir plato</button>
+        <button id="repeatBtn" type="button">Repetir plato</button>
+        <button class="danger" id="fireBtn" type="button">Disparar</button>
+        <button id="resetBtn" type="button">Reset</button>
+        <button id="prevStationBtn" type="button">Puesto -</button>
+        <button id="nextStationBtn" type="button">Puesto +</button>
+      </div>
+      <div class="segmented" aria-label="Tipo de solista">
+        <button id="flatBtn" type="button" aria-pressed="true">Plana</button>
+        <button id="highBtn" type="button" aria-pressed="false">Alta</button>
+      </div>
+      <div class="status">
+        <div class="stat"><span>Estado</span><strong id="stateReadout">Esperando</strong></div>
+        <div class="stat"><span>Tirada</span><strong id="roundReadout">0/25 · 0 rotos</strong></div>
+        <div class="stat"><span>Puesto</span><strong id="stationReadout">3</strong></div>
+        <div class="stat"><span>Plato</span><strong id="targetReadout">-</strong></div>
+        <div class="stat"><span>Adelanto</span><strong id="leadReadout">-</strong></div>
+        <div class="stat"><span>Encare</span><strong id="aimReadout">0.0 deg</strong></div>
+        <div class="stat"><span>Resultado</span><strong id="resultReadout">-</strong></div>
+      </div>
+      <div class="switch-row">
+        <label><input id="autoAim" type="checkbox"> demo sigue nube</label>
+        <label><input id="showShot" type="checkbox" checked> plomeo</label>
+      </div>
+    </section>
+
+    <section class="scene" aria-label="Simulador desde el ojo del tirador">
+      <canvas id="simCanvas"></canvas>
+      <div class="banner" id="banner">PLATO</div>
+    </section>
+
+    <section class="controls" aria-label="Parametros fisicos">
+      <label class="control">Modalidad
+        <select id="modeControl">
+          <option value="universal">Universal</option>
+          <option value="olympic">Olimpica</option>
+        </select>
+      </label>
+      <label class="control">Esquema
+        <select id="schemeControl"></select>
+      </label>
+      <label class="control">Puesto <span id="stationValue">3</span>
+        <input id="stationControl" type="range" min="1" max="5" step="1" value="3">
+      </label>
+      <label class="control">Guardia
+        <select id="guardControl">
+          <option value="neutral">Neutra</option>
+          <option value="high">Alta por puesto</option>
+        </select>
+      </label>
+      <label class="control">Camara lenta <span id="slowValue">0.35x</span>
+        <input id="slowControl" type="range" min="0.15" max="1" step="0.05" value="0.35">
+      </label>
+      <label class="control">Reaccion <span id="reactionValue">0.32 s</span>
+        <input id="reactionControl" type="range" min="0.15" max="0.65" step="0.01" value="0.32">
+      </label>
+      <label class="control">Cartucho <span id="cartridgeValue">400 m/s</span>
+        <input id="cartridgeControl" type="range" min="360" max="430" step="5" value="400">
+      </label>
+      <label class="control">Apertura <span id="spreadValue">media</span>
+        <input id="spreadControl" type="range" min="0" max="100" step="5" value="45">
+      </label>
+      <label class="control">Viento <span id="windValue">0.0 m/s</span>
+        <input id="windControl" type="range" min="-4" max="4" step="0.2" value="0">
+      </label>
+      <label class="control">Ganancia solista <span id="ribValue">0%</span>
+        <input id="ribControl" type="range" min="0" max="100" step="5" value="0">
+      </label>
+      <div class="hint">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
+      <label class="switch-row"><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
+    </section>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("simCanvas");
+    const ctx = canvas.getContext("2d");
+    const banner = document.getElementById("banner");
+    const ui = {
+      call: document.getElementById("callBtn"),
+      repeat: document.getElementById("repeatBtn"),
+      fire: document.getElementById("fireBtn"),
+      reset: document.getElementById("resetBtn"),
+      prevStation: document.getElementById("prevStationBtn"),
+      nextStation: document.getElementById("nextStationBtn"),
+      flat: document.getElementById("flatBtn"),
+      high: document.getElementById("highBtn"),
+      autoAim: document.getElementById("autoAim"),
+      showShot: document.getElementById("showShot"),
+      mode: document.getElementById("modeControl"),
+      scheme: document.getElementById("schemeControl"),
+      station: document.getElementById("stationControl"),
+      guard: document.getElementById("guardControl"),
+      slow: document.getElementById("slowControl"),
+      reaction: document.getElementById("reactionControl"),
+      cartridge: document.getElementById("cartridgeControl"),
+      spread: document.getElementById("spreadControl"),
+      wind: document.getElementById("windControl"),
+      rib: document.getElementById("ribControl"),
+      transparentGround: document.getElementById("transparentGround"),
+      state: document.getElementById("stateReadout"),
+      round: document.getElementById("roundReadout"),
+      stationReadout: document.getElementById("stationReadout"),
+      target: document.getElementById("targetReadout"),
+      lead: document.getElementById("leadReadout"),
+      aim: document.getElementById("aimReadout"),
+      result: document.getElementById("resultReadout"),
+      slowValue: document.getElementById("slowValue"),
+      reactionValue: document.getElementById("reactionValue"),
+      cartridgeValue: document.getElementById("cartridgeValue"),
+      spreadValue: document.getElementById("spreadValue"),
+      windValue: document.getElementById("windValue"),
+      ribValue: document.getElementById("ribValue"),
+      stationValue: document.getElementById("stationValue")
+    };
+
+    const sim = {
+      mode: "idle",
+      t: 0,
+      last: performance.now(),
+      gunYaw: 0,
+      gunPitch: 0,
+      viewYaw: 0,
+      viewPitch: 0,
+      desiredYaw: 0,
+      desiredPitch: 0,
+      manualYawVel: 0,
+      manualPitchVel: 0,
+      ribGain: 0,
+      shotCount: 0,
+      shots: [],
+      bursts: [],
+      fragments: [],
+      target: null,
+      debug: null,
+      machineX: 0,
+      station: 3,
+      startStation: 3,
+      roundIndex: 0,
+      broken: 0,
+      stationLocked: false,
+      pendingStation: null,
+      lastTarget: null,
+      frozenCues: []
+    };
+
+    const params = {
+      slow: 0.35,
+      reaction: 0.32,
+      cartridge: 400,
+      spread: 45,
+      wind: 0,
+      mode: "universal",
+      guard: "neutral"
+    };
+
+    const keys = new Set();
+    const g = 9.81;
+    const TRENCH_FRONT = 15;
+    const TRENCH_BACK = 16.45;
+    const UNIVERSAL_STATION_SPACING = 2.5;
+    const OLYMPIC_STATION_SPACING = 3.15;
+    const UNIVERSAL_MACHINE_SPACING = 1.1;
+    const OLYMPIC_MACHINE_GROUP_SPACING = 3.15;
+    const OLYMPIC_MACHINE_SPACING = 0.82;
+    const LURE_HEIGHT = 0.08;
+    const RELEASE_HEIGHT = 0.72;
+    const MACHINE_HEIGHT = -0.42;
+    const MACHINE_Z = TRENCH_FRONT + 0.62;
+    const CLAY_VISIBLE_DELAY = 0.06;
+    const VIEW_FACTOR = 1.08;
+    const eye = { x: 0, y: 1.7, z: 0 };
+
+    const FU_SCHEMES = {
+      fu1: [[1,35,1.5,70],[2,20,2.0,60],[3,-10,1.5,75],[4,-30,3.0,65],[5,-45,1.5,60]],
+      fu2: [[1,40,2.0,65],[2,25,3.5,60],[3,5,2.5,70],[4,-15,1.5,75],[5,-35,2.0,65]],
+      fu3: [[1,45,2.0,60],[2,25,2.0,75],[3,-5,3.5,60],[4,-30,2.5,65],[5,-45,1.5,70]],
+      fu4: [[1,40,2.0,70],[2,15,3.5,60],[3,-5,1.5,70],[4,-30,3.0,75],[5,-35,2.5,65]],
+      fu5: [[1,45,2.5,65],[2,30,3.0,60],[3,5,2.0,75],[4,-30,3.5,70],[5,-40,2.0,65]],
+      fu6: [[1,40,1.5,60],[2,15,1.5,75],[3,5,2.5,65],[4,-30,2.5,65],[5,-45,3.0,60]],
+      fu7: [[1,40,2.0,70],[2,15,1.5,65],[3,0,2.0,75],[4,-20,2.5,65],[5,-40,2.0,70]],
+      fu8: [[1,35,2.0,75],[2,15,1.5,65],[3,0,2.5,60],[4,-20,3.0,65],[5,-45,2.5,70]],
+      fu9: [[1,40,2.5,60],[2,25,2.0,70],[3,0,1.5,70],[4,-15,3.5,65],[5,-35,3.0,75]],
+      fu10: [[1,35,2.0,65],[2,25,2.0,75],[3,10,3.0,60],[4,-30,2.5,70],[5,-45,2.5,60]]
+    };
+
+    const ISSF_SCHEMES = {
+      issf1: [[1,25,2.0],[2,-5,3.0],[3,-35,1.5],[4,45,2.5],[5,10,1.8],[6,-35,3.0],[7,35,3.0],[8,-5,1.5],[9,-45,1.6],[10,40,1.5],[11,0,3.0],[12,-25,2.6],[13,20,2.4],[14,5,1.9],[15,-35,3.0]],
+      issf2: [[1,25,3.0],[2,-5,1.8],[3,-35,2.0],[4,40,2.0],[5,0,3.0],[6,-45,1.6],[7,45,1.5],[8,0,2.8],[9,-40,2.0],[10,15,1.5],[11,5,2.0],[12,-35,1.8],[13,35,1.8],[14,-5,1.5],[15,-40,3.0]],
+      issf3: [[1,30,2.5],[2,0,2.8],[3,-35,3.0],[4,45,1.5],[5,-5,2.5],[6,-40,1.7],[7,30,2.8],[8,5,3.0],[9,-45,1.5],[10,45,2.3],[11,0,3.0],[12,-40,1.6],[13,30,2.0],[14,0,1.5],[15,-35,2.2]],
+      issf4: [[1,40,3.0],[2,10,1.5],[3,-30,2.2],[4,30,1.6],[5,-10,3.0],[6,-35,2.0],[7,45,2.0],[8,0,3.0],[9,-20,1.5],[10,30,1.5],[11,-5,2.0],[12,-45,2.8],[13,35,2.5],[14,0,1.6],[15,-30,3.0]],
+      issf5: [[1,45,1.6],[2,0,3.0],[3,-15,2.0],[4,40,2.8],[5,-10,1.5],[6,-45,2.0],[7,35,3.0],[8,-5,1.8],[9,-40,1.5],[10,25,1.8],[11,0,1.6],[12,-30,3.0],[13,30,2.0],[14,10,2.4],[15,-15,1.8]],
+      issf6: [[1,40,2.0],[2,0,3.0],[3,-35,1.5],[4,35,2.5],[5,10,1.5],[6,-35,2.0],[7,35,2.0],[8,-5,1.5],[9,-40,3.0],[10,45,1.5],[11,-10,3.0],[12,-25,2.6],[13,25,2.4],[14,5,1.5],[15,-45,2.0]],
+      issf7: [[1,35,2.2],[2,-5,3.0],[3,-20,3.0],[4,40,2.0],[5,0,3.0],[6,-45,2.8],[7,40,3.0],[8,0,2.0],[9,-40,2.2],[10,45,1.5],[11,5,2.0],[12,-35,1.8],[13,20,1.8],[14,-5,1.5],[15,-45,2.0]],
+      issf8: [[1,25,3.0],[2,5,1.5],[3,-20,2.0],[4,40,1.5],[5,0,3.0],[6,-45,2.8],[7,35,3.0],[8,-5,2.5],[9,-45,2.0],[10,45,1.8],[11,0,1.5],[12,-30,3.0],[13,30,2.0],[14,10,3.0],[15,-15,2.2]],
+      issf9: [[1,40,3.0],[2,0,1.8],[3,-20,3.0],[4,15,3.0],[5,-10,1.5],[6,-35,2.0],[7,45,1.6],[8,0,2.8],[9,-30,3.0],[10,30,2.0],[11,-5,2.0],[12,-15,3.0],[13,35,2.9],[14,0,1.6],[15,-45,2.2]]
+    };
+
+    function stationSpacing() {
+      return params.mode === "universal" ? UNIVERSAL_STATION_SPACING : OLYMPIC_STATION_SPACING;
+    }
+
+    function stationX(station) {
+      return (station - 3) * stationSpacing();
+    }
+
+    function updateEye() {
+      eye.x = stationX(sim.station);
+    }
+
+    function guardPoint() {
+      const base = activeLurePoint();
+      if (params.guard !== "high") return base;
+      return {
+        x: base.x + (sim.station <= 2 ? -1.25 : 1.25),
+        y: 1.4,
+        z: TRENCH_FRONT
+      };
+    }
+
+    function lureX(station = sim.station) {
+      return params.mode === "olympic" ? stationX(station) : 0;
+    }
+
+    function activeLurePoint() {
+      return { x: lureX(), y: LURE_HEIGHT, z: TRENCH_FRONT };
+    }
+
+    function setAimToGuard() {
+      updateEye();
+      const lure = aimAnglesAt(activeLurePoint());
+      const a = aimAnglesAt(guardPoint());
+      sim.viewYaw = lure.yaw;
+      sim.viewPitch = lure.pitch;
+      sim.gunYaw = a.yaw;
+      sim.gunPitch = a.pitch;
+      sim.desiredYaw = a.yaw;
+      sim.desiredPitch = a.pitch;
+    }
+
+    function stationForRound() {
+      return ((sim.startStation - 1 + sim.roundIndex) % 5) + 1;
+    }
+
+    function advanceRound(hit) {
+      if (hit) sim.broken += 1;
+      sim.roundIndex = Math.min(25, sim.roundIndex + 1);
+      sim.pendingStation = stationForRound();
+    }
+
+    function applyPendingStation() {
+      if (!sim.pendingStation) return;
+      sim.station = sim.pendingStation;
+      sim.pendingStation = null;
+      ui.station.value = String(sim.station);
+      updateEye();
+      setAimToGuard();
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function rand(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function normalize(v) {
+      const m = Math.hypot(v.x, v.y, v.z) || 1;
+      return { x: v.x / m, y: v.y / m, z: v.z / m };
+    }
+
+    function anglesToDir(yaw, pitch) {
+      const cp = Math.cos(pitch);
+      return { x: Math.sin(yaw) * cp, y: Math.sin(pitch), z: Math.cos(yaw) * cp };
+    }
+
+    function dirToAngles(v) {
+      return { yaw: Math.atan2(v.x, v.z), pitch: Math.atan2(v.y, Math.hypot(v.x, v.z)) };
+    }
+
+    function targetAt(time) {
+      if (!sim.target) return null;
+      const flightTime = time - (sim.target.visibleDelay || 0);
+      if (flightTime < 0) return null;
+      const p = sim.target.p0;
+      const v = sim.target.v0;
+      return {
+        x: p.x + v.x * flightTime + 0.5 * params.wind * 0.28 * flightTime * flightTime,
+        y: p.y + v.y * flightTime - 0.5 * g * 0.42 * flightTime * flightTime,
+        z: p.z + v.z * flightTime
+      };
+    }
+
+    function targetVelocity(time) {
+      if (!sim.target) return { x: 0, y: 0, z: 0 };
+      const flightTime = Math.max(0, time - (sim.target.visibleDelay || 0));
+      return {
+        x: sim.target.v0.x + params.wind * 0.28 * flightTime,
+        y: sim.target.v0.y - g * 0.42 * flightTime,
+        z: sim.target.v0.z
+      };
+    }
+
+    function aimAnglesAt(point) {
+      return dirToAngles({ x: point.x - eye.x, y: point.y - eye.y, z: point.z - eye.z });
+    }
+
+    function solveIntercept(p, v, pelletSpeed) {
+      let tau = Math.hypot(p.x - eye.x, p.y - eye.y, p.z - eye.z) / pelletSpeed;
+      for (let i = 0; i < 5; i += 1) {
+        const q = { x: p.x + v.x * tau, y: p.y + v.y * tau, z: p.z + v.z * tau };
+        tau = Math.hypot(q.x - eye.x, q.y - eye.y, q.z - eye.z) / pelletSpeed;
+      }
+      return {
+        time: tau,
+        point: { x: p.x + v.x * tau, y: p.y + v.y * tau, z: p.z + v.z * tau }
+      };
+    }
+
+    function centerShotClosest(dir, speed, shotTime) {
+      const maxTime = 0.26;
+      const dt = 0.0025;
+      let best = { distance: Infinity, target: null, pellet: null };
+      for (let tau = 0; tau <= maxTime; tau += dt) {
+        const target = targetDuringShot(shotTime, tau);
+        if (!target) continue;
+        const pellet = {
+          x: eye.x + dir.x * speed * tau,
+          y: eye.y + dir.y * speed * tau - 0.5 * g * 0.08 * tau * tau,
+          z: eye.z + dir.z * speed * tau
+        };
+        const distance = Math.hypot(pellet.x - target.x, pellet.y - target.y, pellet.z - target.z);
+        if (distance < best.distance) best = { distance, target, pellet };
+        if (pellet.z > target.z + 2.5 && tau > 0.03) break;
+      }
+      return best;
+    }
+
+    function recommendedAimAt(shotTime) {
+      const p = targetAt(shotTime);
+      if (!p) return null;
+      const v = targetVelocity(shotTime);
+      const pelletSpeed = params.cartridge * 0.78;
+      const poi = sim.ribGain * Math.PI / 180;
+      const intercept = solveIntercept(p, v, pelletSpeed);
+      const base = dirToAngles({
+        x: intercept.point.x - eye.x,
+        y: intercept.point.y - eye.y,
+        z: intercept.point.z - eye.z
+      });
+      let yaw = base.yaw;
+      let pitch = base.pitch - poi;
+      let best = centerShotClosest(anglesToDir(yaw, pitch + poi), pelletSpeed, shotTime);
+      let step = 0.025;
+      for (let pass = 0; pass < 5; pass += 1) {
+        let improved = false;
+        for (const dy of [-step, 0, step]) {
+          for (const dp of [-step, 0, step]) {
+            if (dy === 0 && dp === 0) continue;
+            const testYaw = yaw + dy;
+            const testPitch = pitch + dp;
+            const score = centerShotClosest(anglesToDir(testYaw, testPitch + poi), pelletSpeed, shotTime);
+            if (score.distance < best.distance) {
+              yaw = testYaw;
+              pitch = testPitch;
+              best = score;
+              improved = true;
+            }
+          }
+        }
+        if (!improved) step *= 0.5;
+      }
+      return {
+        yaw,
+        pitch,
+        intercept: best.target || intercept.point,
+        pellet: best.pellet,
+        distance: best.distance
+      };
+    }
+
+    function projectPoint(world) {
+      const rel = { x: world.x - eye.x, y: world.y - eye.y, z: world.z - eye.z };
+      const yaw = Math.atan2(rel.x, rel.z) - sim.viewYaw;
+      const dist = Math.hypot(rel.x, rel.z);
+      const pitch = Math.atan2(rel.y, dist) - sim.viewPitch;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const f = Math.min(w, h) * VIEW_FACTOR;
+      return {
+        x: w / 2 + Math.tan(yaw) * f,
+        y: h / 2 - Math.tan(pitch) * f,
+        yaw,
+        pitch,
+        scale: f / Math.max(2, dist)
+      };
+    }
+
+    function projectAim(yaw, pitch) {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const f = Math.min(w, h) * VIEW_FACTOR;
+      return {
+        x: clamp(w / 2 + Math.tan(yaw - sim.viewYaw) * f, 0, w),
+        y: clamp(h / 2 - Math.tan(pitch - sim.viewPitch) * f, 0, h)
+      };
+    }
+
+    function aimFromScreen(x, y) {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const f = Math.min(w, h) * VIEW_FACTOR;
+      x = clamp(x, 0, w);
+      y = clamp(y, 0, h);
+      sim.gunYaw = sim.viewYaw + Math.atan((x - w / 2) / f);
+      sim.gunPitch = sim.viewPitch - Math.atan((y - h / 2) / f);
+    }
+
+    function cloneTarget(target) {
+      if (!target) return null;
+      return {
+        ...target,
+        machineOrigin: { ...target.machineOrigin },
+        p0: { ...target.p0 },
+        v0: { ...target.v0 }
+      };
+    }
+
+    function startTarget(target, label = "PLATO") {
+      sim.target = cloneTarget(target);
+      sim.t = 0;
+      sim.mode = "reaction";
+      sim.shotCount = 0;
+      sim.shots = [];
+      sim.bursts = [];
+      sim.fragments = [];
+      sim.debug = null;
+      sim.frozenCues = [];
+      ui.result.textContent = "-";
+      banner.textContent = label;
+      banner.classList.add("show");
+      window.setTimeout(() => banner.classList.remove("show"), 360);
+    }
+
+    function callTarget() {
+      if (sim.roundIndex >= 25 || sim.pendingStation || sim.mode === "reaction" || sim.mode === "tracking") return;
+      if (!sim.stationLocked) {
+        sim.startStation = Number(ui.station.value);
+        sim.station = sim.startStation;
+        sim.stationLocked = true;
+      }
+      updateEye();
+      setAimToGuard();
+      const schemeKey = ui.scheme.value;
+      let entry;
+      let machineIndex;
+      let machineX;
+      let landingDistance;
+      if (params.mode === "universal") {
+        const scheme = FU_SCHEMES[schemeKey] || FU_SCHEMES.fu1;
+        entry = scheme[Math.floor(rand(0, scheme.length))];
+        machineIndex = entry[0] - 1;
+        machineX = (entry[0] - 3) * UNIVERSAL_MACHINE_SPACING;
+        landingDistance = entry[3];
+      } else {
+        const scheme = ISSF_SCHEMES[schemeKey] || ISSF_SCHEMES.issf1;
+        const first = (sim.station - 1) * 3;
+        entry = scheme[first + Math.floor(rand(0, 3))];
+        machineIndex = entry[0] - 1;
+        const bank = Math.floor(machineIndex / 3);
+        const within = machineIndex % 3;
+        machineX = (bank - 2) * OLYMPIC_MACHINE_GROUP_SPACING + (within - 1) * OLYMPIC_MACHINE_SPACING;
+        landingDistance = 76;
+      }
+      const releaseX = lureX();
+      const angleDeg = entry[1];
+      const heightAt10 = entry[2];
+      const yaw = angleDeg * Math.PI / 180;
+      const flightTime = params.mode === "universal" ? clamp(landingDistance / rand(18.5, 22.5), 2.8, 4.0) : clamp(landingDistance / rand(25.5, 28.5), 2.65, 3.15);
+      const horizontalSpeed = landingDistance / flightTime;
+      const speedKmh = horizontalSpeed * 3.6;
+      const gravityFactor = g * 0.42;
+      const y0 = RELEASE_HEIGHT;
+      const verticalByHeight = (heightAt10 - y0 + 0.5 * gravityFactor * Math.pow(10 / horizontalSpeed, 2)) / (10 / horizontalSpeed);
+      const verticalByLanding = (0 - y0 + 0.5 * gravityFactor * flightTime * flightTime) / flightTime;
+      const verticalSpeed = verticalByHeight * 0.72 + verticalByLanding * 0.28;
+      const elevDeg = Math.atan2(verticalSpeed, horizontalSpeed) * 180 / Math.PI;
+      const target = {
+        speedKmh,
+        angleDeg,
+        elevDeg,
+        heightAt10,
+        landingDistance,
+        machineIndex,
+        machineX,
+        visibleDelay: CLAY_VISIBLE_DELAY,
+        machineOrigin: { x: machineX, y: MACHINE_HEIGHT, z: MACHINE_Z },
+        p0: { x: releaseX, y: RELEASE_HEIGHT, z: TRENCH_FRONT },
+        v0: {
+          x: Math.sin(yaw) * horizontalSpeed,
+          y: verticalSpeed,
+          z: Math.cos(yaw) * horizontalSpeed
+        }
+      };
+      sim.lastTarget = cloneTarget(target);
+      startTarget(target);
+    }
+
+    function repeatTarget() {
+      if (!sim.lastTarget || sim.pendingStation || sim.mode === "reaction" || sim.mode === "tracking") return;
+      updateEye();
+      setAimToGuard();
+      startTarget(sim.lastTarget, "REPETIR");
+    }
+
+    function reset() {
+      sim.mode = "idle";
+      sim.t = 0;
+      sim.shotCount = 0;
+      sim.target = null;
+      sim.fragments = [];
+      sim.roundIndex = 0;
+      sim.broken = 0;
+      sim.stationLocked = false;
+      sim.pendingStation = null;
+      sim.station = Number(ui.station.value);
+      sim.debug = null;
+      sim.frozenCues = [];
+      setAimToGuard();
+      sim.shots = [];
+      sim.bursts = [];
+      ui.result.textContent = "-";
+    }
+
+    function updateAim(dt) {
+      let inputYaw = 0;
+      let inputPitch = 0;
+      if (keys.has("ArrowLeft")) inputYaw -= 1;
+      if (keys.has("ArrowRight")) inputYaw += 1;
+      if (keys.has("ArrowUp")) inputPitch += 1;
+      if (keys.has("ArrowDown")) inputPitch -= 1;
+      const manualSpeed = 1.45;
+      sim.gunYaw += inputYaw * manualSpeed * dt;
+      sim.gunPitch += inputPitch * manualSpeed * dt;
+
+      if (ui.autoAim.checked && sim.mode === "tracking") {
+        const stiffness = 5.6;
+        sim.gunYaw += (sim.desiredYaw - sim.gunYaw) * clamp(stiffness * dt, 0, 1);
+        sim.gunPitch += (sim.desiredPitch - sim.gunPitch) * clamp(stiffness * dt, 0, 1);
+      }
+      const aim = projectAim(sim.gunYaw, sim.gunPitch);
+      aimFromScreen(aim.x, aim.y);
+    }
+
+    function update(dt) {
+      if (sim.mode !== "idle" && sim.target) {
+        sim.t += dt;
+        if (sim.mode === "reaction" && sim.t >= params.reaction) {
+          sim.mode = "tracking";
+        }
+        const p = targetAt(sim.t);
+        if (!p || p.z > 120) {
+          if (p) sim.mode = "ended";
+        }
+        if (p && p.y <= 0.12 && sim.mode !== "ended") {
+          createGroundBreak(p);
+          sim.mode = "ended";
+        }
+        if (p && sim.mode !== "ended") {
+          const recommended = recommendedAimAt(sim.t);
+          if (recommended) {
+            sim.desiredYaw = recommended.yaw;
+            sim.desiredPitch = recommended.pitch;
+          }
+        }
+      }
+
+      updateAim(dt);
+      sim.shots.forEach(shot => {
+        shot.age += dt;
+      });
+      sim.shots = sim.shots.filter(shot => shot.age < 0.75);
+      sim.bursts.forEach(b => b.age += dt);
+      sim.bursts = sim.bursts.filter(b => b.age < 0.65);
+      sim.fragments.forEach(fragment => {
+        fragment.age += dt;
+        fragment.p.x += fragment.v.x * dt;
+        fragment.p.y = Math.max(0.02, fragment.p.y + fragment.v.y * dt);
+        fragment.p.z += fragment.v.z * dt;
+        fragment.v.y -= g * 0.9 * dt;
+        if (fragment.p.y <= 0.021) fragment.v.y *= -0.18;
+      });
+      sim.fragments = sim.fragments.filter(fragment => fragment.age < 2.2);
+      sim.frozenCues.forEach(cue => cue.age += dt);
+      sim.frozenCues = sim.frozenCues.filter(cue => cue.age <= 3.2);
+      if (sim.mode === "ended" && sim.pendingStation && sim.frozenCues.length === 0 && sim.fragments.length === 0 && sim.bursts.length === 0 && sim.shots.length === 0) {
+        applyPendingStation();
+      }
+    }
+
+    function createGroundBreak(p) {
+      const ground = { x: p.x, y: 0.04, z: p.z };
+      sim.bursts.push({ age: 0, p: ground, hit: false });
+      sim.fragments.push(...makeFragments(ground, 24, 1.6));
+      ui.result.textContent = "Cayo y se rompio";
+      ui.result.style.color = "var(--bad)";
+      advanceRound(false);
+    }
+
+    function makeFragments(p, count, power) {
+      const pieces = [];
+      for (let i = 0; i < count; i += 1) {
+        const a = rand(0, Math.PI * 2);
+        const s = rand(0.3, power);
+        pieces.push({
+          age: 0,
+          p: { x: p.x, y: p.y + rand(0, 0.12), z: p.z },
+          v: { x: Math.cos(a) * s, y: rand(0.5, 2.4), z: Math.sin(a) * s * 0.6 },
+          r: rand(1.8, 4.8)
+        });
+      }
+      return pieces;
+    }
+
+    function patternRadius(distance) {
+      const spread = params.spread / 100;
+      return 0.38 + spread * 0.78 + distance * (0.006 + spread * 0.004);
+    }
+
+    function pelletCount() {
+      return 306;
+    }
+
+    function pelletDirections(centerDir, count, coneAngle) {
+      const forward = normalize(centerDir);
+      const worldUp = Math.abs(forward.y) > 0.92 ? { x: 1, y: 0, z: 0 } : { x: 0, y: 1, z: 0 };
+      const right = normalize({
+        x: worldUp.y * forward.z - worldUp.z * forward.y,
+        y: worldUp.z * forward.x - worldUp.x * forward.z,
+        z: worldUp.x * forward.y - worldUp.y * forward.x
+      });
+      const up = normalize({
+        x: forward.y * right.z - forward.z * right.y,
+        y: forward.z * right.x - forward.x * right.z,
+        z: forward.x * right.y - forward.y * right.x
+      });
+      const dirs = [];
+      for (let i = 0; i < count; i += 1) {
+        const golden = i * 2.399963229728653;
+        const ring = Math.sqrt((i + 0.5) / count);
+        const densityWave = 0.78 + 0.18 * Math.sin(i * 12.9898);
+        const angle = ring * coneAngle * densityWave;
+        const x = Math.cos(golden) * Math.sin(angle);
+        const y = Math.sin(golden) * Math.sin(angle) * 0.82;
+        const z = Math.cos(angle);
+        dirs.push(normalize({
+          x: forward.x * z + right.x * x + up.x * y,
+          y: forward.y * z + right.y * x + up.y * y,
+          z: forward.z * z + right.z * x + up.z * y
+        }));
+      }
+      return dirs;
+    }
+
+    function targetDuringShot(baseTime, tau) {
+      return targetAt(baseTime + tau);
+    }
+
+    function pelletHitTarget(dir, speed, shotTime) {
+      const maxTime = 0.24;
+      const dt = 0.0028;
+      const targetRadius = 0.075;
+      let best = Infinity;
+      let bestPoint = null;
+      for (let tau = 0; tau <= maxTime; tau += dt) {
+        const target = targetDuringShot(shotTime, tau);
+        if (!target) continue;
+        const pellet = {
+          x: eye.x + dir.x * speed * tau,
+          y: eye.y + dir.y * speed * tau - 0.5 * g * 0.08 * tau * tau,
+          z: eye.z + dir.z * speed * tau
+        };
+        const d = Math.hypot(pellet.x - target.x, pellet.y - target.y, pellet.z - target.z);
+        if (d < best) {
+          best = d;
+          bestPoint = target;
+        }
+        if (d <= targetRadius) return { hit: true, p: target, distance: d };
+        if (pellet.z > target.z + 2.5 && tau > 0.03) break;
+      }
+      return { hit: false, p: bestPoint, distance: best };
+    }
+
+    function fire() {
+      if (!sim.target || sim.mode === "idle" || sim.mode === "ended" || sim.shotCount >= 2) return;
+      const current = targetAt(sim.t);
+      if (!current) return;
+      const pelletSpeed = params.cartridge * 0.78;
+      const poi = sim.ribGain * Math.PI / 180;
+      const dir = anglesToDir(sim.gunYaw, sim.gunPitch + poi);
+      const distance = Math.hypot(current.x - eye.x, current.y - eye.y, current.z - eye.z);
+      const radius = patternRadius(distance);
+      const v = targetVelocity(sim.t);
+      const recommended = recommendedAimAt(sim.t);
+      const shotCenter = centerShotClosest(dir, pelletSpeed, sim.t);
+      const coneAngle = Math.atan(radius / distance);
+      const dirs = pelletDirections(dir, pelletCount(), coneAngle);
+      const renderedPellets = [];
+      let hitInfo = null;
+      let nearest = { distance: Infinity, p: current };
+      for (let i = 0; i < dirs.length; i += 1) {
+        const result = pelletHitTarget(dirs[i], pelletSpeed, sim.t);
+        const travel = Math.min(distance / pelletSpeed, 0.22);
+        if (i % 3 === 0) {
+          renderedPellets.push({
+            x: eye.x + dirs[i].x * pelletSpeed * travel,
+            y: eye.y + dirs[i].y * pelletSpeed * travel,
+            z: eye.z + dirs[i].z * pelletSpeed * travel
+          });
+        }
+        if (result.distance < nearest.distance) nearest = result;
+        if (result.hit && !hitInfo) hitInfo = { pellet: i, p: result.p, distance: result.distance };
+      }
+      sim.shotCount += 1;
+      const hit = Boolean(hitInfo);
+      const impact = hit ? hitInfo.p : nearest.p || current;
+      const cue = {
+        age: 0,
+        shot: sim.shotCount,
+        hit,
+        target: { ...current },
+        velocity: { ...v },
+        aimYaw: sim.gunYaw,
+        aimPitch: sim.gunPitch,
+        recommendedYaw: recommended ? recommended.yaw : sim.gunYaw,
+        recommendedPitch: recommended ? recommended.pitch : sim.gunPitch,
+        intercept: { ...(recommended ? recommended.intercept : current) },
+        shotCenter: { ...(shotCenter.pellet || shotCenter.target || current) },
+        impact: { ...impact },
+        radius
+      };
+      sim.frozenCues = [...sim.frozenCues.filter(item => item.shot !== cue.shot), cue].slice(-2);
+      sim.debug = {
+        age: 0,
+        shotOrigin: { x: eye.x, y: eye.y, z: eye.z },
+        shotDir: dir,
+        target: impact,
+        pellets: renderedPellets,
+        hit
+      };
+      sim.shots.push({ age: 0, center: impact, future: impact, radius, hit, pellets: renderedPellets });
+      sim.bursts.push({ age: 0, p: impact, hit });
+      ui.result.textContent = hit ? `Roto: perdigon ${hitInfo.pellet + 1}/${dirs.length}` : `Fallo tiro ${sim.shotCount}/2`;
+      ui.result.style.color = hit ? "var(--good)" : "var(--bad)";
+      if (hit) {
+        sim.fragments.push(...makeFragments(impact, 36, 2.4));
+        sim.mode = "ended";
+        advanceRound(true);
+      } else if (sim.shotCount >= 2) {
+        ui.result.textContent = "Fallo: 2 tiros";
+        sim.mode = "ended";
+        advanceRound(false);
+      }
+    }
+
+    function drawBackground() {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const sky = ctx.createLinearGradient(0, 0, 0, h * 0.58);
+      sky.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue("--sky"));
+      sky.addColorStop(1, "#9dcced");
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
+
+      const horizonY = h * 0.5 + Math.tan(sim.viewPitch) * Math.min(w, h) * VIEW_FACTOR;
+      const field = ctx.createLinearGradient(0, horizonY, 0, h);
+      field.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue("--field"));
+      field.addColorStop(1, getComputedStyle(document.documentElement).getPropertyValue("--field-dark"));
+      ctx.fillStyle = field;
+      ctx.fillRect(0, horizonY, w, h - horizonY);
+      ctx.strokeStyle = "rgba(255,255,255,.35)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, horizonY);
+      ctx.lineTo(w, horizonY);
+      ctx.stroke();
+    }
+
+    function drawGrid() {
+      ctx.strokeStyle = "rgba(255,255,255,.18)";
+      ctx.lineWidth = 1;
+      for (let z = 10; z <= 80; z += 10) {
+        drawWorldLine({ x: -20, y: 0, z }, { x: 20, y: 0, z });
+      }
+      for (let x = -18; x <= 18; x += 4) {
+        drawWorldLine({ x, y: 0, z: 5 }, { x, y: 0, z: 82 });
+      }
+      ctx.strokeStyle = "rgba(255,255,255,.46)";
+      drawWorldLine({ x: 0, y: 0, z: 5 }, { x: 0, y: 0, z: 82 });
+      ctx.strokeStyle = "rgba(255,220,120,.5)";
+      drawWorldLine({ x: eye.x, y: 0.01, z: 1.5 }, { x: eye.x, y: 0.01, z: 82 });
+      drawTrap();
+    }
+
+    function drawWorldLine(a, b) {
+      const pa = projectPoint(a);
+      const pb = projectPoint(b);
+      ctx.beginPath();
+      ctx.moveTo(pa.x, pa.y);
+      ctx.lineTo(pb.x, pb.y);
+      ctx.stroke();
+    }
+
+    function drawWorldPolygon(points, fill, stroke) {
+      const projected = points.map(projectPoint);
+      ctx.beginPath();
+      projected.forEach((p, index) => {
+        if (index === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    function drawWorldLabel(point, text, fill = "rgba(255,255,255,.86)", size = 13) {
+      const p = projectPoint(point);
+      if (p.x < -80 || p.x > canvas.clientWidth + 80 || p.y < -80 || p.y > canvas.clientHeight + 80) return;
+      ctx.save();
+      ctx.font = `500 ${size}px system-ui, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = "rgba(25,23,16,.72)";
+      ctx.strokeText(text, p.x, p.y);
+      ctx.fillStyle = fill;
+      ctx.fillText(text, p.x, p.y);
+      ctx.restore();
+    }
+
+    function drawClayDisc(x, y, size, alpha = 1) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = "var(--clay)";
+      ctx.strokeStyle = "rgba(255,255,255,.9)";
+      ctx.lineWidth = Math.max(1, size * 0.12);
+      ctx.beginPath();
+      ctx.ellipse(x, y, size * 1.28, size * 0.56, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#ff8a18";
+      ctx.beginPath();
+      ctx.ellipse(x, y - size * 0.08, size * 0.82, size * 0.34, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(150,55,0,.65)";
+      ctx.lineWidth = Math.max(1, size * 0.08);
+      ctx.beginPath();
+      ctx.ellipse(x, y - size * 0.11, size * 0.48, size * 0.18, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawTrap() {
+      const rangeMinX = stationX(1) - 1.6;
+      const rangeMaxX = stationX(5) + 1.6;
+      drawWorldPolygon(
+        [
+          { x: rangeMinX, y: 0.015, z: 0.8 },
+          { x: rangeMaxX, y: 0.015, z: 0.8 },
+          { x: rangeMaxX, y: 0.015, z: TRENCH_FRONT - 0.1 },
+          { x: rangeMinX, y: 0.015, z: TRENCH_FRONT - 0.1 }
+        ],
+        ui.transparentGround.checked ? "rgba(138,107,66,.38)" : "rgba(138,107,66,.82)",
+        "rgba(255,255,255,.18)"
+      );
+
+      drawWorldPolygon(
+        [
+          { x: rangeMinX + 0.45, y: 0.035, z: TRENCH_FRONT },
+          { x: rangeMaxX - 0.45, y: 0.035, z: TRENCH_FRONT },
+          { x: rangeMaxX - 0.45, y: -0.22, z: TRENCH_BACK },
+          { x: rangeMinX + 0.45, y: -0.22, z: TRENCH_BACK }
+        ],
+        ui.transparentGround.checked ? "rgba(24,18,13,.55)" : "rgba(24,18,13,.9)",
+        "rgba(255,255,255,.34)"
+      );
+
+      for (let s = 1; s <= 5; s += 1) {
+        const x = stationX(s);
+        drawWorldPolygon(
+          [
+            { x: x - 0.5, y: 0.03, z: 0.25 },
+            { x: x + 0.5, y: 0.03, z: 0.25 },
+            { x: x + 0.5, y: 0.03, z: 1.25 },
+            { x: x - 0.5, y: 0.03, z: 1.25 }
+          ],
+          s === sim.station ? "rgba(255,138,24,.28)" : "rgba(255,255,255,.14)",
+          s === sim.station ? "rgba(255,138,24,.9)" : "rgba(255,255,255,.32)"
+        );
+        drawWorldLabel(
+          { x, y: 0.14, z: 0.76 },
+          String(s),
+          s === sim.station ? "rgba(255,190,88,.98)" : "rgba(255,255,255,.82)",
+          s === sim.station ? 22 : 18
+        );
+      }
+
+      ctx.strokeStyle = "rgba(255,255,255,.62)";
+      ctx.lineWidth = 2;
+      drawWorldLine({ x: rangeMinX + 0.45, y: 0.06, z: TRENCH_FRONT }, { x: rangeMaxX - 0.45, y: 0.06, z: TRENCH_FRONT });
+      const count = params.mode === "universal" ? 5 : 15;
+      for (let i = 0; i < count; i += 1) {
+        const bank = Math.floor(i / 3);
+        const within = i % 3;
+        const x = params.mode === "universal"
+          ? (i - 2) * UNIVERSAL_MACHINE_SPACING
+          : (bank - 2) * OLYMPIC_MACHINE_GROUP_SPACING + (within - 1) * OLYMPIC_MACHINE_SPACING;
+        if (ui.transparentGround.checked) {
+          const p = projectPoint({ x, y: MACHINE_HEIGHT, z: MACHINE_Z });
+          const active = sim.target && sim.target.machineIndex === i;
+          ctx.fillStyle = active ? "rgba(255,100,0,.95)" : "rgba(255,255,255,.5)";
+          ctx.fillRect(p.x - 4, p.y - 8, 8, 14);
+        }
+      }
+      const lureStations = params.mode === "olympic" ? [1, 2, 3, 4, 5] : [sim.station];
+      for (const s of lureStations) {
+        const active = params.mode === "universal" || s === sim.station;
+        const marker = projectPoint({ x: lureX(s), y: LURE_HEIGHT, z: TRENCH_FRONT - 0.02 });
+        if (active) {
+          drawClayDisc(marker.x, marker.y, 11, sim.target && sim.mode !== "ended" ? 0.72 : 1);
+          drawWorldLabel({ x: lureX(s), y: LURE_HEIGHT + 0.18, z: TRENCH_FRONT - 0.08 }, "S", "rgba(255,245,220,.9)", 12);
+        } else {
+          ctx.save();
+          ctx.globalAlpha = 0.5;
+          ctx.fillStyle = "rgba(215,220,210,.72)";
+          ctx.strokeStyle = "rgba(255,255,255,.58)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.ellipse(marker.x, marker.y, 9, 4, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    }
+
+    function drawTargetAndLead() {
+      if (!sim.target) {
+        return;
+      }
+      if (sim.mode === "ended") return;
+      const p = targetAt(sim.t);
+      if (!p) return;
+      const v = targetVelocity(sim.t);
+      const recommended = recommendedAimAt(sim.t);
+      if (!recommended) return;
+
+      const targetScreen = projectPoint(p);
+      const shotScreen = projectPoint(recommended.intercept);
+      const desiredScreen = projectAim(recommended.yaw, recommended.pitch);
+      const dist = Math.hypot(recommended.intercept.x - eye.x, recommended.intercept.y - eye.y, recommended.intercept.z - eye.z);
+      const radiusM = patternRadius(dist);
+      const radiusPx = clamp(radiusM * shotScreen.scale * 1.2, 14, 72);
+
+      ctx.strokeStyle = "rgba(255,100,0,.8)";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 7]);
+      ctx.beginPath();
+      for (let t = 0; t <= Math.min(sim.t + 0.65, 3.4); t += 0.08) {
+        const q = targetAt(t);
+        if (!q) continue;
+        const s = projectPoint(q);
+        if (t === 0) ctx.moveTo(s.x, s.y);
+        else ctx.lineTo(s.x, s.y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (ui.showShot.checked) {
+        ctx.fillStyle = "rgba(215,237,255,.24)";
+        ctx.strokeStyle = "rgba(215,237,255,.75)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(shotScreen.x, shotScreen.y, radiusPx * 1.25, radiusPx * 0.74, sim.target.angleDeg * Math.PI / 540, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "rgba(255,212,81,.24)";
+      ctx.strokeStyle = "rgba(255,212,81,.95)";
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.ellipse(desiredScreen.x, desiredScreen.y, radiusPx * 0.76, radiusPx * 0.48, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255,212,81,.98)";
+      ctx.strokeStyle = "rgba(20,20,20,.72)";
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.arc(desiredScreen.x, desiredScreen.y, 4.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
+
+      if (sim.mode === "reaction") {
+        ctx.fillStyle = "rgba(255,255,255,.9)";
+        ctx.font = "700 13px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText("reaccion", targetScreen.x, targetScreen.y - 22);
+      }
+
+      const leadM = Math.hypot(recommended.intercept.x - p.x, recommended.intercept.y - p.y, recommended.intercept.z - p.z);
+      ui.lead.textContent = `${leadM.toFixed(1)} m`;
+      ui.target.textContent = `M${sim.target.machineIndex + 1} · ${Math.round(sim.target.angleDeg)} deg · ${sim.target.heightAt10.toFixed(1)} m/10m · ${Math.round(sim.target.landingDistance)} m`;
+    }
+
+    function drawFrozenCue() {
+      if (!sim.frozenCues.length) return;
+      for (const cue of sim.frozenCues) {
+        const alpha = clamp(1 - cue.age / 3.2, 0, 1) * (cue.shot === 1 ? 0.78 : 1);
+        const targetScreen = projectPoint(cue.target);
+        const recommendedScreen = projectAim(cue.recommendedYaw, cue.recommendedPitch);
+        const aimScreen = projectAim(cue.aimYaw ?? cue.recommendedYaw, cue.aimPitch ?? cue.recommendedPitch);
+        const interceptScreen = projectPoint(cue.intercept);
+        const impactScreen = projectPoint(cue.impact);
+        const radiusPx = clamp(cue.radius * interceptScreen.scale * 1.2, 14, 72);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.setLineDash([5, 6]);
+        ctx.strokeStyle = "rgba(255,212,81,.95)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(targetScreen.x, targetScreen.y);
+        ctx.lineTo(recommendedScreen.x, recommendedScreen.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = "rgba(255,212,81,.22)";
+        ctx.strokeStyle = "rgba(255,212,81,.98)";
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.ellipse(recommendedScreen.x, recommendedScreen.y, radiusPx * 0.76, radiusPx * 0.48, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = "rgba(215,237,255,.8)";
+        ctx.lineWidth = 1.7;
+        ctx.beginPath();
+        ctx.ellipse(interceptScreen.x, interceptScreen.y, radiusPx * 1.1, radiusPx * 0.68, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = cue.hit ? "rgba(155,230,111,.95)" : "rgba(255,107,104,.95)";
+        ctx.strokeStyle = "rgba(20,20,20,.65)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(impactScreen.x, impactScreen.y, 5.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#d90000";
+        ctx.strokeStyle = "rgba(255,255,255,.9)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(aimScreen.x, aimScreen.y, 4.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "rgba(255,255,255,.9)";
+        ctx.font = "500 11px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText(String(cue.shot), aimScreen.x, aimScreen.y - 10);
+        drawClayDisc(targetScreen.x, targetScreen.y, 8, 0.76);
+        ctx.restore();
+      }
+    }
+
+    function drawSight() {
+      if (sim.mode === "ended" && sim.frozenCues.length) return;
+      const aim = projectAim(sim.gunYaw, sim.gunPitch);
+      const poi = projectAim(sim.gunYaw, sim.gunPitch + sim.ribGain * Math.PI / 180);
+      ctx.save();
+      if (sim.ribGain > 0.0005) {
+        ctx.strokeStyle = "rgba(215,237,255,.42)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(aim.x, aim.y);
+        ctx.lineTo(poi.x, poi.y);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(215,237,255,.45)";
+        ctx.strokeStyle = "rgba(255,255,255,.55)";
+        ctx.beginPath();
+        ctx.arc(poi.x, poi.y, 5.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#d90000";
+      ctx.strokeStyle = "rgba(255,255,255,.86)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(aim.x, aim.y, 3.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawShots() {
+      for (const shot of sim.shots) {
+        const alpha = 1 - shot.age / 0.75;
+        ctx.fillStyle = `rgba(235,247,255,${0.75 * alpha})`;
+        for (const pellet of shot.pellets) {
+          const p = projectPoint(pellet);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      for (const b of sim.bursts) {
+        const p = projectPoint(b.p);
+        const r = 20 + b.age * 70;
+        ctx.strokeStyle = b.hit ? `rgba(155,230,111,${1 - b.age / 0.65})` : `rgba(255,107,104,${1 - b.age / 0.65})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    function drawFragments() {
+      ctx.fillStyle = "var(--clay)";
+      ctx.strokeStyle = "rgba(255,255,255,.35)";
+      ctx.lineWidth = 1;
+      for (const fragment of sim.fragments) {
+        const p = projectPoint(fragment.p);
+        const alpha = clamp(1 - fragment.age / 2.2, 0, 1);
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y - fragment.r);
+        ctx.lineTo(p.x + fragment.r * 1.2, p.y + fragment.r * 0.4);
+        ctx.lineTo(p.x - fragment.r * 0.8, p.y + fragment.r * 0.9);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function currentCorrectionCue() {
+      if (sim.frozenCues.length) return sim.frozenCues[sim.frozenCues.length - 1];
+      if (!sim.target || sim.mode === "ended") return null;
+      const target = targetAt(sim.t);
+      if (!target) return null;
+      const velocity = targetVelocity(sim.t);
+      const recommended = recommendedAimAt(sim.t);
+      if (!recommended) return null;
+      return {
+        age: 0,
+        hit: null,
+        target,
+        velocity,
+        intercept: recommended.intercept,
+        impact: null,
+        radius: patternRadius(Math.hypot(recommended.intercept.x - eye.x, recommended.intercept.y - eye.y, recommended.intercept.z - eye.z))
+      };
+    }
+
+    function correctionVectors(cue) {
+      const forward = normalize({ x: cue.velocity.x, y: 0, z: cue.velocity.z });
+      const right = { x: forward.z, y: 0, z: -forward.x };
+      const actual = cue.shotCenter || cue.impact;
+      if (!actual) return { forward, right, lead: null, lateral: null, vertical: null };
+      const delta = {
+        x: actual.x - cue.intercept.x,
+        y: actual.y - cue.intercept.y,
+        z: actual.z - cue.intercept.z
+      };
+      return {
+        forward,
+        right,
+        lead: delta.x * forward.x + delta.z * forward.z,
+        lateral: delta.x * right.x + delta.z * right.z,
+        vertical: delta.y
+      };
+    }
+
+    function drawCorrectionLegend(x, y, cue, metrics, verticalOnly = false) {
+      ctx.save();
+      ctx.font = "500 12px system-ui";
+      ctx.textAlign = "left";
+      ctx.fillStyle = "rgba(255,255,255,.86)";
+      if (!cue) {
+        ctx.fillText("sin plato", x, y);
+        ctx.restore();
+        return;
+      }
+      if (!cue.impact) {
+        ctx.fillText("naranja: plato  amarillo: punto ideal", x, y);
+        ctx.restore();
+        return;
+      }
+      const leadText = Math.abs(metrics.lead) < 0.12 ? "adelanto correcto" : `${metrics.lead > 0 ? "adelantado" : "retrasado"} ${Math.abs(metrics.lead).toFixed(1)} m`;
+      const lateralText = Math.abs(metrics.lateral) < 0.12 ? "linea correcta" : `${metrics.lateral > 0 ? "derecha" : "izquierda"} ${Math.abs(metrics.lateral).toFixed(1)} m`;
+      const verticalText = Math.abs(metrics.vertical) < 0.08 ? "altura correcta" : `${metrics.vertical > 0 ? "alto" : "bajo"} ${Math.abs(metrics.vertical).toFixed(1)} m`;
+      ctx.fillText(verticalOnly ? verticalText : `${leadText} · ${lateralText}`, x, y);
+      ctx.restore();
+    }
+
+    function cueForShotSlot(slot) {
+      const frozen = sim.frozenCues.find(cue => cue.shot === slot);
+      if (frozen) return frozen;
+      if (sim.target && sim.mode !== "ended" && sim.shotCount + 1 === slot) {
+        const live = currentCorrectionCue();
+        return live ? { ...live, shot: slot } : null;
+      }
+      return null;
+    }
+
+    function correctionText(cue, verticalOnly) {
+      if (!cue) return "sin tiro";
+      if (!cue.impact) return "preparando";
+      const metrics = correctionVectors(cue);
+      const hTol = cue.hit ? 0.04 : 0.005;
+      const vTol = cue.hit ? 0.035 : 0.005;
+      const leadText = Math.abs(metrics.lead) < hTol ? "adelanto ok" : `${metrics.lead > 0 ? "quita adelanto" : "mas adelanto"} ${Math.abs(metrics.lead).toFixed(2)} m`;
+      const lateralText = Math.abs(metrics.lateral) < hTol ? "linea ok" : `${metrics.lateral > 0 ? "corrige izq" : "corrige der"} ${Math.abs(metrics.lateral).toFixed(2)} m`;
+      const verticalText = Math.abs(metrics.vertical) < vTol ? "altura ok" : `${metrics.vertical > 0 ? "baja" : "sube"} ${Math.abs(metrics.vertical).toFixed(2)} m`;
+      return verticalOnly ? verticalText : `${leadText} · ${lateralText}`;
+    }
+
+    function drawCorrectionMini(x0, y0, bw, bh, cue, mode, label) {
+      const topMode = mode === "top";
+      const points = cue && cue.impact
+        ? []
+        : topMode
+          ? [{ x: eye.x, z: 0 }, { x: lureX(), z: TRENCH_FRONT }]
+          : [{ y: 0, z: 0 }, { y: 0, z: TRENCH_FRONT }, { y: eye.y, z: 0 }];
+      if (cue) {
+        points.push(cue.target, cue.intercept);
+        if (cue.shotCenter) points.push(cue.shotCenter);
+        if (cue.impact) points.push(cue.impact);
+      }
+      const pad = 18;
+      const zoomMarginA = cue && cue.impact ? 0.45 : 2;
+      const zoomMarginB = cue && cue.impact ? 0.45 : topMode ? 2 : 0.35;
+      const minA = topMode ? Math.min(...points.map(p => p.x)) - zoomMarginA : Math.max(0, Math.min(...points.map(p => p.z)) - zoomMarginA);
+      const maxA = topMode ? Math.max(...points.map(p => p.x)) + zoomMarginA : Math.max(...points.map(p => p.z)) + zoomMarginA;
+      const minB = topMode ? Math.max(0, Math.min(...points.map(p => p.z)) - zoomMarginB) : Math.min(0, Math.min(...points.map(p => p.y)) - zoomMarginB);
+      const maxB = topMode ? Math.max(...points.map(p => p.z)) + zoomMarginB : Math.max(...points.map(p => p.y)) + zoomMarginB;
+      const scale = Math.min((bw - pad * 2) / Math.max(topMode ? 1.2 : 1.8, maxA - minA), (bh - pad * 2 - 18) / Math.max(topMode ? 1.2 : 0.9, maxB - minB));
+      function map(p) {
+        if (topMode) return { x: x0 + pad + (p.x - minA) * scale, y: y0 + bh - pad - (p.z - minB) * scale };
+        return { x: x0 + pad + (p.z - minA) * scale, y: y0 + bh - pad - (p.y - minB) * scale };
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x0, y0, bw, bh);
+      ctx.clip();
+      ctx.fillStyle = "rgba(255,255,255,.055)";
+      ctx.fillRect(x0, y0, bw, bh);
+      ctx.font = "500 11px system-ui";
+      ctx.fillStyle = "rgba(255,255,255,.86)";
+      ctx.textAlign = "left";
+      ctx.fillText(label, x0 + 8, y0 + 14);
+      ctx.fillStyle = "rgba(255,255,255,.72)";
+      ctx.fillText(correctionText(cue, !topMode), x0 + 58, y0 + 14);
+
+      if (topMode && !(cue && cue.impact)) {
+        const shooter = map({ x: eye.x, z: 0 });
+        const lure = map({ x: lureX(), z: TRENCH_FRONT });
+        ctx.strokeStyle = "rgba(255,255,255,.28)";
+        ctx.beginPath();
+        ctx.moveTo(shooter.x, shooter.y);
+        ctx.lineTo(lure.x, lure.y);
+        ctx.stroke();
+        ctx.fillStyle = "#d90000";
+        ctx.beginPath();
+        ctx.arc(shooter.x, shooter.y, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (!(cue && cue.impact)) {
+        const ground0 = map({ y: 0, z: minA });
+        const ground1 = map({ y: 0, z: maxA });
+        ctx.strokeStyle = "rgba(255,255,255,.28)";
+        ctx.beginPath();
+        ctx.moveTo(ground0.x, ground0.y);
+        ctx.lineTo(ground1.x, ground1.y);
+        ctx.stroke();
+      }
+
+      if (cue) {
+        const target = map(cue.target);
+        const ideal = map(cue.intercept);
+        ctx.strokeStyle = "rgba(255,212,81,.95)";
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(target.x, target.y);
+        ctx.lineTo(ideal.x, ideal.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = "var(--clay)";
+        ctx.beginPath();
+        ctx.arc(target.x, target.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,212,81,.98)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(ideal.x, ideal.y, 7, 0, Math.PI * 2);
+        ctx.stroke();
+        if (cue.impact) {
+          const impact = map(cue.impact);
+          const shotCenter = cue.shotCenter ? map(cue.shotCenter) : impact;
+          const aimDir = cue.aimYaw != null ? anglesToDir(cue.aimYaw, cue.aimPitch) : null;
+          const aimPoint = aimDir
+            ? map({ x: eye.x + aimDir.x * 35, y: eye.y + aimDir.y * 35, z: eye.z + aimDir.z * 35 })
+            : impact;
+          ctx.fillStyle = "rgba(215,237,255,.92)";
+          ctx.strokeStyle = "rgba(20,20,20,.55)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(shotCenter.x, shotCenter.y, 3.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "#d90000";
+          ctx.strokeStyle = "rgba(255,255,255,.75)";
+          ctx.beginPath();
+          ctx.arc(aimPoint.x, aimPoint.y, 3.4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.strokeStyle = "rgba(255,255,255,.55)";
+          ctx.beginPath();
+          ctx.moveTo(ideal.x, ideal.y);
+          ctx.lineTo(shotCenter.x, shotCenter.y);
+          ctx.stroke();
+          ctx.fillStyle = cue.hit ? "rgba(155,230,111,.96)" : "rgba(255,107,104,.96)";
+          ctx.beginPath();
+          ctx.arc(impact.x, impact.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    }
+
+    function drawCorrectionPanel(mode) {
+      const topMode = mode === "top";
+      const w = canvas.clientWidth;
+      const x0 = topMode ? w - 406 : 16;
+      const y0 = 16;
+      const bw = 390;
+      const bh = 270;
+      ctx.save();
+      ctx.fillStyle = "rgba(8,12,10,.78)";
+      ctx.strokeStyle = "rgba(255,255,255,.28)";
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, bw, bh, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.font = "500 12px system-ui";
+      ctx.fillStyle = "rgba(255,255,255,.9)";
+      ctx.textAlign = "left";
+      ctx.fillText(topMode ? "correccion superior" : "correccion lateral", x0 + 12, y0 + 18);
+      ctx.strokeStyle = "rgba(255,255,255,.18)";
+      ctx.beginPath();
+      ctx.moveTo(x0 + bw / 2, y0 + 28);
+      ctx.lineTo(x0 + bw / 2, y0 + bh - 8);
+      ctx.stroke();
+      const innerY = y0 + 30;
+      const innerH = bh - 40;
+      drawCorrectionMini(x0 + 8, innerY, bw / 2 - 12, innerH, cueForShotSlot(1), mode, "tiro 1");
+      drawCorrectionMini(x0 + bw / 2 + 4, innerY, bw / 2 - 12, innerH, cueForShotSlot(2), mode, "tiro 2");
+      ctx.restore();
+    }
+
+    function drawTopView() {
+      drawCorrectionPanel("top");
+    }
+
+    function drawSideView() {
+      drawCorrectionPanel("side");
+    }
+
+    function drawHud() {
+      ui.state.textContent = sim.mode === "idle" ? "Esperando" : sim.mode === "reaction" ? "Reaccion" : sim.mode === "tracking" ? "Seguimiento" : "Terminado";
+      ui.round.textContent = `${sim.roundIndex}/25 · ${sim.broken} rotos`;
+      ui.stationReadout.textContent = sim.station;
+      ui.aim.textContent = `${((sim.gunYaw - sim.viewYaw) * 180 / Math.PI).toFixed(1)} / ${((sim.gunPitch - sim.viewPitch) * 180 / Math.PI).toFixed(1)} deg`;
+      if (!sim.target) {
+        ui.target.textContent = "-";
+        ui.lead.textContent = "-";
+      }
+    }
+
+    function render() {
+      drawBackground();
+      drawGrid();
+      drawTargetAndLead();
+      drawFrozenCue();
+      drawShots();
+      drawFragments();
+      drawSight();
+      drawSideView();
+      drawTopView();
+      drawHud();
+    }
+
+    function loop(now) {
+      const realDt = clamp((now - sim.last) / 1000, 0, 0.05);
+      sim.last = now;
+      update(realDt * params.slow);
+      render();
+      requestAnimationFrame(loop);
+    }
+
+    function populateSchemes() {
+      const current = ui.scheme.value;
+      ui.scheme.innerHTML = "";
+      const source = params.mode === "universal" ? FU_SCHEMES : ISSF_SCHEMES;
+      const prefix = params.mode === "universal" ? "FITASC Universal" : "ISSF Olimpica";
+      Object.keys(source).forEach((key, index) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = `${prefix} ${index + 1}`;
+        ui.scheme.appendChild(option);
+      });
+      if (source[current]) ui.scheme.value = current;
+    }
+
+    function syncControls() {
+      const previousMode = params.mode;
+      params.mode = ui.mode.value;
+      params.guard = ui.guard.value;
+      if (previousMode !== params.mode || ui.scheme.options.length === 0) populateSchemes();
+      params.slow = Number(ui.slow.value);
+      params.reaction = Number(ui.reaction.value);
+      params.cartridge = Number(ui.cartridge.value);
+      params.spread = Number(ui.spread.value);
+      params.wind = Number(ui.wind.value);
+      if (!sim.stationLocked) {
+        sim.station = Number(ui.station.value);
+        sim.startStation = sim.station;
+      }
+      updateEye();
+      sim.ribGain = Number(ui.rib.value) / 100 * 0.06;
+      ui.slowValue.textContent = `${params.slow.toFixed(2)}x`;
+      ui.reactionValue.textContent = `${params.reaction.toFixed(2)} s`;
+      ui.cartridgeValue.textContent = `${params.cartridge} m/s`;
+      ui.spreadValue.textContent = params.spread < 34 ? "cerrada" : params.spread < 67 ? "media" : "abierta";
+      ui.windValue.textContent = `${params.wind.toFixed(1)} m/s`;
+      ui.ribValue.textContent = `${Math.round(Number(ui.rib.value))}%`;
+      ui.stationValue.textContent = sim.station;
+      ui.flat.setAttribute("aria-pressed", Number(ui.rib.value) < 20 ? "true" : "false");
+      ui.high.setAttribute("aria-pressed", Number(ui.rib.value) >= 20 ? "true" : "false");
+      if (sim.mode === "idle") setAimToGuard();
+    }
+
+    ui.call.addEventListener("click", callTarget);
+    ui.repeat.addEventListener("click", repeatTarget);
+    ui.fire.addEventListener("click", fire);
+    ui.reset.addEventListener("click", reset);
+    ui.prevStation.addEventListener("click", () => {
+      ui.station.value = String(Math.max(1, Number(ui.station.value) - 1));
+      syncControls();
+      reset();
+    });
+    ui.nextStation.addEventListener("click", () => {
+      ui.station.value = String(Math.min(5, Number(ui.station.value) + 1));
+      syncControls();
+      reset();
+    });
+    ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
+    ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
+    [ui.mode, ui.scheme, ui.station, ui.guard, ui.slow, ui.reaction, ui.cartridge, ui.spread, ui.wind, ui.rib, ui.transparentGround].forEach(control => {
+      control.addEventListener("input", syncControls);
+      control.addEventListener("change", syncControls);
+    });
+    canvas.addEventListener("contextmenu", event => {
+      event.preventDefault();
+      callTarget();
+    });
+    canvas.addEventListener("mousedown", event => {
+      const rect = canvas.getBoundingClientRect();
+      aimFromScreen(event.clientX - rect.left, event.clientY - rect.top);
+      if (event.button === 0) fire();
+      if (event.button === 2) callTarget();
+    });
+    canvas.addEventListener("mousemove", event => {
+      if (ui.autoAim.checked) return;
+      if (document.pointerLockElement !== canvas) {
+        const rect = canvas.getBoundingClientRect();
+        aimFromScreen(event.clientX - rect.left, event.clientY - rect.top);
+        return;
+      }
+      const sensitivity = 0.0019;
+      sim.gunYaw += event.movementX * sensitivity;
+      sim.gunPitch -= event.movementY * sensitivity;
+      const aim = projectAim(sim.gunYaw, sim.gunPitch);
+      aimFromScreen(aim.x, aim.y);
+    });
+    window.addEventListener("keydown", event => {
+      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) event.preventDefault();
+      if (event.key === "Enter") callTarget();
+      if (event.key === " ") fire();
+      keys.add(event.key);
+    });
+    window.addEventListener("keyup", event => keys.delete(event.key));
+    window.addEventListener("resize", resize);
+
+    resize();
+    syncControls();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
