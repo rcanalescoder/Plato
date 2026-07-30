@@ -437,8 +437,8 @@
       <label class="control" title="Factor temporal del simulador. 1.00x es tiempo real; valores menores ayudan a analizar el adelanto.">Camara lenta <span id="slowValue">0.35x</span>
         <input id="slowControl" type="range" min="0.15" max="1" step="0.05" value="0.35">
       </label>
-      <label class="control" title="Retardo breve entre pedir el plato y que salga del foso. En competicion la salida debe sentirse inmediata; este ajuste simula el retardo del sistema de llamada/lanzadora.">Retardo salida <span id="reactionValue">0.12 s</span>
-        <input id="reactionControl" type="range" min="0" max="0.35" step="0.01" value="0.12">
+      <label class="control" title="Retardo breve entre pedir el plato y que salga del foso. En competicion la salida debe sentirse inmediata; este ajuste simula el retardo del sistema de llamada/lanzadora.">Retardo salida <span id="reactionValue">0.03 s</span>
+        <input id="reactionControl" type="range" min="0" max="0.35" step="0.01" value="0.03">
       </label>
       <label class="control" title="Velocidad inicial de referencia del cartucho; los perdigones usan una velocidad efectiva derivada.">Cartucho <span id="cartridgeValue">400 m/s</span>
         <input id="cartridgeControl" type="range" min="360" max="430" step="5" value="400">
@@ -652,7 +652,7 @@
     */
     const params = {
       slow: 0.35,
-      reaction: 0.12,
+      reaction: 0.03,
       cartridge: 400,
       spread1: 30,
       spread2: 20,
