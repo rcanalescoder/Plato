@@ -479,7 +479,7 @@
     const RELEASE_HEIGHT = 0.72;
     const MACHINE_HEIGHT = -0.42;
     const MACHINE_Z = TRENCH_FRONT + 0.62;
-    const CLAY_VISIBLE_DELAY = 0.06;
+    const CLAY_VISIBLE_DELAY = 0;
     const SHOT_TRACE_BASE_DURATION = 0.75;
     const BURST_BASE_DURATION = 0.65;
     const FRAGMENT_BASE_DURATION = 2.2;
@@ -1392,7 +1392,27 @@
           const active = sim.target && sim.target.machineIndex === i;
           ctx.fillStyle = active ? "rgba(255,100,0,.95)" : "rgba(255,255,255,.5)";
           ctx.fillRect(p.x - 4, p.y - 8, 8, 14);
+          if (active) {
+            ctx.strokeStyle = "rgba(255,138,24,.78)";
+            ctx.lineWidth = 2.4;
+            drawWorldLine(
+              { x, y: MACHINE_HEIGHT + 0.05, z: MACHINE_Z },
+              { x: lureX(), y: RELEASE_HEIGHT, z: TRENCH_FRONT }
+            );
+          }
         }
+      }
+      if (sim.target) {
+        const mouth = projectPoint({ x: lureX(), y: RELEASE_HEIGHT, z: TRENCH_FRONT });
+        ctx.save();
+        ctx.fillStyle = "rgba(255,100,0,.95)";
+        ctx.strokeStyle = "rgba(255,255,255,.85)";
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.ellipse(mouth.x, mouth.y, 8, 3.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
       }
       const lureStations = params.mode === "olympic" ? [1, 2, 3, 4, 5] : [sim.station];
       for (const s of lureStations) {
@@ -1433,7 +1453,7 @@
           ctx.lineTo(s.x, s.y);
         }
       }
-      ctx.stroke();
+      if (pathStarted) ctx.stroke();
       ctx.setLineDash([]);
     }
 
