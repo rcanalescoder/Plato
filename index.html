@@ -410,6 +410,7 @@
       stationLocked: false,
       pendingStation: null,
       lastTarget: null,
+      repeatingTarget: false,
       frozenCues: []
     };
 
@@ -760,6 +761,7 @@
 
     function startTarget(target, label = "PLATO") {
       sim.target = cloneTarget(target);
+      sim.repeatingTarget = Boolean(sim.target.noCount);
       sim.t = 0;
       sim.mode = "reaction";
       sim.shotCount = 0;
@@ -830,6 +832,8 @@
         landingDistance,
         machineIndex,
         machineX,
+        station: sim.station,
+        noCount: false,
         visibleDelay: CLAY_VISIBLE_DELAY,
         machineOrigin: { x: machineX, y: MACHINE_HEIGHT, z: MACHINE_Z },
         p0: { x: releaseX, y: RELEASE_HEIGHT, z: TRENCH_FRONT },
@@ -844,12 +848,14 @@
     }
 
     // Repeats the exact last target. This is useful for studying a difficult
-    // lateral/fast clay without advancing the training problem.
+    // lateral/fast clay without advancing the training problem or station.
     function repeatTarget() {
-      if (!sim.lastTarget || sim.pendingStation || sim.mode === "reaction" || sim.mode === "tracking") return;
+      if (!sim.lastTarget || sim.mode === "reaction" || sim.mode === "tracking") return;
+      sim.station = sim.lastTarget.station || sim.station;
+      ui.station.value = String(sim.station);
       updateEye();
       setAimToGuard();
-      startTarget(sim.lastTarget, "REPETIR");
+      startTarget({ ...sim.lastTarget, noCount: true }, "REPETIR");
     }
 
     function reset() {
@@ -862,6 +868,7 @@
       sim.broken = 0;
       sim.stationLocked = false;
       sim.pendingStation = null;
+      sim.repeatingTarget = false;
       sim.station = Number(ui.station.value);
       sim.debug = null;
       sim.frozenCues = [];
@@ -945,9 +952,9 @@
       const ground = { x: p.x, y: 0.04, z: p.z };
       sim.bursts.push({ age: 0, p: ground, hit: false });
       sim.fragments.push(...makeFragments(ground, 24, 1.6));
-      ui.result.textContent = "Cayo y se rompio";
+      ui.result.textContent = sim.repeatingTarget ? "Repeticion: cayo" : "Cayo y se rompio";
       ui.result.style.color = "var(--bad)";
-      advanceRound(false);
+      if (!sim.repeatingTarget) advanceRound(false);
     }
 
     function makeFragments(p, count, power) {
@@ -1115,16 +1122,18 @@
       };
       sim.shots.push({ age: 0, center: impact, future: impact, radius, hit, pellets: renderedPellets });
       sim.bursts.push({ age: 0, p: impact, hit });
-      ui.result.textContent = hit ? `Roto: perdigon ${hitInfo.pellet + 1}/${dirs.length}` : `Fallo tiro ${sim.shotCount}/2`;
+      ui.result.textContent = hit
+        ? `${sim.repeatingTarget ? "Repeticion rota" : "Roto"}: perdigon ${hitInfo.pellet + 1}/${dirs.length}`
+        : `${sim.repeatingTarget ? "Repeticion fallo" : "Fallo"} tiro ${sim.shotCount}/2`;
       ui.result.style.color = hit ? "var(--good)" : "var(--bad)";
       if (hit) {
         sim.fragments.push(...makeFragments(impact, 36, 2.4));
         sim.mode = "ended";
-        advanceRound(true);
+        if (!sim.repeatingTarget) advanceRound(true);
       } else if (sim.shotCount >= 2) {
-        ui.result.textContent = "Fallo: 2 tiros";
+        ui.result.textContent = sim.repeatingTarget ? "Repeticion fallada: 2 tiros" : "Fallo: 2 tiros";
         sim.mode = "ended";
-        advanceRound(false);
+        if (!sim.repeatingTarget) advanceRound(false);
       }
     }
 
@@ -1406,6 +1415,7 @@
         const aimScreen = projectAim(cue.aimYaw ?? cue.recommendedYaw, cue.aimPitch ?? cue.recommendedPitch);
         const interceptScreen = projectPoint(cue.intercept);
         const impactScreen = projectPoint(cue.impact);
+        const shotCenterScreen = cue.shotCenter ? projectPoint(cue.shotCenter) : null;
         const radiusPx = clamp(cue.radius * interceptScreen.scale * 1.2, 14, 72);
 
         ctx.save();
@@ -1433,11 +1443,21 @@
         ctx.ellipse(interceptScreen.x, interceptScreen.y, radiusPx * 1.1, radiusPx * 0.68, 0, 0, Math.PI * 2);
         ctx.stroke();
 
-        ctx.fillStyle = cue.hit ? "rgba(155,230,111,.95)" : "rgba(255,107,104,.95)";
-        ctx.strokeStyle = "rgba(20,20,20,.65)";
+        if (shotCenterScreen) {
+          ctx.fillStyle = "rgba(215,237,255,.9)";
+          ctx.strokeStyle = "rgba(20,20,20,.55)";
+          ctx.lineWidth = 1.1;
+          ctx.beginPath();
+          ctx.arc(shotCenterScreen.x, shotCenterScreen.y, 4.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = cue.hit ? "rgba(155,230,111,.95)" : "rgba(215,237,255,.42)";
+        ctx.strokeStyle = cue.hit ? "rgba(20,20,20,.65)" : "rgba(255,255,255,.65)";
         ctx.lineWidth = 1.2;
         ctx.beginPath();
-        ctx.arc(impactScreen.x, impactScreen.y, 5.4, 0, Math.PI * 2);
+        ctx.arc(impactScreen.x, impactScreen.y, cue.hit ? 5.4 : 4.2, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
@@ -1704,21 +1724,11 @@
         if (cue.impact) {
           const impact = map(cue.impact);
           const shotCenter = cue.shotCenter ? map(cue.shotCenter) : impact;
-          const aimDir = cue.aimYaw != null ? anglesToDir(cue.aimYaw, cue.aimPitch) : null;
-          const aimPoint = aimDir
-            ? map({ x: eye.x + aimDir.x * 35, y: eye.y + aimDir.y * 35, z: eye.z + aimDir.z * 35 })
-            : impact;
-          ctx.fillStyle = "rgba(215,237,255,.92)";
+          ctx.fillStyle = "#d90000";
           ctx.strokeStyle = "rgba(20,20,20,.55)";
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.arc(shotCenter.x, shotCenter.y, 3.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-          ctx.fillStyle = "#d90000";
-          ctx.strokeStyle = "rgba(255,255,255,.75)";
-          ctx.beginPath();
-          ctx.arc(aimPoint.x, aimPoint.y, 3.4, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
           ctx.strokeStyle = "rgba(255,255,255,.55)";
@@ -1726,7 +1736,7 @@
           ctx.moveTo(ideal.x, ideal.y);
           ctx.lineTo(shotCenter.x, shotCenter.y);
           ctx.stroke();
-          ctx.fillStyle = cue.hit ? "rgba(155,230,111,.96)" : "rgba(255,107,104,.96)";
+          ctx.fillStyle = cue.hit ? "rgba(155,230,111,.96)" : "rgba(215,237,255,.42)";
           ctx.beginPath();
           ctx.arc(impact.x, impact.y, 5, 0, Math.PI * 2);
           ctx.fill();
@@ -1756,7 +1766,7 @@
       ctx.font = "500 12px system-ui";
       ctx.fillStyle = "rgba(255,255,255,.9)";
       ctx.textAlign = "left";
-      ctx.fillText(topMode ? "correccion superior" : "correccion lateral", x0 + 12, y0 + 18);
+      ctx.fillText(topMode ? "correccion lateral" : "correccion superior", x0 + 12, y0 + 18);
       ctx.strokeStyle = "rgba(255,255,255,.18)";
       ctx.beginPath();
       ctx.moveTo(x0 + bw / 2, y0 + 28);
