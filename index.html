@@ -948,7 +948,7 @@
           createGroundBreak(p);
           sim.mode = "ended";
         }
-        if (p && sim.mode !== "ended") {
+        if (p && sim.mode !== "ended" && sim.mode !== "falling") {
           const recommended = recommendedAimAt(sim.t);
           if (recommended) {
             sim.desiredYaw = recommended.yaw;
@@ -1139,7 +1139,7 @@
       stores frozen correction cues so the user can compare shot 1 vs shot 2.
     */
     function fire() {
-      if (!sim.target || sim.mode === "idle" || sim.mode === "ended" || sim.shotCount >= 2) return;
+      if (!sim.target || sim.mode === "idle" || sim.mode === "ended" || sim.mode === "falling" || sim.shotCount >= 2) return;
       const current = targetAt(sim.t);
       if (!current) return;
       const pelletSpeed = params.cartridge * 0.78;
@@ -1217,9 +1217,8 @@
         sim.mode = "ended";
         if (!sim.repeatingTarget) advanceRound(true);
       } else if (sim.shotCount >= 2) {
-        ui.result.textContent = sim.repeatingTarget ? "Repeticion fallada: 2 tiros" : "Fallo: 2 tiros";
-        sim.mode = "ended";
-        if (!sim.repeatingTarget) advanceRound(false);
+        ui.result.textContent = sim.repeatingTarget ? "Repeticion fallada: espera caida" : "Fallo: 2 tiros, espera caida";
+        sim.mode = "falling";
       }
     }
 
@@ -1417,6 +1416,38 @@
       }
     }
 
+    function drawTargetPath(untilTime) {
+      ctx.strokeStyle = "rgba(255,100,0,.8)";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 7]);
+      ctx.beginPath();
+      let pathStarted = false;
+      for (let t = 0; t <= untilTime; t += 0.08) {
+        const q = targetAt(t);
+        if (!q) continue;
+        const s = projectPoint(q);
+        if (!pathStarted) {
+          ctx.moveTo(s.x, s.y);
+          pathStarted = true;
+        } else {
+          ctx.lineTo(s.x, s.y);
+        }
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function drawFallingTarget(p) {
+      const targetScreen = projectPoint(p);
+      drawTargetPath(Math.min(sim.t + 0.65, 3.4));
+      drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
+      ctx.fillStyle = "rgba(255,255,255,.9)";
+      ctx.font = "700 12px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText("fallo: cayendo", targetScreen.x, targetScreen.y - 20);
+      ui.lead.textContent = "-";
+    }
+
     // Live target, lead cloud, and recommended sight point.
     function drawTargetAndLead() {
       if (!sim.target) {
@@ -1425,6 +1456,10 @@
       if (sim.mode === "ended") return;
       const p = targetAt(sim.t);
       if (!p) return;
+      if (sim.mode === "falling") {
+        drawFallingTarget(p);
+        return;
+      }
       const v = targetVelocity(sim.t);
       const recommended = recommendedAimAt(sim.t);
       if (!recommended) return;
@@ -1439,23 +1474,7 @@
       const patternPoint = currentShot.pellet || currentShot.target || recommended.intercept;
       const pattern = patternScreenRadius(patternPoint, shotNumber, 1.2);
 
-      ctx.strokeStyle = "rgba(255,100,0,.8)";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([6, 7]);
-      ctx.beginPath();
-      let pathStarted = false;
-      for (let t = 0; t <= Math.min(sim.t + 0.65, 3.4); t += 0.08) {
-        const q = targetAt(t);
-        if (!q) continue;
-        const s = projectPoint(q);
-        if (!pathStarted) {
-          ctx.moveTo(s.x, s.y);
-          pathStarted = true;
-        }
-        else ctx.lineTo(s.x, s.y);
-      }
-      ctx.stroke();
-      ctx.setLineDash([]);
+      drawTargetPath(Math.min(sim.t + 0.65, 3.4));
 
       if (ui.showShot.checked) {
         ctx.fillStyle = "rgba(215,237,255,.24)";
@@ -1894,7 +1913,7 @@
     }
 
     function drawHud() {
-      ui.state.textContent = sim.mode === "idle" ? "Esperando" : sim.mode === "reaction" ? "Reaccion" : sim.mode === "tracking" ? "Seguimiento" : "Terminado";
+      ui.state.textContent = sim.mode === "idle" ? "Esperando" : sim.mode === "reaction" ? "Reaccion" : sim.mode === "tracking" ? "Seguimiento" : sim.mode === "falling" ? "Cayendo" : "Terminado";
       ui.round.textContent = `${sim.roundIndex}/25 · ${sim.broken} rotos`;
       ui.stationReadout.textContent = sim.station;
       ui.aim.textContent = `${((sim.gunYaw - sim.viewYaw) * 180 / Math.PI).toFixed(1)} / ${((sim.gunPitch - sim.viewPitch) * 180 / Math.PI).toFixed(1)} deg`;
