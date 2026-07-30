@@ -308,8 +308,11 @@
       <label class="control">Cartucho <span id="cartridgeValue">400 m/s</span>
         <input id="cartridgeControl" type="range" min="360" max="430" step="5" value="400">
       </label>
-      <label class="control">Apertura <span id="spreadValue">media</span>
-        <input id="spreadControl" type="range" min="0" max="100" step="5" value="45">
+      <label class="control">Plomeo tiro 1 <span id="spread1Value">3/4</span>
+        <input id="spread1Control" type="range" min="0" max="100" step="5" value="30">
+      </label>
+      <label class="control">Plomeo tiro 2 <span id="spread2Value">Full</span>
+        <input id="spread2Control" type="range" min="0" max="100" step="5" value="20">
       </label>
       <label class="control">Viento <span id="windValue">0.0 m/s</span>
         <input id="windControl" type="range" min="-4" max="4" step="0.2" value="0">
@@ -360,7 +363,8 @@
       slow: document.getElementById("slowControl"),
       reaction: document.getElementById("reactionControl"),
       cartridge: document.getElementById("cartridgeControl"),
-      spread: document.getElementById("spreadControl"),
+      spread1: document.getElementById("spread1Control"),
+      spread2: document.getElementById("spread2Control"),
       wind: document.getElementById("windControl"),
       rib: document.getElementById("ribControl"),
       transparentGround: document.getElementById("transparentGround"),
@@ -375,7 +379,8 @@
       slowValue: document.getElementById("slowValue"),
       reactionValue: document.getElementById("reactionValue"),
       cartridgeValue: document.getElementById("cartridgeValue"),
-      spreadValue: document.getElementById("spreadValue"),
+      spread1Value: document.getElementById("spread1Value"),
+      spread2Value: document.getElementById("spread2Value"),
       windValue: document.getElementById("windValue"),
       ribValue: document.getElementById("ribValue"),
       stationValue: document.getElementById("stationValue")
@@ -424,7 +429,8 @@
       slow: 0.35,
       reaction: 0.32,
       cartridge: 400,
-      spread: 45,
+      spread1: 30,
+      spread2: 20,
       wind: 0,
       mode: "universal",
       guard: "neutral"
@@ -985,9 +991,21 @@
       Pattern radius grows with distance and choke/spread setting. It is not a
       score probability; it only defines the cone that individual pellets occupy.
     */
-    function patternRadius(distance) {
-      const spread = params.spread / 100;
-      return 0.38 + spread * 0.78 + distance * (0.006 + spread * 0.004);
+    function spreadForShot(shotNumber = sim.shotCount + 1) {
+      return shotNumber <= 1 ? params.spread1 : params.spread2;
+    }
+
+    function spreadLabel(value) {
+      if (value <= 20) return "Full";
+      if (value <= 35) return "3/4";
+      if (value <= 55) return "1/2";
+      if (value <= 75) return "1/4";
+      return "abierto";
+    }
+
+    function patternRadius(distance, shotNumber = sim.shotCount + 1) {
+      const spread = spreadForShot(shotNumber);
+      return 0.22 + spread * 0.0045 + distance * (0.0035 + spread * 0.00003);
     }
 
     function pelletCount() {
@@ -1076,7 +1094,7 @@
       const poi = sim.ribGain * Math.PI / 180;
       const dir = anglesToDir(sim.gunYaw, sim.gunPitch + poi);
       const distance = Math.hypot(current.x - eye.x, current.y - eye.y, current.z - eye.z);
-      const radius = patternRadius(distance);
+      const radius = patternRadius(distance, sim.shotCount + 1);
       const v = targetVelocity(sim.t);
       const recommended = recommendedAimAt(sim.t);
       const shotCenter = centerShotClosest(dir, pelletSpeed, sim.t);
@@ -1352,7 +1370,7 @@
       const targetScreen = projectPoint(p);
       const desiredScreen = projectAim(recommended.yaw, recommended.pitch);
       const dist = Math.hypot(recommended.intercept.x - eye.x, recommended.intercept.y - eye.y, recommended.intercept.z - eye.z);
-      const radiusM = patternRadius(dist);
+      const radiusM = patternRadius(dist, sim.shotCount + 1);
       const pelletSpeed = params.cartridge * 0.78;
       const poi = sim.ribGain * Math.PI / 180;
       const currentShot = centerShotClosest(anglesToDir(sim.gunYaw, sim.gunPitch + poi), pelletSpeed, sim.t);
@@ -1590,7 +1608,7 @@
         velocity,
         intercept: recommended.intercept,
         impact: null,
-        radius: patternRadius(Math.hypot(recommended.intercept.x - eye.x, recommended.intercept.y - eye.y, recommended.intercept.z - eye.z))
+        radius: patternRadius(Math.hypot(recommended.intercept.x - eye.x, recommended.intercept.y - eye.y, recommended.intercept.z - eye.z), sim.shotCount + 1)
       };
     }
 
@@ -1962,7 +1980,8 @@
       params.slow = Number(ui.slow.value);
       params.reaction = Number(ui.reaction.value);
       params.cartridge = Number(ui.cartridge.value);
-      params.spread = Number(ui.spread.value);
+      params.spread1 = Number(ui.spread1.value);
+      params.spread2 = Number(ui.spread2.value);
       params.wind = Number(ui.wind.value);
       if (!sim.stationLocked) {
         sim.station = Number(ui.station.value);
@@ -1973,7 +1992,8 @@
       ui.slowValue.textContent = `${params.slow.toFixed(2)}x`;
       ui.reactionValue.textContent = `${params.reaction.toFixed(2)} s`;
       ui.cartridgeValue.textContent = `${params.cartridge} m/s`;
-      ui.spreadValue.textContent = params.spread < 34 ? "cerrada" : params.spread < 67 ? "media" : "abierta";
+      ui.spread1Value.textContent = spreadLabel(params.spread1);
+      ui.spread2Value.textContent = spreadLabel(params.spread2);
       ui.windValue.textContent = `${params.wind.toFixed(1)} m/s`;
       ui.ribValue.textContent = `${Math.round(Number(ui.rib.value))}%`;
       ui.stationValue.textContent = sim.station;
@@ -1999,7 +2019,7 @@
     });
     ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
     ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
-    [ui.mode, ui.scheme, ui.station, ui.guard, ui.slow, ui.reaction, ui.cartridge, ui.spread, ui.wind, ui.rib, ui.transparentGround, ui.showLegend].forEach(control => {
+    [ui.mode, ui.scheme, ui.station, ui.guard, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.wind, ui.rib, ui.transparentGround, ui.showLegend].forEach(control => {
       control.addEventListener("input", syncControls);
       control.addEventListener("change", syncControls);
     });

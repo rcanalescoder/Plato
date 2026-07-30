@@ -64,6 +64,9 @@ Fuentes consultadas:
 - [ISSF technical target dimensions, PDF federativo](https://www.asia-shooting.org/wp-content/uploads/2023/01/ISSF_Technical_Rules_Draft_01.01.2023-6.pdf)
 - [USA Shooting / ISSF General Technical Rules, referencia de puestos y foso](https://usashooting.org/app/uploads/2022/04/2013_USAS_GTR.pdf)
 - [RIO Star Team EVO Training, ficha comercial](https://centerfiresystems.com/collections/ammunition-shotshells/products/rio-ammunition-star-team-evo-training-12-gauge-2-75-1-1-8-oz-7-5-shot-box-or-case)
+- [Beretta, DT11 International Trap](https://www.beretta.com/en-us/product/dt11-international-trap-FA0095)
+- [Beretta, guia de chokes OptimaChoke HP](https://estore.beretta.com/en-hu/utility/choke-tubes-guide)
+- [Beretta, guia de seleccion de choke](https://www.beretta.com/en-us/blog/how-to-choose-the-right-shotgun-choke-tube)
 
 ## 5. Salida del Plato
 
@@ -105,8 +108,23 @@ El cartucho de referencia es RIO Star Team EVO Training. En la versión actual s
 - Velocidad configurable del cartucho.
 - Velocidad efectiva de perdigón: `velocidad_cartucho * 0.78`.
 - 306 perdigones, aproximación compatible con una carga de 1 1/8 oz de plomo #7.5.
-- Dispersión configurable con apertura de escopeta.
+- Dispersión configurable por separado para tiro 1 y tiro 2.
 - Patrón de nube determinista, no gaussiano, para aproximar un flujo de perdigones con anillos y variaciones internas.
+
+La referencia de escopeta es una Beretta DT11 de trap. Beretta documenta el DT11 dentro de la familia de cañones/chokes OptimaChoke HP, y las configuraciones de trap suelen trabajar con chokes cerrados. En el simulador se usan valores iniciales conservadores:
+
+| Disparo | Referencia práctica | Control inicial |
+| --- | --- | ---: |
+| Tiro 1 | 3/4 / Improved Modified, algo más abierto para plato cercano | 30 |
+| Tiro 2 | Full, más cerrado para plato más alejado | 20 |
+
+Estos controles no cambian el número de perdigones; reducen o amplían el radio del cono de plomeo. La fórmula actual es:
+
+```text
+radio_patron = 0.22 + apertura*0.0045 + distancia*(0.0035 + apertura*0.00003)
+```
+
+Donde `apertura` es el valor del control correspondiente al tiro actual. Valores bajos representan chokes más cerrados.
 
 Cada disparo genera direcciones individuales para todos los perdigones. Para cada perdigón se simula su trayectoria y se comprueba si pasa a menos de 7,5 cm del centro del plato:
 
@@ -116,7 +134,7 @@ py(t) = ojo.y + dir.y * velocidad * t - 0.5*g*0.08*t^2
 pz(t) = ojo.z + dir.z * velocidad * t
 ```
 
-El plato se rompe solo si algún perdigón intersecta físicamente su volumen simplificado. Por eso se puede apuntar cerca del área ideal y fallar: la nube tiene dispersión, el plato se mueve, el usuario puede quedar ligeramente retrasado/adelantado/alto/bajo y el cálculo se evalúa contra partículas individuales.
+El plato se rompe solo si algún perdigón intersecta físicamente su volumen simplificado. Por eso se puede apuntar cerca del área ideal y fallar: la nube tiene dispersión, el plato se mueve, el usuario puede quedar ligeramente retrasado/adelantado/alto/bajo y el cálculo se evalúa contra partículas individuales. Cuando el simulador indica `Roto borde`, significa que el centro del plomeo no iba perfectamente centrado, pero un perdigón periférico alcanzó el plato.
 
 ## 8. Corrección Tras el Tiro
 
@@ -125,7 +143,7 @@ Las dos ventanas superiores ayudan a entender el error de forma separada:
 - **Corrección lateral**: vista superior. Mide si el disparo quedó adelantado, retrasado o lateralmente fuera de línea respecto al punto ideal.
 - **Corrección superior**: vista lateral. Mide si el disparo quedó alto o bajo.
 
-Cada ventana está dividida en **tiro 1** y **tiro 2**, para comparar ambos intentos. La referencia amarilla es el punto físico recomendado; el punto rojo representa dónde pasó el centro efectivo del disparo. Si hay impacto, la escena conserva unos instantes la trayectoria recomendada y el punto de impacto para que el tirador pueda analizarlo.
+Cada ventana está dividida en **tiro 1** y **tiro 2**, para comparar ambos intentos. La referencia amarilla es el punto físico recomendado; el punto rojo representa el encare del tirador; el azul claro representa el centro físico del plomeo del tiro actual. Si hay impacto, la escena conserva unos instantes la trayectoria recomendada y el punto de impacto para que el tirador pueda analizarlo.
 
 ![Ventanas de corrección del primer y segundo tiro](docs/screenshots/correcciones-doble-tiro.png)
 
