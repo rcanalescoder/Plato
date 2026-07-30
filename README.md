@@ -85,6 +85,8 @@ Cuando se pide plato, la aplicación:
 4. Lanza el plato desde la boca/rendija del foso en la planta del señuelo activo, con la máquina físicamente retrasada y por debajo.
 5. Simula el vuelo con gravedad reducida y viento lateral opcional.
 
+La máquina activa visible bajo el suelo translúcido se coloca sobre la prolongación inversa del vector de lanzamiento. Por tanto, el tramo sólido máquina-boca y la trayectoria inicial del plato son colineales; si la trayectoria se curva después es por la integración de gravedad/viento, no por un quiebro artificial al salir del foso.
+
 La posición del plato en el tiempo se calcula como:
 
 ```text
