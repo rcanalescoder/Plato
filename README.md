@@ -139,8 +139,9 @@ El cartucho de referencia es RIO Star Team EVO Training. En la versión actual s
 - Velocidad efectiva de perdigón: `velocidad_cartucho * 0.78`.
 - 306 perdigones, aproximación compatible con una carga de 1 1/8 oz de plomo #7.5.
 - Dispersión configurable por separado para tiro 1 y tiro 2.
-- Patrón de nube determinista, no gaussiano, para aproximar un flujo de perdigones con anillos y variaciones internas.
+- Patrón de nube no gaussiano, con variación por disparo, para aproximar un flujo de perdigones con anillos, huecos y agrupaciones internas.
 - Un perdigón central que representa el núcleo del plomeo, más una nube distribuida alrededor.
+- Diferencias leves de velocidad y salida entre perdigones para representar una cuerda de tiro simplificada: la nube no llega como un disco plano perfecto, sino como un volumen corto en movimiento.
 
 La referencia de escopeta es una Beretta DT11 de trap. Beretta documenta el DT11 dentro de la familia de cañones/chokes OptimaChoke HP, y las configuraciones de trap suelen trabajar con chokes cerrados. En el simulador se usan valores iniciales conservadores:
 
@@ -156,6 +157,8 @@ radio_patron = 0.22 + apertura*0.0045 + distancia*(0.0035 + apertura*0.00003)
 ```
 
 Donde `apertura` es el valor del control correspondiente al tiro actual. Valores bajos representan chokes más cerrados.
+
+El control **Variación plomeo** añade realismo al patrón sin convertirlo en una lotería. Con valores bajos el patrón se parece más a una diana repetible; con valores altos aparecen microhuecos, pequeñas agrupaciones, periferia más irregular y ligeras diferencias de velocidad entre perdigones. Esto aproxima el comportamiento real de una carga de escopeta: al salir del cartucho los perdigones no forman un círculo matemático perfecto, sino una nube o "shot string" tridimensional. En el simulador se modela de forma contenida porque, a distancias de plato, el efecto dominante sigue siendo el adelanto, la apertura del choke y la posición del centro del plomeo.
 
 Cada disparo genera direcciones individuales para todos los perdigones. Para cada perdigón se simula su trayectoria y se comprueba si pasa a menos de 7,5 cm del centro del plato:
 
@@ -215,7 +218,7 @@ El simulador es una herramienta de entrenamiento visual y experimentación. Las 
 
 - La aerodinámica del plato se simplifica con gravedad efectiva.
 - La pérdida de velocidad de los perdigones por resistencia del aire no está todavía modelada con una curva completa.
-- El patrón de plomeo es determinista para que dos disparos comparables sean analizables.
+- El patrón de plomeo incluye variación por disparo, pero no modela deformación individual completa del plomo, rozamiento interno del taco ni turbulencia real.
 - La probabilidad real de rotura depende de cartucho, choke, cañón, viento, calidad del plato y distancia efectiva.
 
 ## 12. Ejecución Local

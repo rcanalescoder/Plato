@@ -242,7 +242,7 @@
 
     .controls {
       display: grid;
-      grid-template-columns: repeat(11, minmax(74px, 1fr));
+      grid-template-columns: repeat(12, minmax(74px, 1fr));
       gap: 7px;
       padding: 7px 10px;
       background: var(--panel);
@@ -449,6 +449,9 @@
       <label class="control" title="Apertura del patron de perdigones para el segundo disparo, normalmente mas cerrado.">Plomeo tiro 2 <span id="spread2Value">Full</span>
         <input id="spread2Control" type="range" min="0" max="100" step="5" value="20">
       </label>
+      <label class="control" title="Variacion realista entre disparos: cambia microhuecos, deformacion y velocidad relativa de los perdigones.">Variacion plomeo <span id="pelletVarianceValue">45%</span>
+        <input id="pelletVarianceControl" type="range" min="0" max="100" step="5" value="45">
+      </label>
       <label class="control" title="Tiempo durante el que se mantienen visibles las ayudas y correcciones despues del disparo o fallo.">Analisis <span id="analysisValue">4.8 s</span>
         <input id="analysisControl" type="range" min="1.8" max="8" step="0.2" value="4.8">
       </label>
@@ -493,6 +496,7 @@
         <li>El cartucho define la velocidad de salida de los perdigones. Cuanto mas rapido, menos tiempo tardan en llegar al plato.</li>
         <li>El plomeo azul representa la nube de perdigones donde estas apuntando. No es certeza absoluta: el programa simula muchos perdigones y comprueba si alguno toca el plato.</li>
         <li><strong>Plomeo tiro 1</strong> y <strong>Plomeo tiro 2</strong> permiten abrir o cerrar el patron, como harian choques distintos.</li>
+        <li><strong>Variacion plomeo</strong> introduce huecos, agrupaciones y pequenas diferencias de velocidad entre perdigones. Asi el plomeo se comporta como una nube 3D simplificada, no como un circulo perfecto.</li>
       </ul>
 
       <h3>Adelanto</h3>
@@ -580,6 +584,7 @@
       cartridge: document.getElementById("cartridgeControl"),
       spread1: document.getElementById("spread1Control"),
       spread2: document.getElementById("spread2Control"),
+      pelletVariance: document.getElementById("pelletVarianceControl"),
       analysis: document.getElementById("analysisControl"),
       wind: document.getElementById("windControl"),
       rib: document.getElementById("ribControl"),
@@ -599,6 +604,7 @@
       cartridgeValue: document.getElementById("cartridgeValue"),
       spread1Value: document.getElementById("spread1Value"),
       spread2Value: document.getElementById("spread2Value"),
+      pelletVarianceValue: document.getElementById("pelletVarianceValue"),
       analysisValue: document.getElementById("analysisValue"),
       windValue: document.getElementById("windValue"),
       ribValue: document.getElementById("ribValue"),
@@ -650,6 +656,7 @@
       cartridge: 400,
       spread1: 30,
       spread2: 20,
+      pelletVariance: 45,
       analysis: 4.8,
       wind: 0,
       zoom: 1,
@@ -1337,14 +1344,25 @@
       return 306;
     }
 
+    function seededRandom(seed) {
+      let s = seed >>> 0;
+      return () => {
+        s = (s + 0x6D2B79F5) >>> 0;
+        let t = s;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
     /*
-      Deterministic pellet cloud:
+      Seeded pellet cloud:
       - golden-angle sampling spreads pellets without random clumping between runs
-      - densityWave breaks the perfect mathematical spiral so it feels more like
-        a shot column than a synthetic grid
-      - vertical scaling makes the pattern slightly elliptical on screen
+      - per-shot jitter/clumping avoids a synthetic target-board template
+      - peripheral pellets are slightly slower, making a mild shot-string flow
     */
-    function pelletDirections(centerDir, count, coneAngle) {
+    function pelletDirections(centerDir, count, coneAngle, seed, variation = 0.45) {
+      const random = seededRandom(seed);
       const forward = normalize(centerDir);
       const worldUp = Math.abs(forward.y) > 0.92 ? { x: 1, y: 0, z: 0 } : { x: 0, y: 1, z: 0 };
       const right = normalize({
@@ -1357,20 +1375,30 @@
         y: forward.z * right.x - forward.x * right.z,
         z: forward.x * right.y - forward.y * right.x
       });
-      const dirs = [forward];
+      const dirs = [{ ...forward, speedScale: 1, lag: 0, ring: 0 }];
       for (let i = 1; i < count; i += 1) {
-        const golden = i * 2.399963229728653;
-        const ring = Math.sqrt((i - 0.5) / count);
+        const golden = i * 2.399963229728653 + (random() - 0.5) * variation * 0.38;
+        const baseRing = Math.sqrt((i - 0.5) / count);
+        const ringJitter = 1 + (random() - 0.5) * variation * 0.34;
+        const ring = clamp(baseRing * ringJitter, 0.02, 1.22);
         const densityWave = 0.78 + 0.18 * Math.sin(i * 12.9898);
-        const angle = ring * coneAngle * densityWave;
+        const clump = 1 + Math.sin((seed % 997) * 0.017 + i * 0.41) * variation * 0.08;
+        const angle = ring * coneAngle * densityWave * clump;
         const x = Math.cos(golden) * Math.sin(angle);
-        const y = Math.sin(golden) * Math.sin(angle) * 0.82;
+        const y = Math.sin(golden) * Math.sin(angle) * (0.82 + (random() - 0.5) * variation * 0.12);
         const z = Math.cos(angle);
-        dirs.push(normalize({
-          x: forward.x * z + right.x * x + up.x * y,
-          y: forward.y * z + right.y * x + up.y * y,
-          z: forward.z * z + right.z * x + up.z * y
-        }));
+        const speedScale = clamp(1 - ring * ring * variation * 0.075 + (random() - 0.5) * variation * 0.018, 0.88, 1.02);
+        const lag = ring * variation * 0.00055 * random();
+        dirs.push({
+          ...normalize({
+            x: forward.x * z + right.x * x + up.x * y,
+            y: forward.y * z + right.y * x + up.y * y,
+            z: forward.z * z + right.z * x + up.z * y
+          }),
+          speedScale,
+          lag,
+          ring
+        });
       }
       return dirs;
     }
@@ -1380,10 +1408,12 @@
     }
 
     function centerPelletAt(dir, speed, tau) {
+      const localTau = Math.max(0, tau - (dir.lag || 0));
+      const localSpeed = speed * (dir.speedScale || 1);
       return {
-        x: eye.x + dir.x * speed * tau,
-        y: eye.y + dir.y * speed * tau - 0.5 * g * 0.08 * tau * tau,
-        z: eye.z + dir.z * speed * tau
+        x: eye.x + dir.x * localSpeed * localTau,
+        y: eye.y + dir.y * localSpeed * localTau - 0.5 * g * 0.08 * localTau * localTau,
+        z: eye.z + dir.z * localSpeed * localTau
       };
     }
 
@@ -1406,8 +1436,8 @@
         z: planePoint.z - eye.z
       }, normal);
       const pellets = pelletDirs.map((pelletDir, index) => {
-        const denom = Math.max(0.02, pelletSpeed * dot(pelletDir, normal));
-        const tau = clamp(planeDistance / denom, 0, 0.26);
+        const denom = Math.max(0.02, pelletSpeed * (pelletDir.speedScale || 1) * dot(pelletDir, normal));
+        const tau = clamp(planeDistance / denom + (pelletDir.lag || 0), 0, 0.26);
         const p = centerPelletAt(pelletDir, pelletSpeed, tau);
         const d = { x: p.x - planePoint.x, y: p.y - planePoint.y, z: p.z - planePoint.z };
         return {
@@ -1463,7 +1493,8 @@
       const recommended = recommendedAimAt(sim.t);
       const shotCenter = centerShotClosest(dir, pelletSpeed, sim.t);
       const coneAngle = Math.atan(radius / distance);
-      const dirs = pelletDirections(dir, pelletCount(), coneAngle);
+      const shotSeed = Math.floor(Math.random() * 0xFFFFFFFF);
+      const dirs = pelletDirections(dir, pelletCount(), coneAngle, shotSeed, params.pelletVariance / 100);
       const renderedPellets = [];
       let hitInfo = null;
       let nearest = { distance: Infinity, p: current, tau: 0 };
@@ -1471,10 +1502,12 @@
         const result = pelletHitTarget(dirs[i], pelletSpeed, sim.t);
         const travel = Math.min(distance / pelletSpeed, 0.22);
         if (i % 3 === 0) {
+          const renderTau = travel + (dirs[i].lag || 0);
+          const p = centerPelletAt(dirs[i], pelletSpeed, renderTau);
           renderedPellets.push({
-            x: eye.x + dirs[i].x * pelletSpeed * travel,
-            y: eye.y + dirs[i].y * pelletSpeed * travel,
-            z: eye.z + dirs[i].z * pelletSpeed * travel
+            x: p.x,
+            y: p.y,
+            z: p.z
           });
         }
         if (result.distance < nearest.distance) nearest = result;
@@ -1498,6 +1531,7 @@
         velocity: { ...v },
         aimYaw: sim.gunYaw,
         aimPitch: sim.gunPitch,
+        shotSeed,
         recommendedYaw: recommended ? recommended.yaw : sim.gunYaw,
         recommendedPitch: recommended ? recommended.pitch : sim.gunPitch,
         intercept: { ...idealPoint },
@@ -2415,6 +2449,7 @@
       params.cartridge = Number(ui.cartridge.value);
       params.spread1 = Number(ui.spread1.value);
       params.spread2 = Number(ui.spread2.value);
+      params.pelletVariance = Number(ui.pelletVariance.value);
       params.analysis = Number(ui.analysis.value);
       params.wind = Number(ui.wind.value);
       params.zoom = Number(ui.zoom.value);
@@ -2430,6 +2465,7 @@
       ui.cartridgeValue.textContent = `${params.cartridge} m/s`;
       ui.spread1Value.textContent = spreadLabel(params.spread1);
       ui.spread2Value.textContent = spreadLabel(params.spread2);
+      ui.pelletVarianceValue.textContent = `${Math.round(params.pelletVariance)}%`;
       ui.analysisValue.textContent = `${params.analysis.toFixed(1)} s`;
       ui.windValue.textContent = `${params.wind.toFixed(1)} m/s`;
       ui.zoomValue.textContent = `${params.zoom.toFixed(2)}x`;
@@ -2462,7 +2498,7 @@
     });
     ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
     ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
-    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showLead, ui.showShot, ui.showPath].forEach(control => {
+    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.pelletVariance, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showLead, ui.showShot, ui.showPath].forEach(control => {
       control.addEventListener("input", syncControls);
       control.addEventListener("change", syncControls);
     });
