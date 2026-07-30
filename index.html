@@ -304,6 +304,19 @@
       font-size: 13px;
     }
 
+    .license-card h3 {
+      margin: 16px 0 6px;
+      font-size: 14px;
+    }
+
+    .license-card ul {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
     @media (max-width: 1040px) {
       main {
         grid-template-rows: auto 58vh auto;
@@ -415,10 +428,68 @@
       <label class="switch-row" title="Muestra u oculta la leyenda de colores y simbolos de la esquina inferior derecha."><input id="showLegend" type="checkbox" checked> leyenda</label>
       <div class="project-links">
         <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Powered by www.robertocanales.com</a>
+        <a href="#ayuda">Ayuda</a>
         <a href="#licencia-mit">Licencia MIT</a>
       </div>
     </section>
   </main>
+
+  <section id="ayuda" class="license-panel" aria-label="Ayuda del simulador">
+    <article class="license-card">
+      <h2>Ayuda del Simulador</h2>
+      <p>Este laboratorio muestra el tiro al plato desde el ojo del tirador. La idea principal es aprender a leer el vuelo del plato y entender donde hay que llevar el punto de mira para que la nube de perdigones lo intercepte.</p>
+
+      <h3>Modalidades</h3>
+      <ul>
+        <li><strong>Universal:</strong> cinco maquinas dentro del foso. El señuelo naranja central indica la referencia de salida.</li>
+        <li><strong>Olimpica:</strong> quince maquinas agrupadas por puestos. El señuelo activo se alinea con el puesto desde el que se tira.</li>
+        <li><strong>Puesto:</strong> el tirador rota por los puestos 1 a 5 durante una tirada de 25 platos.</li>
+      </ul>
+
+      <h3>Velocidad y trayectoria</h3>
+      <ul>
+        <li>El plato sale de la boca del foso con una velocidad, un angulo lateral y una altura definidos por el esquema.</li>
+        <li>La linea naranja discontinua muestra su trayectoria prevista. Si desactivas <strong>trayectoria</strong>, tambien se oculta la guia entre maquina y salida.</li>
+        <li>La trayectoria no se pinta por debajo del suelo: cuando el plato cae, la ayuda deja de sugerir puntos imposibles.</li>
+      </ul>
+
+      <h3>Cartucho y plomeo</h3>
+      <ul>
+        <li>El cartucho define la velocidad de salida de los perdigones. Cuanto mas rapido, menos tiempo tardan en llegar al plato.</li>
+        <li>El plomeo azul representa la nube de perdigones donde estas apuntando. No es certeza absoluta: el programa simula muchos perdigones y comprueba si alguno toca el plato.</li>
+        <li><strong>Plomeo tiro 1</strong> y <strong>Plomeo tiro 2</strong> permiten abrir o cerrar el patron, como harian choques distintos.</li>
+      </ul>
+
+      <h3>Adelanto</h3>
+      <ul>
+        <li>El plato sigue moviendose mientras los perdigones viajan. Por eso normalmente no se apunta exactamente al plato, sino un poco por delante.</li>
+        <li>El area amarilla es la ayuda de adelanto: donde conviene llevar el punto rojo para que la nube alcance al plato.</li>
+        <li>Si ocultas <strong>ayuda adelanto</strong>, la fisica sigue calculandose, pero no se muestra la pista amarilla.</li>
+      </ul>
+
+      <h3>Elementos en pantalla</h3>
+      <ul>
+        <li><strong>Plato naranja:</strong> objetivo real.</li>
+        <li><strong>Punto rojo:</strong> punto de mira; donde disparas.</li>
+        <li><strong>Area amarilla:</strong> punto o zona ideal de adelanto.</li>
+        <li><strong>Area azul:</strong> patron de plomeo estimado.</li>
+        <li><strong>Punto azul claro:</strong> centro fisico del disparo.</li>
+        <li><strong>Punto verde:</strong> impacto que rompe el plato.</li>
+        <li><strong>Señuelo S:</strong> referencia visual de salida del plato.</li>
+        <li><strong>Ventanas de correccion:</strong> resumen de si el tiro quedo alto, bajo, adelantado, retrasado o fuera de linea.</li>
+      </ul>
+
+      <h3>Como usarlo</h3>
+      <ul>
+        <li>Empieza con <strong>Camara lenta</strong> baja para ver la relacion entre plato, adelanto y plomeo.</li>
+        <li>Sube el zoom visual si el señuelo o el plato se ven demasiado pequeños en tu pantalla.</li>
+        <li>Prueba primero con la ayuda amarilla activada; despues ocultala para entrenar la estimacion mental.</li>
+        <li>Usa <strong>Repetir plato</strong> para practicar una salida dificil sin avanzar la tirada.</li>
+      </ul>
+
+      <p><a href="#">Cerrar</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>
+    </article>
+  </section>
 
   <section id="licencia-mit" class="license-panel" aria-label="Licencia MIT">
     <article class="license-card">

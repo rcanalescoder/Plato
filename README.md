@@ -33,6 +33,7 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Ayuda adelanto**: muestra u oculta el punto/área amarilla donde conviene llevar el tiro. Al ocultarla, la física y las correcciones siguen calculándose.
 - **Trayectoria**: muestra u oculta la línea naranja discontinua del vuelo del plato.
 - **Zoom visual**: acerca la escena para pantallas pequeñas o usuarios con peor visión. El valor `1.00x` conserva la escala reglamentaria; valores mayores estrechan la lente visual sin cambiar distancias ni físicas.
+- **Ayuda**: abre una explicación para principiantes sobre modalidades, velocidades, cartuchos, aperturas, trayectorias y lectura de los elementos de pantalla.
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
 
