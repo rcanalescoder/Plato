@@ -2137,7 +2137,6 @@
       const sy = (axisH / 2 - 12) / range;
       const shotX = clamp(cx + metrics.lead * sx * leadScreenSign, cx - axisW / 2 + 10, cx + axisW / 2 - 10);
       const shotY = clamp(cy - metrics.vertical * sy, cy - axisH / 2 + 10, cy + axisH / 2 - 10);
-      const lateralText = Math.abs(metrics.lateral) < 0.005 ? "linea ok" : `${metrics.lateral > 0 ? "linea izq" : "linea der"} ${Math.abs(metrics.lateral).toFixed(2)} m`;
       ctx.strokeStyle = "rgba(255,255,255,.55)";
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -2151,15 +2150,6 @@
       ctx.arc(shotX, shotY, 4.8, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
-      if (Math.abs(metrics.lateral) >= 0.005) {
-        ctx.strokeStyle = "rgba(215,237,255,.72)";
-        ctx.setLineDash([3, 3]);
-        ctx.beginPath();
-        ctx.moveTo(shotX, shotY);
-        ctx.lineTo(clamp(shotX + metrics.lateral * sx * 0.55, x0 + 20, x0 + bw - 20), shotY);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
       ctx.font = "500 10px system-ui";
       const leadLabel = Math.abs(metrics.lead) < 0.005 ? "adelanto ok" : `${metrics.lead > 0 ? "adelantado" : "retrasado"} ${Math.abs(metrics.lead).toFixed(2)} m`;
       const heightLabel = Math.abs(metrics.vertical) < 0.005 ? "altura ok" : `${metrics.vertical > 0 ? "alto" : "bajo"} ${Math.abs(metrics.vertical).toFixed(2)} m`;
@@ -2171,9 +2161,6 @@
       ctx.textAlign = "right";
       ctx.fillStyle = metrics.vertical >= 0 ? highColor : lowColor;
       ctx.fillText(heightLabel, x0 + bw - 10, metrics.vertical >= 0 ? y0 + 34 : y0 + bh - 12);
-      ctx.textAlign = "center";
-      ctx.fillStyle = "rgba(215,237,255,.72)";
-      ctx.fillText(lateralText, cx, y0 + bh - 44);
       ctx.restore();
     }
 
