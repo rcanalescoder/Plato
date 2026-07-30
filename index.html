@@ -390,7 +390,7 @@
         <button id="highBtn" type="button" aria-pressed="false" title="Solista con ganancia: el impacto sale algo por encima del punto de mira.">Alta</button>
       </div>
       <div class="status">
-        <div class="stat" title="Fase actual del simulador: esperando, reaccion, seguimiento, caida o terminado."><span>Estado</span><strong id="stateReadout">Esperando</strong></div>
+        <div class="stat" title="Fase actual del simulador: esperando, retardo de salida, seguimiento, caida o terminado."><span>Estado</span><strong id="stateReadout">Esperando</strong></div>
         <div class="stat" title="Contador de la tirada: platos consumidos de 25 y platos rotos. Las repeticiones no suman."><span>Tirada</span><strong id="roundReadout">0/25 · 0 rotos</strong></div>
         <div class="stat" title="Puesto de tiro actual. La tirada rota por los puestos 1 a 5."><span>Puesto</span><strong id="stationReadout">3</strong></div>
         <div class="stat" title="Maquina, angulo, altura a 10 m y distancia del plato actual."><span>Plato</span><strong id="targetReadout">-</strong></div>
@@ -437,8 +437,8 @@
       <label class="control" title="Factor temporal del simulador. 1.00x es tiempo real; valores menores ayudan a analizar el adelanto.">Camara lenta <span id="slowValue">0.35x</span>
         <input id="slowControl" type="range" min="0.15" max="1" step="0.05" value="0.35">
       </label>
-      <label class="control" title="Tiempo que tarda el tirador en empezar a mover la escopeta tras ver salir el plato.">Reaccion <span id="reactionValue">0.32 s</span>
-        <input id="reactionControl" type="range" min="0.15" max="0.65" step="0.01" value="0.32">
+      <label class="control" title="Retardo breve entre pedir el plato y que salga del foso. En competicion la salida debe sentirse inmediata; este ajuste simula el retardo del sistema de llamada/lanzadora.">Retardo salida <span id="reactionValue">0.12 s</span>
+        <input id="reactionControl" type="range" min="0" max="0.35" step="0.01" value="0.12">
       </label>
       <label class="control" title="Velocidad inicial de referencia del cartucho; los perdigones usan una velocidad efectiva derivada.">Cartucho <span id="cartridgeValue">400 m/s</span>
         <input id="cartridgeControl" type="range" min="360" max="430" step="5" value="400">
@@ -652,7 +652,7 @@
     */
     const params = {
       slow: 0.35,
-      reaction: 0.32,
+      reaction: 0.12,
       cartridge: 400,
       spread1: 30,
       spread2: 20,
@@ -684,7 +684,6 @@
     const RELEASE_HEIGHT = 0.16;
     const MACHINE_HEIGHT = -0.5;
     const MACHINE_Z = TRENCH_FRONT + 0.5;
-    const CLAY_VISIBLE_DELAY = 0;
     const CLAY_GROUND_Y = 0.12;
     const SHOT_TRACE_BASE_DURATION = 0.75;
     const BURST_BASE_DURATION = 0.65;
@@ -1030,6 +1029,7 @@
 
     function startTarget(target, label = "PLATO") {
       sim.target = cloneTarget(target);
+      sim.target.visibleDelay = params.reaction;
       sim.repeatingTarget = Boolean(sim.target.noCount);
       sim.t = 0;
       sim.mode = "reaction";
@@ -1167,7 +1167,7 @@
         station: sim.station,
         mode: params.mode,
         noCount: false,
-        visibleDelay: CLAY_VISIBLE_DELAY,
+        visibleDelay: params.reaction,
         machineOrigin,
         p0,
         v0
@@ -1225,7 +1225,11 @@
           sim.mode = "tracking";
         }
         const p = targetAt(sim.t);
-        if (!p || p.z > 120) {
+        if (!p) {
+          updateAim(simDt);
+          return;
+        }
+        if (p.z > 120) {
           if (p) sim.mode = "ended";
         }
         if (p && p.y <= CLAY_GROUND_Y && sim.mode !== "ended") {
@@ -1480,7 +1484,7 @@
       stores frozen correction cues so the user can compare shot 1 vs shot 2.
     */
     function fire() {
-      if (!sim.target || sim.mode === "idle" || sim.mode === "ended" || sim.mode === "falling" || sim.shotCount >= 2) return;
+      if (!sim.target || sim.mode === "idle" || sim.mode === "reaction" || sim.mode === "ended" || sim.mode === "falling" || sim.shotCount >= 2) return;
       const current = targetAt(sim.t);
       if (!current) return;
       const pelletSpeed = params.cartridge * 0.78;
@@ -2312,7 +2316,7 @@
     }
 
     function drawHud() {
-      ui.state.textContent = sim.mode === "idle" ? "Esperando" : sim.mode === "reaction" ? "Reaccion" : sim.mode === "tracking" ? "Seguimiento" : sim.mode === "falling" ? "Cayendo" : "Terminado";
+      ui.state.textContent = sim.mode === "idle" ? "Esperando" : sim.mode === "reaction" ? "Retardo" : sim.mode === "tracking" ? "Seguimiento" : sim.mode === "falling" ? "Cayendo" : "Terminado";
       ui.round.textContent = `${sim.roundIndex}/25 · ${sim.broken} rotos`;
       ui.stationReadout.textContent = sim.station;
       ui.aim.textContent = `${((sim.gunYaw - sim.viewYaw) * 180 / Math.PI).toFixed(1)} / ${((sim.gunPitch - sim.viewPitch) * 180 / Math.PI).toFixed(1)} deg`;

@@ -33,6 +33,7 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Ayuda adelanto**: muestra u oculta el punto/área amarilla donde conviene llevar el tiro. Al ocultarla, la física y las correcciones siguen calculándose.
 - **Trayectoria**: muestra u oculta la línea naranja discontinua del vuelo del plato.
 - **Zoom visual**: acerca la escena para pantallas pequeñas o usuarios con peor visión. El valor `1.00x` conserva la escala reglamentaria; valores mayores estrechan la lente visual sin cambiar distancias ni físicas.
+- **Retardo salida**: tiempo breve entre pedir el plato y que este salga realmente del foso. Por defecto es `0,12 s`, pensado como retardo de sistema/lanzadora, no como reacción humana.
 - **Plomeo tiro 1 / Plomeo tiro 2**: ajustan la apertura del patrón de cada disparo, como una aproximación a chokes diferentes.
 - **Variación plomeo**: introduce irregularidad entre disparos: huecos, pequeñas agrupaciones y diferencias leves de velocidad entre perdigones.
 - **Análisis**: controla cuánto tiempo quedan visibles la corrección del disparo, los rastros y la rotura o caída del plato.
@@ -85,11 +86,16 @@ Fuentes consultadas:
 
 Cuando se pide plato, la aplicación:
 
-1. Mantiene el punto rojo en la guardia inicial durante el tiempo de reacción configurado.
+1. Mantiene el punto rojo en la guardia inicial.
 2. Selecciona una máquina del esquema activo.
-3. Calcula el vector de salida a partir del ángulo horizontal, la altura exigida a 10 m y la distancia normativa.
-4. Lanza el plato desde la boca/rendija del foso en la planta del señuelo activo, con la máquina físicamente retrasada y por debajo.
-5. Simula el vuelo con gravedad reducida y viento lateral opcional.
+3. Espera el **Retardo salida** configurado, por defecto muy bajo para que la salida se sienta inmediata.
+4. Calcula el vector de salida a partir del ángulo horizontal, la altura exigida a 10 m y la distancia normativa.
+5. Lanza el plato desde la boca/rendija del foso en la planta del señuelo activo, con la máquina físicamente retrasada y por debajo.
+6. Simula el vuelo con gravedad reducida y viento lateral opcional.
+
+El antiguo concepto de "reacción" del tirador se sustituyó por este retardo de salida porque el simulador ya no mueve automáticamente la escopeta persiguiendo el plato. La reacción real queda en manos del usuario: cuándo localiza el plato, mueve el punto rojo y dispara. El control solo representa el pequeño intervalo entre la orden de pedir plato y la aparición física del objetivo.
+
+En FITASC Universal Trench la salida se define como inmediata tras la llamada, considerando únicamente el tiempo de reacción al sonido, indicado aproximadamente en una décima de segundo. Por eso el valor inicial del simulador es `0,12 s`: suficiente para notar la llamada sin convertirlo en una espera artificial.
 
 La máquina activa visible bajo el suelo translúcido se coloca sobre la prolongación inversa del vector de lanzamiento. Por tanto, el tramo sólido máquina-boca y la trayectoria inicial del plato son colineales; si la trayectoria se curva después es por la integración de gravedad/viento, no por un quiebro artificial al salir del foso.
 
