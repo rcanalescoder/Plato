@@ -319,6 +319,7 @@
       </label>
       <div class="hint">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
       <label class="switch-row"><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
+      <label class="switch-row"><input id="showLegend" type="checkbox" checked> leyenda</label>
     </section>
   </main>
 
@@ -363,6 +364,7 @@
       wind: document.getElementById("windControl"),
       rib: document.getElementById("ribControl"),
       transparentGround: document.getElementById("transparentGround"),
+      showLegend: document.getElementById("showLegend"),
       state: document.getElementById("stateReadout"),
       round: document.getElementById("roundReadout"),
       stationReadout: document.getElementById("stationReadout"),
@@ -679,23 +681,26 @@
       let pitch = base.pitch - poi;
       let best = centerShotClosest(anglesToDir(yaw, pitch + poi), pelletSpeed, shotTime);
       let step = 0.025;
-      for (let pass = 0; pass < 5; pass += 1) {
-        let improved = false;
-        for (const dy of [-step, 0, step]) {
-          for (const dp of [-step, 0, step]) {
-            if (dy === 0 && dp === 0) continue;
-            const testYaw = yaw + dy;
-            const testPitch = pitch + dp;
-            const score = centerShotClosest(anglesToDir(testYaw, testPitch + poi), pelletSpeed, shotTime);
-            if (score.distance < best.distance) {
-              yaw = testYaw;
-              pitch = testPitch;
-              best = score;
-              improved = true;
+      for (let level = 0; level < 6; level += 1) {
+        for (let sweep = 0; sweep < 2; sweep += 1) {
+          let improved = false;
+          for (const dy of [-step, 0, step]) {
+            for (const dp of [-step, 0, step]) {
+              if (dy === 0 && dp === 0) continue;
+              const testYaw = yaw + dy;
+              const testPitch = pitch + dp;
+              const score = centerShotClosest(anglesToDir(testYaw, testPitch + poi), pelletSpeed, shotTime);
+              if (score.distance < best.distance) {
+                yaw = testYaw;
+                pitch = testPitch;
+                best = score;
+                improved = true;
+              }
             }
           }
+          if (!improved) break;
         }
-        if (!improved) step *= 0.5;
+        step *= 0.5;
       }
       return {
         yaw,
@@ -1122,8 +1127,9 @@
       };
       sim.shots.push({ age: 0, center: impact, future: impact, radius, hit, pellets: renderedPellets });
       sim.bursts.push({ age: 0, p: impact, hit });
+      const edgeHit = hit && shotCenter.distance > radius * 0.65;
       ui.result.textContent = hit
-        ? `${sim.repeatingTarget ? "Repeticion rota" : "Roto"}: perdigon ${hitInfo.pellet + 1}/${dirs.length}`
+        ? `${sim.repeatingTarget ? "Repeticion" : "Roto"} ${edgeHit ? "borde" : "centro"}: perdigon ${hitInfo.pellet + 1}/${dirs.length}`
         : `${sim.repeatingTarget ? "Repeticion fallo" : "Fallo"} tiro ${sim.shotCount}/2`;
       ui.result.style.color = hit ? "var(--good)" : "var(--bad)";
       if (hit) {
@@ -1798,6 +1804,102 @@
       }
     }
 
+    function drawLegend() {
+      if (!ui.showLegend.checked) return;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const panelW = Math.min(340, w - 32);
+      const panelH = 202;
+      const x0 = w - panelW - 16;
+      const y0 = h - panelH - 16;
+      if (panelW < 260 || y0 < 12) return;
+
+      ctx.save();
+      ctx.fillStyle = "rgba(8,12,10,.78)";
+      ctx.strokeStyle = "rgba(255,255,255,.28)";
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, panelW, panelH, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = "600 12px system-ui";
+      ctx.fillStyle = "rgba(255,255,255,.92)";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText("leyenda", x0 + 14, y0 + 18);
+
+      const textX = x0 + 54;
+      const iconX = x0 + 28;
+      let y = y0 + 42;
+      function item(text, drawIcon) {
+        drawIcon(iconX, y);
+        ctx.font = "500 11px system-ui";
+        ctx.fillStyle = "rgba(255,255,255,.84)";
+        ctx.fillText(text, textX, y);
+        y += 22;
+      }
+
+      item("plato naranja: objetivo real", (x, yy) => {
+        drawClayDisc(x, yy, 8, 1);
+      });
+      item("amarillo: punto/area ideal de adelanto", (x, yy) => {
+        ctx.strokeStyle = "rgba(255,212,81,.96)";
+        ctx.fillStyle = "rgba(255,212,81,.18)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(x, yy, 17, 9, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+      item("azul: patron de plomeo estimado", (x, yy) => {
+        ctx.strokeStyle = "rgba(215,237,255,.76)";
+        ctx.fillStyle = "rgba(215,237,255,.18)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(x, yy, 19, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+      item("rojo: punto de mira / donde disparas", (x, yy) => {
+        ctx.fillStyle = "#d90000";
+        ctx.strokeStyle = "rgba(255,255,255,.86)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(x, yy, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+      item("azul claro: centro fisico del disparo", (x, yy) => {
+        ctx.fillStyle = "rgba(215,237,255,.92)";
+        ctx.strokeStyle = "rgba(20,20,20,.55)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(x, yy, 4.6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+      item("verde: impacto que rompe el plato", (x, yy) => {
+        ctx.fillStyle = "rgba(155,230,111,.96)";
+        ctx.strokeStyle = "rgba(20,20,20,.65)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(x, yy, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+      item("naranja discontinua: trayectoria del plato", (x, yy) => {
+        ctx.strokeStyle = "rgba(255,100,0,.85)";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(x - 16, yy + 6);
+        ctx.lineTo(x + 16, yy - 6);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      });
+      ctx.restore();
+    }
+
     function render() {
       drawBackground();
       drawGrid();
@@ -1809,6 +1911,7 @@
       drawSideView();
       drawTopView();
       drawHud();
+      drawLegend();
     }
 
     function loop(now) {
@@ -1880,7 +1983,7 @@
     });
     ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
     ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
-    [ui.mode, ui.scheme, ui.station, ui.guard, ui.slow, ui.reaction, ui.cartridge, ui.spread, ui.wind, ui.rib, ui.transparentGround].forEach(control => {
+    [ui.mode, ui.scheme, ui.station, ui.guard, ui.slow, ui.reaction, ui.cartridge, ui.spread, ui.wind, ui.rib, ui.transparentGround, ui.showLegend].forEach(control => {
       control.addEventListener("input", syncControls);
       control.addEventListener("change", syncControls);
     });
