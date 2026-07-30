@@ -30,6 +30,7 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Ratón**: el cursor del juego es el propio punto rojo de mira.
 - **Botón derecho**: pide plato.
 - **Botón izquierdo**: dispara el primer y segundo tiro.
+- **Ayuda adelanto**: muestra u oculta el punto/área amarilla donde conviene llevar el tiro. Al ocultarla, la física y las correcciones siguen calculándose.
 - **Solista**: muestra u oculta la banda visual de la escopeta desde el ojo del tirador, inspirada en las fotos de referencia de la DT11.
 - **Zoom visual**: acerca la escena para pantallas pequeñas o usuarios con peor visión. El valor `1.00x` conserva la escala reglamentaria; valores mayores estrechan la lente visual sin cambiar distancias ni físicas.
 
