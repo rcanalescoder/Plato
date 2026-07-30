@@ -174,7 +174,7 @@ La **ganancia de solista** modifica el punto efectivo de impacto. Visualmente:
 - El punto rojo es donde el tirador apunta.
 - El punto traslúcido muestra dónde impactaría el centro del disparo por la elevación de la solista.
 
-Esto permite representar la diferencia entre una escopeta plana, que obliga a tapar más el plato, y una configuración con ganancia, donde se puede apuntar algo por debajo porque el disparo sale más alto que el punto de mira. El rango actual llega hasta `0,24 grados` de elevación balística para que el efecto sea visible durante el entrenamiento.
+Esto permite representar la diferencia entre una escopeta plana, que obliga a tapar más el plato, y una configuración con ganancia, donde se puede apuntar algo por debajo porque el disparo sale más alto que el punto de mira. El rango actual llega hasta `0,96 grados` de elevación balística para que el efecto sea claramente visible durante el entrenamiento.
 
 El check **Solista** no pinta una escopeta completa. En un encare correcto, el arma se colapsa visualmente sobre el eje del ojo, así que solo se dibuja una pequeña línea negra de solista y un punto verde fosforito pegados al punto de encare. La ganancia no ensancha la solista; solo desplaza hacia arriba el punto físico de impacto.
 
