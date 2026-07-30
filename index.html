@@ -1708,51 +1708,66 @@
     }
 
     // First-person rib/solista overlay based on the user's DT11 reference photos.
-    // It is screen-space on purpose: the shooter sees a visual obstruction from
-    // the aligned eye, not a full shotgun model floating in the world. The rib is
-    // a trapezoid in perspective: narrow at the bead, wider towards the shooter.
+    // It is screen-space on purpose: the shooter sees a near-field obstruction
+    // from the aligned eye, not a full shotgun model floating in the world. The
+    // visible rib is a trapezoid in perspective: narrow at the bead and broader
+    // at the eye/receiver end, always sitting under the sight picture.
     function drawRibOverlay() {
       if (!ui.showRib.checked || (sim.mode === "ended" && sim.frozenCues.length)) return;
       const aim = projectAim(sim.gunYaw, sim.gunPitch);
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       const gain = clamp(sim.ribGain / 0.06, 0, 1);
-      const topY = aim.y + 6;
-      const bottomY = h + 90;
-      const topHalf = 2.2 + gain * 8.5;
-      const bottomHalf = 18 + gain * 46;
-      const centerBottomX = aim.x + (aim.x - w / 2) * 0.08;
+      const farY = clamp(aim.y + 10, h * 0.44, h - 118);
+      const receiverTopY = Math.min(h - 146, farY + 96 + gain * 34);
+      const nearY = h + 56;
+      const drift = (aim.x - w / 2) * 0.05;
+      const nearX = w / 2 + drift;
+      const farHalf = 2.4 + gain * 5.8;
+      const midHalf = 30 + gain * 26;
+      const nearHalf = 96 + gain * 56;
 
       ctx.save();
-      ctx.globalAlpha = 0.9;
-      ctx.fillStyle = "rgba(4,5,5,.88)";
+      ctx.globalAlpha = 0.94;
+      ctx.fillStyle = "rgba(12,13,12,.84)";
       ctx.strokeStyle = "rgba(255,255,255,.18)";
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(aim.x - topHalf, topY);
-      ctx.lineTo(aim.x + topHalf, topY);
-      ctx.lineTo(centerBottomX + bottomHalf, bottomY);
-      ctx.lineTo(centerBottomX - bottomHalf, bottomY);
+      ctx.moveTo(aim.x - farHalf, farY);
+      ctx.lineTo(aim.x + farHalf, farY);
+      ctx.bezierCurveTo(nearX + midHalf, receiverTopY - 24, nearX + nearHalf, h - 78, nearX + nearHalf * 0.86, nearY);
+      ctx.lineTo(nearX - nearHalf * 0.86, nearY);
+      ctx.bezierCurveTo(nearX - nearHalf, h - 78, nearX - midHalf, receiverTopY - 24, aim.x - farHalf, farY);
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
 
-      ctx.globalAlpha = 0.72;
-      ctx.strokeStyle = "rgba(255,255,255,.24)";
-      ctx.lineWidth = 1.1;
+      ctx.globalAlpha = 0.82;
+      ctx.fillStyle = "rgba(58,62,56,.78)";
       ctx.beginPath();
-      ctx.moveTo(aim.x - topHalf, topY);
-      ctx.lineTo(centerBottomX - bottomHalf, bottomY);
-      ctx.moveTo(aim.x + topHalf, topY);
-      ctx.lineTo(centerBottomX + bottomHalf, bottomY);
+      ctx.moveTo(aim.x - farHalf, farY + 2);
+      ctx.lineTo(aim.x + farHalf, farY + 2);
+      ctx.lineTo(nearX + midHalf, receiverTopY + 34);
+      ctx.quadraticCurveTo(nearX, receiverTopY + 70, nearX - midHalf, receiverTopY + 34);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.globalAlpha = 0.72;
+      ctx.strokeStyle = "rgba(255,255,255,.28)";
+      ctx.lineWidth = 1.2 + gain * 1.5;
+      ctx.beginPath();
+      ctx.moveTo(aim.x - farHalf, farY + 2);
+      ctx.lineTo(nearX - midHalf, receiverTopY + 34);
+      ctx.moveTo(aim.x + farHalf, farY + 2);
+      ctx.lineTo(nearX + midHalf, receiverTopY + 34);
       ctx.stroke();
 
       ctx.globalAlpha = 0.65;
-      ctx.strokeStyle = "rgba(255,255,255,.22)";
-      ctx.lineWidth = Math.max(1, 1.1 + gain * 2.2);
+      ctx.strokeStyle = "rgba(255,255,255,.3)";
+      ctx.lineWidth = 1.2 + gain * 2.4;
       ctx.beginPath();
-      ctx.moveTo(aim.x, topY + 3);
-      ctx.lineTo(centerBottomX, bottomY);
+      ctx.moveTo(aim.x, farY + 6);
+      ctx.lineTo(nearX, receiverTopY + 60);
       ctx.stroke();
 
       ctx.globalAlpha = 1;
