@@ -187,6 +187,39 @@
       opacity: 1;
     }
 
+    .norm-badge {
+      position: absolute;
+      top: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: min(760px, calc(100% - 32px));
+      padding: 7px 11px;
+      border-radius: 7px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(8,12,10,.62);
+      color: rgba(255,255,255,.9);
+      font-size: 11px;
+      font-weight: 650;
+      line-height: 1.25;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .18s ease;
+    }
+
+    .norm-badge.show {
+      opacity: 1;
+    }
+
+    .norm-badge .ok {
+      color: var(--good);
+    }
+
+    .norm-badge .warn {
+      color: var(--bad);
+    }
+
     .slow-note {
       position: absolute;
       left: 14px;
@@ -374,6 +407,7 @@
     <section class="scene" aria-label="Simulador desde el ojo del tirador">
       <canvas id="simCanvas"></canvas>
       <div class="banner" id="banner">PLATO</div>
+      <div class="norm-badge" id="normBadge" aria-live="polite"></div>
       <div class="slow-note"><strong>Camara lenta</strong> activa para analizar. Para probar tiempo real, sube <strong>Camara lenta</strong> a 1.00x.</div>
     </section>
 
@@ -521,6 +555,7 @@
     const canvas = document.getElementById("simCanvas");
     const ctx = canvas.getContext("2d");
     const banner = document.getElementById("banner");
+    const normBadge = document.getElementById("normBadge");
     const ui = {
       call: document.getElementById("callBtn"),
       repeat: document.getElementById("repeatBtn"),
@@ -978,6 +1013,64 @@
       window.setTimeout(() => banner.classList.remove("show"), 360);
     }
 
+    function solveClayLaunch(landingDistance, heightAt10) {
+      const gravityFactor = g * 0.42;
+      const y0 = RELEASE_HEIGHT;
+      const checkDistance = 10;
+      const h10 = heightAt10 - y0;
+      const hLand = CLAY_GROUND_Y - y0;
+
+      /*
+        A regulated target must satisfy two geometric constraints: height at
+        10 m and landing distance. Model y as a parabola over horizontal
+        distance s: y(s)=y0+k*s-A*s^2, then solve A and k exactly.
+      */
+      const denominator = landingDistance * checkDistance - landingDistance * landingDistance;
+      const curve = (hLand - (landingDistance / checkDistance) * h10) / denominator;
+      const slope = (h10 + curve * checkDistance * checkDistance) / checkDistance;
+      const horizontalSpeed = Math.sqrt(0.5 * gravityFactor / Math.max(curve, 0.0001));
+      const verticalSpeed = slope * horizontalSpeed;
+      const flightTime = landingDistance / horizontalSpeed;
+      return { horizontalSpeed, verticalSpeed, flightTime };
+    }
+
+    function clayHeightAtDistance(target, distance) {
+      const horizontalSpeed = Math.hypot(target.v0.x, target.v0.z);
+      const t = distance / horizontalSpeed;
+      return target.p0.y + target.v0.y * t - 0.5 * g * 0.42 * t * t;
+    }
+
+    function clayLandingTime(target) {
+      const a = 0.5 * g * 0.42;
+      const b = -target.v0.y;
+      const c = CLAY_GROUND_Y - target.p0.y;
+      const disc = Math.max(0, b * b - 4 * a * c);
+      return (-b + Math.sqrt(disc)) / (2 * a);
+    }
+
+    function verifyTarget(target) {
+      if (!target) return null;
+      const horizontalSpeed = Math.hypot(target.v0.x, target.v0.z);
+      const height10 = clayHeightAtDistance(target, 10);
+      const landingTime = clayLandingTime(target);
+      const landingDistance = horizontalSpeed * landingTime;
+      const distanceTolerance = target.mode === "universal" ? 5 : 1;
+      const heightTolerance = 0.05;
+      const heightError = Math.abs(height10 - target.heightAt10);
+      const distanceError = Math.abs(landingDistance - target.landingDistance);
+      return {
+        height10,
+        landingDistance,
+        flightTime: landingTime,
+        speedKmh: target.speedKmh,
+        distanceTolerance,
+        heightTolerance,
+        heightError,
+        distanceError,
+        ok: heightError <= heightTolerance && distanceError <= distanceTolerance
+      };
+    }
+
     /*
       callTarget() selects one machine from the active scheme and converts the
       table row into an initial velocity. Universal always emerges from the
@@ -1017,14 +1110,10 @@
       const angleDeg = entry[1];
       const heightAt10 = entry[2];
       const yaw = angleDeg * Math.PI / 180;
-      const flightTime = params.mode === "universal" ? clamp(landingDistance / rand(18.5, 22.5), 2.8, 4.0) : clamp(landingDistance / rand(25.5, 28.5), 2.65, 3.15);
-      const horizontalSpeed = landingDistance / flightTime;
-      const speedKmh = horizontalSpeed * 3.6;
-      const gravityFactor = g * 0.42;
-      const y0 = RELEASE_HEIGHT;
-      const verticalByHeight = (heightAt10 - y0 + 0.5 * gravityFactor * Math.pow(10 / horizontalSpeed, 2)) / (10 / horizontalSpeed);
-      const verticalByLanding = (0 - y0 + 0.5 * gravityFactor * flightTime * flightTime) / flightTime;
-      const verticalSpeed = verticalByHeight * 0.72 + verticalByLanding * 0.28;
+      const launch = solveClayLaunch(landingDistance, heightAt10);
+      const horizontalSpeed = launch.horizontalSpeed;
+      const verticalSpeed = launch.verticalSpeed;
+      const speedKmh = Math.hypot(horizontalSpeed, verticalSpeed) * 3.6;
       const elevDeg = Math.atan2(verticalSpeed, horizontalSpeed) * 180 / Math.PI;
       const p0 = { x: releaseX, y: RELEASE_HEIGHT, z: TRENCH_FRONT };
       const v0 = {
@@ -1048,6 +1137,7 @@
         machineIndex,
         machineX: machineOrigin.x,
         station: sim.station,
+        mode: params.mode,
         noCount: false,
         visibleDelay: CLAY_VISIBLE_DELAY,
         machineOrigin,
@@ -2127,6 +2217,23 @@
       drawCorrectionPanel("side");
     }
 
+    function updateNormBadge() {
+      const target = sim.target || sim.lastTarget;
+      if (!target || sim.mode === "idle") {
+        normBadge.classList.remove("show");
+        normBadge.textContent = "";
+        return;
+      }
+      const check = verifyTarget(target);
+      if (!check) return;
+      const discipline = target.mode === "universal" ? "Universal FITASC" : "Foso olimpico ISSF";
+      const status = check.ok ? "Cumple normativa" : "Revisar ajuste";
+      const statusClass = check.ok ? "ok" : "warn";
+      const windText = Math.abs(params.wind) > 0.01 ? " · validacion base sin viento" : "";
+      normBadge.innerHTML = `<span class="${statusClass}">${check.ok ? "✓" : "!"} ${status}</span> · ${discipline} · M${target.machineIndex + 1} · ${Math.round(target.angleDeg)}° · v0 ${check.speedKmh.toFixed(1)} km/h · h10 ${check.height10.toFixed(2)} m/${target.heightAt10.toFixed(2)} m · alcance ${check.landingDistance.toFixed(1)} m/${target.landingDistance.toFixed(1)} m · vuelo ${check.flightTime.toFixed(2)} s${windText}`;
+      normBadge.classList.add("show");
+    }
+
     function drawHud() {
       ui.state.textContent = sim.mode === "idle" ? "Esperando" : sim.mode === "reaction" ? "Reaccion" : sim.mode === "tracking" ? "Seguimiento" : sim.mode === "falling" ? "Cayendo" : "Terminado";
       ui.round.textContent = `${sim.roundIndex}/25 · ${sim.broken} rotos`;
@@ -2136,6 +2243,7 @@
         ui.target.textContent = "-";
         ui.lead.textContent = "-";
       }
+      updateNormBadge();
     }
 
     function drawLegend() {
