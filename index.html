@@ -1,4 +1,10 @@
 <!doctype html>
+<!--
+  Plato - Laboratorio de adelanto para tiro al plato.
+  Construido por Roberto Canales Mora.
+  Proyecto: https://robertocanales.com/proyectos#plato
+  Licencia: MIT. Ver el texto en castellano dentro de esta pagina (#licencia-mit).
+-->
 <html lang="es">
 <head>
   <meta charset="utf-8">
@@ -241,6 +247,63 @@
       line-height: 1.2;
     }
 
+    .project-links {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      grid-column: -4 / -1;
+      justify-self: end;
+      min-width: 0;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .project-links a,
+    .license-panel a {
+      color: #e9f5ee;
+      text-decoration-color: rgba(233,245,238,.52);
+      text-underline-offset: 3px;
+    }
+
+    .license-panel {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 20;
+      background: rgba(6,8,8,.72);
+      padding: 22px;
+      overflow: auto;
+    }
+
+    .license-panel:target {
+      display: grid;
+      place-items: center;
+    }
+
+    .license-card {
+      max-width: 760px;
+      max-height: min(86dvh, 720px);
+      overflow: auto;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background: #172022;
+      box-shadow: 0 18px 60px rgba(0,0,0,.42);
+    }
+
+    .license-card h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .license-card p {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
     @media (max-width: 1040px) {
       main {
         grid-template-rows: auto 58vh auto;
@@ -346,8 +409,23 @@
       <div class="hint">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
       <label class="switch-row"><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
       <label class="switch-row"><input id="showLegend" type="checkbox" checked> leyenda</label>
+      <div class="project-links">
+        <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Powered by www.robertocanales.com</a>
+        <a href="#licencia-mit">Licencia MIT</a>
+      </div>
     </section>
   </main>
+
+  <section id="licencia-mit" class="license-panel" aria-label="Licencia MIT">
+    <article class="license-card">
+      <h2>Licencia MIT</h2>
+      <p>Copyright (c) 2026 Roberto Canales Mora</p>
+      <p>Por la presente se concede permiso, libre de cargos, a cualquier persona que obtenga una copia de este software y de los archivos de documentación asociados, para tratar el software sin restricción, incluyendo sin limitación los derechos de uso, copia, modificación, fusión, publicación, distribución, sublicencia y/o venta de copias del software, y para permitir a las personas a quienes se les proporcione el software que hagan lo mismo, sujeto a las siguientes condiciones:</p>
+      <p>El aviso de copyright anterior y este aviso de permiso se incluirán en todas las copias o partes sustanciales del software.</p>
+      <p>EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITÁNDOSE A GARANTÍAS DE COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO LOS AUTORES O TITULARES DEL COPYRIGHT SERÁN RESPONSABLES DE NINGUNA RECLAMACIÓN, DAÑO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIÓN CONTRACTUAL, EXTRACONTRACTUAL O DE OTRO TIPO, QUE SURJA DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O EL USO U OTRAS OPERACIONES EN EL SOFTWARE.</p>
+      <p><a href="#">Cerrar</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>
+    </article>
+  </section>
 
   <script>
     /*
