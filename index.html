@@ -485,7 +485,7 @@
     const SHOT_TRACE_BASE_DURATION = 0.75;
     const BURST_BASE_DURATION = 0.65;
     const FRAGMENT_BASE_DURATION = 2.2;
-    const VIEW_FACTOR = 1.08;
+    const VERTICAL_FOV_DEG = 48;
     const eye = { x: 0, y: 1.7, z: 0 };
 
     /*
@@ -746,6 +746,11 @@
 
     // World projection is deliberately tied to the fixed eye view. Moving the
     // mouse changes the sight angle, not the range/camera.
+    function cameraFocalLength() {
+      const h = canvas.clientHeight;
+      return (h * 0.5) / Math.tan((VERTICAL_FOV_DEG * Math.PI / 180) * 0.5);
+    }
+
     function projectPoint(world) {
       const rel = { x: world.x - eye.x, y: world.y - eye.y, z: world.z - eye.z };
       const yaw = Math.atan2(rel.x, rel.z) - sim.viewYaw;
@@ -753,7 +758,7 @@
       const pitch = Math.atan2(rel.y, dist) - sim.viewPitch;
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      const f = Math.min(w, h) * VIEW_FACTOR;
+      const f = cameraFocalLength();
       return {
         x: w / 2 + Math.tan(yaw) * f,
         y: h / 2 - Math.tan(pitch) * f,
@@ -766,7 +771,7 @@
     function projectAim(yaw, pitch) {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      const f = Math.min(w, h) * VIEW_FACTOR;
+      const f = cameraFocalLength();
       return {
         x: clamp(w / 2 + Math.tan(yaw - sim.viewYaw) * f, 0, w),
         y: clamp(h / 2 - Math.tan(pitch - sim.viewPitch) * f, 0, h)
@@ -776,7 +781,7 @@
     function aimFromScreen(x, y) {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      const f = Math.min(w, h) * VIEW_FACTOR;
+      const f = cameraFocalLength();
       x = clamp(x, 0, w);
       y = clamp(y, 0, h);
       sim.gunYaw = sim.viewYaw + Math.atan((x - w / 2) / f);
@@ -1237,7 +1242,7 @@
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, w, h);
 
-      const horizonY = h * 0.5 + Math.tan(sim.viewPitch) * Math.min(w, h) * VIEW_FACTOR;
+      const horizonY = h * 0.5 + Math.tan(sim.viewPitch) * cameraFocalLength();
       const field = ctx.createLinearGradient(0, horizonY, 0, h);
       field.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue("--field"));
       field.addColorStop(1, getComputedStyle(document.documentElement).getPropertyValue("--field-dark"));
