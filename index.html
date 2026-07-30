@@ -1900,13 +1900,6 @@
 
       drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
 
-      if (sim.mode === "reaction") {
-        ctx.fillStyle = "rgba(255,255,255,.9)";
-        ctx.font = "700 13px system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText("reaccion", targetScreen.x, targetScreen.y - 22);
-      }
-
       const leadM = Math.hypot(recommended.intercept.x - p.x, recommended.intercept.y - p.y, recommended.intercept.z - p.z);
       ui.lead.textContent = ui.showLead.checked ? (leadAboveGround ? `${leadM.toFixed(1)} m` : "suelo") : "oculto";
       ui.target.textContent = `M${sim.target.machineIndex + 1} · ${Math.round(sim.target.angleDeg)} deg · ${sim.target.heightAt10.toFixed(1)} m/10m · ${Math.round(sim.target.landingDistance)} m`;
