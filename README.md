@@ -2,6 +2,8 @@
 
 Simulador 3D en HTML para estudiar el tiro al plato desde la perspectiva real del ojo del tirador. El objetivo no es inventar un juego abstracto, sino construir un laboratorio visual de física aplicada: salida del plato, velocidad, ángulo, reacción del tirador, adelanto, dispersión del cartucho y corrección tras el primer y segundo tiro.
 
+Construido por **Roberto Canales Mora**: [robertocanales.com/proyectos#plato](https://robertocanales.com/proyectos#plato). Licencia: [MIT](#14-licencia).
+
 La aplicación se ejecuta como una página HTML autónoma y renderiza la escena con `canvas`, sin dependencias externas. Está pensada para iterar rápido sobre la física y la representación visual antes de convertirla, si procede, en un juego completo o una experiencia VR.
 
 **Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a `index.html` muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación. El proyecto sigue siendo un único fichero ejecutable, por lo que también puede servirse localmente con `python3 -m http.server 8000` y abrir `http://localhost:8000/`.
@@ -213,3 +215,15 @@ http://localhost:8000/
 │   └── screenshots/
 └── auxiliares/        # scripts temporales locales, excluidos de git
 ```
+
+## 14. Licencia
+
+Este proyecto se publica bajo licencia MIT.
+
+Copyright (c) 2026 Roberto Canales Mora
+
+Por la presente se concede permiso, libre de cargos, a cualquier persona que obtenga una copia de este software y de los archivos de documentación asociados, para tratar el software sin restricción, incluyendo sin limitación los derechos de uso, copia, modificación, fusión, publicación, distribución, sublicencia y/o venta de copias del software, y para permitir a las personas a quienes se les proporcione el software que hagan lo mismo, sujeto a las siguientes condiciones:
+
+El aviso de copyright anterior y este aviso de permiso se incluirán en todas las copias o partes sustanciales del software.
+
+EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITÁNDOSE A GARANTÍAS DE COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO LOS AUTORES O TITULARES DEL COPYRIGHT SERÁN RESPONSABLES DE NINGUNA RECLAMACIÓN, DAÑO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIÓN CONTRACTUAL, EXTRACONTRACTUAL O DE OTRO TIPO, QUE SURJA DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O EL USO U OTRAS OPERACIONES EN EL SOFTWARE.
