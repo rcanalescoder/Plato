@@ -2063,18 +2063,6 @@
       return null;
     }
 
-    function correctionText(cue, verticalOnly) {
-      if (!cue) return "sin tiro";
-      if (!cue.impact) return "preparando";
-      const metrics = correctionVectors(cue);
-      const hTol = cue.hit ? 0.04 : 0.005;
-      const vTol = cue.hit ? 0.035 : 0.005;
-      const leadText = Math.abs(metrics.lead) < hTol ? "adelanto ok" : `${metrics.lead > 0 ? "quita adelanto" : "mas adelanto"} ${Math.abs(metrics.lead).toFixed(2)} m`;
-      const lateralText = Math.abs(metrics.lateral) < hTol ? "linea ok" : `${metrics.lateral > 0 ? "corrige izq" : "corrige der"} ${Math.abs(metrics.lateral).toFixed(2)} m`;
-      const verticalText = Math.abs(metrics.vertical) < vTol ? "altura ok" : `${metrics.vertical > 0 ? "baja" : "sube"} ${Math.abs(metrics.vertical).toFixed(2)} m`;
-      return verticalOnly ? verticalText : `${leadText} · ${lateralText}`;
-    }
-
     // Combined shot diagnostic: horizontal = lead, vertical = height.
     function drawCorrectionMini(x0, y0, bw, bh, cue, label) {
       if (!cue || !cue.impact) return;
@@ -2088,8 +2076,6 @@
       ctx.fillStyle = "rgba(255,255,255,.86)";
       ctx.textAlign = "left";
       ctx.fillText(label, x0 + 8, y0 + 14);
-      ctx.fillStyle = "rgba(255,255,255,.72)";
-      ctx.fillText(correctionText(cue, false), x0 + 56, y0 + 14);
 
       const metrics = correctionVectors(cue);
       const cx = x0 + bw / 2;
