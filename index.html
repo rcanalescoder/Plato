@@ -323,6 +323,21 @@
   </main>
 
   <script>
+    /*
+      Plato is intentionally kept as a single-file app so it can be opened,
+      published on GitHub Pages, or served locally without a build step.
+
+      Coordinate system used everywhere below:
+      - x: lateral field axis, positive to the shooter's right.
+      - y: height in metres.
+      - z: depth away from the shooter, positive towards the trench/field.
+      - yaw/pitch: aiming angles from the shooter's right eye.
+    */
+
+    // -------------------------------------------------------------------------
+    // DOM handles
+    // -------------------------------------------------------------------------
+
     const canvas = document.getElementById("simCanvas");
     const ctx = canvas.getContext("2d");
     const banner = document.getElementById("banner");
@@ -364,6 +379,10 @@
       stationValue: document.getElementById("stationValue")
     };
 
+    // -------------------------------------------------------------------------
+    // Simulation state and user-adjustable parameters
+    // -------------------------------------------------------------------------
+
     const sim = {
       mode: "idle",
       t: 0,
@@ -394,6 +413,10 @@
       frozenCues: []
     };
 
+    /*
+      params are the public "laboratory" controls. sim stores transient state
+      for the current target, shot history, station rotation, and visual effects.
+    */
     const params = {
       slow: 0.35,
       reaction: 0.32,
@@ -403,6 +426,10 @@
       mode: "universal",
       guard: "neutral"
     };
+
+    // -------------------------------------------------------------------------
+    // Range geometry and rules-derived constants
+    // -------------------------------------------------------------------------
 
     const keys = new Set();
     const g = 9.81;
@@ -421,6 +448,15 @@
     const VIEW_FACTOR = 1.08;
     const eye = { x: 0, y: 1.7, z: 0 };
 
+    /*
+      Scheme rows:
+      - Universal: [machineNumber, horizontalAngleDeg, heightAt10m, landingDistanceM]
+      - Olympic:   [machineNumber, horizontalAngleDeg, heightAt10m]
+
+      Values are model tables for training. They are based on the normative
+      structure of FITASC Universal Trench and ISSF Trap, then tuned so the
+      simulator can expose a broad set of realistic visual problems.
+    */
     const FU_SCHEMES = {
       fu1: [[1,35,1.5,70],[2,20,2.0,60],[3,-10,1.5,75],[4,-30,3.0,65],[5,-45,1.5,60]],
       fu2: [[1,40,2.0,65],[2,25,3.5,60],[3,5,2.5,70],[4,-15,1.5,75],[5,-35,2.0,65]],
@@ -445,6 +481,10 @@
       issf8: [[1,25,3.0],[2,5,1.5],[3,-20,2.0],[4,40,1.5],[5,0,3.0],[6,-45,2.8],[7,35,3.0],[8,-5,2.5],[9,-45,2.0],[10,45,1.8],[11,0,1.5],[12,-30,3.0],[13,30,2.0],[14,10,3.0],[15,-15,2.2]],
       issf9: [[1,40,3.0],[2,0,1.8],[3,-20,3.0],[4,15,3.0],[5,-10,1.5],[6,-35,2.0],[7,45,1.6],[8,0,2.8],[9,-30,3.0],[10,30,2.0],[11,-5,2.0],[12,-15,3.0],[13,35,2.9],[14,0,1.6],[15,-45,2.2]]
     };
+
+    // -------------------------------------------------------------------------
+    // Station, lure, and guard geometry
+    // -------------------------------------------------------------------------
 
     function stationSpacing() {
       return params.mode === "universal" ? UNIVERSAL_STATION_SPACING : OLYMPIC_STATION_SPACING;
@@ -488,6 +528,7 @@
       sim.desiredPitch = a.pitch;
     }
 
+    // The round rotates through stations 1..5, starting from the selected post.
     function stationForRound() {
       return ((sim.startStation - 1 + sim.roundIndex) % 5) + 1;
     }
@@ -515,6 +556,10 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
+    // -------------------------------------------------------------------------
+    // Vector math and camera projection
+    // -------------------------------------------------------------------------
+
     function rand(min, max) {
       return min + Math.random() * (max - min);
     }
@@ -537,6 +582,15 @@
       return { yaw: Math.atan2(v.x, v.z), pitch: Math.atan2(v.y, Math.hypot(v.x, v.z)) };
     }
 
+    // -------------------------------------------------------------------------
+    // Target flight and lead solution
+    // -------------------------------------------------------------------------
+
+    /*
+      targetAt() is the simplified clay-flight integrator.
+      The reduced gravity factor represents the visual effect of aerodynamic lift
+      without introducing a full disc-aerodynamics model.
+    */
     function targetAt(time) {
       if (!sim.target) return null;
       const flightTime = time - (sim.target.visibleDelay || 0);
@@ -564,6 +618,11 @@
       return dirToAngles({ x: point.x - eye.x, y: point.y - eye.y, z: point.z - eye.z });
     }
 
+    /*
+      First-pass intercept: assume current target velocity and iterate on pellet
+      travel time. This gives a useful seed, then recommendedAimAt() refines it
+      against the same centre-shot physics used for impact diagnostics.
+    */
     function solveIntercept(p, v, pelletSpeed) {
       let tau = Math.hypot(p.x - eye.x, p.y - eye.y, p.z - eye.z) / pelletSpeed;
       for (let i = 0; i < 5; i += 1) {
@@ -595,6 +654,14 @@
       return best;
     }
 
+    /*
+      recommendedAimAt() returns the sight angle that should put the effective
+      centre of the pattern closest to the moving clay at this instant.
+
+      Rib gain is handled by subtracting the point-of-impact lift from the sight
+      pitch, because the shooter aims with the bead but the shot column leaves a
+      little higher when the solista/stock setup has gain.
+    */
     function recommendedAimAt(shotTime) {
       const p = targetAt(shotTime);
       if (!p) return null;
@@ -638,6 +705,8 @@
       };
     }
 
+    // World projection is deliberately tied to the fixed eye view. Moving the
+    // mouse changes the sight angle, not the range/camera.
     function projectPoint(world) {
       const rel = { x: world.x - eye.x, y: world.y - eye.y, z: world.z - eye.z };
       const yaw = Math.atan2(rel.x, rel.z) - sim.viewYaw;
@@ -685,6 +754,10 @@
       };
     }
 
+    // -------------------------------------------------------------------------
+    // Target lifecycle: call, repeat, reset, and station advance
+    // -------------------------------------------------------------------------
+
     function startTarget(target, label = "PLATO") {
       sim.target = cloneTarget(target);
       sim.t = 0;
@@ -701,6 +774,11 @@
       window.setTimeout(() => banner.classList.remove("show"), 360);
     }
 
+    /*
+      callTarget() selects one machine from the active scheme and converts the
+      table row into an initial velocity. Universal always emerges from the
+      central lure. Olympic emerges from the lure in front of the current station.
+    */
     function callTarget() {
       if (sim.roundIndex >= 25 || sim.pendingStation || sim.mode === "reaction" || sim.mode === "tracking") return;
       if (!sim.stationLocked) {
@@ -765,6 +843,8 @@
       startTarget(target);
     }
 
+    // Repeats the exact last target. This is useful for studying a difficult
+    // lateral/fast clay without advancing the training problem.
     function repeatTarget() {
       if (!sim.lastTarget || sim.pendingStation || sim.mode === "reaction" || sim.mode === "tracking") return;
       updateEye();
@@ -857,6 +937,10 @@
       }
     }
 
+    // -------------------------------------------------------------------------
+    // Breakage effects
+    // -------------------------------------------------------------------------
+
     function createGroundBreak(p) {
       const ground = { x: p.x, y: 0.04, z: p.z };
       sim.bursts.push({ age: 0, p: ground, hit: false });
@@ -881,6 +965,14 @@
       return pieces;
     }
 
+    // -------------------------------------------------------------------------
+    // Shot pattern, pellets, and hit validation
+    // -------------------------------------------------------------------------
+
+    /*
+      Pattern radius grows with distance and choke/spread setting. It is not a
+      score probability; it only defines the cone that individual pellets occupy.
+    */
     function patternRadius(distance) {
       const spread = params.spread / 100;
       return 0.38 + spread * 0.78 + distance * (0.006 + spread * 0.004);
@@ -890,6 +982,13 @@
       return 306;
     }
 
+    /*
+      Deterministic pellet cloud:
+      - golden-angle sampling spreads pellets without random clumping between runs
+      - densityWave breaks the perfect mathematical spiral so it feels more like
+        a shot column than a synthetic grid
+      - vertical scaling makes the pattern slightly elliptical on screen
+    */
     function pelletDirections(centerDir, count, coneAngle) {
       const forward = normalize(centerDir);
       const worldUp = Math.abs(forward.y) > 0.92 ? { x: 1, y: 0, z: 0 } : { x: 0, y: 1, z: 0 };
@@ -925,6 +1024,8 @@
       return targetAt(baseTime + tau);
     }
 
+    // Each pellet is advanced through the same moving-target timeline. A hit is
+    // recorded only when one physical pellet passes inside the clay radius.
     function pelletHitTarget(dir, speed, shotTime) {
       const maxTime = 0.24;
       const dt = 0.0028;
@@ -950,6 +1051,11 @@
       return { hit: false, p: bestPoint, distance: best };
     }
 
+    /*
+      fire() is the source of truth for hit/miss.
+      It samples all pellets, keeps a small rendered subset for performance, and
+      stores frozen correction cues so the user can compare shot 1 vs shot 2.
+    */
     function fire() {
       if (!sim.target || sim.mode === "idle" || sim.mode === "ended" || sim.shotCount >= 2) return;
       const current = targetAt(sim.t);
@@ -1021,6 +1127,10 @@
         advanceRound(false);
       }
     }
+
+    // -------------------------------------------------------------------------
+    // Main first-person drawing
+    // -------------------------------------------------------------------------
 
     function drawBackground() {
       const w = canvas.clientWidth;
@@ -1124,6 +1234,10 @@
       ctx.restore();
     }
 
+    /*
+      drawTrap() renders the fixed range reference: shooting posts, translucent
+      pit, machines, and lure. It intentionally does not move with the mouse.
+    */
     function drawTrap() {
       const rangeMinX = stationX(1) - 1.6;
       const rangeMaxX = stationX(5) + 1.6;
@@ -1208,6 +1322,7 @@
       }
     }
 
+    // Live target, lead cloud, and recommended sight point.
     function drawTargetAndLead() {
       if (!sim.target) {
         return;
@@ -1280,6 +1395,8 @@
       ui.target.textContent = `M${sim.target.machineIndex + 1} · ${Math.round(sim.target.angleDeg)} deg · ${sim.target.heightAt10.toFixed(1)} m/10m · ${Math.round(sim.target.landingDistance)} m`;
     }
 
+    // Keeps the last shot cues visible briefly after break/fail so the user can
+    // compare where the recommended point was against the real shot line.
     function drawFrozenCue() {
       if (!sim.frozenCues.length) return;
       for (const cue of sim.frozenCues) {
@@ -1341,6 +1458,7 @@
       }
     }
 
+    // Red bead/cursor plus optional translucent point-of-impact from rib gain.
     function drawSight() {
       if (sim.mode === "ended" && sim.frozenCues.length) return;
       const aim = projectAim(sim.gunYaw, sim.gunPitch);
@@ -1411,6 +1529,10 @@
       ctx.globalAlpha = 1;
     }
 
+    // -------------------------------------------------------------------------
+    // Correction panels
+    // -------------------------------------------------------------------------
+
     function currentCorrectionCue() {
       if (sim.frozenCues.length) return sim.frozenCues[sim.frozenCues.length - 1];
       if (!sim.target || sim.mode === "ended") return null;
@@ -1430,6 +1552,12 @@
       };
     }
 
+    /*
+      Decompose the miss in clay-relative axes:
+      - lead: ahead/behind along the clay ground-projected travel direction
+      - lateral: left/right from that travel line
+      - vertical: high/low
+    */
     function correctionVectors(cue) {
       const forward = normalize({ x: cue.velocity.x, y: 0, z: cue.velocity.z });
       const right = { x: forward.z, y: 0, z: -forward.x };
@@ -1493,6 +1621,7 @@
       return verticalOnly ? verticalText : `${leadText} · ${lateralText}`;
     }
 
+    // Compact, auto-zoomed diagnostic view for one shot slot.
     function drawCorrectionMini(x0, y0, bw, bh, cue, mode, label) {
       const topMode = mode === "top";
       const points = cue && cue.impact
@@ -1606,6 +1735,10 @@
       ctx.restore();
     }
 
+    // -------------------------------------------------------------------------
+    // HUD, render loop, controls, and input events
+    // -------------------------------------------------------------------------
+
     function drawCorrectionPanel(mode) {
       const topMode = mode === "top";
       const w = canvas.clientWidth;
@@ -1676,6 +1809,7 @@
       requestAnimationFrame(loop);
     }
 
+    // Rebuild the scheme selector when switching between Universal and Olympic.
     function populateSchemes() {
       const current = ui.scheme.value;
       ui.scheme.innerHTML = "";
@@ -1690,6 +1824,7 @@
       if (source[current]) ui.scheme.value = current;
     }
 
+    // Single synchronization point from form controls to simulation parameters.
     function syncControls() {
       const previousMode = params.mode;
       params.mode = ui.mode.value;
@@ -1718,6 +1853,7 @@
       if (sim.mode === "idle") setAimToGuard();
     }
 
+    // Buttons and sliders.
     ui.call.addEventListener("click", callTarget);
     ui.repeat.addEventListener("click", repeatTarget);
     ui.fire.addEventListener("click", fire);
@@ -1738,6 +1874,9 @@
       control.addEventListener("input", syncControls);
       control.addEventListener("change", syncControls);
     });
+
+    // Mouse contract: right click calls the target, left click fires. The native
+    // cursor is hidden while the red bead drawn by canvas is the visible sight.
     canvas.addEventListener("contextmenu", event => {
       event.preventDefault();
       callTarget();
@@ -1761,6 +1900,8 @@
       const aim = projectAim(sim.gunYaw, sim.gunPitch);
       aimFromScreen(aim.x, aim.y);
     });
+
+    // Keyboard controls are retained for laptop testing and fine adjustment.
     window.addEventListener("keydown", event => {
       if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) event.preventDefault();
       if (event.key === "Enter") callTarget();
@@ -1770,6 +1911,7 @@
     window.addEventListener("keyup", event => keys.delete(event.key));
     window.addEventListener("resize", resize);
 
+    // Boot.
     resize();
     syncControls();
     requestAnimationFrame(loop);
