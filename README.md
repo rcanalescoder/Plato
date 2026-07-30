@@ -4,7 +4,7 @@ Simulador 3D en HTML para estudiar el tiro al plato desde la perspectiva real de
 
 La aplicación se ejecuta como una página HTML autónoma y renderiza la escena con `canvas`, sin dependencias externas. Está pensada para iterar rápido sobre la física y la representación visual antes de convertirla, si procede, en un juego completo o una experiencia VR.
 
-**Probar la aplicación:** <a href="./index.html" target="_blank" rel="noopener">abrir `index.html` en una nueva ventana</a>. El proyecto es un único fichero ejecutable, por lo que también puede servirse localmente con `python3 -m http.server 8000` y abrir `http://localhost:8000/`.
+**Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a `index.html` muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación. El proyecto sigue siendo un único fichero ejecutable, por lo que también puede servirse localmente con `python3 -m http.server 8000` y abrir `http://localhost:8000/`.
 
 ![Vista principal del simulador](docs/screenshots/vista-principal.png)
 
