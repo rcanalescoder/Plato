@@ -1493,7 +1493,7 @@
           const p = projectPoint(machinePoint);
           ctx.fillStyle = active ? "rgba(255,100,0,.95)" : "rgba(255,255,255,.5)";
           ctx.fillRect(p.x - 4, p.y - 8, 8, 14);
-          if (active) {
+          if (active && ui.showPath.checked) {
             ctx.strokeStyle = "rgba(255,138,24,.78)";
             ctx.lineWidth = 2.4;
             drawWorldLine(
