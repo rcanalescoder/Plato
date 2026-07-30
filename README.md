@@ -103,6 +103,8 @@ El área amarilla/translúcida representa la zona a la que conviene apuntar para
 
 ![Nube de adelanto sobre el plato](docs/screenshots/nube-adelanto.png)
 
+Las ayudas visuales de adelanto se recortan al suelo: si el punto recomendado o la trayectoria futura caerían por debajo del terreno, dejan de pintarse para no sugerir un disparo imposible.
+
 El cálculo parte de dos ideas:
 
 - El plato se sigue moviendo mientras los perdigones viajan.
