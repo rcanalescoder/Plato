@@ -89,6 +89,13 @@ Cuando se pide plato, la aplicación:
 
 La máquina activa visible bajo el suelo translúcido se coloca sobre la prolongación inversa del vector de lanzamiento. Por tanto, el tramo sólido máquina-boca y la trayectoria inicial del plato son colineales; si la trayectoria se curva después es por la integración de gravedad/viento, no por un quiebro artificial al salir del foso.
 
+La velocidad inicial no se elige al azar. Para cada fila de esquema se resuelve una parábola que cumple simultáneamente:
+
+- altura exigida a 10 m;
+- distancia de caída del esquema: 60-75 m en Universal y 76 m en Olímpico.
+
+En la parte superior de la escena aparece una banda de verificación con velocidad inicial, ángulo, altura real a 10 m, alcance calculado y un check de cumplimiento. Si el viento está activado, la banda indica que la validación corresponde al ajuste base de máquina sin viento.
+
 La posición del plato en el tiempo se calcula como:
 
 ```text
@@ -98,6 +105,16 @@ z(t) = z0 + vz*t
 ```
 
 El factor de gravedad reducido no intenta afirmar que el plato ignore la gravedad; compensa de forma práctica la sustentación aerodinámica del plato real para obtener una trayectoria visual y entrenable.
+
+## 5.1. Verificación Automática de Esquemas
+
+El repositorio incluye una prueba sin dependencias para auditar todos los esquemas definidos en `index.html`:
+
+```bash
+node scripts/verify-schemes.js
+```
+
+La prueba recorre 185 lanzamientos teóricos: 50 de Universal y 135 de Olímpico. Falla si alguna fila no reproduce su altura a 10 m o si el alcance se sale de tolerancia: ±5 m para Universal y ±1 m para Olímpico.
 
 ## 6. Adelanto
 
