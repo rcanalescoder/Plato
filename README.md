@@ -31,6 +31,8 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
 
+La proyección usa un campo de visión vertical fijo de 48 grados. Así el tamaño percibido del foso y del plato depende del ángulo de visión, no del formato exacto del monitor; una pantalla más ancha muestra más campo lateral, pero no debería alejar artificialmente la escena.
+
 ## 3. Geometría de Campo
 
 El sistema usa metros como unidad interna.
