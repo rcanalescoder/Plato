@@ -354,6 +354,7 @@
       <div class="switch-row">
         <label title="Muestra u oculta el punto y area amarilla donde conviene apuntar para interceptar el plato."><input id="showLead" type="checkbox" checked> ayuda adelanto</label>
         <label title="Muestra u oculta el patron azul estimado del plomeo donde estas apuntando."><input id="showShot" type="checkbox" checked> plomeo</label>
+        <label title="Muestra u oculta la trayectoria naranja del plato."><input id="showPath" type="checkbox" checked> trayectoria</label>
       </div>
     </section>
 
@@ -460,6 +461,7 @@
       high: document.getElementById("highBtn"),
       showLead: document.getElementById("showLead"),
       showShot: document.getElementById("showShot"),
+      showPath: document.getElementById("showPath"),
       mode: document.getElementById("modeControl"),
       scheme: document.getElementById("schemeControl"),
       station: document.getElementById("stationControl"),
@@ -1536,6 +1538,7 @@
     }
 
     function drawTargetPath(untilTime) {
+      if (!ui.showPath.checked) return;
       ctx.strokeStyle = "rgba(255,100,0,.8)";
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 7]);
@@ -2249,7 +2252,7 @@
     });
     ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
     ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
-    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showLead].forEach(control => {
+    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showLead, ui.showShot, ui.showPath].forEach(control => {
       control.addEventListener("input", syncControls);
       control.addEventListener("change", syncControls);
     });
