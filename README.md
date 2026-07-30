@@ -44,7 +44,8 @@ El sistema usa metros como unidad interna.
 | Separación puestos olímpico | 3,15 m | Rango ISSF 3,00-3,30 m |
 | Máquinas universal | 5 | FITASC Universal Trench |
 | Máquinas olímpico | 15 | ISSF Trap |
-| Altura de salida visible | 0,72 m | Aproximación visual del brazo/máquina bajo foso |
+| Altura de salida visible | 0,16 m | Boca de salida sobre la tapa del foso |
+| Posición máquina bajo foso | 0,50 m bajo tapa y 0,50 m retrasada | FITASC Universal Trench 1.03 |
 
 En universal, el señuelo naranja se mantiene antes del foso y sobre la línea central del puesto 3. En olímpico, el señuelo activo aparece delante del puesto desde el que se tira; los demás señuelos quedan en gris como referencia.
 
@@ -52,9 +53,9 @@ En universal, el señuelo naranja se mantiene antes del foso y sobre la línea c
 
 La implementación toma como guía normas y tablas oficiales, pero no pretende sustituir una homologación de campo.
 
-- **Foso universal FITASC**: cinco máquinas dentro de la zanja, puestos a 15 m del borde delantero del foso y un plato/señuelo sobre la máquina 3 para indicar la salida a 0 grados.
+- **Foso universal FITASC**: cinco máquinas dentro de la zanja, puestos a 15 m del borde delantero del foso y un plato/señuelo sobre la máquina 3 para indicar la salida a 0 grados. Las máquinas se modelan sobre bases alineadas, separadas 1,10 m, con el pivote aproximadamente 0,50 m bajo el techo del foso y 0,50 m retrasado del borde delantero.
 - **Esquemas universal**: se modelan diez esquemas (`fu1` a `fu10`) con ángulos laterales de -45 a +45 grados, alturas de 1,5 a 3,5 m y distancias de 60 a 75 m.
-- **Foso olímpico ISSF**: quince máquinas agrupadas para los cinco puestos; se modelan nueve esquemas (`issf1` a `issf9`) con distancia objetivo de 76 m.
+- **Foso olímpico ISSF**: quince máquinas agrupadas en cinco grupos de tres, uno por cada puesto; se modelan nueve esquemas (`issf1` a `issf9`) con distancia objetivo de 76 m.
 - **Plato**: se representa como disco naranja macizo con forma escalonada, aproximando el plato real de 110 mm de diámetro y 25-26 mm de altura descrito en reglas técnicas ISSF.
 
 Fuentes consultadas:
@@ -75,7 +76,7 @@ Cuando se pide plato, la aplicación:
 1. Mantiene el punto rojo en la guardia inicial durante el tiempo de reacción configurado.
 2. Selecciona una máquina del esquema activo.
 3. Calcula el vector de salida a partir del ángulo horizontal, la altura exigida a 10 m y la distancia normativa.
-4. Lanza el plato siempre desde la zona del foso próxima al señuelo.
+4. Lanza el plato desde la boca/rendija del foso en la planta del señuelo activo, con la máquina físicamente retrasada y por debajo.
 5. Simula el vuelo con gravedad reducida y viento lateral opcional.
 
 La posición del plato en el tiempo se calcula como:

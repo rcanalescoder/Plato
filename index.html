@@ -476,9 +476,11 @@
     const OLYMPIC_MACHINE_GROUP_SPACING = 3.15;
     const OLYMPIC_MACHINE_SPACING = 0.82;
     const LURE_HEIGHT = 0.08;
-    const RELEASE_HEIGHT = 0.72;
-    const MACHINE_HEIGHT = -0.42;
-    const MACHINE_Z = TRENCH_FRONT + 0.62;
+    // FITASC places the trap pivot about 0.50 m below the trench roof and
+    // 0.50 m behind its front edge. The clay becomes visible at the roof slit.
+    const RELEASE_HEIGHT = 0.16;
+    const MACHINE_HEIGHT = -0.5;
+    const MACHINE_Z = TRENCH_FRONT + 0.5;
     const CLAY_VISIBLE_DELAY = 0;
     const SHOT_TRACE_BASE_DURATION = 0.75;
     const BURST_BASE_DURATION = 0.65;
@@ -1397,7 +1399,7 @@
             ctx.lineWidth = 2.4;
             drawWorldLine(
               { x, y: MACHINE_HEIGHT + 0.05, z: MACHINE_Z },
-              { x: lureX(), y: RELEASE_HEIGHT, z: TRENCH_FRONT }
+              { x: lureX(), y: LURE_HEIGHT, z: TRENCH_FRONT }
             );
           }
         }
