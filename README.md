@@ -251,6 +251,8 @@ Copyright (c) 2026 Roberto Canales Mora
 
 Por la presente se concede permiso, libre de cargos, a cualquier persona que obtenga una copia de este software y de los archivos de documentación asociados, para tratar el software sin restricción, incluyendo sin limitación los derechos de uso, copia, modificación, fusión, publicación, distribución, sublicencia y/o venta de copias del software, y para permitir a las personas a quienes se les proporcione el software que hagan lo mismo, sujeto a las siguientes condiciones:
 
+Al usar, copiar, modificar, distribuir o publicar versiones derivadas de este proyecto debe conservarse siempre la referencia al autor original, **Roberto Canales Mora**, junto con el enlace a [www.robertocanales.com](https://robertocanales.com/proyectos#plato). Esta atribución forma parte del aviso de copyright y de permiso que debe acompañar a todas las copias o partes sustanciales del software.
+
 El aviso de copyright anterior y este aviso de permiso se incluirán en todas las copias o partes sustanciales del software.
 
 EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITÁNDOSE A GARANTÍAS DE COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO LOS AUTORES O TITULARES DEL COPYRIGHT SERÁN RESPONSABLES DE NINGUNA RECLAMACIÓN, DAÑO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIÓN CONTRACTUAL, EXTRACONTRACTUAL O DE OTRO TIPO, QUE SURJA DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O EL USO U OTRAS OPERACIONES EN EL SOFTWARE.
