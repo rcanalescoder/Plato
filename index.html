@@ -409,7 +409,7 @@
       <canvas id="simCanvas"></canvas>
       <div class="banner" id="banner">PLATO</div>
       <div class="norm-badge" id="normBadge" aria-live="polite"></div>
-      <div class="slow-note"><strong>Camara lenta</strong> activa para analizar. Para probar tiempo real, sube <strong>Camara lenta</strong> a 1.00x.</div>
+      <div class="slow-note" id="slowNote"><strong>Camara lenta</strong> activa para analizar. Para probar tiempo real, sube <strong>Camara lenta</strong> a 1.00x.</div>
     </section>
 
     <section class="controls" aria-label="Parametros fisicos">
@@ -594,6 +594,7 @@
       result: document.getElementById("resultReadout"),
       zoomValue: document.getElementById("zoomValue"),
       slowValue: document.getElementById("slowValue"),
+      slowNote: document.getElementById("slowNote"),
       reactionValue: document.getElementById("reactionValue"),
       cartridgeValue: document.getElementById("cartridgeValue"),
       spread1Value: document.getElementById("spread1Value"),
@@ -2090,6 +2091,7 @@
       ctx.fillStyle = "rgba(255,255,255,.72)";
       ctx.fillText(correctionText(cue, false), x0 + 56, y0 + 14);
 
+      const metrics = correctionVectors(cue);
       const cx = x0 + bw / 2;
       const cy = y0 + bh / 2 + 18;
       const axisW = bw - 44;
@@ -2129,30 +2131,7 @@
       ctx.moveTo(cx, cy);
       ctx.lineTo(cx, cy + axisH / 2);
       ctx.stroke();
-      ctx.font = "500 9px system-ui";
-      ctx.fillStyle = lowColor;
-      ctx.textAlign = "center";
-      ctx.fillText("bajo", cx, cy + axisH / 2 + 12);
-      ctx.fillStyle = highColor;
-      ctx.fillText("alto", cx, cy - axisH / 2 - 8);
-      ctx.textAlign = "left";
-      ctx.fillStyle = leadScreenSign > 0 ? behindColor : aheadColor;
-      ctx.fillText(leadScreenSign > 0 ? "retrasado" : "adelantado", cx - axisW / 2, cy + 14);
-      ctx.textAlign = "right";
-      ctx.fillStyle = leadScreenSign > 0 ? aheadColor : behindColor;
-      ctx.fillText(leadScreenSign > 0 ? "adelantado" : "retrasado", cx + axisW / 2, cy + 14);
 
-      ctx.strokeStyle = "rgba(255,212,81,.98)";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 7, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.font = "500 9px system-ui";
-      ctx.fillStyle = "rgba(255,212,81,.82)";
-      ctx.textAlign = "center";
-      ctx.fillText("ideal", cx, cy - 11);
-
-      const metrics = correctionVectors(cue);
       const range = Math.max(0.35, Math.abs(metrics.lead), Math.abs(metrics.vertical), Math.abs(metrics.lateral) * 0.55) * 1.35;
       const sx = (axisW / 2 - 12) / range;
       const sy = (axisH / 2 - 12) / range;
@@ -2182,9 +2161,19 @@
         ctx.setLineDash([]);
       }
       ctx.font = "500 10px system-ui";
-      ctx.fillStyle = "rgba(255,255,255,.72)";
+      const leadLabel = Math.abs(metrics.lead) < 0.005 ? "adelanto ok" : `${metrics.lead > 0 ? "adelantado" : "retrasado"} ${Math.abs(metrics.lead).toFixed(2)} m`;
+      const heightLabel = Math.abs(metrics.vertical) < 0.005 ? "altura ok" : `${metrics.vertical > 0 ? "alto" : "bajo"} ${Math.abs(metrics.vertical).toFixed(2)} m`;
+      const leadLabelX = metrics.lead * leadScreenSign >= 0 ? x0 + bw - 10 : x0 + 10;
+      const leadAlign = metrics.lead * leadScreenSign >= 0 ? "right" : "left";
+      ctx.textAlign = leadAlign;
+      ctx.fillStyle = metrics.lead >= 0 ? aheadColor : behindColor;
+      ctx.fillText(leadLabel, leadLabelX, y0 + bh - 28);
+      ctx.textAlign = "right";
+      ctx.fillStyle = metrics.vertical >= 0 ? highColor : lowColor;
+      ctx.fillText(heightLabel, x0 + bw - 10, metrics.vertical >= 0 ? y0 + 34 : y0 + bh - 12);
       ctx.textAlign = "center";
-      ctx.fillText(lateralText, cx, y0 + bh - 10);
+      ctx.fillStyle = "rgba(215,237,255,.72)";
+      ctx.fillText(lateralText, cx, y0 + bh - 44);
       ctx.restore();
     }
 
@@ -2408,6 +2397,7 @@
       updateEye();
       sim.ribGain = Number(ui.rib.value) / 100 * MAX_RIB_GAIN_DEG;
       ui.slowValue.textContent = `${params.slow.toFixed(2)}x`;
+      ui.slowNote.style.display = params.slow >= 0.995 ? "none" : "block";
       ui.reactionValue.textContent = `${params.reaction.toFixed(2)} s`;
       ui.cartridgeValue.textContent = `${params.cartridge} m/s`;
       ui.spread1Value.textContent = spreadLabel(params.spread1);
