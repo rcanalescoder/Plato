@@ -2146,6 +2146,22 @@
       return null;
     }
 
+    function correctionLabel(value, axis) {
+      const abs = Math.abs(value);
+      if (axis === "lead") {
+        if (abs < 0.12) return { text: "adelanto ok", color: "rgba(255,255,255,.72)" };
+        return {
+          text: `${value > 0 ? "quita adelanto" : "da adelanto"} ${abs.toFixed(2)} m`,
+          color: value > 0 ? "rgba(125,183,255,.95)" : "rgba(255,180,84,.95)"
+        };
+      }
+      if (abs < 0.08) return { text: "altura ok", color: "rgba(255,255,255,.72)" };
+      return {
+        text: `${value > 0 ? "baja" : "sube"} ${abs.toFixed(2)} m`,
+        color: value > 0 ? "rgba(199,160,255,.95)" : "rgba(155,230,111,.95)"
+      };
+    }
+
     // Combined shot diagnostic: horizontal = lead, vertical = height.
     function drawCorrectionMini(x0, y0, bw, bh, cue, label) {
       if (!cue || !cue.impact) return;
@@ -2235,6 +2251,17 @@
         ctx.arc(cx + shotU * scale, cy - shotV * scale, 3.7, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
+
+        const leadInfo = correctionLabel(shotU, "lead");
+        const heightInfo = correctionLabel(shotV, "height");
+        ctx.textAlign = "left";
+        ctx.font = "500 10px system-ui";
+        ctx.fillStyle = "rgba(255,255,255,.68)";
+        ctx.fillText("rojo = centro plomeo", x0 + 8, y0 + 30);
+        ctx.fillStyle = leadInfo.color;
+        ctx.fillText(leadInfo.text, x0 + 8, y0 + 44);
+        ctx.fillStyle = heightInfo.color;
+        ctx.fillText(heightInfo.text, x0 + 8, y0 + 58);
       }
       ctx.restore();
     }
