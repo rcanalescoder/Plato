@@ -143,7 +143,9 @@ Las dos ventanas superiores ayudan a entender el error de forma separada:
 - **Corrección lateral**: vista superior. Mide si el disparo quedó adelantado, retrasado o lateralmente fuera de línea respecto al punto ideal.
 - **Corrección superior**: vista lateral. Mide si el disparo quedó alto o bajo.
 
-Cada ventana está dividida en **tiro 1** y **tiro 2**, para comparar ambos intentos. La referencia amarilla es el punto físico recomendado; el punto rojo representa el encare del tirador; el azul claro representa el centro físico del plomeo del tiro actual. Si hay impacto, la escena conserva unos instantes la trayectoria recomendada y el punto de impacto para que el tirador pueda analizarlo.
+Cada ventana está dividida en **tiro 1** y **tiro 2**, para comparar ambos intentos. La referencia amarilla es el punto físico recomendado; el punto rojo representa el encare del tirador; el azul claro representa el centro físico del plomeo del tiro actual. El aro amarillo y el aro azul se escalan por separado con su propia distancia 3D al ojo del tirador, porque pueden estar en profundidades distintas.
+
+El control **Analisis** define cuantos segundos quedan visibles las pistas congeladas, los fragmentos y los rastros tras el disparo. Es una ayuda visual: no altera la fisica ni cuenta platos. La camara lenta tambien es visual; para probar una tirada a tiempo real hay que subir **Camara lenta** a `1.00x`.
 
 ![Ventanas de corrección del primer y segundo tiro](docs/screenshots/correcciones-doble-tiro.png)
 
