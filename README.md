@@ -31,10 +31,11 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Botón derecho**: pide plato.
 - **Botón izquierdo**: dispara el primer y segundo tiro.
 - **Solista**: muestra u oculta la banda visual de la escopeta desde el ojo del tirador, inspirada en las fotos de referencia de la DT11.
+- **Zoom visual**: acerca la escena para pantallas pequeñas o usuarios con peor visión. El valor `1.00x` conserva la escala reglamentaria; valores mayores estrechan la lente visual sin cambiar distancias ni físicas.
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
 
-La proyección usa un campo de visión vertical fijo de 48 grados. Así el tamaño percibido del foso y del plato depende del ángulo de visión, no del formato exacto del monitor; una pantalla más ancha muestra más campo lateral, pero no debería alejar artificialmente la escena.
+La proyección usa un campo de visión vertical base de 48 grados. Así el tamaño percibido del foso y del plato depende del ángulo de visión, no del formato exacto del monitor; una pantalla más ancha muestra más campo lateral, pero no debería alejar artificialmente la escena. El control de zoom visual multiplica la focal de cámara para mejorar legibilidad sin tocar la geometría real del campo.
 
 ## 3. Geometría de Campo
 

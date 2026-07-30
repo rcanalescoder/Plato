@@ -383,6 +383,9 @@
           <option value="high">Alta por puesto</option>
         </select>
       </label>
+      <label class="control">Zoom visual <span id="zoomValue">1.00x</span>
+        <input id="zoomControl" type="range" min="1" max="2.2" step="0.05" value="1">
+      </label>
       <label class="control">Camara lenta <span id="slowValue">0.35x</span>
         <input id="slowControl" type="range" min="0.15" max="1" step="0.05" value="0.35">
       </label>
@@ -462,6 +465,7 @@
       scheme: document.getElementById("schemeControl"),
       station: document.getElementById("stationControl"),
       guard: document.getElementById("guardControl"),
+      zoom: document.getElementById("zoomControl"),
       slow: document.getElementById("slowControl"),
       reaction: document.getElementById("reactionControl"),
       cartridge: document.getElementById("cartridgeControl"),
@@ -480,6 +484,7 @@
       lead: document.getElementById("leadReadout"),
       aim: document.getElementById("aimReadout"),
       result: document.getElementById("resultReadout"),
+      zoomValue: document.getElementById("zoomValue"),
       slowValue: document.getElementById("slowValue"),
       reactionValue: document.getElementById("reactionValue"),
       cartridgeValue: document.getElementById("cartridgeValue"),
@@ -538,6 +543,7 @@
       spread2: 20,
       analysis: 4.8,
       wind: 0,
+      zoom: 1,
       mode: "universal",
       guard: "neutral"
     };
@@ -828,7 +834,7 @@
     // mouse changes the sight angle, not the range/camera.
     function cameraFocalLength() {
       const h = canvas.clientHeight;
-      return (h * 0.5) / Math.tan((VERTICAL_FOV_DEG * Math.PI / 180) * 0.5);
+      return ((h * 0.5) / Math.tan((VERTICAL_FOV_DEG * Math.PI / 180) * 0.5)) * params.zoom;
     }
 
     function projectPoint(world) {
@@ -2262,6 +2268,7 @@
       params.spread2 = Number(ui.spread2.value);
       params.analysis = Number(ui.analysis.value);
       params.wind = Number(ui.wind.value);
+      params.zoom = Number(ui.zoom.value);
       if (!sim.stationLocked) {
         sim.station = Number(ui.station.value);
         sim.startStation = sim.station;
@@ -2275,6 +2282,7 @@
       ui.spread2Value.textContent = spreadLabel(params.spread2);
       ui.analysisValue.textContent = `${params.analysis.toFixed(1)} s`;
       ui.windValue.textContent = `${params.wind.toFixed(1)} m/s`;
+      ui.zoomValue.textContent = `${params.zoom.toFixed(2)}x`;
       ui.ribValue.textContent = `${Math.round(Number(ui.rib.value))}%`;
       ui.stationValue.textContent = sim.station;
       ui.flat.setAttribute("aria-pressed", Number(ui.rib.value) < 20 ? "true" : "false");
@@ -2299,7 +2307,7 @@
     });
     ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
     ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
-    [ui.mode, ui.scheme, ui.station, ui.guard, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showRib].forEach(control => {
+    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showRib].forEach(control => {
       control.addEventListener("input", syncControls);
       control.addEventListener("change", syncControls);
     });
