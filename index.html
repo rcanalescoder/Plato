@@ -222,7 +222,8 @@
 
     .slow-note {
       position: absolute;
-      left: 14px;
+      left: 50%;
+      transform: translateX(-50%);
       bottom: 12px;
       max-width: min(520px, calc(100% - 28px));
       padding: 7px 9px;
@@ -2073,32 +2074,8 @@
       return verticalOnly ? verticalText : `${leadText} · ${lateralText}`;
     }
 
-    // Compact, auto-zoomed diagnostic view for one shot slot.
-    function drawCorrectionMini(x0, y0, bw, bh, cue, mode, label) {
-      const topMode = mode === "top";
-      const points = cue && cue.impact
-        ? []
-        : topMode
-          ? [{ x: eye.x, z: 0 }, { x: lureX(), z: TRENCH_FRONT }]
-          : [{ y: 0, z: 0 }, { y: 0, z: TRENCH_FRONT }, { y: eye.y, z: 0 }];
-      if (cue) {
-        points.push(cue.target, cue.intercept);
-        if (cue.shotCenter) points.push(cue.shotCenter);
-        if (cue.impact) points.push(cue.impact);
-      }
-      const pad = 18;
-      const zoomMarginA = cue && cue.impact ? 0.45 : 2;
-      const zoomMarginB = cue && cue.impact ? 0.45 : topMode ? 2 : 0.35;
-      const minA = topMode ? Math.min(...points.map(p => p.x)) - zoomMarginA : Math.max(0, Math.min(...points.map(p => p.z)) - zoomMarginA);
-      const maxA = topMode ? Math.max(...points.map(p => p.x)) + zoomMarginA : Math.max(...points.map(p => p.z)) + zoomMarginA;
-      const minB = topMode ? Math.max(0, Math.min(...points.map(p => p.z)) - zoomMarginB) : Math.min(0, Math.min(...points.map(p => p.y)) - zoomMarginB);
-      const maxB = topMode ? Math.max(...points.map(p => p.z)) + zoomMarginB : Math.max(...points.map(p => p.y)) + zoomMarginB;
-      const scale = Math.min((bw - pad * 2) / Math.max(topMode ? 1.2 : 1.8, maxA - minA), (bh - pad * 2 - 18) / Math.max(topMode ? 1.2 : 0.9, maxB - minB));
-      function map(p) {
-        if (topMode) return { x: x0 + pad + (p.x - minA) * scale, y: y0 + bh - pad - (p.z - minB) * scale };
-        return { x: x0 + pad + (p.z - minA) * scale, y: y0 + bh - pad - (p.y - minB) * scale };
-      }
-
+    // Combined shot diagnostic: horizontal = lead, vertical = height.
+    function drawCorrectionMini(x0, y0, bw, bh, cue, label) {
       ctx.save();
       ctx.beginPath();
       ctx.rect(x0, y0, bw, bh);
@@ -2110,69 +2087,96 @@
       ctx.textAlign = "left";
       ctx.fillText(label, x0 + 8, y0 + 14);
       ctx.fillStyle = "rgba(255,255,255,.72)";
-      ctx.fillText(correctionText(cue, !topMode), x0 + 58, y0 + 14);
+      ctx.fillText(correctionText(cue, false), x0 + 56, y0 + 14);
 
-      if (topMode && !(cue && cue.impact)) {
-        const shooter = map({ x: eye.x, z: 0 });
-        const lure = map({ x: lureX(), z: TRENCH_FRONT });
-        ctx.strokeStyle = "rgba(255,255,255,.28)";
+      const cx = x0 + bw / 2;
+      const cy = y0 + bh / 2 + 12;
+      const axisW = bw - 44;
+      const axisH = bh - 76;
+      ctx.strokeStyle = "rgba(255,255,255,.22)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx - axisW / 2, cy);
+      ctx.lineTo(cx + axisW / 2, cy);
+      ctx.moveTo(cx, cy - axisH / 2);
+      ctx.lineTo(cx, cy + axisH / 2);
+      ctx.stroke();
+      ctx.font = "500 9px system-ui";
+      ctx.fillStyle = "rgba(255,255,255,.48)";
+      ctx.textAlign = "center";
+      ctx.fillText("bajo", cx, cy + axisH / 2 + 11);
+      ctx.fillText("alto", cx, cy - axisH / 2 - 4);
+      ctx.textAlign = "left";
+      ctx.fillText("retrasado", cx - axisW / 2, cy - 6);
+      ctx.textAlign = "right";
+      ctx.fillText("adelantado", cx + axisW / 2, cy - 6);
+
+      ctx.strokeStyle = "rgba(255,212,81,.98)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+      ctx.stroke();
+
+      if (cue && cue.impact) {
+        const metrics = correctionVectors(cue);
+        const range = Math.max(0.35, Math.abs(metrics.lead), Math.abs(metrics.vertical), Math.abs(metrics.lateral) * 0.55) * 1.35;
+        const sx = (axisW / 2 - 12) / range;
+        const sy = (axisH / 2 - 12) / range;
+        const shotX = clamp(cx + metrics.lead * sx, cx - axisW / 2 + 10, cx + axisW / 2 - 10);
+        const shotY = clamp(cy - metrics.vertical * sy, cy - axisH / 2 + 10, cy + axisH / 2 - 10);
+        const lateralText = Math.abs(metrics.lateral) < 0.005 ? "linea ok" : `${metrics.lateral > 0 ? "linea izq" : "linea der"} ${Math.abs(metrics.lateral).toFixed(2)} m`;
+        ctx.strokeStyle = "rgba(255,255,255,.55)";
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(shooter.x, shooter.y);
-        ctx.lineTo(lure.x, lure.y);
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(shotX, shotY);
         ctx.stroke();
         ctx.fillStyle = "#d90000";
+        ctx.strokeStyle = "rgba(20,20,20,.55)";
         ctx.beginPath();
-        ctx.arc(shooter.x, shooter.y, 3.2, 0, Math.PI * 2);
+        ctx.arc(shotX, shotY, 4, 0, Math.PI * 2);
         ctx.fill();
-      } else if (!(cue && cue.impact)) {
-        const ground0 = map({ y: 0, z: minA });
-        const ground1 = map({ y: 0, z: maxA });
-        ctx.strokeStyle = "rgba(255,255,255,.28)";
-        ctx.beginPath();
-        ctx.moveTo(ground0.x, ground0.y);
-        ctx.lineTo(ground1.x, ground1.y);
         ctx.stroke();
-      }
-
-      if (cue) {
-        const target = map(cue.target);
-        const ideal = map(cue.intercept);
+        if (Math.abs(metrics.lateral) >= 0.005) {
+          ctx.strokeStyle = "rgba(215,237,255,.72)";
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(shotX, shotY);
+          ctx.lineTo(clamp(shotX + metrics.lateral * sx * 0.55, x0 + 20, x0 + bw - 20), shotY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        ctx.fillStyle = cue.hit ? "rgba(155,230,111,.96)" : "rgba(215,237,255,.78)";
+        ctx.beginPath();
+        ctx.arc(shotX + 10, shotY - 10, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = "500 10px system-ui";
+        ctx.fillStyle = "rgba(255,255,255,.72)";
+        ctx.textAlign = "center";
+        ctx.fillText(lateralText, cx, y0 + bh - 10);
+      } else if (cue) {
+        const target = projectPoint(cue.target);
+        const ideal = projectPoint(cue.intercept);
         ctx.strokeStyle = "rgba(255,212,81,.95)";
         ctx.setLineDash([4, 4]);
         ctx.beginPath();
-        ctx.moveTo(target.x, target.y);
-        ctx.lineTo(ideal.x, ideal.y);
+        ctx.moveTo(cx - 14, cy + 14);
+        ctx.lineTo(cx + 14, cy - 14);
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = "var(--clay)";
         ctx.beginPath();
-        ctx.arc(target.x, target.y, 4, 0, Math.PI * 2);
+        ctx.arc(cx - 14, cy + 14, 4, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = "rgba(255,212,81,.98)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(ideal.x, ideal.y, 7, 0, Math.PI * 2);
-        ctx.stroke();
-        if (cue.impact) {
-          const impact = map(cue.impact);
-          const shotCenter = cue.shotCenter ? map(cue.shotCenter) : impact;
-          ctx.fillStyle = "#d90000";
-          ctx.strokeStyle = "rgba(20,20,20,.55)";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.arc(shotCenter.x, shotCenter.y, 3.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-          ctx.strokeStyle = "rgba(255,255,255,.55)";
-          ctx.beginPath();
-          ctx.moveTo(ideal.x, ideal.y);
-          ctx.lineTo(shotCenter.x, shotCenter.y);
-          ctx.stroke();
-          ctx.fillStyle = cue.hit ? "rgba(155,230,111,.96)" : "rgba(215,237,255,.42)";
-          ctx.beginPath();
-          ctx.arc(impact.x, impact.y, 5, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        ctx.fillStyle = "rgba(255,255,255,.5)";
+        ctx.font = "500 9px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText(`${Math.hypot(ideal.x - target.x, ideal.y - target.y).toFixed(0)} px pantalla`, cx, y0 + bh - 10);
+      } else {
+        ctx.fillStyle = "rgba(255,255,255,.42)";
+        ctx.textAlign = "center";
+        ctx.font = "500 11px system-ui";
+        ctx.fillText("sin disparo", cx, cy + 4);
       }
       ctx.restore();
     }
@@ -2181,13 +2185,14 @@
     // HUD, render loop, controls, and input events
     // -------------------------------------------------------------------------
 
-    function drawCorrectionPanel(mode) {
-      const topMode = mode === "top";
+    function drawCorrectionPanel() {
       const w = canvas.clientWidth;
-      const x0 = topMode ? w - 406 : 16;
-      const y0 = 16;
-      const bw = 390;
-      const bh = 270;
+      const h = canvas.clientHeight;
+      const bw = Math.min(500, w - 32);
+      const bh = 210;
+      const x0 = 16;
+      const y0 = Math.max(16, h - bh - 64);
+      if (bw < 360) return;
       ctx.save();
       ctx.fillStyle = "rgba(8,12,10,.78)";
       ctx.strokeStyle = "rgba(255,255,255,.28)";
@@ -2198,7 +2203,7 @@
       ctx.font = "500 12px system-ui";
       ctx.fillStyle = "rgba(255,255,255,.9)";
       ctx.textAlign = "left";
-      ctx.fillText(topMode ? "correccion lateral" : "correccion superior", x0 + 12, y0 + 18);
+      ctx.fillText("correccion de disparo", x0 + 12, y0 + 18);
       ctx.strokeStyle = "rgba(255,255,255,.18)";
       ctx.beginPath();
       ctx.moveTo(x0 + bw / 2, y0 + 28);
@@ -2206,17 +2211,9 @@
       ctx.stroke();
       const innerY = y0 + 30;
       const innerH = bh - 40;
-      drawCorrectionMini(x0 + 8, innerY, bw / 2 - 12, innerH, cueForShotSlot(1), mode, "tiro 1");
-      drawCorrectionMini(x0 + bw / 2 + 4, innerY, bw / 2 - 12, innerH, cueForShotSlot(2), mode, "tiro 2");
+      drawCorrectionMini(x0 + 8, innerY, bw / 2 - 12, innerH, cueForShotSlot(1), "tiro 1");
+      drawCorrectionMini(x0 + bw / 2 + 4, innerY, bw / 2 - 12, innerH, cueForShotSlot(2), "tiro 2");
       ctx.restore();
-    }
-
-    function drawTopView() {
-      drawCorrectionPanel("top");
-    }
-
-    function drawSideView() {
-      drawCorrectionPanel("side");
     }
 
     function updateNormBadge() {
@@ -2352,8 +2349,7 @@
       drawShots();
       drawFragments();
       drawSight();
-      drawSideView();
-      drawTopView();
+      drawCorrectionPanel();
       drawHud();
       drawLegend();
     }
