@@ -352,7 +352,7 @@
         <div class="stat"><span>Resultado</span><strong id="resultReadout">-</strong></div>
       </div>
       <div class="switch-row">
-        <label><input id="autoAim" type="checkbox"> demo sigue nube</label>
+        <label><input id="showLead" type="checkbox" checked> ayuda adelanto</label>
         <label><input id="showShot" type="checkbox" checked> plomeo</label>
         <label><input id="showRib" type="checkbox"> solista</label>
       </div>
@@ -459,7 +459,7 @@
       nextStation: document.getElementById("nextStationBtn"),
       flat: document.getElementById("flatBtn"),
       high: document.getElementById("highBtn"),
-      autoAim: document.getElementById("autoAim"),
+      showLead: document.getElementById("showLead"),
       showShot: document.getElementById("showShot"),
       mode: document.getElementById("modeControl"),
       scheme: document.getElementById("schemeControl"),
@@ -1027,11 +1027,6 @@
       sim.gunYaw += inputYaw * manualSpeed * dt;
       sim.gunPitch += inputPitch * manualSpeed * dt;
 
-      if (ui.autoAim.checked && sim.mode === "tracking") {
-        const stiffness = 5.6;
-        sim.gunYaw += (sim.desiredYaw - sim.gunYaw) * clamp(stiffness * dt, 0, 1);
-        sim.gunPitch += (sim.desiredPitch - sim.gunPitch) * clamp(stiffness * dt, 0, 1);
-      }
       const aim = projectAim(sim.gunYaw, sim.gunPitch);
       aimFromScreen(aim.x, aim.y);
     }
@@ -1617,21 +1612,23 @@
         ctx.stroke();
       }
 
-      ctx.fillStyle = "rgba(255,212,81,.24)";
-      ctx.strokeStyle = "rgba(255,212,81,.95)";
-      ctx.lineWidth = 2.4;
-      ctx.beginPath();
-      ctx.ellipse(desiredScreen.x, desiredScreen.y, idealRadiusPx * 0.76, idealRadiusPx * 0.48, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
+      if (ui.showLead.checked) {
+        ctx.fillStyle = "rgba(255,212,81,.24)";
+        ctx.strokeStyle = "rgba(255,212,81,.95)";
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.ellipse(desiredScreen.x, desiredScreen.y, idealRadiusPx * 0.76, idealRadiusPx * 0.48, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
 
-      ctx.fillStyle = "rgba(255,212,81,.98)";
-      ctx.strokeStyle = "rgba(20,20,20,.72)";
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.arc(desiredScreen.x, desiredScreen.y, 4.2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
+        ctx.fillStyle = "rgba(255,212,81,.98)";
+        ctx.strokeStyle = "rgba(20,20,20,.72)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(desiredScreen.x, desiredScreen.y, 4.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
 
       drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
 
@@ -1643,7 +1640,7 @@
       }
 
       const leadM = Math.hypot(recommended.intercept.x - p.x, recommended.intercept.y - p.y, recommended.intercept.z - p.z);
-      ui.lead.textContent = `${leadM.toFixed(1)} m`;
+      ui.lead.textContent = ui.showLead.checked ? `${leadM.toFixed(1)} m` : "oculto";
       ui.target.textContent = `M${sim.target.machineIndex + 1} · ${Math.round(sim.target.angleDeg)} deg · ${sim.target.heightAt10.toFixed(1)} m/10m · ${Math.round(sim.target.landingDistance)} m`;
     }
 
@@ -1665,22 +1662,24 @@
 
         ctx.save();
         ctx.globalAlpha = alpha;
-        ctx.setLineDash([5, 6]);
-        ctx.strokeStyle = "rgba(255,212,81,.95)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(targetScreen.x, targetScreen.y);
-        ctx.lineTo(recommendedScreen.x, recommendedScreen.y);
-        ctx.stroke();
-        ctx.setLineDash([]);
+        if (ui.showLead.checked) {
+          ctx.setLineDash([5, 6]);
+          ctx.strokeStyle = "rgba(255,212,81,.95)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(targetScreen.x, targetScreen.y);
+          ctx.lineTo(recommendedScreen.x, recommendedScreen.y);
+          ctx.stroke();
+          ctx.setLineDash([]);
 
-        ctx.fillStyle = "rgba(255,212,81,.22)";
-        ctx.strokeStyle = "rgba(255,212,81,.98)";
-        ctx.lineWidth = 2.4;
-        ctx.beginPath();
-        ctx.ellipse(recommendedScreen.x, recommendedScreen.y, idealRadiusPx * 0.76, idealRadiusPx * 0.48, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
+          ctx.fillStyle = "rgba(255,212,81,.22)";
+          ctx.strokeStyle = "rgba(255,212,81,.98)";
+          ctx.lineWidth = 2.4;
+          ctx.beginPath();
+          ctx.ellipse(recommendedScreen.x, recommendedScreen.y, idealRadiusPx * 0.76, idealRadiusPx * 0.48, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
 
         ctx.strokeStyle = "rgba(215,237,255,.8)";
         ctx.lineWidth = 1.7;
@@ -2317,7 +2316,7 @@
     });
     ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
     ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
-    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showRib].forEach(control => {
+    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showLead, ui.showRib].forEach(control => {
       control.addEventListener("input", syncControls);
       control.addEventListener("change", syncControls);
     });
@@ -2335,7 +2334,6 @@
       if (event.button === 2) callTarget();
     });
     canvas.addEventListener("mousemove", event => {
-      if (ui.autoAim.checked) return;
       if (document.pointerLockElement !== canvas) {
         const rect = canvas.getBoundingClientRect();
         aimFromScreen(event.clientX - rect.left, event.clientY - rect.top);
