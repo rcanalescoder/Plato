@@ -651,6 +651,7 @@
       wind: 0,
       zoom: 1,
       mode: "universal",
+      scheme: "fu1",
       guard: "neutral"
     };
 
@@ -996,17 +997,21 @@
     // Target lifecycle: call, repeat, reset, and station advance
     // -------------------------------------------------------------------------
 
+    function clearShotReview() {
+      sim.shots = [];
+      sim.bursts = [];
+      sim.fragments = [];
+      sim.debug = null;
+      sim.frozenCues = [];
+    }
+
     function startTarget(target, label = "PLATO") {
       sim.target = cloneTarget(target);
       sim.repeatingTarget = Boolean(sim.target.noCount);
       sim.t = 0;
       sim.mode = "reaction";
       sim.shotCount = 0;
-      sim.shots = [];
-      sim.bursts = [];
-      sim.fragments = [];
-      sim.debug = null;
-      sim.frozenCues = [];
+      clearShotReview();
       ui.result.textContent = "-";
       banner.textContent = label;
       banner.classList.add("show");
@@ -1164,18 +1169,14 @@
       sim.t = 0;
       sim.shotCount = 0;
       sim.target = null;
-      sim.fragments = [];
       sim.roundIndex = 0;
       sim.broken = 0;
       sim.stationLocked = false;
       sim.pendingStation = null;
       sim.repeatingTarget = false;
       sim.station = Number(ui.station.value);
-      sim.debug = null;
-      sim.frozenCues = [];
+      clearShotReview();
       setAimToGuard();
-      sim.shots = [];
-      sim.bursts = [];
       ui.result.textContent = "-";
     }
 
@@ -2382,9 +2383,12 @@
     // Single synchronization point from form controls to simulation parameters.
     function syncControls() {
       const previousMode = params.mode;
+      const previousScheme = params.scheme;
+      const previousStation = sim.station;
       params.mode = ui.mode.value;
       params.guard = ui.guard.value;
       if (previousMode !== params.mode || ui.scheme.options.length === 0) populateSchemes();
+      params.scheme = ui.scheme.value;
       params.slow = Number(ui.slow.value);
       params.reaction = Number(ui.reaction.value);
       params.cartridge = Number(ui.cartridge.value);
@@ -2411,6 +2415,11 @@
       ui.stationValue.textContent = sim.station;
       ui.flat.setAttribute("aria-pressed", Number(ui.rib.value) < 20 ? "true" : "false");
       ui.high.setAttribute("aria-pressed", Number(ui.rib.value) >= 20 ? "true" : "false");
+      const changedTargetContext = previousMode !== params.mode || previousScheme !== params.scheme || previousStation !== sim.station;
+      if (changedTargetContext && sim.mode === "idle") {
+        clearShotReview();
+        ui.result.textContent = "-";
+      }
       if (sim.mode === "idle") setAimToGuard();
     }
 
