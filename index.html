@@ -1628,7 +1628,7 @@
     function cueForShotSlot(slot) {
       const frozen = sim.frozenCues.find(cue => cue.shot === slot);
       if (frozen) return frozen;
-      if (sim.target && sim.mode !== "ended" && sim.shotCount + 1 === slot) {
+      if (slot === 1 && sim.target && sim.mode !== "ended" && sim.shotCount === 0) {
         const live = currentCorrectionCue();
         return live ? { ...live, shot: slot } : null;
       }
