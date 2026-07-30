@@ -1360,11 +1360,15 @@
       ctx.lineWidth = 2;
       ctx.setLineDash([6, 7]);
       ctx.beginPath();
+      let pathStarted = false;
       for (let t = 0; t <= Math.min(sim.t + 0.65, 3.4); t += 0.08) {
         const q = targetAt(t);
         if (!q) continue;
         const s = projectPoint(q);
-        if (t === 0) ctx.moveTo(s.x, s.y);
+        if (!pathStarted) {
+          ctx.moveTo(s.x, s.y);
+          pathStarted = true;
+        }
         else ctx.lineTo(s.x, s.y);
       }
       ctx.stroke();
