@@ -331,30 +331,30 @@
   <main>
     <section class="toolbar" aria-label="Controles principales">
       <div class="button-row">
-        <button class="primary" id="callBtn" type="button">Pedir plato</button>
-        <button id="repeatBtn" type="button">Repetir plato</button>
-        <button class="danger" id="fireBtn" type="button">Disparar</button>
-        <button id="resetBtn" type="button">Reset</button>
-        <button id="prevStationBtn" type="button">Puesto -</button>
-        <button id="nextStationBtn" type="button">Puesto +</button>
+        <button class="primary" id="callBtn" type="button" title="Solicita un nuevo plato. Tambien puedes pedirlo con el boton derecho del raton.">Pedir plato</button>
+        <button id="repeatBtn" type="button" title="Repite exactamente el plato anterior desde el mismo puesto, sin contar como nuevo plato de la tirada.">Repetir plato</button>
+        <button class="danger" id="fireBtn" type="button" title="Dispara el cartucho actual. Tambien puedes disparar con el boton izquierdo del raton.">Disparar</button>
+        <button id="resetBtn" type="button" title="Reinicia la tirada de 25 platos y limpia los disparos y fragmentos visibles.">Reset</button>
+        <button id="prevStationBtn" type="button" title="Retrocede el puesto seleccionado o actual.">Puesto -</button>
+        <button id="nextStationBtn" type="button" title="Avanza el puesto seleccionado o actual.">Puesto +</button>
       </div>
       <div class="segmented" aria-label="Tipo de solista">
-        <button id="flatBtn" type="button" aria-pressed="true">Plana</button>
-        <button id="highBtn" type="button" aria-pressed="false">Alta</button>
+        <button id="flatBtn" type="button" aria-pressed="true" title="Solista sin ganancia: el punto de mira y el centro de impacto salen practicamente alineados.">Plana</button>
+        <button id="highBtn" type="button" aria-pressed="false" title="Solista con ganancia: el impacto sale algo por encima del punto de mira.">Alta</button>
       </div>
       <div class="status">
-        <div class="stat"><span>Estado</span><strong id="stateReadout">Esperando</strong></div>
-        <div class="stat"><span>Tirada</span><strong id="roundReadout">0/25 · 0 rotos</strong></div>
-        <div class="stat"><span>Puesto</span><strong id="stationReadout">3</strong></div>
-        <div class="stat"><span>Plato</span><strong id="targetReadout">-</strong></div>
-        <div class="stat"><span>Adelanto</span><strong id="leadReadout">-</strong></div>
-        <div class="stat"><span>Encare</span><strong id="aimReadout">0.0 deg</strong></div>
-        <div class="stat"><span>Resultado</span><strong id="resultReadout">-</strong></div>
+        <div class="stat" title="Fase actual del simulador: esperando, reaccion, seguimiento, caida o terminado."><span>Estado</span><strong id="stateReadout">Esperando</strong></div>
+        <div class="stat" title="Contador de la tirada: platos consumidos de 25 y platos rotos. Las repeticiones no suman."><span>Tirada</span><strong id="roundReadout">0/25 · 0 rotos</strong></div>
+        <div class="stat" title="Puesto de tiro actual. La tirada rota por los puestos 1 a 5."><span>Puesto</span><strong id="stationReadout">3</strong></div>
+        <div class="stat" title="Maquina, angulo, altura a 10 m y distancia del plato actual."><span>Plato</span><strong id="targetReadout">-</strong></div>
+        <div class="stat" title="Distancia aproximada entre el plato y el punto fisico recomendado de adelanto."><span>Adelanto</span><strong id="leadReadout">-</strong></div>
+        <div class="stat" title="Angulos actuales del punto de mira respecto al eje del ojo del tirador."><span>Encare</span><strong id="aimReadout">0.0 deg</strong></div>
+        <div class="stat" title="Resultado del ultimo disparo o del plato actual."><span>Resultado</span><strong id="resultReadout">-</strong></div>
       </div>
       <div class="switch-row">
-        <label><input id="showLead" type="checkbox" checked> ayuda adelanto</label>
-        <label><input id="showShot" type="checkbox" checked> plomeo</label>
-        <label><input id="showRib" type="checkbox"> solista</label>
+        <label title="Muestra u oculta el punto y area amarilla donde conviene apuntar para interceptar el plato."><input id="showLead" type="checkbox" checked> ayuda adelanto</label>
+        <label title="Muestra u oculta el patron azul estimado del plomeo donde estas apuntando."><input id="showShot" type="checkbox" checked> plomeo</label>
+        <label title="Muestra u oculta la solista vista desde el ojo del tirador."><input id="showRib" type="checkbox"> solista</label>
       </div>
     </section>
 
@@ -365,54 +365,54 @@
     </section>
 
     <section class="controls" aria-label="Parametros fisicos">
-      <label class="control">Modalidad
+      <label class="control" title="Elige la disciplina: Universal usa cinco maquinas; Olimpica usa quince maquinas agrupadas por puesto.">Modalidad
         <select id="modeControl">
           <option value="universal">Universal</option>
           <option value="olympic">Olimpica</option>
         </select>
       </label>
-      <label class="control">Esquema
+      <label class="control" title="Selecciona el esquema oficial/simulado de maquinas, angulos y alturas que se usara para sortear cada plato.">Esquema
         <select id="schemeControl"></select>
       </label>
-      <label class="control">Puesto <span id="stationValue">3</span>
+      <label class="control" title="Puesto inicial o actual del tirador. La tirada avanza rotando 1, 2, 3, 4, 5.">Puesto <span id="stationValue">3</span>
         <input id="stationControl" type="range" min="1" max="5" step="1" value="3">
       </label>
-      <label class="control">Guardia
+      <label class="control" title="Define donde empieza apuntando el tirador antes de pedir plato: al señuelo o algo alto segun el puesto.">Guardia
         <select id="guardControl">
           <option value="neutral">Neutra</option>
           <option value="high">Alta por puesto</option>
         </select>
       </label>
-      <label class="control">Zoom visual <span id="zoomValue">1.00x</span>
+      <label class="control" title="Acerca visualmente la escena sin cambiar la distancia real al foso ni la fisica.">Zoom visual <span id="zoomValue">1.00x</span>
         <input id="zoomControl" type="range" min="1" max="2.2" step="0.05" value="1">
       </label>
-      <label class="control">Camara lenta <span id="slowValue">0.35x</span>
+      <label class="control" title="Factor temporal del simulador. 1.00x es tiempo real; valores menores ayudan a analizar el adelanto.">Camara lenta <span id="slowValue">0.35x</span>
         <input id="slowControl" type="range" min="0.15" max="1" step="0.05" value="0.35">
       </label>
-      <label class="control">Reaccion <span id="reactionValue">0.32 s</span>
+      <label class="control" title="Tiempo que tarda el tirador en empezar a mover la escopeta tras ver salir el plato.">Reaccion <span id="reactionValue">0.32 s</span>
         <input id="reactionControl" type="range" min="0.15" max="0.65" step="0.01" value="0.32">
       </label>
-      <label class="control">Cartucho <span id="cartridgeValue">400 m/s</span>
+      <label class="control" title="Velocidad inicial de referencia del cartucho; los perdigones usan una velocidad efectiva derivada.">Cartucho <span id="cartridgeValue">400 m/s</span>
         <input id="cartridgeControl" type="range" min="360" max="430" step="5" value="400">
       </label>
-      <label class="control">Plomeo tiro 1 <span id="spread1Value">3/4</span>
+      <label class="control" title="Apertura del patron de perdigones para el primer disparo, equivalente al choke seleccionado.">Plomeo tiro 1 <span id="spread1Value">3/4</span>
         <input id="spread1Control" type="range" min="0" max="100" step="5" value="30">
       </label>
-      <label class="control">Plomeo tiro 2 <span id="spread2Value">Full</span>
+      <label class="control" title="Apertura del patron de perdigones para el segundo disparo, normalmente mas cerrado.">Plomeo tiro 2 <span id="spread2Value">Full</span>
         <input id="spread2Control" type="range" min="0" max="100" step="5" value="20">
       </label>
-      <label class="control">Analisis <span id="analysisValue">4.8 s</span>
+      <label class="control" title="Tiempo durante el que se mantienen visibles las ayudas y correcciones despues del disparo o fallo.">Analisis <span id="analysisValue">4.8 s</span>
         <input id="analysisControl" type="range" min="1.8" max="8" step="0.2" value="4.8">
       </label>
-      <label class="control">Viento <span id="windValue">0.0 m/s</span>
+      <label class="control" title="Viento lateral aplicado a la trayectoria del plato. Negativo empuja a un lado y positivo al contrario.">Viento <span id="windValue">0.0 m/s</span>
         <input id="windControl" type="range" min="-4" max="4" step="0.2" value="0">
       </label>
-      <label class="control">Ganancia solista <span id="ribValue">0%</span>
+      <label class="control" title="Elevacion de la solista: aumenta la diferencia entre punto de mira y centro fisico de impacto.">Ganancia solista <span id="ribValue">0%</span>
         <input id="ribControl" type="range" min="0" max="100" step="5" value="0">
       </label>
       <div class="hint">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
-      <label class="switch-row"><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
-      <label class="switch-row"><input id="showLegend" type="checkbox" checked> leyenda</label>
+      <label class="switch-row" title="Alterna entre suelo opaco y suelo translucido para ver las maquinas bajo el foso."><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
+      <label class="switch-row" title="Muestra u oculta la leyenda de colores y simbolos de la esquina inferior derecha."><input id="showLegend" type="checkbox" checked> leyenda</label>
       <div class="project-links">
         <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Powered by www.robertocanales.com</a>
         <a href="#licencia-mit">Licencia MIT</a>
