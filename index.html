@@ -903,9 +903,9 @@
       aimFromScreen(aim.x, aim.y);
     }
 
-    function update(dt) {
+    function update(simDt, realDt = simDt) {
       if (sim.mode !== "idle" && sim.target) {
-        sim.t += dt;
+        sim.t += simDt;
         if (sim.mode === "reaction" && sim.t >= params.reaction) {
           sim.mode = "tracking";
         }
@@ -926,23 +926,23 @@
         }
       }
 
-      updateAim(dt);
+      updateAim(simDt);
       sim.shots.forEach(shot => {
-        shot.age += dt;
+        shot.age += realDt;
       });
       sim.shots = sim.shots.filter(shot => shot.age < 0.75);
-      sim.bursts.forEach(b => b.age += dt);
+      sim.bursts.forEach(b => b.age += realDt);
       sim.bursts = sim.bursts.filter(b => b.age < 0.65);
       sim.fragments.forEach(fragment => {
-        fragment.age += dt;
-        fragment.p.x += fragment.v.x * dt;
-        fragment.p.y = Math.max(0.02, fragment.p.y + fragment.v.y * dt);
-        fragment.p.z += fragment.v.z * dt;
-        fragment.v.y -= g * 0.9 * dt;
+        fragment.age += realDt;
+        fragment.p.x += fragment.v.x * realDt;
+        fragment.p.y = Math.max(0.02, fragment.p.y + fragment.v.y * realDt);
+        fragment.p.z += fragment.v.z * realDt;
+        fragment.v.y -= g * 0.9 * realDt;
         if (fragment.p.y <= 0.021) fragment.v.y *= -0.18;
       });
       sim.fragments = sim.fragments.filter(fragment => fragment.age < 2.2);
-      sim.frozenCues.forEach(cue => cue.age += dt);
+      sim.frozenCues.forEach(cue => cue.age += realDt);
       sim.frozenCues = sim.frozenCues.filter(cue => cue.age <= 3.2);
       if (sim.mode === "ended" && sim.pendingStation && sim.frozenCues.length === 0 && sim.fragments.length === 0 && sim.bursts.length === 0 && sim.shots.length === 0) {
         applyPendingStation();
@@ -1917,7 +1917,7 @@
     function loop(now) {
       const realDt = clamp((now - sim.last) / 1000, 0, 0.05);
       sim.last = now;
-      update(realDt * params.slow);
+      update(realDt * params.slow, realDt);
       render();
       requestAnimationFrame(loop);
     }
