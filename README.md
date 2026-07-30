@@ -33,7 +33,7 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Ayuda adelanto**: muestra u oculta el punto/área amarilla donde conviene llevar el tiro. Al ocultarla, la física y las correcciones siguen calculándose.
 - **Trayectoria**: muestra u oculta la línea naranja discontinua del vuelo del plato.
 - **Zoom visual**: acerca la escena para pantallas pequeñas o usuarios con peor visión. El valor `1.00x` conserva la escala reglamentaria; valores mayores estrechan la lente visual sin cambiar distancias ni físicas.
-- **Retardo salida**: tiempo breve entre pedir el plato y que este salga realmente del foso. Por defecto es `0,12 s`, pensado como retardo de sistema/lanzadora, no como reacción humana.
+- **Retardo salida**: tiempo breve entre pedir el plato y que este salga realmente del foso. Por defecto es `0,03 s`, pensado como retardo de sistema/lanzadora, no como reacción humana.
 - **Plomeo tiro 1 / Plomeo tiro 2**: ajustan la apertura del patrón de cada disparo, como una aproximación a chokes diferentes.
 - **Variación plomeo**: introduce irregularidad entre disparos: huecos, pequeñas agrupaciones y diferencias leves de velocidad entre perdigones.
 - **Análisis**: controla cuánto tiempo quedan visibles la corrección del disparo, los rastros y la rotura o caída del plato.
@@ -95,7 +95,7 @@ Cuando se pide plato, la aplicación:
 
 El antiguo concepto de "reacción" del tirador se sustituyó por este retardo de salida porque el simulador ya no mueve automáticamente la escopeta persiguiendo el plato. La reacción real queda en manos del usuario: cuándo localiza el plato, mueve el punto rojo y dispara. El control solo representa el pequeño intervalo entre la orden de pedir plato y la aparición física del objetivo.
 
-En FITASC Universal Trench la salida se define como inmediata tras la llamada, considerando únicamente el tiempo de reacción al sonido, indicado aproximadamente en una décima de segundo. Por eso el valor inicial del simulador es `0,12 s`: suficiente para notar la llamada sin convertirlo en una espera artificial.
+En FITASC Universal Trench la salida se define como inmediata tras la llamada, considerando únicamente el tiempo de reacción al sonido, indicado aproximadamente en una décima de segundo. Por eso el valor inicial del simulador es `0,03 s`: deja una latencia técnica mínima sin convertirlo en una espera artificial.
 
 La máquina activa visible bajo el suelo translúcido se coloca sobre la prolongación inversa del vector de lanzamiento. Por tanto, el tramo sólido máquina-boca y la trayectoria inicial del plato son colineales; si la trayectoria se curva después es por la integración de gravedad/viento, no por un quiebro artificial al salir del foso.
 
