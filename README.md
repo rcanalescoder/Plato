@@ -36,7 +36,7 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Retardo salida**: tiempo breve entre pedir el plato y que este salga realmente del foso. Por defecto es `0,03 s`, pensado como retardo de sistema/lanzadora, no como reacción humana.
 - **Plomeo tiro 1 / Plomeo tiro 2**: ajustan la apertura del patrón de cada disparo, como una aproximación a chokes diferentes.
 - **Variación plomeo**: introduce irregularidad entre disparos: huecos, pequeñas agrupaciones y diferencias leves de velocidad entre perdigones.
-- **Análisis**: controla cuánto tiempo quedan visibles la corrección del disparo, los rastros y la rotura o caída del plato.
+- **Análisis**: controla cuánto tiempo quedan visibles los rastros y la rotura o caída del plato. La corrección del disparo se conserva hasta que el tirador cambia de puesto.
 - **Ayuda**: abre una explicación para principiantes sobre modalidades, velocidades, cartuchos, aperturas, trayectorias y lectura de los elementos de pantalla.
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
@@ -223,7 +223,7 @@ El eje de adelanto se calcula siguiendo la dirección real de vuelo del plato. P
 
 La referencia amarilla es el punto físico recomendado; el punto rojo representa el encare del tirador; el azul claro representa el centro físico del plomeo del tiro actual. El aro amarillo y el aro azul se escalan por separado con su propia distancia 3D al ojo del tirador, porque pueden estar en profundidades distintas.
 
-El control **Analisis** define cuantos segundos quedan visibles las pistas congeladas, los fragmentos y los rastros tras el disparo. Es una ayuda visual: no altera la fisica ni cuenta platos. La camara lenta tambien es visual; para probar una tirada a tiempo real hay que subir **Camara lenta** a `1.00x`.
+El control **Analisis** define cuantos segundos quedan visibles los fragmentos y los rastros tras el disparo. La corrección congelada permanece hasta que se aplica el cambio de puesto del tirador, porque pertenece al puesto desde el que se disparó. Es una ayuda visual: no altera la fisica ni cuenta platos. La camara lenta tambien es visual; para probar una tirada a tiempo real hay que subir **Camara lenta** a `1.00x`.
 
 ![Ventanas de corrección del primer y segundo tiro](docs/screenshots/correcciones-doble-tiro.png)
 
