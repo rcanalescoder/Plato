@@ -788,6 +788,7 @@
       sim.station = sim.pendingStation;
       sim.pendingStation = null;
       ui.station.value = String(sim.station);
+      clearShotReview();
       updateEye();
       setAimToGuard();
     }
@@ -1018,12 +1019,12 @@
     // Target lifecycle: call, repeat, reset, and station advance
     // -------------------------------------------------------------------------
 
-    function clearShotReview() {
+    function clearShotReview({ keepCorrections = false } = {}) {
       sim.shots = [];
       sim.bursts = [];
       sim.fragments = [];
       sim.debug = null;
-      sim.frozenCues = [];
+      if (!keepCorrections) sim.frozenCues = [];
     }
 
     function startTarget(target, label = "PLATO") {
@@ -1033,7 +1034,7 @@
       sim.t = 0;
       sim.mode = "reaction";
       sim.shotCount = 0;
-      clearShotReview();
+      clearShotReview({ keepCorrections: true });
       ui.result.textContent = "-";
       banner.textContent = label;
       banner.classList.add("show");
