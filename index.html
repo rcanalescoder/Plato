@@ -2332,7 +2332,8 @@
       if (!ui.showLegend.checked) return;
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      const panelW = Math.min(340, w - 32);
+      const showMouseHelp = w >= 760;
+      const panelW = Math.min(showMouseHelp ? 540 : 340, w - 32);
       const panelH = 202;
       const x0 = w - panelW - 16;
       const y0 = h - panelH - 16;
@@ -2354,12 +2355,13 @@
 
       const textX = x0 + 54;
       const iconX = x0 + 28;
+      const legendRight = showMouseHelp ? x0 + 330 : x0 + panelW - 14;
       let y = y0 + 42;
       function item(text, drawIcon) {
         drawIcon(iconX, y);
         ctx.font = "500 11px system-ui";
         ctx.fillStyle = "rgba(255,255,255,.84)";
-        ctx.fillText(text, textX, y);
+        ctx.fillText(text, textX, y, legendRight - textX);
         y += 22;
       }
 
@@ -2421,6 +2423,37 @@
         ctx.stroke();
         ctx.setLineDash([]);
       });
+
+      if (showMouseHelp) {
+        const mx = x0 + 365;
+        const my = y0 + 56;
+        ctx.strokeStyle = "rgba(255,255,255,.78)";
+        ctx.fillStyle = "rgba(255,255,255,.08)";
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.roundRect(mx, my - 28, 46, 66, 20);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(mx + 23, my - 28);
+        ctx.lineTo(mx + 23, my - 4);
+        ctx.moveTo(mx, my - 3);
+        ctx.lineTo(mx + 46, my - 3);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,.86)";
+        ctx.beginPath();
+        ctx.arc(mx + 23, my + 9, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.font = "600 12px system-ui";
+        ctx.fillStyle = "rgba(255,255,255,.92)";
+        ctx.fillText("raton", mx - 10, y0 + 18);
+        ctx.font = "500 11px system-ui";
+        ctx.fillStyle = "rgba(255,255,255,.82)";
+        ctx.fillText("derecho: pedir plato", mx + 58, my - 16);
+        ctx.fillText("izquierdo: disparar", mx + 58, my + 6);
+        ctx.fillText("mover: apuntar", mx + 58, my + 28);
+      }
       ctx.restore();
     }
 
