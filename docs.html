@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Documentacion | Simulador Plato</title>
+  <!--
+    Simulador Plato
+    Construido por Roberto Canales Mora
+    Proyecto: https://robertocanales.com/proyectos#plato
+    Licencia: MIT con atribucion al autor original y a la pagina del proyecto.
+  -->
+  <style>
+    :root {
+      --ink: #17201b;
+      --muted: #607064;
+      --line: #d9e2da;
+      --panel: #f7faf7;
+      --brand: #ff7417;
+      --blue: #1d67b1;
+      --green: #2e7d32;
+      --red: #b3261e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.58;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #f8fbf8);
+    }
+
+    nav,
+    .hero,
+    main,
+    footer {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    nav {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    nav a,
+    footer a {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    nav a:hover,
+    footer a:hover { text-decoration: underline; }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    .hero {
+      padding: 54px 0 42px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 820px;
+      margin: 0;
+      font-size: clamp(18px, 2.2vw, 23px);
+      color: var(--muted);
+    }
+
+    main {
+      padding: 38px 0 70px;
+    }
+
+    section {
+      padding: 34px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: clamp(25px, 3vw, 36px);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 26px 0 8px;
+      font-size: 20px;
+    }
+
+    p {
+      max-width: 850px;
+      margin: 0 0 14px;
+    }
+
+    ul {
+      max-width: 900px;
+      padding-left: 22px;
+    }
+
+    li { margin: 8px 0; }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    figure {
+      margin: 0;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    figcaption {
+      padding: 12px 14px 14px;
+      font-size: 14px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    .note,
+    .license-note {
+      padding: 16px 18px;
+      margin: 18px 0;
+      max-width: 900px;
+      background: var(--panel);
+      border-left: 4px solid var(--brand);
+    }
+
+    .tech {
+      border-left-color: var(--blue);
+    }
+
+    .source-list a {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: #eef4ef;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.94em;
+    }
+
+    footer {
+      padding: 28px 0 42px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Navegacion principal">
+      <strong>Simulador Plato</strong>
+      <div class="nav-links">
+        <a href="./">Abrir simulador</a>
+        <a href="#fisica">Fisica</a>
+        <a href="#modalidades">Modalidades</a>
+        <a href="#fuentes">Fuentes</a>
+        <a href="#licencia">Licencia</a>
+      </div>
+    </nav>
+    <div class="hero">
+      <h1>Aprender a adelantar el plato con fisica visible</h1>
+      <p class="lead">Esta documentacion explica, con lenguaje de tirador y con una capa tecnica para quien quiera profundizar, que problema resuelve el simulador, que normas usa como referencia y como se calculan trayectoria, plomeo, energia y correccion del disparo.</p>
+    </div>
+  </header>
+
+  <main>
+    <section id="fundamento">
+      <h2>1. Fundamento del proyecto</h2>
+      <p>El tiro al plato parece sencillo visto desde fuera: sale un plato naranja y hay que romperlo. En realidad el tirador no dispara al punto donde ve el plato, sino al sitio donde el plato estara cuando llegue la nube de perdigones.</p>
+      <p>El objetivo del simulador es hacer visible ese espacio invisible: la distancia al plato, el tiempo de vuelo del cartucho, el adelanto, la altura del disparo y la dispersion real del plomeo.</p>
+      <div class="note">
+        <strong>Para el tirador:</strong> la idea practica es entrenar el ojo. Si ves que te quedas detras, adelanta. Si ves que tapas demasiado o te vas alto, corrige altura. La aplicacion no sustituye al entrenador, pero ayuda a entender por que un plato se rompe o se escapa.
+      </div>
+      <div class="figure-grid">
+        <figure>
+          <img src="docs/assets/infografia-geometria-adelanto.png" alt="Infografia de geometria de adelanto desde el ojo del tirador">
+          <figcaption>El adelanto se mide desde el ojo del tirador: punto de mira, plato real y punto de intercepcion no son el mismo sitio.</figcaption>
+        </figure>
+        <figure>
+          <img src="docs/assets/infografia-correccion-disparo.png" alt="Infografia de correccion de disparo alto bajo adelantado retrasado">
+          <figcaption>La correccion se lee respecto al movimiento del plato: no basta decir izquierda o derecha, importa si el tiro iba adelantado o retrasado.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="reglas">
+      <h2>2. Reglas y referencias de tiro al plato</h2>
+      <p>La aplicacion usa tres familias de escenarios: Universal, Foso Olimpico y Robot. Las dos primeras se aproximan a esquemas federativos; Robot permite estudiar maquinas oscilantes y tiradas populares que pueden estar fuera de norma.</p>
+      <ul>
+        <li><strong>Universal:</strong> cinco maquinas en el foso, puestos 1 a 5 y platos que salen por la zona del señuelo central.</li>
+        <li><strong>Foso Olimpico:</strong> quince maquinas, agrupadas de tres en tres, con el señuelo activo alineado con el puesto.</li>
+        <li><strong>Robot:</strong> una maquina que oscila o recorre una secuencia. Puede configurarse compatible con ABT o con parametros extremos de feria.</li>
+      </ul>
+      <p>En cada lanzamiento se calcula altura a 10 m, alcance, velocidad inicial y tiempo de vuelo. La banda superior del simulador muestra si el plato cumple la referencia elegida o si es un plato no normativo.</p>
+      <figure>
+        <img src="docs/assets/infografia-modalidades.png" alt="Infografia de modalidades Universal Olimpico y Robot">
+        <figcaption>La mecanica del simulador es comun. Cambian las maquinas, los esquemas, las alturas y los alcances.</figcaption>
+      </figure>
+    </section>
+
+    <section id="problema">
+      <h2>3. Por que falla un tirador</h2>
+      <p>El fallo habitual no es solo punteria. Suele ser una combinacion de lectura tardia, mala estimacion de velocidad, adelanto insuficiente, exceso de altura o un plomeo que llega abierto y con poca energia.</p>
+      <ul>
+        <li><strong>Retrasado:</strong> el plato ya se ha ido cuando llegan los perdigones.</li>
+        <li><strong>Adelantado:</strong> el tiro se escapa por delante del plato.</li>
+        <li><strong>Alto o bajo:</strong> la nube pasa por encima o por debajo del disco.</li>
+        <li><strong>Toque flojo:</strong> puede haber contacto geometrico, pero el perdigon llega sin energia suficiente para romper.</li>
+      </ul>
+      <p>Por eso la aplicacion no solo pinta una nube bonita: simula perdigones individuales y evalua si alguno cruza el plato con energia residual suficiente.</p>
+    </section>
+
+    <section id="fisica">
+      <h2>4. Modelo fisico aplicado</h2>
+      <p>El plato se integra como una trayectoria parabolica con gravedad reducida para aproximar el efecto aerodinamico del disco sin convertir el proyecto en un simulador CFD. El viento modifica lateralmente la trayectoria.</p>
+      <p>El cartucho se modela como un flujo de perdigones. Cada perdigon tiene direccion, pequeña variacion de velocidad, retardo de salida y una perdida de velocidad con la distancia. El simulador evalua el impacto en el tiempo, no con una probabilidad inventada.</p>
+      <div class="note tech">
+        <strong>Version de ingenieria:</strong> el modelo usa una curva exponencial simplificada de velocidad residual, energia cinetica <code>E = 1/2 · m · v²</code>, masa aproximada de perdigon de plato tipo 7½ y un umbral minimo de rotura. Es una aproximacion pedagogica basada en tablas de balistica exterior, no una certificacion de cartucho concreto.
+      </div>
+      <figure>
+        <img src="docs/assets/infografia-plomeo-energia.png" alt="Infografia de plomeo energia residual y umbral de rotura">
+        <figcaption>El patron se abre con la distancia y la energia baja. Un impacto geometrico muy lejano puede no romper.</figcaption>
+      </figure>
+      <p>La velocidad del cartucho que se muestra en el control es una referencia inicial. En la vida real cada carga, tamaño de plomo, taco, choke, temperatura y cañon cambian el resultado. Aun asi, mientras se mantengan constantes los parametros, el simulador sirve para entrenar anticipacion y lectura relativa.</p>
+    </section>
+
+    <section id="aplicacion">
+      <h2>5. Como se usa la aplicacion</h2>
+      <ul>
+        <li>Boton derecho del raton: pedir plato.</li>
+        <li>Boton izquierdo: disparar primer y segundo tiro.</li>
+        <li>El punto rojo es el punto de mira y donde dispara el usuario.</li>
+        <li>El area amarilla es la recomendacion de adelanto. Puede ocultarse para entrenar sin ayuda.</li>
+        <li>El area azul representa el patron estimado de plomeo sobre la linea de disparo.</li>
+        <li>La correccion inferior indica si el tiro quedo adelantado, retrasado, alto o bajo.</li>
+        <li>La camara lenta ayuda a analizar; a 1x el comportamiento temporal se acerca mas al tiro real.</li>
+      </ul>
+      <p>Cuando el plato sale de la ventana util, el lance termina y se avanza de puesto. Si el plato cae al suelo sin romperse, la aplicacion conserva la correccion hasta el siguiente cambio de posicion.</p>
+    </section>
+
+    <section id="modalidades">
+      <h2>6. Universal, Olimpico y Robot</h2>
+      <h3>Universal</h3>
+      <p>Es el modo mas directo para entender la relacion entre señuelo, foso y plato. El señuelo central marca la zona de salida visible y las maquinas se representan bajo el suelo translúcido.</p>
+      <h3>Foso Olimpico</h3>
+      <p>La dificultad aumenta por los grupos de maquinas y por la lectura de angulos. El tirador rota por puestos y el señuelo activo cambia con el puesto.</p>
+      <h3>Robot y ferias</h3>
+      <p>En España muchas tiradas populares usan un robot o maquina oscilante. Puede estar configurado con muelle fuerte, inclinacion alta o angulos laterales extremos. Eso explica por que tiradores acostumbrados a esos platos pueden destacar en ferias aunque el ajuste no sea federativo.</p>
+      <p>Los controles <strong>Robot fuerza</strong>, <strong>Robot altura</strong> y <strong>Robot lateral</strong> permiten exagerar o suavizar esos comportamientos para comparar lo normativo con lo popular.</p>
+    </section>
+
+    <section id="fuentes">
+      <h2>7. Fuentes bibliograficas y tecnicas</h2>
+      <p>Estas fuentes sirven como base de normas, dimensiones, funcionamiento de maquinas y balistica. El simulador las usa como referencia pedagogica, no como homologacion oficial.</p>
+      <ul class="source-list">
+        <li><a href="https://www.issf-sports.org/theissf/rules_and_regulations.ashx" target="_blank" rel="noopener">ISSF - reglas y regulaciones oficiales</a>: referencia para Foso Olimpico, platos, dimensiones y competicion.</li>
+        <li><a href="https://www.fitasc.com/uk/content/12" target="_blank" rel="noopener">FITASC - Universal Trench</a>: referencia federativa para Foso Universal.</li>
+        <li><a href="https://www.cpsa.co.uk/userfiles/files/CPSA_Booklet_7.pdf" target="_blank" rel="noopener">CPSA Booklet 7 - ABT y Wobble</a>: referencia de Automatic Ball Trap y maquinas oscilantes.</li>
+        <li><a href="https://whiteflyer.com/resources/shotgun-disciplines/" target="_blank" rel="noopener">White Flyer - Shotgun Disciplines</a>: resumen tecnico de disciplinas de plato y blancos.</li>
+        <li><a href="https://rangeservices.nra.org/media/4074/shotshell-ballistics.pdf" target="_blank" rel="noopener">NRA - Shotshell Ballistics</a>: tablas de balistica exterior de perdigones.</li>
+        <li><a href="https://www.hunter-ed.com/national/studyGuide/Shotgun-Choke-and-Shot-String/201099_92847/" target="_blank" rel="noopener">Hunter-ed - Shot String</a>: explicacion divulgativa del plomeo y la longitud de la nube de perdigones.</li>
+        <li><a href="https://www.promaticus.com/product-page/super-sporter-8-wobble" target="_blank" rel="noopener">Promatic Super Sporter Wobble</a>: ejemplo comercial de robot/wobble programable.</li>
+        <li><a href="https://www.laporte.biz/en/our-traps/american-trap/" target="_blank" rel="noopener">Laporte American Trap</a>: referencia comercial de maquinas de trap.</li>
+        <li><a href="https://www.atlastraps.com/Tri-axes-wobble-trap--AT250_p_204.html" target="_blank" rel="noopener">Atlas Tri-Axis Wobble</a>: referencia comercial de maquina wobble con movimiento en varios ejes.</li>
+        <li><a href="https://bowmantraps.co.uk/product/abt-base/" target="_blank" rel="noopener">Bowman ABT Base</a>: referencia comercial de base ABT.</li>
+      </ul>
+    </section>
+
+    <section id="licencia">
+      <h2>8. Licencia y atribucion</h2>
+      <div class="license-note">
+        <p>El proyecto se publica bajo licencia MIT. Al ser una pagina HTML, puede descargarse, copiarse, instalarse localmente o adaptarse, pero toda copia o derivado debe conservar la referencia al autor original, <strong>Roberto Canales Mora</strong>, y el enlace a <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a>.</p>
+        <p>La atribucion forma parte del aviso de copyright y de permiso que acompaña al software.</p>
+      </div>
+      <p><a href="./#licencia-mit">Ver texto MIT completo en castellano dentro del simulador</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Construido por <strong>Roberto Canales Mora</strong>. Proyecto: <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">robertocanales.com/proyectos#plato</a>.</p>
+  </footer>
+</body>
+</html>

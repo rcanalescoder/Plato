@@ -476,7 +476,8 @@
       <label class="switch-row" title="Muestra u oculta la leyenda de colores y simbolos de la esquina inferior derecha."><input id="showLegend" type="checkbox" checked> leyenda</label>
       <div class="project-links">
         <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Powered by www.robertocanales.com</a>
-        <a href="#ayuda">Ayuda</a>
+        <a href="docs.html" target="_blank" rel="noopener">Documentacion</a>
+        <a href="#ayuda">Ayuda rapida</a>
         <a href="#licencia-mit">Licencia MIT</a>
       </div>
     </section>
@@ -507,6 +508,7 @@
       <ul>
         <li>El cartucho define la velocidad de salida de los perdigones. Cuanto mas rapido, menos tiempo tardan en llegar al plato.</li>
         <li>El plomeo azul representa la nube de perdigones donde estas apuntando. No es certeza absoluta: el programa simula muchos perdigones y comprueba si alguno toca el plato.</li>
+        <li>Un toque no siempre rompe: si el perdigon llega con poca energia residual, el simulador lo marca como <strong>toque flojo</strong>.</li>
         <li><strong>Plomeo tiro 1</strong> y <strong>Plomeo tiro 2</strong> permiten abrir o cerrar el patron, como harian choques distintos.</li>
         <li><strong>Variacion plomeo</strong> introduce huecos, agrupaciones y pequenas diferencias de velocidad entre perdigones. Asi el plomeo se comporta como una nube 3D simplificada, no como un circulo perfecto.</li>
       </ul>
@@ -538,7 +540,7 @@
         <li>Usa <strong>Repetir plato</strong> para practicar una salida dificil sin avanzar la tirada.</li>
       </ul>
 
-      <p><a href="#">Cerrar</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>
+      <p><a href="#">Cerrar</a> · <a href="docs.html" target="_blank" rel="noopener">Documentacion completa</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>
     </article>
   </section>
 
@@ -965,10 +967,11 @@
       against the same centre-shot physics used for impact diagnostics.
     */
     function solveIntercept(p, v, pelletSpeed) {
-      let tau = Math.hypot(p.x - eye.x, p.y - eye.y, p.z - eye.z) / pelletSpeed;
+      const centerDir = { speedScale: 1, lag: 0 };
+      let tau = pelletTimeToDistance(Math.hypot(p.x - eye.x, p.y - eye.y, p.z - eye.z), pelletSpeed, centerDir);
       for (let i = 0; i < 5; i += 1) {
         const q = { x: p.x + v.x * tau, y: p.y + v.y * tau, z: p.z + v.z * tau };
-        tau = Math.hypot(q.x - eye.x, q.y - eye.y, q.z - eye.z) / pelletSpeed;
+        tau = pelletTimeToDistance(Math.hypot(q.x - eye.x, q.y - eye.y, q.z - eye.z), pelletSpeed, centerDir);
       }
       return {
         time: tau,
@@ -977,8 +980,8 @@
     }
 
     function centerShotClosest(dir, speed, shotTime) {
-      const maxTime = 0.26;
-      const dt = 0.0009;
+      const maxTime = 0.42;
+      const dt = 0.0012;
       let best = { distance: Infinity, target: null, pellet: null, tau: 0 };
       for (let tau = 0; tau <= maxTime; tau += dt) {
         const target = targetDuringShot(shotTime, tau);
@@ -1522,6 +1525,36 @@
       return 306;
     }
 
+    const PELLET_MASS_KG = 0.000083;
+    const PELLET_DRAG_PER_M = 0.014;
+    const MIN_BREAK_ENERGY_J = 0.55;
+
+    function pelletInitialSpeed(speed, dir) {
+      return speed * (dir.speedScale || 1);
+    }
+
+    function pelletTravelDistance(speed, tau, dir) {
+      const localTau = Math.max(0, tau - (dir.lag || 0));
+      const v0 = pelletInitialSpeed(speed, dir);
+      return Math.log(1 + PELLET_DRAG_PER_M * v0 * localTau) / PELLET_DRAG_PER_M;
+    }
+
+    function pelletTimeToDistance(distance, speed, dir) {
+      const v0 = pelletInitialSpeed(speed, dir);
+      const localTau = (Math.exp(PELLET_DRAG_PER_M * Math.max(0, distance)) - 1) / (PELLET_DRAG_PER_M * v0);
+      return localTau + (dir.lag || 0);
+    }
+
+    function pelletVelocityAt(speed, tau, dir) {
+      const distance = pelletTravelDistance(speed, tau, dir);
+      return pelletInitialSpeed(speed, dir) * Math.exp(-PELLET_DRAG_PER_M * distance);
+    }
+
+    function pelletEnergyAt(speed, tau, dir) {
+      const velocity = pelletVelocityAt(speed, tau, dir);
+      return 0.5 * PELLET_MASS_KG * velocity * velocity;
+    }
+
     function seededRandom(seed) {
       let s = seed >>> 0;
       return () => {
@@ -1587,11 +1620,11 @@
 
     function centerPelletAt(dir, speed, tau) {
       const localTau = Math.max(0, tau - (dir.lag || 0));
-      const localSpeed = speed * (dir.speedScale || 1);
+      const travel = pelletTravelDistance(speed, tau, dir);
       return {
-        x: eye.x + dir.x * localSpeed * localTau,
-        y: eye.y + dir.y * localSpeed * localTau - 0.5 * g * 0.08 * localTau * localTau,
-        z: eye.z + dir.z * localSpeed * localTau
+        x: eye.x + dir.x * travel,
+        y: eye.y + dir.y * travel - 0.5 * g * 0.08 * localTau * localTau,
+        z: eye.z + dir.z * travel
       };
     }
 
@@ -1614,42 +1647,51 @@
         z: planePoint.z - eye.z
       }, normal);
       const pellets = pelletDirs.map((pelletDir, index) => {
-        const denom = Math.max(0.02, pelletSpeed * (pelletDir.speedScale || 1) * dot(pelletDir, normal));
-        const tau = clamp(planeDistance / denom + (pelletDir.lag || 0), 0, 0.26);
+        const axial = Math.max(0.05, dot(pelletDir, normal));
+        const tau = clamp(pelletTimeToDistance(planeDistance / axial, pelletSpeed, pelletDir), 0, 0.42);
         const p = centerPelletAt(pelletDir, pelletSpeed, tau);
         const d = { x: p.x - planePoint.x, y: p.y - planePoint.y, z: p.z - planePoint.z };
         return {
           u: dot(d, leadAxis),
           v: dot(d, heightAxis),
-          hit: index === hitPellet
+          hit: index === hitPellet,
+          energy: pelletEnergyAt(pelletSpeed, tau, pelletDir)
         };
       });
       return { pellets, leadAxis, heightAxis };
     }
 
     // Each pellet is advanced through the same moving-target timeline. A hit is
-    // recorded only when one physical pellet passes inside the clay radius.
+    // recorded only when one physical pellet passes inside the clay radius and
+    // still carries enough residual energy to plausibly break the target.
     function pelletHitTarget(dir, speed, shotTime) {
-      const maxTime = 0.24;
-      const dt = 0.00045;
+      const maxTime = 0.42;
+      const dt = 0.0007;
       const targetRadius = 0.075;
       let best = Infinity;
       let bestPoint = null;
       let bestTau = 0;
+      let bestEnergy = 0;
+      let weakContact = null;
       for (let tau = 0; tau <= maxTime; tau += dt) {
         const target = targetDuringShot(shotTime, tau);
         if (!target) continue;
         const pellet = centerPelletAt(dir, speed, tau);
         const d = Math.hypot(pellet.x - target.x, pellet.y - target.y, pellet.z - target.z);
+        const energy = pelletEnergyAt(speed, tau, dir);
         if (d < best) {
           best = d;
           bestPoint = target;
           bestTau = tau;
+          bestEnergy = energy;
         }
-        if (d <= targetRadius) return { hit: true, p: target, distance: d, tau };
+        if (d <= targetRadius) {
+          if (energy >= MIN_BREAK_ENERGY_J) return { hit: true, p: target, distance: d, tau, energy };
+          weakContact = { hit: false, weak: true, p: target, distance: d, tau, energy };
+        }
         if (pellet.z > target.z + 2.5 && tau > 0.03) break;
       }
-      return { hit: false, p: bestPoint, distance: best, tau: bestTau };
+      return weakContact || { hit: false, p: bestPoint, distance: best, tau: bestTau, energy: bestEnergy };
     }
 
     /*
@@ -1678,7 +1720,7 @@
       let nearest = { distance: Infinity, p: current, tau: 0 };
       for (let i = 0; i < dirs.length; i += 1) {
         const result = pelletHitTarget(dirs[i], pelletSpeed, sim.t);
-        const travel = Math.min(distance / pelletSpeed, 0.22);
+        const travel = Math.min(pelletTimeToDistance(distance, pelletSpeed, dirs[i]), 0.42);
         if (i % 3 === 0) {
           const renderTau = travel + (dirs[i].lag || 0);
           const p = centerPelletAt(dirs[i], pelletSpeed, renderTau);
@@ -1695,6 +1737,7 @@
       }
       sim.shotCount += 1;
       const hit = Boolean(hitInfo);
+      const weakContact = !hit && nearest.weak;
       const impact = hit ? hitInfo.p : nearest.p || current;
       const eventTau = hitInfo?.tau ?? nearest.tau ?? shotCenter.tau ?? 0;
       const shotCenterPoint = centerPelletAt(dir, pelletSpeed, eventTau);
@@ -1717,6 +1760,8 @@
         impact: { ...impact },
         planePattern,
         eventTau,
+        impactEnergy: hitInfo?.energy ?? nearest.energy ?? 0,
+        minBreakEnergy: MIN_BREAK_ENERGY_J,
         radius,
         idealRadius: patternRadius(distanceFromEye(idealPoint), shotNumber),
         shotRadius: patternRadius(distanceFromEye(impact), shotNumber)
@@ -1734,7 +1779,9 @@
       sim.bursts.push({ age: 0, p: impact, hit });
       const edgeHit = hit && shotCenter.distance > radius * 0.65;
       ui.result.textContent = hit
-        ? `${sim.repeatingTarget ? "Repeticion" : "Roto"} ${edgeHit ? "borde" : "centro"}: perdigon ${hitInfo.pellet + 1}/${dirs.length}`
+        ? `${sim.repeatingTarget ? "Repeticion" : "Roto"} ${edgeHit ? "borde" : "centro"}: perdigon ${hitInfo.pellet + 1}/${dirs.length} · ${hitInfo.energy.toFixed(2)} J`
+        : weakContact
+        ? `${sim.repeatingTarget ? "Repeticion toque flojo" : "Toque flojo"} ${nearest.energy.toFixed(2)} J`
         : `${sim.repeatingTarget ? "Repeticion fallo" : "Fallo"} tiro ${sim.shotCount}/2`;
       ui.result.style.color = hit ? "var(--good)" : "var(--bad)";
       if (hit) {
