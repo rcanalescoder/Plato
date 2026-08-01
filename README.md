@@ -16,7 +16,7 @@ El simulador representa una tirada de 25 platos en tres modalidades:
 
 - **Foso universal**: cinco máquinas dentro de una zanja. El señuelo naranja está centrado sobre la máquina 3 e indica el punto de salida del plato cuando la máquina está ajustada a cero grados.
 - **Foso olímpico**: quince máquinas agrupadas en cinco puestos. En este modo el señuelo activo se desplaza delante del puesto del tirador y los otros posibles señuelos se muestran en gris.
-- **Robot**: una única máquina oscilante/programable, inspirada en wobble trap, Automatic Ball Trap y tiradas populares con máquina robot. Puede trabajar con preset compatible ABT o con presets no normativos de feria/popular.
+- **Robot**: una única máquina oscilante/programable, inspirada en wobble trap, Automatic Ball Trap y tiradas populares con máquina robot. Puede trabajar con preset compatible ABT o con presets no normativos de feria/popular. El tirador también rota por los cinco puestos, igual que en una tirada completa.
 
 El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m de altura. La escopeta no se dibuja como un objeto externo; el usuario ve el punto de mira rojo y, cuando hay ganancia de solista, un punto traslúcido que indica cómo sube el punto efectivo de impacto.
 
@@ -42,6 +42,7 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Robot fuerza**: solo en modalidad Robot; simula apretar o aflojar el muelle, alterando velocidad inicial y alcance.
 - **Robot altura**: solo en modalidad Robot; suma o resta inclinación vertical a la máquina.
 - **Robot lateral**: solo en modalidad Robot; multiplica la apertura lateral de la secuencia.
+- **Repetir plato**: repite el mismo plato desde el mismo puesto, sin sumar plato ni avanzar la rotación.
 - **Ayuda**: abre una explicación para principiantes sobre modalidades, velocidades, cartuchos, aperturas, trayectorias y lectura de los elementos de pantalla.
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
