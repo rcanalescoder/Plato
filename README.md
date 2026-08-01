@@ -8,7 +8,9 @@ La aplicación se ejecuta como una página HTML autónoma y renderiza la escena 
 
 **Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a `index.html` muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación. El proyecto sigue siendo un único fichero ejecutable, por lo que también puede servirse localmente con `python3 -m http.server 8000` y abrir `http://localhost:8000/`.
 
-**Documentación pedagógica:** <a href="https://rcanalescoder.github.io/Plato/docs.html" target="_blank" rel="noopener">abrir la documentación en GitHub Pages</a>. Incluye infografías PNG generativas, explicación para tiradores, explicación técnica y bibliografía.
+**Manual avanzado:** <a href="https://rcanalescoder.github.io/Plato/manual.html" target="_blank" rel="noopener">abrir el manual en GitHub Pages</a>. Incluye narrativa para tiradores, seguridad, equipamiento, modalidades, robots de feria, física y bibliografía.
+
+**Documentación técnica breve:** <a href="https://rcanalescoder.github.io/Plato/docs.html" target="_blank" rel="noopener">abrir la documentación técnica en GitHub Pages</a>. Incluye infografías PNG generativas, explicación para tiradores, explicación técnica y bibliografía.
 
 ![Vista principal del simulador](docs/screenshots/vista-principal.png)
 
@@ -316,6 +318,7 @@ http://localhost:8000/
 ```text
 .
 ├── index.html
+├── manual.html
 ├── docs.html
 ├── README.md
 ├── docs/
