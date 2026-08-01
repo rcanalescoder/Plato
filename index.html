@@ -1,2836 +1,522 @@
 <!doctype html>
-<!--
-  Plato - Laboratorio de adelanto para tiro al plato.
-  Construido por Roberto Canales Mora.
-  Proyecto: https://robertocanales.com/proyectos#plato
-  Licencia: MIT. Ver el texto en castellano dentro de esta pagina (#licencia-mit).
--->
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Laboratorio de Adelanto - Tiro al Plato</title>
+  <title>Plato | Simulador y manual de tiro al plato</title>
+  <!--
+    Plato - Simulador y manual pedagogico de tiro al plato.
+    Construido por Roberto Canales Mora.
+    Proyecto: https://robertocanales.com/proyectos#plato
+    Licencia: MIT con atribucion obligatoria al autor original y a la pagina del proyecto.
+  -->
   <style>
     :root {
-      --bg: #101416;
-      --panel: #172022;
-      --panel-2: #202a2d;
-      --text: #eef5ef;
-      --muted: #aebdb2;
-      --line: rgba(255,255,255,.16);
-      --sky: #7fbee9;
-      --field: #416f37;
-      --field-dark: #294f26;
-      --dirt: #8a6b42;
-      --dirt-dark: #59432b;
-      --clay: #ff6400;
-      --lead: #ffd451;
-      --shot: #d7edff;
-      --good: #9be66f;
-      --bad: #ff6b68;
-      --rib: #07090a;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --ink: #121d17;
+      --muted: #5e6d63;
+      --line: #dce5dd;
+      --soft: #f5f8f5;
+      --soft-2: #eef4ef;
+      --brand: #ff6a16;
+      --brand-dark: #b74600;
+      --blue: #0f4f93;
+      --green: #28733a;
+      --red: #b42318;
+      --gold: #e5ae22;
+      --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      overflow: hidden;
+      color: var(--ink);
+      background: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.62;
     }
 
-    main {
-      height: 100dvh;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
-      overflow: hidden;
+    a {
+      color: var(--blue);
+      font-weight: 750;
+      text-decoration: none;
     }
 
-    .toolbar {
-      display: grid;
-      grid-template-columns: max-content max-content minmax(0, 1fr) max-content;
-      gap: 8px;
-      align-items: center;
-      padding: 8px 10px;
-      background: var(--panel);
-      border-bottom: 1px solid var(--line);
+    a:hover { text-decoration: underline; }
+
+    img {
+      max-width: 100%;
+      height: auto;
     }
 
-    .button-row,
-    .segmented,
-    .switch-row {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      flex-wrap: nowrap;
-    }
-
-    button,
-    select,
-    input {
-      font: inherit;
-    }
-
-    button {
-      border: 1px solid var(--line);
-      background: var(--panel-2);
-      color: var(--text);
-      padding: 6px 9px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    button:hover {
-      border-color: rgba(255,255,255,.34);
-    }
-
-    button.primary {
-      background: #e9f5ee;
-      color: #0d1512;
-      border-color: transparent;
-      font-weight: 600;
-    }
-
-    button.danger {
-      background: #3a2020;
-      border-color: rgba(255,107,104,.35);
-    }
-
-    .segmented button[aria-pressed="true"] {
-      background: #e9f5ee;
-      color: #0d1512;
-      border-color: transparent;
-      font-weight: 600;
-    }
-
-    label {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .switch-row label {
-      display: inline-flex;
-      gap: 7px;
-      align-items: center;
-      white-space: nowrap;
-    }
-
-    .status {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(64px, 1fr));
-      gap: 6px;
-      min-width: 0;
-    }
-
-    .stat {
-      min-width: 0;
-      padding: 5px 7px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid var(--line);
-      border-radius: 7px;
-    }
-
-    .stat span {
-      display: block;
-      color: var(--muted);
-      font-size: 9px;
-    }
-
-    .stat strong {
-      display: block;
-      margin-top: 2px;
-      font-size: 11px;
-      font-variant-numeric: tabular-nums;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .scene {
-      position: relative;
-      min-height: 0;
-      overflow: hidden;
-      background: #050607;
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      cursor: none;
-    }
-
-    .banner {
-      position: absolute;
-      top: 36px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 8px 13px;
-      border-radius: 7px;
-      color: #101416;
-      background: rgba(255,255,255,.86);
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity .18s ease;
-    }
-
-    .banner.show {
-      opacity: 1;
-    }
-
-    .norm-badge {
-      position: absolute;
-      top: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: min(760px, calc(100% - 32px));
-      padding: 5px 10px;
-      border-radius: 7px;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(8,12,10,.62);
-      color: rgba(255,255,255,.9);
-      font-size: 11px;
-      font-weight: 650;
-      line-height: 1.25;
-      text-align: center;
-      font-variant-numeric: tabular-nums;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity .18s ease;
-    }
-
-    .norm-badge.show {
-      opacity: 1;
-    }
-
-    .norm-badge .ok {
-      color: var(--good);
-    }
-
-    .norm-badge .warn {
-      color: var(--bad);
-    }
-
-    .slow-note {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 12px;
-      max-width: min(520px, calc(100% - 28px));
-      padding: 7px 9px;
-      border-radius: 7px;
-      background: rgba(8,12,10,.54);
-      color: rgba(255,255,255,.86);
-      font-size: 11px;
-      line-height: 1.25;
-      pointer-events: none;
-    }
-
-    .slow-note strong {
-      color: #ff6b68;
-      font-weight: 800;
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: repeat(12, minmax(74px, 1fr));
-      gap: 7px;
-      padding: 7px 10px;
-      background: var(--panel);
-      border-top: 1px solid var(--line);
-    }
-
-    .control {
-      display: grid;
-      gap: 3px;
-      min-width: 0;
-    }
-
-    .control span {
-      color: var(--text);
-      font-size: 12px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: #e9f5ee;
-    }
-
-    select {
-      width: 100%;
-      padding: 5px;
-      color: var(--text);
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      border-radius: 7px;
-    }
-
-    .hint {
-      color: var(--muted);
-      font-size: 10px;
-      line-height: 1.2;
-    }
-
-    .project-links {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 10px;
-      grid-column: -4 / -1;
-      justify-self: end;
-      min-width: 0;
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .project-links a,
-    .license-panel a {
-      color: #e9f5ee;
-      text-decoration-color: rgba(233,245,238,.52);
-      text-underline-offset: 3px;
-    }
-
-    .license-panel {
-      position: fixed;
-      inset: 0;
-      display: none;
+    .topbar {
+      position: sticky;
+      top: 0;
       z-index: 20;
-      background: rgba(6,8,8,.72);
-      padding: 22px;
-      overflow: auto;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .94);
+      backdrop-filter: blur(12px);
     }
 
-    .license-panel:target {
-      display: grid;
-      place-items: center;
+    nav,
+    .hero,
+    main,
+    footer {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
     }
 
-    .license-card {
-      max-width: 760px;
-      max-height: min(86dvh, 720px);
-      overflow: auto;
-      padding: 20px;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 8px;
-      background: #172022;
-      box-shadow: 0 18px 60px rgba(0,0,0,.42);
-    }
-
-    .license-card h2 {
-      margin: 0 0 10px;
-      font-size: 18px;
-    }
-
-    .license-card p {
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 13px;
-    }
-
-    .license-card h3 {
-      margin: 16px 0 6px;
+    nav {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
       font-size: 14px;
     }
 
-    .license-card ul {
-      margin: 6px 0 0;
-      padding-left: 18px;
-      color: var(--muted);
-      line-height: 1.45;
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .brand-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffd7a6 0 22%, var(--brand) 24% 60%, #fff 62% 74%, var(--brand-dark) 76%);
+      border: 1px solid rgba(0,0,0,.18);
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.88), #fff 74%),
+        radial-gradient(circle at 76% 18%, rgba(255,106,22,.16), transparent 34%),
+        radial-gradient(circle at 12% 10%, rgba(15,79,147,.10), transparent 32%);
+    }
+
+    .hero {
+      padding: 56px 0 44px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(330px, 520px);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--brand-dark);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .06em;
       font-size: 13px;
     }
 
-    @media (max-width: 1040px) {
-      main {
-        grid-template-rows: auto 58vh auto;
-      }
-
-      .toolbar {
-        grid-template-columns: 1fr;
-      }
-
-      .status,
-      .controls {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(38px, 5.6vw, 74px);
+      line-height: 1.02;
+      letter-spacing: 0;
     }
 
-    @media (max-width: 560px) {
-      .status,
-      .controls {
-        grid-template-columns: 1fr;
-      }
+    .lead {
+      max-width: 780px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 23px);
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 0 24px;
+      border-radius: 8px;
+      border: 2px solid var(--ink);
+      background: #fff;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .button.primary {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 16px 36px rgba(255,106,22,.26);
+    }
+
+    .hero-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: 0 24px 60px rgba(20,32,26,.12);
+    }
+
+    .hero-card img {
+      display: block;
+      width: 100%;
+    }
+
+    .hero-card figcaption {
+      padding: 12px 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    main { padding: 34px 0 80px; }
+
+    section {
+      padding: 46px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      max-width: 920px;
+      font-size: clamp(29px, 3.6vw, 48px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 26px 0 8px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    p {
+      max-width: 920px;
+      margin: 0 0 14px;
+    }
+
+    ul,
+    ol {
+      max-width: 940px;
+      padding-left: 22px;
+    }
+
+    li { margin: 8px 0; }
+
+    figure {
+      margin: 24px 0;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+    }
+
+    figcaption {
+      padding: 13px 16px 15px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .note {
+      max-width: 940px;
+      margin: 18px 0;
+      padding: 16px 18px;
+      border-left: 5px solid var(--brand);
+      background: var(--soft);
+    }
+
+    .safety { border-left-color: var(--red); }
+    .tech { border-left-color: var(--blue); }
+    .practice { border-left-color: var(--green); }
+
+    .screens {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .toc a {
+      display: block;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      max-width: 980px;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 15px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th { background: var(--soft); }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: #eef3ef;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .94em;
+    }
+
+    .source-list {
+      columns: 2 340px;
+      column-gap: 34px;
+    }
+
+    footer {
+      padding: 34px 0 48px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; }
+      .button { width: 100%; }
     }
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <nav aria-label="Navegacion principal">
+      <a class="brand" href="#inicio"><span class="brand-dot" aria-hidden="true"></span>Plato</a>
+      <div class="nav-links">
+        <a href="app.html">Abrir simulador</a>
+        <a href="#manual">Manual</a>
+        <a href="#fisica">Fisica</a>
+        <a href="#app">Aplicacion</a>
+        <a href="#fuentes">Fuentes</a>
+      </div>
+    </nav>
+  </div>
+
+  <header id="inicio">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Simulador + manual pedagogico</p>
+        <h1>Aprender a adelantar el plato antes de gastar cartuchos</h1>
+        <p class="lead">Un laboratorio visual para entender por que se falla: puestos, señuelo, salida del plato, adelanto, plomeo, energia residual, solista y correccion del primer y segundo tiro.</p>
+        <div class="cta-row">
+          <a class="button primary" href="app.html">Arrancar el simulador</a>
+          <a class="button" href="#manual">Leer el manual</a>
+        </div>
+      </div>
+      <figure class="hero-card">
+        <a href="app.html" aria-label="Abrir simulador">
+          <img src="docs/screenshots/vista-principal.png" alt="Captura real del simulador de tiro al plato">
+        </a>
+        <figcaption>Captura real de la aplicación: punto de mira, señuelo, foso, trayectoria y campo desde el ojo del tirador.</figcaption>
+      </figure>
+    </div>
+  </header>
+
   <main>
-    <section class="toolbar" aria-label="Controles principales">
-      <div class="button-row">
-        <button class="primary" id="callBtn" type="button" title="Solicita un nuevo plato. Tambien puedes pedirlo con el boton derecho del raton.">Pedir plato</button>
-        <button id="repeatBtn" type="button" title="Repite exactamente el plato anterior desde el mismo puesto, sin contar como nuevo plato de la tirada.">Repetir plato</button>
-        <button class="danger" id="fireBtn" type="button" title="Dispara el cartucho actual. Tambien puedes disparar con el boton izquierdo del raton.">Disparar</button>
-        <button id="resetBtn" type="button" title="Reinicia la tirada de 25 platos y limpia los disparos y fragmentos visibles.">Reset</button>
-        <button id="prevStationBtn" type="button" title="Retrocede el puesto seleccionado o actual.">Puesto -</button>
-        <button id="nextStationBtn" type="button" title="Avanza el puesto seleccionado o actual.">Puesto +</button>
-      </div>
-      <div class="segmented" aria-label="Tipo de solista">
-        <button id="flatBtn" type="button" aria-pressed="true" title="Solista sin ganancia: el punto de mira y el centro de impacto salen practicamente alineados.">Plana</button>
-        <button id="highBtn" type="button" aria-pressed="false" title="Solista con ganancia: el impacto sale algo por encima del punto de mira.">Alta</button>
-      </div>
-      <div class="status">
-        <div class="stat" title="Fase actual del simulador: esperando, retardo de salida, seguimiento, caida o terminado."><span>Estado</span><strong id="stateReadout">Esperando</strong></div>
-        <div class="stat" title="Contador de la tirada: platos consumidos de 25 y platos rotos. Las repeticiones no suman."><span>Tirada</span><strong id="roundReadout">0/25 · 0 rotos</strong></div>
-        <div class="stat" title="Puesto de tiro actual. La tirada rota por los puestos 1 a 5."><span>Puesto</span><strong id="stationReadout">3</strong></div>
-        <div class="stat" title="Maquina, angulo, altura a 10 m y distancia del plato actual."><span>Plato</span><strong id="targetReadout">-</strong></div>
-        <div class="stat" title="Distancia aproximada entre el plato y el punto fisico recomendado de adelanto."><span>Adelanto</span><strong id="leadReadout">-</strong></div>
-        <div class="stat" title="Angulos actuales del punto de mira respecto al eje del ojo del tirador."><span>Encare</span><strong id="aimReadout">0.0 deg</strong></div>
-        <div class="stat" title="Resultado del ultimo disparo o del plato actual."><span>Resultado</span><strong id="resultReadout">-</strong></div>
-      </div>
-      <div class="switch-row">
-        <label title="Muestra u oculta el punto y area amarilla donde conviene apuntar para interceptar el plato."><input id="showLead" type="checkbox" checked> ayuda adelanto</label>
-        <label title="Muestra u oculta el patron azul estimado del plomeo donde estas apuntando."><input id="showShot" type="checkbox" checked> plomeo</label>
-        <label title="Muestra u oculta la trayectoria naranja del plato."><input id="showPath" type="checkbox" checked> trayectoria</label>
+    <section id="manual">
+      <h2>1. Por que este proyecto existe</h2>
+      <p>El tiro al plato no se entiende bien desde una explicación de dos frases. El principiante ve un disco naranja, apunta al disco, dispara y falla. La razón es sencilla de decir pero dificil de interiorizar: el plato se mueve mientras los perdigones viajan. Por eso el tiro efectivo no está exactamente donde el ojo ve el plato en el instante de disparar.</p>
+      <p>Este simulador nace para entrenar esa intuición. No pretende sustituir a un instructor, ni a un campo real, ni a la normativa de una federación. Pretende que el tirador vea, despacio y con ayudas, la relación entre velocidad, distancia, ángulo, plomeo y adelanto.</p>
+      <div class="toc" aria-label="Indice del manual">
+        <a href="#inicio-deporte">Deporte, licencia y club</a>
+        <a href="#seguridad">Seguridad y comportamiento</a>
+        <a href="#modalidades">Universal, Olímpico y Robot</a>
+        <a href="#escopeta">Escopeta, solista y culata</a>
+        <a href="#novato">Por qué falla un novato</a>
+        <a href="#fisica">Física e ingeniería</a>
+        <a href="#app">Cómo usar el simulador</a>
+        <a href="#licencia">Licencia y atribución</a>
       </div>
     </section>
 
-    <section class="scene" aria-label="Simulador desde el ojo del tirador">
-      <canvas id="simCanvas"></canvas>
-      <div class="banner" id="banner">PLATO</div>
-      <div class="norm-badge" id="normBadge" aria-live="polite"></div>
-      <div class="slow-note" id="slowNote"><strong>Camara lenta</strong> activa para analizar. Para probar tiempo real, sube <strong>Camara lenta</strong> a 1.00x.</div>
+    <section id="inicio-deporte">
+      <h2>2. Antes del primer plato: club, federación y licencia</h2>
+      <p>Lo razonable al empezar no es comprar material a ciegas. Lo normal es acercarse a un club de tiro, hablar con la federación autonómica o con un instructor y entender qué permisos hacen falta. En España intervienen la licencia federativa, la formación y la licencia de armas correspondiente, que debe verificarse con fuentes oficiales.</p>
+      <p>La pescadilla que confunde a muchos principiantes es esta: para practicar necesitas estar dentro de un circuito legal y federado, pero para obtener permisos y aprender con seguridad necesitas acercarte antes a quien ya conoce ese circuito. Por eso el club suele ser la puerta de entrada más sensata.</p>
+      <figure>
+        <img src="docs/assets/manual-primer-plato.png" alt="Infografía del club al primer plato">
+        <figcaption>La ruta prudente combina club, formación, licencia federativa, licencia de armas y primera tirada acompañada.</figcaption>
+      </figure>
     </section>
 
-    <section class="controls" aria-label="Parametros fisicos">
-      <label class="control" title="Elige la disciplina: Universal usa cinco maquinas; Olimpica usa quince maquinas agrupadas por puesto; Robot usa una maquina oscilante con fuerza, altura y lateral regulables.">Modalidad
-        <select id="modeControl">
-          <option value="universal">Universal</option>
-          <option value="olympic">Olimpica</option>
-          <option value="robot">Robot</option>
-        </select>
-      </label>
-      <label class="control" title="Selecciona el esquema oficial/simulado de maquinas, angulos y alturas que se usara para sortear cada plato.">Esquema
-        <select id="schemeControl"></select>
-      </label>
-      <label class="control" title="Puesto inicial o actual del tirador. La tirada avanza rotando 1, 2, 3, 4, 5.">Puesto <span id="stationValue">3</span>
-        <input id="stationControl" type="range" min="1" max="5" step="1" value="3">
-      </label>
-      <label class="control" title="Define donde empieza apuntando el tirador antes de pedir plato: al señuelo o algo alto segun el puesto.">Guardia
-        <select id="guardControl">
-          <option value="neutral">Neutra</option>
-          <option value="high">Alta por puesto</option>
-        </select>
-      </label>
-      <label class="control" title="Acerca visualmente la escena sin cambiar la distancia real al foso ni la fisica.">Zoom visual <span id="zoomValue">1.00x</span>
-        <input id="zoomControl" type="range" min="1" max="2.2" step="0.05" value="1">
-      </label>
-      <label class="control" title="Factor temporal del simulador. 1.00x es tiempo real; valores menores ayudan a analizar el adelanto.">Camara lenta <span id="slowValue">0.35x</span>
-        <input id="slowControl" type="range" min="0.15" max="1" step="0.05" value="0.35">
-      </label>
-      <label class="control" title="Retardo breve entre pedir el plato y que salga del foso. En competicion la salida debe sentirse inmediata; este ajuste simula el retardo del sistema de llamada/lanzadora.">Retardo salida <span id="reactionValue">0.03 s</span>
-        <input id="reactionControl" type="range" min="0" max="0.35" step="0.01" value="0.03">
-      </label>
-      <label class="control" title="Velocidad inicial de referencia del cartucho; los perdigones usan una velocidad efectiva derivada.">Cartucho <span id="cartridgeValue">400 m/s</span>
-        <input id="cartridgeControl" type="range" min="360" max="430" step="5" value="400">
-      </label>
-      <label class="control" title="Apertura del patron de perdigones para el primer disparo, equivalente al choke seleccionado.">Plomeo tiro 1 <span id="spread1Value">3/4</span>
-        <input id="spread1Control" type="range" min="0" max="100" step="5" value="30">
-      </label>
-      <label class="control" title="Apertura del patron de perdigones para el segundo disparo, normalmente mas cerrado.">Plomeo tiro 2 <span id="spread2Value">Full</span>
-        <input id="spread2Control" type="range" min="0" max="100" step="5" value="20">
-      </label>
-      <label class="control" title="Variacion realista entre disparos: cambia microhuecos, deformacion y velocidad relativa de los perdigones.">Variacion plomeo <span id="pelletVarianceValue">45%</span>
-        <input id="pelletVarianceControl" type="range" min="0" max="100" step="5" value="45">
-      </label>
-      <label class="control" title="Tiempo durante el que se mantienen visibles las ayudas y correcciones despues del disparo o fallo.">Analisis <span id="analysisValue">4.8 s</span>
-        <input id="analysisControl" type="range" min="1.8" max="8" step="0.2" value="4.8">
-      </label>
-      <label class="control" title="Viento lateral aplicado a la trayectoria del plato. Negativo empuja a un lado y positivo al contrario.">Viento <span id="windValue">0.0 m/s</span>
-        <input id="windControl" type="range" min="-4" max="4" step="0.2" value="0">
-      </label>
-      <label class="control" title="Elevacion balistica de la solista: hace que el disparo vaya por encima del punto de mira, sin cambiar la anchura visual de la solista.">Ganancia solista <span id="ribValue">0%</span>
-        <input id="ribControl" type="range" min="0" max="100" step="5" value="0">
-      </label>
-      <label class="control" title="Solo modalidad Robot: simula apretar o aflojar el muelle. Aumenta o reduce velocidad y alcance del plato.">Robot fuerza <span id="robotForceValue">100%</span>
-        <input id="robotForceControl" type="range" min="70" max="135" step="5" value="100">
-      </label>
-      <label class="control" title="Solo modalidad Robot: cambia la inclinacion vertical de la maquina. Valores altos hacen platos mas altos.">Robot altura <span id="robotPitchValue">0°</span>
-        <input id="robotPitchControl" type="range" min="-12" max="18" step="1" value="0">
-      </label>
-      <label class="control" title="Solo modalidad Robot: multiplica la apertura lateral del robot. Valores altos hacen platos mas cruzados.">Robot lateral <span id="robotLateralValue">100%</span>
-        <input id="robotLateralControl" type="range" min="50" max="140" step="5" value="100">
-      </label>
-      <div class="hint">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
-      <label class="switch-row" title="Alterna entre suelo opaco y suelo translucido para ver las maquinas bajo el foso."><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
-      <label class="switch-row" title="Muestra u oculta la leyenda de colores y simbolos de la esquina inferior derecha."><input id="showLegend" type="checkbox" checked> leyenda</label>
-      <div class="project-links">
-        <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Powered by www.robertocanales.com</a>
-        <a href="manual.html" target="_blank" rel="noopener">Manual</a>
-        <a href="docs.html" target="_blank" rel="noopener">Documentacion tecnica</a>
-        <a href="#ayuda">Ayuda rapida</a>
-        <a href="#licencia-mit">Licencia MIT</a>
+    <section id="seguridad">
+      <h2>3. Seguridad: lo primero que hay que aprender</h2>
+      <p>La seguridad no es una sección secundaria. En una cancha real hay otros tiradores, árbitros, máquinas, ruido, presión y armas cargadas. Un principiante puede fallar platos; lo que no puede hacer es girarse con el arma cerrada, manipular nervioso un encasquillamiento o olvidar hacia dónde apuntan los cañones.</p>
+      <div class="grid">
+        <article class="card">
+          <h3>Al terminar el disparo</h3>
+          <p>Abrir el arma sin girarse, manteniendo los cañones hacia la zona de tiro. Solo después se abandona el puesto.</p>
+        </article>
+        <article class="card">
+          <h3>Si algo se atasca</h3>
+          <p>Quedarse quieto, cañones en dirección segura y pedir asistencia. La improvisación con un arma es mala compañera.</p>
+        </article>
+        <article class="card">
+          <h3>Equipo mínimo</h3>
+          <p>Gafas protectoras, protección auditiva, chaleco cómodo y cartuchos adecuados. El ruido de la cancha castiga más de lo que parece.</p>
+        </article>
       </div>
+      <div class="note safety"><strong>Idea clave:</strong> primero se aprende a estar seguro en el puesto; luego ya se aprende a romper más platos.</div>
+    </section>
+
+    <section id="modalidades">
+      <h2>4. Cómo es una cancha y por qué hay modalidades distintas</h2>
+      <p>En muchos clubes hay varias pistas. Algunas están configuradas para Foso Universal y otras para Foso Olímpico. En tiradas populares pueden aparecer robots o máquinas oscilantes. Desde fuera todo parece “tirar platos”, pero para el tirador cambia la lectura de salida, la velocidad, el ángulo, la altura y la distancia.</p>
+      <figure>
+        <img src="docs/assets/manual-modalidades-trap.png" alt="Infografía de modalidades de trap">
+        <figcaption>Universal, Olímpico y Robot comparten el problema físico del adelanto, pero no comparten la misma distribución de máquinas ni la misma previsibilidad.</figcaption>
+      </figure>
+      <table>
+        <thead><tr><th>Modalidad</th><th>Qué representa en el simulador</th><th>Qué aprende el tirador</th></tr></thead>
+        <tbody>
+          <tr><td>Universal</td><td>Cinco máquinas, señuelo central y rotación por puestos.</td><td>Base de lectura, adelantamiento y corrección.</td></tr>
+          <tr><td>Foso Olímpico</td><td>Quince máquinas agrupadas por puesto y esquemas reglados.</td><td>Más velocidad de lectura y adaptación a ángulos.</td></tr>
+          <tr><td>Robot / trillo</td><td>Una máquina oscilante con fuerza, altura y lateralidad regulables.</td><td>Comparar lo normativo con platos extremos de feria.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="escopeta">
+      <h2>5. Escopeta de plato, solista y por qué el ojo manda</h2>
+      <p>El tirador no mira la escopeta como la miraría una cámara externa. Encara al hombro, adelanta la cara y alinea el ojo con la solista. Si la escopeta queda plana, puede ver casi solo una línea y el punto de mira; si sube el lomo o ajusta la culata, el punto efectivo de impacto cambia.</p>
+      <p>Esto importa porque una escopeta de caza no regulada puede obligar a tapar más plato. En cambio, una configuración de trap con lomo regulable permite que el disparo vaya algo por encima del punto de mira, facilitando ver el plato y corregir el segundo tiro.</p>
+      <figure>
+        <img src="docs/assets/manual-escopeta-solista.png" alt="Infografía de escopeta, solista y visión del tirador">
+        <figcaption>La solista no es decoración: define cómo se relacionan ojo, punto de mira y centro de impacto.</figcaption>
+      </figure>
+    </section>
+
+    <section id="novato">
+      <h2>6. Por qué un principiante falla tantos platos</h2>
+      <p>El error normal es disparar donde está el plato, como en una pantalla de videojuego. En la cancha real, el plato se mueve, el cartucho tarda en llegar, la nube se abre y la escopeta puede tapar parte de la visión. Por eso el fallo típico es quedarse retrasado y bajo.</p>
+      <p>Además está el cuerpo: el hombro no está acostumbrado, la cara puede levantarse, el encare cambia de un tiro al siguiente y aparece la tentación de disparar demasiado. Un tirador nuevo aprende mejor con pocas series conscientes, corrección clara y repetición de platos concretos.</p>
+      <div class="grid">
+        <article class="card"><h3>Retrasado</h3><p>El plato ya se fue cuando llega el plomeo.</p></article>
+        <article class="card"><h3>Bajo</h3><p>El plato sube y la nube pasa por debajo.</p></article>
+        <article class="card"><h3>Sin ver el segundo tiro</h3><p>La escopeta tapa el plato si la geometría ojo-solista no ayuda.</p></article>
+      </div>
+    </section>
+
+    <section id="fisica">
+      <h2>7. La física: adelanto, plomeo y energía residual</h2>
+      <p>El simulador calcula el plato como un objetivo móvil y el disparo como una nube de perdigones. Cada perdigón tiene dirección, pequeña variación, retardo, pérdida de velocidad y energía. No basta con tocar geométricamente: si llega demasiado lejos o demasiado flojo, puede no romper.</p>
+      <figure>
+        <img src="docs/assets/manual-fisica-adelanto.png" alt="Infografía de física de adelanto y energía">
+        <figcaption>El adelanto depende del tiempo de vuelo de los perdigones; la rotura depende además de la energía residual.</figcaption>
+      </figure>
+      <div class="note tech">
+        <strong>Versión técnica:</strong> el modelo usa trayectoria parabólica del plato con gravedad efectiva, dispersión por choke, perdigones individuales, curva de velocidad residual y umbral mínimo de energía. Es una aproximación pedagógica, no una certificación balística de un cartucho concreto.
+      </div>
+    </section>
+
+    <section id="robot">
+      <h2>8. Robot de feria, trillos y platos fuera de norma</h2>
+      <p>En tiradas populares puede haber una sola máquina o robot, a veces montado en condiciones menos estables y ajustado “a ojo”. Si se aprieta el muelle, se aumenta la inclinación o se abre el barrido lateral, aparecen platos que no se parecen a una cancha regulada: muy altos, muy bajos, muy laterales o muy rápidos.</p>
+      <p>Eso explica por qué alguien entrenado en un campo ortodoxo puede sufrir en una feria, y por qué tiradores acostumbrados a esos robots resuelven trayectorias raras. La modalidad Robot del simulador existe para estudiar esa diferencia sin llamar normativo a lo que no lo es.</p>
+    </section>
+
+    <section id="app">
+      <h2>9. Cómo se usa el simulador</h2>
+      <p>La aplicación permite pedir plato con botón derecho, disparar con botón izquierdo y mover el punto rojo con el ratón. Puede mostrar u ocultar ayuda de adelanto, trayectoria, plomeo y corrección. La repetición de plato sirve para entrenar una misma salida hasta que el cerebro aprende la relación entre velocidad, distancia y adelanto.</p>
+      <div class="screens">
+        <figure>
+          <img src="docs/screenshots/vista-completa.png" alt="Captura completa de la aplicación con controles">
+          <figcaption>Vista completa: controles, foso, puestos, señuelo, estado y leyenda.</figcaption>
+        </figure>
+        <figure>
+          <img src="docs/screenshots/correcciones-doble-tiro.png" alt="Captura de corrección del primer y segundo tiro">
+          <figcaption>Corrección del disparo: compara tiro 1 y tiro 2 para saber si quedaste alto, bajo, adelantado o retrasado.</figcaption>
+        </figure>
+      </div>
+      <figure>
+        <img src="docs/assets/manual-entrenamiento.png" alt="Infografía de entrenamiento con simulador">
+        <figcaption>La aplicación no ahorra la práctica real, pero ayuda a llegar al campo con una idea mental más clara.</figcaption>
+      </figure>
+      <p><a class="button primary" href="app.html">Abrir ahora el simulador</a></p>
+    </section>
+
+    <section id="fuentes">
+      <h2>10. Fuentes, normativa y límites</h2>
+      <p>La documentación combina fuentes oficiales, federativas, comerciales y divulgativas. Las fuentes oficiales prevalecen si hay discrepancias. La simulación se ha construido para aprender y comparar, no para homologar una cancha ni certificar munición.</p>
+      <ul class="source-list">
+        <li><a href="https://www.guardiacivil.es/es/servicios/armasyexplosivo/controldearmas/licencias_armas/" target="_blank" rel="noopener">Guardia Civil - licencias de armas</a></li>
+        <li><a href="https://www.boe.es/buscar/act.php?id=BOE-A-1993-6202" target="_blank" rel="noopener">BOE - Reglamento de Armas</a></li>
+        <li><a href="https://www.tirolimpico.org/" target="_blank" rel="noopener">Real Federación Española de Tiro Olímpico</a></li>
+        <li><a href="https://www.issf-sports.org/theissf/rules_and_regulations.ashx" target="_blank" rel="noopener">ISSF - reglas oficiales</a></li>
+        <li><a href="https://www.fitasc.com/uk/content/12" target="_blank" rel="noopener">FITASC - Universal Trench</a></li>
+        <li><a href="https://www.cpsa.co.uk/userfiles/files/CPSA_Booklet_7.pdf" target="_blank" rel="noopener">CPSA - ABT y Wobble</a></li>
+        <li><a href="https://rangeservices.nra.org/media/4074/shotshell-ballistics.pdf" target="_blank" rel="noopener">NRA - Shotshell Ballistics</a></li>
+        <li><a href="https://www.hunter-ed.com/national/studyGuide/Shotgun-Choke-and-Shot-String/201099_92847/" target="_blank" rel="noopener">Hunter-ed - Shot String</a></li>
+        <li><a href="https://whiteflyer.com/resources/shotgun-disciplines/" target="_blank" rel="noopener">White Flyer - disciplinas de escopeta</a></li>
+        <li><a href="https://www.beretta.com/en-us/product/dt11-international-trap-FA0095" target="_blank" rel="noopener">Beretta DT11 International Trap</a></li>
+      </ul>
+    </section>
+
+    <section id="licencia">
+      <h2>11. Licencia: se puede instalar, pero no borrar la autoría</h2>
+      <p>El proyecto se publica bajo licencia MIT. Al ser una página HTML, puede descargarse, instalarse localmente, copiarse, modificarse y redistribuirse. Pero toda copia o derivado debe conservar la referencia al autor original, <strong>Roberto Canales Mora</strong>, y el enlace a <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a>.</p>
+      <p>La atribución forma parte del aviso de copyright y de permiso que acompaña al software.</p>
     </section>
   </main>
 
-  <section id="ayuda" class="license-panel" aria-label="Ayuda del simulador">
-    <article class="license-card">
-      <h2>Ayuda del Simulador</h2>
-      <p>Este laboratorio muestra el tiro al plato desde el ojo del tirador. La idea principal es aprender a leer el vuelo del plato y entender donde hay que llevar el punto de mira para que la nube de perdigones lo intercepte.</p>
-
-      <h3>Modalidades</h3>
-      <ul>
-        <li><strong>Universal:</strong> cinco maquinas dentro del foso. El señuelo naranja central indica la referencia de salida.</li>
-        <li><strong>Olimpica:</strong> quince maquinas agrupadas por puestos. El señuelo activo se alinea con el puesto desde el que se tira.</li>
-        <li><strong>Robot:</strong> una unica maquina oscilante o programable. Puede ser ABT compatible o popular no normativa, con fuerza, altura y lateralidad ajustables.</li>
-        <li><strong>Puesto:</strong> en todas las modalidades, incluido Robot, el tirador rota por los puestos 1 a 5 durante una tirada de 25 platos. Repetir plato no suma ni cambia de puesto.</li>
-      </ul>
-
-      <h3>Velocidad y trayectoria</h3>
-      <ul>
-        <li>El plato sale de la boca del foso con una velocidad, un angulo lateral y una altura definidos por el esquema.</li>
-        <li>En <strong>Robot</strong>, los esquemas son secuencias de una maquina: circular, pseudoaleatoria o extrema. <strong>Robot fuerza</strong> cambia el alcance, <strong>Robot altura</strong> cambia la inclinacion y <strong>Robot lateral</strong> abre o cierra los angulos.</li>
-        <li>La linea naranja discontinua muestra su trayectoria prevista. Si desactivas <strong>trayectoria</strong>, tambien se oculta la guia entre maquina y salida.</li>
-        <li>La trayectoria no se pinta por debajo del suelo: cuando el plato cae, la ayuda deja de sugerir puntos imposibles.</li>
-      </ul>
-
-      <h3>Cartucho y plomeo</h3>
-      <ul>
-        <li>El cartucho define la velocidad de salida de los perdigones. Cuanto mas rapido, menos tiempo tardan en llegar al plato.</li>
-        <li>El plomeo azul representa la nube de perdigones donde estas apuntando. No es certeza absoluta: el programa simula muchos perdigones y comprueba si alguno toca el plato.</li>
-        <li>Un toque no siempre rompe: si el perdigon llega con poca energia residual, el simulador lo marca como <strong>toque flojo</strong>.</li>
-        <li><strong>Plomeo tiro 1</strong> y <strong>Plomeo tiro 2</strong> permiten abrir o cerrar el patron, como harian choques distintos.</li>
-        <li><strong>Variacion plomeo</strong> introduce huecos, agrupaciones y pequenas diferencias de velocidad entre perdigones. Asi el plomeo se comporta como una nube 3D simplificada, no como un circulo perfecto.</li>
-      </ul>
-
-      <h3>Adelanto</h3>
-      <ul>
-        <li>El plato sigue moviendose mientras los perdigones viajan. Por eso normalmente no se apunta exactamente al plato, sino un poco por delante.</li>
-        <li>El area amarilla es la ayuda de adelanto: donde conviene llevar el punto rojo para que la nube alcance al plato.</li>
-        <li>Si ocultas <strong>ayuda adelanto</strong>, la fisica sigue calculandose, pero no se muestra la pista amarilla.</li>
-      </ul>
-
-      <h3>Elementos en pantalla</h3>
-      <ul>
-        <li><strong>Plato naranja:</strong> objetivo real.</li>
-        <li><strong>Punto rojo:</strong> punto de mira; donde disparas.</li>
-        <li><strong>Area amarilla:</strong> punto o zona ideal de adelanto.</li>
-        <li><strong>Area azul:</strong> patron de plomeo estimado.</li>
-        <li><strong>Punto azul claro:</strong> centro fisico del disparo.</li>
-        <li><strong>Punto verde:</strong> impacto que rompe el plato.</li>
-        <li><strong>Señuelo S:</strong> referencia visual de salida del plato.</li>
-        <li><strong>Ventanas de correccion:</strong> resumen de si el tiro quedo alto, bajo, adelantado, retrasado o fuera de linea.</li>
-      </ul>
-
-      <h3>Como usarlo</h3>
-      <ul>
-        <li>Empieza con <strong>Camara lenta</strong> baja para ver la relacion entre plato, adelanto y plomeo.</li>
-        <li>Sube el zoom visual si el señuelo o el plato se ven demasiado pequeños en tu pantalla.</li>
-        <li>Prueba primero con la ayuda amarilla activada; despues ocultala para entrenar la estimacion mental.</li>
-        <li>Usa <strong>Repetir plato</strong> para practicar una salida dificil sin avanzar la tirada.</li>
-      </ul>
-
-      <p><a href="#">Cerrar</a> · <a href="manual.html" target="_blank" rel="noopener">Manual avanzado</a> · <a href="docs.html" target="_blank" rel="noopener">Documentacion tecnica</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>
-    </article>
-  </section>
-
-  <section id="licencia-mit" class="license-panel" aria-label="Licencia MIT">
-    <article class="license-card">
-      <h2>Licencia MIT</h2>
-      <p>Copyright (c) 2026 Roberto Canales Mora</p>
-      <p>Por la presente se concede permiso, libre de cargos, a cualquier persona que obtenga una copia de este software y de los archivos de documentación asociados, para tratar el software sin restricción, incluyendo sin limitación los derechos de uso, copia, modificación, fusión, publicación, distribución, sublicencia y/o venta de copias del software, y para permitir a las personas a quienes se les proporcione el software que hagan lo mismo, sujeto a las siguientes condiciones:</p>
-      <p>Al usar, copiar, modificar, distribuir o publicar versiones derivadas de este proyecto debe conservarse siempre la referencia al autor original, <strong>Roberto Canales Mora</strong>, junto con el enlace a <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a>. Esta atribución forma parte del aviso de copyright y de permiso que debe acompañar a todas las copias o partes sustanciales del software.</p>
-      <p>El aviso de copyright anterior y este aviso de permiso se incluirán en todas las copias o partes sustanciales del software.</p>
-      <p>EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITÁNDOSE A GARANTÍAS DE COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO LOS AUTORES O TITULARES DEL COPYRIGHT SERÁN RESPONSABLES DE NINGUNA RECLAMACIÓN, DAÑO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIÓN CONTRACTUAL, EXTRACONTRACTUAL O DE OTRO TIPO, QUE SURJA DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O EL USO U OTRAS OPERACIONES EN EL SOFTWARE.</p>
-      <p><a href="#">Cerrar</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>
-    </article>
-  </section>
-
-  <script>
-    /*
-      Plato is intentionally kept as a single-file app so it can be opened,
-      published on GitHub Pages, or served locally without a build step.
-
-      Coordinate system used everywhere below:
-      - x: lateral field axis, positive to the shooter's right.
-      - y: height in metres.
-      - z: depth away from the shooter, positive towards the trench/field.
-      - yaw/pitch: aiming angles from the shooter's right eye.
-    */
-
-    // -------------------------------------------------------------------------
-    // DOM handles
-    // -------------------------------------------------------------------------
-
-    const canvas = document.getElementById("simCanvas");
-    const ctx = canvas.getContext("2d");
-    const banner = document.getElementById("banner");
-    const normBadge = document.getElementById("normBadge");
-    const ui = {
-      call: document.getElementById("callBtn"),
-      repeat: document.getElementById("repeatBtn"),
-      fire: document.getElementById("fireBtn"),
-      reset: document.getElementById("resetBtn"),
-      prevStation: document.getElementById("prevStationBtn"),
-      nextStation: document.getElementById("nextStationBtn"),
-      flat: document.getElementById("flatBtn"),
-      high: document.getElementById("highBtn"),
-      showLead: document.getElementById("showLead"),
-      showShot: document.getElementById("showShot"),
-      showPath: document.getElementById("showPath"),
-      mode: document.getElementById("modeControl"),
-      scheme: document.getElementById("schemeControl"),
-      station: document.getElementById("stationControl"),
-      guard: document.getElementById("guardControl"),
-      zoom: document.getElementById("zoomControl"),
-      slow: document.getElementById("slowControl"),
-      reaction: document.getElementById("reactionControl"),
-      cartridge: document.getElementById("cartridgeControl"),
-      spread1: document.getElementById("spread1Control"),
-      spread2: document.getElementById("spread2Control"),
-      pelletVariance: document.getElementById("pelletVarianceControl"),
-      analysis: document.getElementById("analysisControl"),
-      wind: document.getElementById("windControl"),
-      rib: document.getElementById("ribControl"),
-      robotForce: document.getElementById("robotForceControl"),
-      robotPitch: document.getElementById("robotPitchControl"),
-      robotLateral: document.getElementById("robotLateralControl"),
-      transparentGround: document.getElementById("transparentGround"),
-      showLegend: document.getElementById("showLegend"),
-      state: document.getElementById("stateReadout"),
-      round: document.getElementById("roundReadout"),
-      stationReadout: document.getElementById("stationReadout"),
-      target: document.getElementById("targetReadout"),
-      lead: document.getElementById("leadReadout"),
-      aim: document.getElementById("aimReadout"),
-      result: document.getElementById("resultReadout"),
-      zoomValue: document.getElementById("zoomValue"),
-      slowValue: document.getElementById("slowValue"),
-      slowNote: document.getElementById("slowNote"),
-      reactionValue: document.getElementById("reactionValue"),
-      cartridgeValue: document.getElementById("cartridgeValue"),
-      spread1Value: document.getElementById("spread1Value"),
-      spread2Value: document.getElementById("spread2Value"),
-      pelletVarianceValue: document.getElementById("pelletVarianceValue"),
-      analysisValue: document.getElementById("analysisValue"),
-      windValue: document.getElementById("windValue"),
-      ribValue: document.getElementById("ribValue"),
-      robotForceValue: document.getElementById("robotForceValue"),
-      robotPitchValue: document.getElementById("robotPitchValue"),
-      robotLateralValue: document.getElementById("robotLateralValue"),
-      stationValue: document.getElementById("stationValue")
-    };
-
-    // -------------------------------------------------------------------------
-    // Simulation state and user-adjustable parameters
-    // -------------------------------------------------------------------------
-
-    const sim = {
-      mode: "idle",
-      t: 0,
-      last: performance.now(),
-      gunYaw: 0,
-      gunPitch: 0,
-      viewYaw: 0,
-      viewPitch: 0,
-      desiredYaw: 0,
-      desiredPitch: 0,
-      manualYawVel: 0,
-      manualPitchVel: 0,
-      ribGain: 0,
-      shotCount: 0,
-      shots: [],
-      bursts: [],
-      fragments: [],
-      target: null,
-      debug: null,
-      machineX: 0,
-      station: 3,
-      startStation: 3,
-      roundIndex: 0,
-      broken: 0,
-      stationLocked: false,
-      pendingStation: null,
-      lastTarget: null,
-      repeatingTarget: false,
-      robotIndex: 0,
-      robotSeed: 24681357,
-      frozenCues: []
-    };
-
-    /*
-      params are the public "laboratory" controls. sim stores transient state
-      for the current target, shot history, station rotation, and visual effects.
-    */
-    const params = {
-      slow: 0.35,
-      reaction: 0.03,
-      cartridge: 400,
-      spread1: 30,
-      spread2: 20,
-      pelletVariance: 45,
-      analysis: 4.8,
-      wind: 0,
-      zoom: 1,
-      robotForce: 100,
-      robotPitch: 0,
-      robotLateral: 100,
-      mode: "universal",
-      scheme: "fu1",
-      guard: "neutral"
-    };
-
-    // -------------------------------------------------------------------------
-    // Range geometry and rules-derived constants
-    // -------------------------------------------------------------------------
-
-    const keys = new Set();
-    const g = 9.81;
-    const TRENCH_FRONT = 15;
-    const TRENCH_BACK = 16.45;
-    const UNIVERSAL_STATION_SPACING = 2.5;
-    const OLYMPIC_STATION_SPACING = 3.15;
-    const UNIVERSAL_MACHINE_SPACING = 1.1;
-    const OLYMPIC_MACHINE_GROUP_SPACING = 3.15;
-    const OLYMPIC_MACHINE_SPACING = 0.82;
-    const LURE_HEIGHT = 0.08;
-    // FITASC places the trap pivot about 0.50 m below the trench roof and
-    // 0.50 m behind its front edge. The clay becomes visible at the roof slit.
-    const RELEASE_HEIGHT = 0.16;
-    const MACHINE_HEIGHT = -0.5;
-    const MACHINE_Z = TRENCH_FRONT + 0.5;
-    const CLAY_GROUND_Y = 0.12;
-    const SHOT_TRACE_BASE_DURATION = 0.75;
-    const BURST_BASE_DURATION = 0.65;
-    const FRAGMENT_BASE_DURATION = 2.2;
-    const VERTICAL_FOV_DEG = 48;
-    const MAX_RIB_GAIN_DEG = 0.96;
-    const eye = { x: 0, y: 1.7, z: 0 };
-
-    /*
-      Scheme rows:
-      - Universal: [machineNumber, horizontalAngleDeg, heightAt10m, landingDistanceM]
-      - Olympic:   [machineNumber, horizontalAngleDeg, heightAt10m]
-
-      Values are model tables for training. They are based on the normative
-      structure of FITASC Universal Trench and ISSF Trap, then tuned so the
-      simulator can expose a broad set of realistic visual problems.
-    */
-    const FU_SCHEMES = {
-      fu1: [[1,35,1.5,70],[2,20,2.0,60],[3,-10,1.5,75],[4,-30,3.0,65],[5,-45,1.5,60]],
-      fu2: [[1,40,2.0,65],[2,25,3.5,60],[3,5,2.5,70],[4,-15,1.5,75],[5,-35,2.0,65]],
-      fu3: [[1,45,2.0,60],[2,25,2.0,75],[3,-5,3.5,60],[4,-30,2.5,65],[5,-45,1.5,70]],
-      fu4: [[1,40,2.0,70],[2,15,3.5,60],[3,-5,1.5,70],[4,-30,3.0,75],[5,-35,2.5,65]],
-      fu5: [[1,45,2.5,65],[2,30,3.0,60],[3,5,2.0,75],[4,-30,3.5,70],[5,-40,2.0,65]],
-      fu6: [[1,40,1.5,60],[2,15,1.5,75],[3,5,2.5,65],[4,-30,2.5,65],[5,-45,3.0,60]],
-      fu7: [[1,40,2.0,70],[2,15,1.5,65],[3,0,2.0,75],[4,-20,2.5,65],[5,-40,2.0,70]],
-      fu8: [[1,35,2.0,75],[2,15,1.5,65],[3,0,2.5,60],[4,-20,3.0,65],[5,-45,2.5,70]],
-      fu9: [[1,40,2.5,60],[2,25,2.0,70],[3,0,1.5,70],[4,-15,3.5,65],[5,-35,3.0,75]],
-      fu10: [[1,35,2.0,65],[2,25,2.0,75],[3,10,3.0,60],[4,-30,2.5,70],[5,-45,2.5,60]]
-    };
-
-    const ISSF_SCHEMES = {
-      issf1: [[1,25,2.0],[2,-5,3.0],[3,-35,1.5],[4,45,2.5],[5,10,1.8],[6,-35,3.0],[7,35,3.0],[8,-5,1.5],[9,-45,1.6],[10,40,1.5],[11,0,3.0],[12,-25,2.6],[13,20,2.4],[14,5,1.9],[15,-35,3.0]],
-      issf2: [[1,25,3.0],[2,-5,1.8],[3,-35,2.0],[4,40,2.0],[5,0,3.0],[6,-45,1.6],[7,45,1.5],[8,0,2.8],[9,-40,2.0],[10,15,1.5],[11,5,2.0],[12,-35,1.8],[13,35,1.8],[14,-5,1.5],[15,-40,3.0]],
-      issf3: [[1,30,2.5],[2,0,2.8],[3,-35,3.0],[4,45,1.5],[5,-5,2.5],[6,-40,1.7],[7,30,2.8],[8,5,3.0],[9,-45,1.5],[10,45,2.3],[11,0,3.0],[12,-40,1.6],[13,30,2.0],[14,0,1.5],[15,-35,2.2]],
-      issf4: [[1,40,3.0],[2,10,1.5],[3,-30,2.2],[4,30,1.6],[5,-10,3.0],[6,-35,2.0],[7,45,2.0],[8,0,3.0],[9,-20,1.5],[10,30,1.5],[11,-5,2.0],[12,-45,2.8],[13,35,2.5],[14,0,1.6],[15,-30,3.0]],
-      issf5: [[1,45,1.6],[2,0,3.0],[3,-15,2.0],[4,40,2.8],[5,-10,1.5],[6,-45,2.0],[7,35,3.0],[8,-5,1.8],[9,-40,1.5],[10,25,1.8],[11,0,1.6],[12,-30,3.0],[13,30,2.0],[14,10,2.4],[15,-15,1.8]],
-      issf6: [[1,40,2.0],[2,0,3.0],[3,-35,1.5],[4,35,2.5],[5,10,1.5],[6,-35,2.0],[7,35,2.0],[8,-5,1.5],[9,-40,3.0],[10,45,1.5],[11,-10,3.0],[12,-25,2.6],[13,25,2.4],[14,5,1.5],[15,-45,2.0]],
-      issf7: [[1,35,2.2],[2,-5,3.0],[3,-20,3.0],[4,40,2.0],[5,0,3.0],[6,-45,2.8],[7,40,3.0],[8,0,2.0],[9,-40,2.2],[10,45,1.5],[11,5,2.0],[12,-35,1.8],[13,20,1.8],[14,-5,1.5],[15,-45,2.0]],
-      issf8: [[1,25,3.0],[2,5,1.5],[3,-20,2.0],[4,40,1.5],[5,0,3.0],[6,-45,2.8],[7,35,3.0],[8,-5,2.5],[9,-45,2.0],[10,45,1.8],[11,0,1.5],[12,-30,3.0],[13,30,2.0],[14,10,3.0],[15,-15,2.2]],
-      issf9: [[1,40,3.0],[2,0,1.8],[3,-20,3.0],[4,15,3.0],[5,-10,1.5],[6,-35,2.0],[7,45,1.6],[8,0,2.8],[9,-30,3.0],[10,30,2.0],[11,-5,2.0],[12,-15,3.0],[13,35,2.9],[14,0,1.6],[15,-45,2.2]]
-    };
-
-    const ROBOT_SCHEMES = {
-      robot_abt: {
-        name: "Robot ABT",
-        normative: true,
-        sequence: "random",
-        rows: [
-          [-35, 1.8, 72],
-          [-25, 2.6, 75],
-          [-10, 3.2, 75],
-          [0, 2.4, 75],
-          [15, 3.4, 76],
-          [28, 2.2, 74],
-          [42, 1.7, 72]
-        ]
-      },
-      robot_feria: {
-        name: "Robot feria circular",
-        normative: false,
-        sequence: "circular",
-        rows: [
-          [0, 4.6, 82],
-          [-14, 3.6, 78],
-          [-30, 2.4, 82],
-          [-48, 1.4, 88],
-          [-8, 2.0, 76],
-          [0, 2.2, 74],
-          [24, 2.2, 80],
-          [50, 1.4, 90],
-          [34, 4.2, 84]
-        ]
-      },
-      robot_extremo: {
-        name: "Robot popular extremo",
-        normative: false,
-        sequence: "weighted",
-        rows: [
-          [-55, 1.2, 94],
-          [-45, 1.5, 90],
-          [-24, 4.8, 88],
-          [0, 5.2, 92],
-          [28, 4.4, 88],
-          [45, 1.4, 92],
-          [55, 1.2, 96]
-        ]
-      },
-      robot_random: {
-        name: "Robot pseudoaleatorio",
-        normative: false,
-        sequence: "random",
-        rows: [
-          [-48, 1.5, 88],
-          [-34, 2.0, 84],
-          [-18, 4.0, 82],
-          [0, 3.0, 78],
-          [18, 4.2, 82],
-          [34, 2.0, 84],
-          [48, 1.5, 88]
-        ]
-      }
-    };
-
-    // -------------------------------------------------------------------------
-    // Station, lure, and guard geometry
-    // -------------------------------------------------------------------------
-
-    function stationSpacing() {
-      return params.mode === "olympic" ? OLYMPIC_STATION_SPACING : UNIVERSAL_STATION_SPACING;
-    }
-
-    function stationX(station) {
-      return (station - 3) * stationSpacing();
-    }
-
-    function updateEye() {
-      eye.x = stationX(sim.station);
-    }
-
-    function guardPoint() {
-      const base = activeLurePoint();
-      if (params.guard !== "high") return base;
-      return {
-        x: base.x + (sim.station <= 2 ? -1.25 : 1.25),
-        y: 1.4,
-        z: TRENCH_FRONT
-      };
-    }
-
-    function lureX(station = sim.station) {
-      return params.mode === "olympic" ? stationX(station) : 0;
-    }
-
-    function activeLurePoint() {
-      return { x: lureX(), y: LURE_HEIGHT, z: TRENCH_FRONT };
-    }
-
-    function setAimToGuard() {
-      updateEye();
-      const lure = aimAnglesAt(activeLurePoint());
-      const a = aimAnglesAt(guardPoint());
-      sim.viewYaw = lure.yaw;
-      sim.viewPitch = lure.pitch;
-      sim.gunYaw = a.yaw;
-      sim.gunPitch = a.pitch;
-      sim.desiredYaw = a.yaw;
-      sim.desiredPitch = a.pitch;
-    }
-
-    // The round rotates through stations 1..5, starting from the selected post.
-    function stationForRound() {
-      return ((sim.startStation - 1 + sim.roundIndex) % 5) + 1;
-    }
-
-    function advanceRound(hit) {
-      if (hit) sim.broken += 1;
-      sim.roundIndex = Math.min(25, sim.roundIndex + 1);
-      sim.pendingStation = stationForRound();
-    }
-
-    function applyPendingStation() {
-      if (!sim.pendingStation) return;
-      sim.station = sim.pendingStation;
-      sim.pendingStation = null;
-      ui.station.value = String(sim.station);
-      clearShotReview();
-      updateEye();
-      setAimToGuard();
-    }
-
-    function resize() {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = Math.max(1, Math.round(rect.width * dpr));
-      canvas.height = Math.max(1, Math.round(rect.height * dpr));
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-
-    // -------------------------------------------------------------------------
-    // Vector math and camera projection
-    // -------------------------------------------------------------------------
-
-    function rand(min, max) {
-      return min + Math.random() * (max - min);
-    }
-
-    function clamp(v, min, max) {
-      return Math.max(min, Math.min(max, v));
-    }
-
-    function normalize(v) {
-      const m = Math.hypot(v.x, v.y, v.z) || 1;
-      return { x: v.x / m, y: v.y / m, z: v.z / m };
-    }
-
-    function dot(a, b) {
-      return a.x * b.x + a.y * b.y + a.z * b.z;
-    }
-
-    function cross(a, b) {
-      return {
-        x: a.y * b.z - a.z * b.y,
-        y: a.z * b.x - a.x * b.z,
-        z: a.x * b.y - a.y * b.x
-      };
-    }
-
-    function anglesToDir(yaw, pitch) {
-      const cp = Math.cos(pitch);
-      return { x: Math.sin(yaw) * cp, y: Math.sin(pitch), z: Math.cos(yaw) * cp };
-    }
-
-    function dirToAngles(v) {
-      return { yaw: Math.atan2(v.x, v.z), pitch: Math.atan2(v.y, Math.hypot(v.x, v.z)) };
-    }
-
-    // -------------------------------------------------------------------------
-    // Target flight and lead solution
-    // -------------------------------------------------------------------------
-
-    /*
-      targetAt() is the simplified clay-flight integrator.
-      The reduced gravity factor represents the visual effect of aerodynamic lift
-      without introducing a full disc-aerodynamics model.
-    */
-    function targetAt(time) {
-      if (!sim.target) return null;
-      const flightTime = time - (sim.target.visibleDelay || 0);
-      if (flightTime < 0) return null;
-      const p = sim.target.p0;
-      const v = sim.target.v0;
-      return {
-        x: p.x + v.x * flightTime + 0.5 * params.wind * 0.28 * flightTime * flightTime,
-        y: p.y + v.y * flightTime - 0.5 * g * 0.42 * flightTime * flightTime,
-        z: p.z + v.z * flightTime
-      };
-    }
-
-    function targetVelocity(time) {
-      if (!sim.target) return { x: 0, y: 0, z: 0 };
-      const flightTime = Math.max(0, time - (sim.target.visibleDelay || 0));
-      return {
-        x: sim.target.v0.x + params.wind * 0.28 * flightTime,
-        y: sim.target.v0.y - g * 0.42 * flightTime,
-        z: sim.target.v0.z
-      };
-    }
-
-    function aimAnglesAt(point) {
-      return dirToAngles({ x: point.x - eye.x, y: point.y - eye.y, z: point.z - eye.z });
-    }
-
-    /*
-      First-pass intercept: assume current target velocity and iterate on pellet
-      travel time. This gives a useful seed, then recommendedAimAt() refines it
-      against the same centre-shot physics used for impact diagnostics.
-    */
-    function solveIntercept(p, v, pelletSpeed) {
-      const centerDir = { speedScale: 1, lag: 0 };
-      let tau = pelletTimeToDistance(Math.hypot(p.x - eye.x, p.y - eye.y, p.z - eye.z), pelletSpeed, centerDir);
-      for (let i = 0; i < 5; i += 1) {
-        const q = { x: p.x + v.x * tau, y: p.y + v.y * tau, z: p.z + v.z * tau };
-        tau = pelletTimeToDistance(Math.hypot(q.x - eye.x, q.y - eye.y, q.z - eye.z), pelletSpeed, centerDir);
-      }
-      return {
-        time: tau,
-        point: { x: p.x + v.x * tau, y: p.y + v.y * tau, z: p.z + v.z * tau }
-      };
-    }
-
-    function centerShotClosest(dir, speed, shotTime) {
-      const maxTime = 0.42;
-      const dt = 0.0012;
-      let best = { distance: Infinity, target: null, pellet: null, tau: 0 };
-      for (let tau = 0; tau <= maxTime; tau += dt) {
-        const target = targetDuringShot(shotTime, tau);
-        if (!target) continue;
-        const pellet = centerPelletAt(dir, speed, tau);
-        const distance = Math.hypot(pellet.x - target.x, pellet.y - target.y, pellet.z - target.z);
-        if (distance < best.distance) best = { distance, target, pellet, tau };
-        if (pellet.z > target.z + 2.5 && tau > 0.03) break;
-      }
-      return best;
-    }
-
-    /*
-      recommendedAimAt() returns the sight angle that should put the effective
-      centre of the pattern closest to the moving clay at this instant.
-
-      Rib gain is handled by subtracting the point-of-impact lift from the sight
-      pitch, because the shooter aims with the bead but the shot column leaves a
-      little higher when the solista/stock setup has gain.
-    */
-    function recommendedAimAt(shotTime) {
-      const p = targetAt(shotTime);
-      if (!p) return null;
-      const v = targetVelocity(shotTime);
-      const pelletSpeed = params.cartridge * 0.78;
-      const poi = sim.ribGain * Math.PI / 180;
-      const intercept = solveIntercept(p, v, pelletSpeed);
-      const base = dirToAngles({
-        x: intercept.point.x - eye.x,
-        y: intercept.point.y - eye.y,
-        z: intercept.point.z - eye.z
-      });
-      let yaw = base.yaw;
-      let pitch = base.pitch - poi;
-      let best = centerShotClosest(anglesToDir(yaw, pitch + poi), pelletSpeed, shotTime);
-      let step = 0.025;
-      for (let level = 0; level < 6; level += 1) {
-        for (let sweep = 0; sweep < 2; sweep += 1) {
-          let improved = false;
-          for (const dy of [-step, 0, step]) {
-            for (const dp of [-step, 0, step]) {
-              if (dy === 0 && dp === 0) continue;
-              const testYaw = yaw + dy;
-              const testPitch = pitch + dp;
-              const score = centerShotClosest(anglesToDir(testYaw, testPitch + poi), pelletSpeed, shotTime);
-              if (score.distance < best.distance) {
-                yaw = testYaw;
-                pitch = testPitch;
-                best = score;
-                improved = true;
-              }
-            }
-          }
-          if (!improved) break;
-        }
-        step *= 0.5;
-      }
-      return {
-        yaw,
-        pitch,
-        intercept: best.target || intercept.point,
-        pellet: best.pellet,
-        distance: best.distance
-      };
-    }
-
-    // World projection is deliberately tied to the fixed eye view. Moving the
-    // mouse changes the sight angle, not the range/camera.
-    function cameraFocalLength() {
-      const h = canvas.clientHeight;
-      return ((h * 0.5) / Math.tan((VERTICAL_FOV_DEG * Math.PI / 180) * 0.5)) * params.zoom;
-    }
-
-    function projectPoint(world) {
-      const rel = { x: world.x - eye.x, y: world.y - eye.y, z: world.z - eye.z };
-      const yaw = Math.atan2(rel.x, rel.z) - sim.viewYaw;
-      const dist = Math.hypot(rel.x, rel.z);
-      const pitch = Math.atan2(rel.y, dist) - sim.viewPitch;
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      const f = cameraFocalLength();
-      return {
-        x: w / 2 + Math.tan(yaw) * f,
-        y: h / 2 - Math.tan(pitch) * f,
-        yaw,
-        pitch,
-        scale: f / Math.max(2, dist)
-      };
-    }
-
-    function projectAim(yaw, pitch) {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      const f = cameraFocalLength();
-      return {
-        x: clamp(w / 2 + Math.tan(yaw - sim.viewYaw) * f, 0, w),
-        y: clamp(h / 2 - Math.tan(pitch - sim.viewPitch) * f, 0, h)
-      };
-    }
-
-    function aimFromScreen(x, y) {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      const f = cameraFocalLength();
-      x = clamp(x, 0, w);
-      y = clamp(y, 0, h);
-      sim.gunYaw = sim.viewYaw + Math.atan((x - w / 2) / f);
-      sim.gunPitch = sim.viewPitch - Math.atan((y - h / 2) / f);
-    }
-
-    function cloneTarget(target) {
-      if (!target) return null;
-      return {
-        ...target,
-        machineOrigin: { ...target.machineOrigin },
-        p0: { ...target.p0 },
-        v0: { ...target.v0 }
-      };
-    }
-
-    // -------------------------------------------------------------------------
-    // Target lifecycle: call, repeat, reset, and station advance
-    // -------------------------------------------------------------------------
-
-    function clearShotReview({ keepCorrections = false } = {}) {
-      sim.shots = [];
-      sim.bursts = [];
-      sim.fragments = [];
-      sim.debug = null;
-      if (!keepCorrections) sim.frozenCues = [];
-    }
-
-    function startTarget(target, label = "PLATO") {
-      sim.target = cloneTarget(target);
-      sim.target.visibleDelay = params.reaction;
-      sim.repeatingTarget = Boolean(sim.target.noCount);
-      sim.t = 0;
-      sim.mode = "reaction";
-      sim.shotCount = 0;
-      clearShotReview({ keepCorrections: true });
-      ui.result.textContent = "-";
-      banner.textContent = label;
-      banner.classList.add("show");
-      window.setTimeout(() => banner.classList.remove("show"), 360);
-    }
-
-    function solveClayLaunch(landingDistance, heightAt10) {
-      const gravityFactor = g * 0.42;
-      const y0 = RELEASE_HEIGHT;
-      const checkDistance = 10;
-      const h10 = heightAt10 - y0;
-      const hLand = CLAY_GROUND_Y - y0;
-
-      /*
-        A regulated target must satisfy two geometric constraints: height at
-        10 m and landing distance. Model y as a parabola over horizontal
-        distance s: y(s)=y0+k*s-A*s^2, then solve A and k exactly.
-      */
-      const denominator = landingDistance * checkDistance - landingDistance * landingDistance;
-      const curve = (hLand - (landingDistance / checkDistance) * h10) / denominator;
-      const slope = (h10 + curve * checkDistance * checkDistance) / checkDistance;
-      const horizontalSpeed = Math.sqrt(0.5 * gravityFactor / Math.max(curve, 0.0001));
-      const verticalSpeed = slope * horizontalSpeed;
-      const flightTime = landingDistance / horizontalSpeed;
-      return { horizontalSpeed, verticalSpeed, flightTime };
-    }
-
-    function clayHeightAtDistance(target, distance) {
-      const horizontalSpeed = Math.hypot(target.v0.x, target.v0.z);
-      const t = distance / horizontalSpeed;
-      return target.p0.y + target.v0.y * t - 0.5 * g * 0.42 * t * t;
-    }
-
-    function clayLandingTime(target) {
-      const a = 0.5 * g * 0.42;
-      const b = -target.v0.y;
-      const c = CLAY_GROUND_Y - target.p0.y;
-      const disc = Math.max(0, b * b - 4 * a * c);
-      return (-b + Math.sqrt(disc)) / (2 * a);
-    }
-
-    function verifyTarget(target) {
-      if (!target) return null;
-      if (target.mode === "robot") {
-        const horizontalSpeed = Math.hypot(target.v0.x, target.v0.z);
-        const height10 = clayHeightAtDistance(target, 10);
-        const landingTime = clayLandingTime(target);
-        const landingDistance = horizontalSpeed * landingTime;
-        return {
-          height10,
-          landingDistance,
-          flightTime: landingTime,
-          speedKmh: target.speedKmh,
-          distanceTolerance: target.robotNormative ? 5 : 0,
-          heightTolerance: target.robotNormative ? 0.08 : 0,
-          heightError: Math.abs(height10 - target.heightAt10),
-          distanceError: Math.abs(landingDistance - target.landingDistance),
-          ok: Boolean(target.robotNormative)
-        };
-      }
-      const horizontalSpeed = Math.hypot(target.v0.x, target.v0.z);
-      const height10 = clayHeightAtDistance(target, 10);
-      const landingTime = clayLandingTime(target);
-      const landingDistance = horizontalSpeed * landingTime;
-      const distanceTolerance = target.mode === "universal" ? 5 : 1;
-      const heightTolerance = 0.05;
-      const heightError = Math.abs(height10 - target.heightAt10);
-      const distanceError = Math.abs(landingDistance - target.landingDistance);
-      return {
-        height10,
-        landingDistance,
-        flightTime: landingTime,
-        speedKmh: target.speedKmh,
-        distanceTolerance,
-        heightTolerance,
-        heightError,
-        distanceError,
-        ok: heightError <= heightTolerance && distanceError <= distanceTolerance
-      };
-    }
-
-    function robotRandom() {
-      sim.robotSeed = (Math.imul(sim.robotSeed, 1664525) + 1013904223) >>> 0;
-      return sim.robotSeed / 4294967296;
-    }
-
-    function nextRobotRow(robotScheme) {
-      const rows = robotScheme.rows;
-      if (robotScheme.sequence === "circular") {
-        const row = rows[sim.robotIndex % rows.length];
-        sim.robotIndex = (sim.robotIndex + 1) % rows.length;
-        return row;
-      }
-      if (robotScheme.sequence === "weighted") {
-        const weights = rows.map(row => Math.abs(row[0]) >= 40 || row[1] >= 4.4 ? 1.5 : 1);
-        const total = weights.reduce((sum, weight) => sum + weight, 0);
-        let pick = robotRandom() * total;
-        for (let i = 0; i < rows.length; i += 1) {
-          pick -= weights[i];
-          if (pick <= 0) return rows[i];
-        }
-        return rows[rows.length - 1];
-      }
-      return rows[Math.floor(robotRandom() * rows.length)];
-    }
-
-    function makeTargetFromBallistics({ angleDeg, heightAt10, landingDistance, machineIndex = 0, mode = params.mode, robotScheme = null }) {
-      const yaw = angleDeg * Math.PI / 180;
-      const launch = solveClayLaunch(landingDistance, heightAt10);
-      const horizontalSpeed = launch.horizontalSpeed;
-      const verticalSpeed = launch.verticalSpeed;
-      const speedKmh = Math.hypot(horizontalSpeed, verticalSpeed) * 3.6;
-      const elevDeg = Math.atan2(verticalSpeed, horizontalSpeed) * 180 / Math.PI;
-      const p0 = { x: lureX(), y: RELEASE_HEIGHT, z: TRENCH_FRONT };
-      const v0 = {
-        x: Math.sin(yaw) * horizontalSpeed,
-        y: verticalSpeed,
-        z: Math.cos(yaw) * horizontalSpeed
-      };
-      const launchDir = normalize(v0);
-      const launcherBackset = clamp((RELEASE_HEIGHT - MACHINE_HEIGHT) / Math.max(0.16, launchDir.y), 0.85, 1.8);
-      const machineOrigin = {
-        x: p0.x - launchDir.x * launcherBackset,
-        y: p0.y - launchDir.y * launcherBackset,
-        z: p0.z - launchDir.z * launcherBackset
-      };
-      return {
-        speedKmh,
-        angleDeg,
-        elevDeg,
-        heightAt10,
-        landingDistance,
-        machineIndex,
-        machineX: machineOrigin.x,
-        station: sim.station,
-        mode,
-        robotScheme,
-        robotNormative: robotScheme ? Boolean(robotScheme.normative) : false,
-        noCount: false,
-        visibleDelay: params.reaction,
-        machineOrigin,
-        p0,
-        v0
-      };
-    }
-
-    /*
-      callTarget() selects one machine from the active scheme and converts the
-      table row into an initial velocity. Universal always emerges from the
-      central lure. Olympic emerges from the lure in front of the current station.
-    */
-    function callTarget() {
-      if (sim.roundIndex >= 25 || sim.pendingStation || sim.mode === "reaction" || sim.mode === "tracking") return;
-      if (!sim.stationLocked) {
-        sim.startStation = Number(ui.station.value);
-        sim.station = sim.startStation;
-        sim.stationLocked = true;
-      }
-      updateEye();
-      setAimToGuard();
-      const schemeKey = ui.scheme.value;
-      let entry;
-      let machineIndex;
-      let landingDistance;
-      let target;
-      if (params.mode === "universal") {
-        const scheme = FU_SCHEMES[schemeKey] || FU_SCHEMES.fu1;
-        entry = scheme[Math.floor(rand(0, scheme.length))];
-        machineIndex = entry[0] - 1;
-        landingDistance = entry[3];
-        target = makeTargetFromBallistics({
-          angleDeg: entry[1],
-          heightAt10: entry[2],
-          landingDistance,
-          machineIndex,
-          mode: params.mode
-        });
-      } else if (params.mode === "olympic") {
-        const scheme = ISSF_SCHEMES[schemeKey] || ISSF_SCHEMES.issf1;
-        const first = (sim.station - 1) * 3;
-        entry = scheme[first + Math.floor(rand(0, 3))];
-        machineIndex = entry[0] - 1;
-        landingDistance = 76;
-        target = makeTargetFromBallistics({
-          angleDeg: entry[1],
-          heightAt10: entry[2],
-          landingDistance,
-          machineIndex,
-          mode: params.mode
-        });
-      } else {
-        const robotScheme = ROBOT_SCHEMES[schemeKey] || ROBOT_SCHEMES.robot_feria;
-        const row = nextRobotRow(robotScheme);
-        const force = params.robotForce / 100;
-        const lateral = params.robotLateral / 100;
-        const angleDeg = clamp(row[0] * lateral, -62, 62);
-        const heightAt10 = clamp(row[1] + params.robotPitch * 0.085, 0.8, 5.8);
-        landingDistance = clamp(row[2] * force, 45, 120);
-        target = makeTargetFromBallistics({
-          angleDeg,
-          heightAt10,
-          landingDistance,
-          machineIndex: 0,
-          mode: "robot",
-          robotScheme
-        });
-      }
-      sim.lastTarget = cloneTarget(target);
-      startTarget(target);
-    }
-
-    // Repeats the exact last target. This is useful for studying a difficult
-    // lateral/fast clay without advancing the training problem or station.
-    function repeatTarget() {
-      if (!sim.lastTarget || sim.mode === "reaction" || sim.mode === "tracking") return;
-      sim.station = sim.lastTarget.station || sim.station;
-      ui.station.value = String(sim.station);
-      updateEye();
-      setAimToGuard();
-      startTarget({ ...sim.lastTarget, noCount: true }, "REPETIR");
-    }
-
-    function reset() {
-      sim.mode = "idle";
-      sim.t = 0;
-      sim.shotCount = 0;
-      sim.target = null;
-      sim.roundIndex = 0;
-      sim.broken = 0;
-      sim.stationLocked = false;
-      sim.pendingStation = null;
-      sim.repeatingTarget = false;
-      sim.station = Number(ui.station.value);
-      clearShotReview();
-      setAimToGuard();
-      ui.result.textContent = "-";
-    }
-
-    function updateAim(dt) {
-      let inputYaw = 0;
-      let inputPitch = 0;
-      if (keys.has("ArrowLeft")) inputYaw -= 1;
-      if (keys.has("ArrowRight")) inputYaw += 1;
-      if (keys.has("ArrowUp")) inputPitch += 1;
-      if (keys.has("ArrowDown")) inputPitch -= 1;
-      const manualSpeed = 1.45;
-      sim.gunYaw += inputYaw * manualSpeed * dt;
-      sim.gunPitch += inputPitch * manualSpeed * dt;
-
-      const aim = projectAim(sim.gunYaw, sim.gunPitch);
-      aimFromScreen(aim.x, aim.y);
-    }
-
-    function update(simDt, realDt = simDt) {
-      if (sim.mode !== "idle" && sim.target) {
-        sim.t += simDt;
-        if (sim.mode === "reaction" && sim.t >= params.reaction) {
-          sim.mode = "tracking";
-        }
-        const p = targetAt(sim.t);
-        if (!p) {
-          updateAim(simDt);
-          return;
-        }
-        if (p.z > 120 || isTargetOutOfUsefulView(p)) {
-          finishOutOfView();
-        }
-        if (p && p.y <= CLAY_GROUND_Y && sim.mode !== "ended") {
-          createGroundBreak(p);
-          sim.mode = "ended";
-        }
-        if (p && sim.mode !== "ended" && sim.mode !== "falling") {
-          const recommended = recommendedAimAt(sim.t);
-          if (recommended) {
-            sim.desiredYaw = recommended.yaw;
-            sim.desiredPitch = recommended.pitch;
-          }
-        }
-      }
-
-      updateAim(simDt);
-      const traceDuration = Math.max(SHOT_TRACE_BASE_DURATION, analysisDuration() * 0.34);
-      const burstDuration = Math.max(BURST_BASE_DURATION, analysisDuration() * 0.28);
-      const fragmentDuration = Math.max(FRAGMENT_BASE_DURATION, analysisDuration() * 0.72);
-      sim.shots.forEach(shot => {
-        shot.age += realDt;
-      });
-      sim.shots = sim.shots.filter(shot => shot.age < traceDuration);
-      sim.bursts.forEach(b => b.age += realDt);
-      sim.bursts = sim.bursts.filter(b => b.age < burstDuration);
-      sim.fragments.forEach(fragment => {
-        fragment.age += realDt;
-        fragment.p.x += fragment.v.x * realDt;
-        fragment.p.y = Math.max(0.02, fragment.p.y + fragment.v.y * realDt);
-        fragment.p.z += fragment.v.z * realDt;
-        fragment.v.y -= g * 0.9 * realDt;
-        if (fragment.p.y <= 0.021) fragment.v.y *= -0.18;
-      });
-      sim.fragments = sim.fragments.filter(fragment => fragment.age < fragmentDuration);
-      sim.frozenCues.forEach(cue => cue.age += realDt);
-      const keepShotReview = sim.pendingStation || sim.mode === "tracking" || sim.mode === "falling" || sim.mode === "ended";
-      if (!keepShotReview) {
-        sim.frozenCues = sim.frozenCues.filter(cue => cue.age <= analysisDuration());
-      }
-      if (sim.mode === "ended" && sim.pendingStation && sim.fragments.length === 0 && sim.bursts.length === 0 && sim.shots.length === 0) {
-        applyPendingStation();
-      }
-    }
-
-    // -------------------------------------------------------------------------
-    // Breakage effects
-    // -------------------------------------------------------------------------
-
-    function finishOutOfView() {
-      if (sim.mode === "ended") return;
-      sim.mode = "ended";
-      ui.lead.textContent = "-";
-      ui.result.textContent = sim.repeatingTarget ? "Repeticion: fuera de ventana" : "Fuera de ventana";
-      ui.result.style.color = "var(--muted)";
-      if (!sim.repeatingTarget) advanceRound(false);
-    }
-
-    function createGroundBreak(p) {
-      const ground = { x: p.x, y: 0.04, z: p.z };
-      sim.bursts.push({ age: 0, p: ground, hit: false });
-      sim.fragments.push(...makeFragments(ground, 24, 1.6));
-      ui.result.textContent = sim.repeatingTarget ? "Repeticion: cayo" : "Cayo y se rompio";
-      ui.result.style.color = "var(--bad)";
-      if (!sim.repeatingTarget) advanceRound(false);
-    }
-
-    function makeFragments(p, count, power) {
-      const pieces = [];
-      for (let i = 0; i < count; i += 1) {
-        const a = rand(0, Math.PI * 2);
-        const s = rand(0.3, power);
-        pieces.push({
-          age: 0,
-          p: { x: p.x, y: p.y + rand(0, 0.12), z: p.z },
-          v: { x: Math.cos(a) * s, y: rand(0.5, 2.4), z: Math.sin(a) * s * 0.6 },
-          r: rand(1.8, 4.8)
-        });
-      }
-      return pieces;
-    }
-
-    // -------------------------------------------------------------------------
-    // Shot pattern, pellets, and hit validation
-    // -------------------------------------------------------------------------
-
-    /*
-      Pattern radius grows with distance and choke/spread setting. It is not a
-      score probability; it only defines the cone that individual pellets occupy.
-    */
-    function spreadForShot(shotNumber = sim.shotCount + 1) {
-      return shotNumber <= 1 ? params.spread1 : params.spread2;
-    }
-
-    function spreadLabel(value) {
-      if (value <= 20) return "Full";
-      if (value <= 35) return "3/4";
-      if (value <= 55) return "1/2";
-      if (value <= 75) return "1/4";
-      return "abierto";
-    }
-
-    function patternRadius(distance, shotNumber = sim.shotCount + 1) {
-      const spread = spreadForShot(shotNumber);
-      return 0.22 + spread * 0.0045 + distance * (0.0035 + spread * 0.00003);
-    }
-
-    function distanceFromEye(point) {
-      return Math.hypot(point.x - eye.x, point.y - eye.y, point.z - eye.z);
-    }
-
-    function patternScreenRadius(point, shotNumber = sim.shotCount + 1, scaleBoost = 1.2) {
-      const screen = projectPoint(point);
-      const radius = patternRadius(distanceFromEye(point), shotNumber);
-      return {
-        screen,
-        radius,
-        px: clamp(radius * screen.scale * scaleBoost, 14, 72)
-      };
-    }
-
-    function analysisDuration() {
-      return params.analysis;
-    }
-
-    function isTargetOutOfUsefulView(point) {
-      const screen = projectPoint(point);
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      const marginX = Math.max(180, w * 0.16);
-      const marginY = Math.max(120, h * 0.18);
-      const pastMargin = screen.x < -marginX || screen.x > w + marginX || screen.y < -marginY || screen.y > h + marginY;
-      return pastMargin && point.z > TRENCH_FRONT + 8;
-    }
-
-    function pelletCount() {
-      return 306;
-    }
-
-    const PELLET_MASS_KG = 0.000083;
-    const PELLET_DRAG_PER_M = 0.014;
-    const MIN_BREAK_ENERGY_J = 0.55;
-
-    function pelletInitialSpeed(speed, dir) {
-      return speed * (dir.speedScale || 1);
-    }
-
-    function pelletTravelDistance(speed, tau, dir) {
-      const localTau = Math.max(0, tau - (dir.lag || 0));
-      const v0 = pelletInitialSpeed(speed, dir);
-      return Math.log(1 + PELLET_DRAG_PER_M * v0 * localTau) / PELLET_DRAG_PER_M;
-    }
-
-    function pelletTimeToDistance(distance, speed, dir) {
-      const v0 = pelletInitialSpeed(speed, dir);
-      const localTau = (Math.exp(PELLET_DRAG_PER_M * Math.max(0, distance)) - 1) / (PELLET_DRAG_PER_M * v0);
-      return localTau + (dir.lag || 0);
-    }
-
-    function pelletVelocityAt(speed, tau, dir) {
-      const distance = pelletTravelDistance(speed, tau, dir);
-      return pelletInitialSpeed(speed, dir) * Math.exp(-PELLET_DRAG_PER_M * distance);
-    }
-
-    function pelletEnergyAt(speed, tau, dir) {
-      const velocity = pelletVelocityAt(speed, tau, dir);
-      return 0.5 * PELLET_MASS_KG * velocity * velocity;
-    }
-
-    function seededRandom(seed) {
-      let s = seed >>> 0;
-      return () => {
-        s = (s + 0x6D2B79F5) >>> 0;
-        let t = s;
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-      };
-    }
-
-    /*
-      Seeded pellet cloud:
-      - golden-angle sampling spreads pellets without random clumping between runs
-      - per-shot jitter/clumping avoids a synthetic target-board template
-      - peripheral pellets are slightly slower, making a mild shot-string flow
-    */
-    function pelletDirections(centerDir, count, coneAngle, seed, variation = 0.45) {
-      const random = seededRandom(seed);
-      const forward = normalize(centerDir);
-      const worldUp = Math.abs(forward.y) > 0.92 ? { x: 1, y: 0, z: 0 } : { x: 0, y: 1, z: 0 };
-      const right = normalize({
-        x: worldUp.y * forward.z - worldUp.z * forward.y,
-        y: worldUp.z * forward.x - worldUp.x * forward.z,
-        z: worldUp.x * forward.y - worldUp.y * forward.x
-      });
-      const up = normalize({
-        x: forward.y * right.z - forward.z * right.y,
-        y: forward.z * right.x - forward.x * right.z,
-        z: forward.x * right.y - forward.y * right.x
-      });
-      const dirs = [{ ...forward, speedScale: 1, lag: 0, ring: 0 }];
-      for (let i = 1; i < count; i += 1) {
-        const golden = i * 2.399963229728653 + (random() - 0.5) * variation * 0.38;
-        const baseRing = Math.sqrt((i - 0.5) / count);
-        const ringJitter = 1 + (random() - 0.5) * variation * 0.34;
-        const ring = clamp(baseRing * ringJitter, 0.02, 1.22);
-        const densityWave = 0.78 + 0.18 * Math.sin(i * 12.9898);
-        const clump = 1 + Math.sin((seed % 997) * 0.017 + i * 0.41) * variation * 0.08;
-        const angle = ring * coneAngle * densityWave * clump;
-        const x = Math.cos(golden) * Math.sin(angle);
-        const y = Math.sin(golden) * Math.sin(angle) * (0.82 + (random() - 0.5) * variation * 0.12);
-        const z = Math.cos(angle);
-        const speedScale = clamp(1 - ring * ring * variation * 0.075 + (random() - 0.5) * variation * 0.018, 0.88, 1.02);
-        const lag = ring * variation * 0.00055 * random();
-        dirs.push({
-          ...normalize({
-            x: forward.x * z + right.x * x + up.x * y,
-            y: forward.y * z + right.y * x + up.y * y,
-            z: forward.z * z + right.z * x + up.z * y
-          }),
-          speedScale,
-          lag,
-          ring
-        });
-      }
-      return dirs;
-    }
-
-    function targetDuringShot(baseTime, tau) {
-      return targetAt(baseTime + tau);
-    }
-
-    function centerPelletAt(dir, speed, tau) {
-      const localTau = Math.max(0, tau - (dir.lag || 0));
-      const travel = pelletTravelDistance(speed, tau, dir);
-      return {
-        x: eye.x + dir.x * travel,
-        y: eye.y + dir.y * travel - 0.5 * g * 0.08 * localTau * localTau,
-        z: eye.z + dir.z * travel
-      };
-    }
-
-    function shotPlanePattern(centerDir, pelletDirs, pelletSpeed, planePoint, clayVelocity, hitPellet) {
-      const normal = normalize(centerDir);
-      const clayInPlane = {
-        x: clayVelocity.x - normal.x * dot(clayVelocity, normal),
-        y: clayVelocity.y - normal.y * dot(clayVelocity, normal),
-        z: clayVelocity.z - normal.z * dot(clayVelocity, normal)
-      };
-      let leadAxis = normalize(clayInPlane);
-      if (Math.hypot(leadAxis.x, leadAxis.y, leadAxis.z) < 0.01) {
-        leadAxis = normalize(cross({ x: 0, y: 1, z: 0 }, normal));
-      }
-      let heightAxis = normalize(cross(normal, leadAxis));
-      if (heightAxis.y < 0) heightAxis = { x: -heightAxis.x, y: -heightAxis.y, z: -heightAxis.z };
-      const planeDistance = dot({
-        x: planePoint.x - eye.x,
-        y: planePoint.y - eye.y,
-        z: planePoint.z - eye.z
-      }, normal);
-      const pellets = pelletDirs.map((pelletDir, index) => {
-        const axial = Math.max(0.05, dot(pelletDir, normal));
-        const tau = clamp(pelletTimeToDistance(planeDistance / axial, pelletSpeed, pelletDir), 0, 0.42);
-        const p = centerPelletAt(pelletDir, pelletSpeed, tau);
-        const d = { x: p.x - planePoint.x, y: p.y - planePoint.y, z: p.z - planePoint.z };
-        return {
-          u: dot(d, leadAxis),
-          v: dot(d, heightAxis),
-          hit: index === hitPellet,
-          energy: pelletEnergyAt(pelletSpeed, tau, pelletDir)
-        };
-      });
-      return { pellets, leadAxis, heightAxis };
-    }
-
-    // Each pellet is advanced through the same moving-target timeline. A hit is
-    // recorded only when one physical pellet passes inside the clay radius and
-    // still carries enough residual energy to plausibly break the target.
-    function pelletHitTarget(dir, speed, shotTime) {
-      const maxTime = 0.42;
-      const dt = 0.0007;
-      const targetRadius = 0.075;
-      let best = Infinity;
-      let bestPoint = null;
-      let bestTau = 0;
-      let bestEnergy = 0;
-      let weakContact = null;
-      for (let tau = 0; tau <= maxTime; tau += dt) {
-        const target = targetDuringShot(shotTime, tau);
-        if (!target) continue;
-        const pellet = centerPelletAt(dir, speed, tau);
-        const d = Math.hypot(pellet.x - target.x, pellet.y - target.y, pellet.z - target.z);
-        const energy = pelletEnergyAt(speed, tau, dir);
-        if (d < best) {
-          best = d;
-          bestPoint = target;
-          bestTau = tau;
-          bestEnergy = energy;
-        }
-        if (d <= targetRadius) {
-          if (energy >= MIN_BREAK_ENERGY_J) return { hit: true, p: target, distance: d, tau, energy };
-          weakContact = { hit: false, weak: true, p: target, distance: d, tau, energy };
-        }
-        if (pellet.z > target.z + 2.5 && tau > 0.03) break;
-      }
-      return weakContact || { hit: false, p: bestPoint, distance: best, tau: bestTau, energy: bestEnergy };
-    }
-
-    /*
-      fire() is the source of truth for hit/miss.
-      It samples all pellets, keeps a small rendered subset for performance, and
-      stores frozen correction cues so the user can compare shot 1 vs shot 2.
-    */
-    function fire() {
-      if (!sim.target || sim.mode === "idle" || sim.mode === "reaction" || sim.mode === "ended" || sim.mode === "falling" || sim.shotCount >= 2) return;
-      const current = targetAt(sim.t);
-      if (!current) return;
-      const pelletSpeed = params.cartridge * 0.78;
-      const poi = sim.ribGain * Math.PI / 180;
-      const dir = anglesToDir(sim.gunYaw, sim.gunPitch + poi);
-      const shotNumber = sim.shotCount + 1;
-      const distance = distanceFromEye(current);
-      const radius = patternRadius(distance, shotNumber);
-      const v = targetVelocity(sim.t);
-      const recommended = recommendedAimAt(sim.t);
-      const shotCenter = centerShotClosest(dir, pelletSpeed, sim.t);
-      const coneAngle = Math.atan(radius / distance);
-      const shotSeed = Math.floor(Math.random() * 0xFFFFFFFF);
-      const dirs = pelletDirections(dir, pelletCount(), coneAngle, shotSeed, params.pelletVariance / 100);
-      const renderedPellets = [];
-      let hitInfo = null;
-      let nearest = { distance: Infinity, p: current, tau: 0 };
-      for (let i = 0; i < dirs.length; i += 1) {
-        const result = pelletHitTarget(dirs[i], pelletSpeed, sim.t);
-        const travel = Math.min(pelletTimeToDistance(distance, pelletSpeed, dirs[i]), 0.42);
-        if (i % 3 === 0) {
-          const renderTau = travel + (dirs[i].lag || 0);
-          const p = centerPelletAt(dirs[i], pelletSpeed, renderTau);
-          renderedPellets.push({
-            x: p.x,
-            y: p.y,
-            z: p.z
-          });
-        }
-        if (result.distance < nearest.distance) nearest = result;
-        if (result.hit && (!hitInfo || result.distance < hitInfo.distance)) {
-          hitInfo = { pellet: i, p: result.p, distance: result.distance, tau: result.tau };
-        }
-      }
-      sim.shotCount += 1;
-      const hit = Boolean(hitInfo);
-      const weakContact = !hit && nearest.weak;
-      const impact = hit ? hitInfo.p : nearest.p || current;
-      const eventTau = hitInfo?.tau ?? nearest.tau ?? shotCenter.tau ?? 0;
-      const shotCenterPoint = centerPelletAt(dir, pelletSpeed, eventTau);
-      const idealPoint = recommended ? recommended.intercept : current;
-      const planePattern = shotPlanePattern(dir, dirs, pelletSpeed, impact, v, hitInfo?.pellet ?? -1);
-      const cue = {
-        age: 0,
-        shot: sim.shotCount,
-        hit,
-        triggerTarget: { ...current },
-        target: { ...impact },
-        velocity: { ...v },
-        aimYaw: sim.gunYaw,
-        aimPitch: sim.gunPitch,
-        shotSeed,
-        recommendedYaw: recommended ? recommended.yaw : sim.gunYaw,
-        recommendedPitch: recommended ? recommended.pitch : sim.gunPitch,
-        intercept: { ...idealPoint },
-        shotCenter: { ...shotCenterPoint },
-        impact: { ...impact },
-        planePattern,
-        eventTau,
-        impactEnergy: hitInfo?.energy ?? nearest.energy ?? 0,
-        minBreakEnergy: MIN_BREAK_ENERGY_J,
-        radius,
-        idealRadius: patternRadius(distanceFromEye(idealPoint), shotNumber),
-        shotRadius: patternRadius(distanceFromEye(impact), shotNumber)
-      };
-      sim.frozenCues = [...sim.frozenCues.filter(item => item.shot !== cue.shot), cue].slice(-2);
-      sim.debug = {
-        age: 0,
-        shotOrigin: { x: eye.x, y: eye.y, z: eye.z },
-        shotDir: dir,
-        target: impact,
-        pellets: renderedPellets,
-        hit
-      };
-      sim.shots.push({ age: 0, center: impact, future: impact, radius, hit, pellets: renderedPellets });
-      sim.bursts.push({ age: 0, p: impact, hit });
-      const edgeHit = hit && shotCenter.distance > radius * 0.65;
-      ui.result.textContent = hit
-        ? `${sim.repeatingTarget ? "Repeticion" : "Roto"} ${edgeHit ? "borde" : "centro"}: perdigon ${hitInfo.pellet + 1}/${dirs.length} · ${hitInfo.energy.toFixed(2)} J`
-        : weakContact
-        ? `${sim.repeatingTarget ? "Repeticion toque flojo" : "Toque flojo"} ${nearest.energy.toFixed(2)} J`
-        : `${sim.repeatingTarget ? "Repeticion fallo" : "Fallo"} tiro ${sim.shotCount}/2`;
-      ui.result.style.color = hit ? "var(--good)" : "var(--bad)";
-      if (hit) {
-        sim.fragments.push(...makeFragments(impact, 36, 2.4));
-        sim.mode = "ended";
-        if (!sim.repeatingTarget) advanceRound(true);
-      } else if (sim.shotCount >= 2) {
-        ui.result.textContent = sim.repeatingTarget ? "Repeticion fallada: espera caida" : "Fallo: 2 tiros, espera caida";
-        sim.mode = "falling";
-      }
-    }
-
-    // -------------------------------------------------------------------------
-    // Main first-person drawing
-    // -------------------------------------------------------------------------
-
-    function drawBackground() {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      const sky = ctx.createLinearGradient(0, 0, 0, h * 0.58);
-      sky.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue("--sky"));
-      sky.addColorStop(1, "#9dcced");
-      ctx.fillStyle = sky;
-      ctx.fillRect(0, 0, w, h);
-
-      const horizonY = h * 0.5 + Math.tan(sim.viewPitch) * cameraFocalLength();
-      const field = ctx.createLinearGradient(0, horizonY, 0, h);
-      field.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue("--field"));
-      field.addColorStop(1, getComputedStyle(document.documentElement).getPropertyValue("--field-dark"));
-      ctx.fillStyle = field;
-      ctx.fillRect(0, horizonY, w, h - horizonY);
-      ctx.strokeStyle = "rgba(255,255,255,.35)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, horizonY);
-      ctx.lineTo(w, horizonY);
-      ctx.stroke();
-    }
-
-    function drawGrid() {
-      ctx.strokeStyle = "rgba(255,255,255,.18)";
-      ctx.lineWidth = 1;
-      for (let z = 10; z <= 80; z += 10) {
-        drawWorldLine({ x: -20, y: 0, z }, { x: 20, y: 0, z });
-      }
-      for (let x = -18; x <= 18; x += 4) {
-        drawWorldLine({ x, y: 0, z: 5 }, { x, y: 0, z: 82 });
-      }
-      ctx.strokeStyle = "rgba(255,255,255,.46)";
-      drawWorldLine({ x: 0, y: 0, z: 5 }, { x: 0, y: 0, z: 82 });
-      ctx.strokeStyle = "rgba(255,220,120,.5)";
-      drawWorldLine({ x: eye.x, y: 0.01, z: 1.5 }, { x: eye.x, y: 0.01, z: 82 });
-      drawTrap();
-    }
-
-    function drawWorldLine(a, b) {
-      const pa = projectPoint(a);
-      const pb = projectPoint(b);
-      ctx.beginPath();
-      ctx.moveTo(pa.x, pa.y);
-      ctx.lineTo(pb.x, pb.y);
-      ctx.stroke();
-    }
-
-    function drawWorldPolygon(points, fill, stroke) {
-      const projected = points.map(projectPoint);
-      ctx.beginPath();
-      projected.forEach((p, index) => {
-        if (index === 0) ctx.moveTo(p.x, p.y);
-        else ctx.lineTo(p.x, p.y);
-      });
-      ctx.closePath();
-      ctx.fillStyle = fill;
-      ctx.fill();
-      if (stroke) {
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-    }
-
-    function drawWorldLabel(point, text, fill = "rgba(255,255,255,.86)", size = 13) {
-      const p = projectPoint(point);
-      if (p.x < -80 || p.x > canvas.clientWidth + 80 || p.y < -80 || p.y > canvas.clientHeight + 80) return;
-      ctx.save();
-      ctx.font = `500 ${size}px system-ui, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = "rgba(25,23,16,.72)";
-      ctx.strokeText(text, p.x, p.y);
-      ctx.fillStyle = fill;
-      ctx.fillText(text, p.x, p.y);
-      ctx.restore();
-    }
-
-    function drawClayDisc(x, y, size, alpha = 1) {
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = "var(--clay)";
-      ctx.strokeStyle = "rgba(255,255,255,.9)";
-      ctx.lineWidth = Math.max(1, size * 0.12);
-      ctx.beginPath();
-      ctx.ellipse(x, y, size * 1.28, size * 0.56, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = "#ff8a18";
-      ctx.beginPath();
-      ctx.ellipse(x, y - size * 0.08, size * 0.82, size * 0.34, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(150,55,0,.65)";
-      ctx.lineWidth = Math.max(1, size * 0.08);
-      ctx.beginPath();
-      ctx.ellipse(x, y - size * 0.11, size * 0.48, size * 0.18, 0, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    /*
-      drawTrap() renders the fixed range reference: shooting posts, translucent
-      pit, machines, and lure. It intentionally does not move with the mouse.
-    */
-    function drawTrap() {
-      const rangeMinX = stationX(1) - 1.6;
-      const rangeMaxX = stationX(5) + 1.6;
-      drawWorldPolygon(
-        [
-          { x: rangeMinX, y: 0.015, z: 0.8 },
-          { x: rangeMaxX, y: 0.015, z: 0.8 },
-          { x: rangeMaxX, y: 0.015, z: TRENCH_FRONT - 0.1 },
-          { x: rangeMinX, y: 0.015, z: TRENCH_FRONT - 0.1 }
-        ],
-        ui.transparentGround.checked ? "rgba(138,107,66,.38)" : "rgba(138,107,66,.82)",
-        "rgba(255,255,255,.18)"
-      );
-
-      drawWorldPolygon(
-        [
-          { x: rangeMinX + 0.45, y: 0.035, z: TRENCH_FRONT },
-          { x: rangeMaxX - 0.45, y: 0.035, z: TRENCH_FRONT },
-          { x: rangeMaxX - 0.45, y: -0.22, z: TRENCH_BACK },
-          { x: rangeMinX + 0.45, y: -0.22, z: TRENCH_BACK }
-        ],
-        ui.transparentGround.checked ? "rgba(24,18,13,.55)" : "rgba(24,18,13,.9)",
-        "rgba(255,255,255,.34)"
-      );
-
-      for (let s = 1; s <= 5; s += 1) {
-        const x = stationX(s);
-        drawWorldPolygon(
-          [
-            { x: x - 0.5, y: 0.03, z: 0.25 },
-            { x: x + 0.5, y: 0.03, z: 0.25 },
-            { x: x + 0.5, y: 0.03, z: 1.25 },
-            { x: x - 0.5, y: 0.03, z: 1.25 }
-          ],
-          s === sim.station ? "rgba(255,138,24,.28)" : "rgba(255,255,255,.14)",
-          s === sim.station ? "rgba(255,138,24,.9)" : "rgba(255,255,255,.32)"
-        );
-        drawWorldLabel(
-          { x, y: 0.14, z: 0.76 },
-          String(s),
-          s === sim.station ? "rgba(255,190,88,.98)" : "rgba(255,255,255,.82)",
-          s === sim.station ? 22 : 18
-        );
-      }
-
-      ctx.strokeStyle = "rgba(255,255,255,.62)";
-      ctx.lineWidth = 2;
-      drawWorldLine({ x: rangeMinX + 0.45, y: 0.06, z: TRENCH_FRONT }, { x: rangeMaxX - 0.45, y: 0.06, z: TRENCH_FRONT });
-      const count = params.mode === "olympic" ? 15 : params.mode === "universal" ? 5 : 1;
-      const showReleaseGuide = sim.target && sim.mode !== "ended" && sim.shotCount < 2;
-      for (let i = 0; i < count; i += 1) {
-        const bank = Math.floor(i / 3);
-        const within = i % 3;
-        const x = params.mode === "robot"
-          ? 0
-          : params.mode === "universal"
-          ? (i - 2) * UNIVERSAL_MACHINE_SPACING
-          : (bank - 2) * OLYMPIC_MACHINE_GROUP_SPACING + (within - 1) * OLYMPIC_MACHINE_SPACING;
-        if (ui.transparentGround.checked) {
-          const active = showReleaseGuide && sim.target.machineIndex === i;
-          const machinePoint = active ? sim.target.machineOrigin : { x, y: MACHINE_HEIGHT, z: MACHINE_Z };
-          const p = projectPoint(machinePoint);
-          ctx.fillStyle = active ? "rgba(255,100,0,.95)" : "rgba(255,255,255,.5)";
-          ctx.fillRect(p.x - 4, p.y - 8, 8, 14);
-          if (active && ui.showPath.checked) {
-            ctx.strokeStyle = "rgba(255,138,24,.78)";
-            ctx.lineWidth = 2.4;
-            drawWorldLine(
-              sim.target.machineOrigin,
-              sim.target.p0
-            );
-          }
-        }
-      }
-      if (showReleaseGuide) {
-        const mouth = projectPoint(sim.target.p0);
-        ctx.save();
-        ctx.fillStyle = "rgba(255,100,0,.95)";
-        ctx.strokeStyle = "rgba(255,255,255,.85)";
-        ctx.lineWidth = 1.4;
-        ctx.beginPath();
-        ctx.ellipse(mouth.x, mouth.y, 8, 3.6, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.restore();
-      }
-      const lureStations = params.mode === "olympic" ? [1, 2, 3, 4, 5] : [sim.station];
-      for (const s of lureStations) {
-        const active = params.mode === "universal" || s === sim.station;
-        const marker = projectPoint({ x: lureX(s), y: LURE_HEIGHT, z: TRENCH_FRONT - 0.02 });
-        if (active) {
-          drawClayDisc(marker.x, marker.y, 11, sim.target && sim.mode !== "ended" ? 0.72 : 1);
-          drawWorldLabel({ x: lureX(s), y: LURE_HEIGHT + 0.18, z: TRENCH_FRONT - 0.08 }, "S", "rgba(255,245,220,.9)", 12);
-        } else {
-          ctx.save();
-          ctx.globalAlpha = 0.5;
-          ctx.fillStyle = "rgba(215,220,210,.72)";
-          ctx.strokeStyle = "rgba(255,255,255,.58)";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.ellipse(marker.x, marker.y, 9, 4, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-          ctx.restore();
-        }
-      }
-    }
-
-    function drawTargetPath(untilTime) {
-      if (!ui.showPath.checked) return;
-      ctx.strokeStyle = "rgba(255,100,0,.8)";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([6, 7]);
-      ctx.beginPath();
-      let pathStarted = false;
-      let previous = null;
-      for (let t = 0; t <= untilTime; t += 0.08) {
-        const q = targetAt(t);
-        if (!q) continue;
-        if (q.y <= CLAY_GROUND_Y) {
-          const groundPoint = previous
-            ? {
-                x: previous.x + (q.x - previous.x) * clamp((CLAY_GROUND_Y - previous.y) / (q.y - previous.y || 1), 0, 1),
-                y: CLAY_GROUND_Y,
-                z: previous.z + (q.z - previous.z) * clamp((CLAY_GROUND_Y - previous.y) / (q.y - previous.y || 1), 0, 1)
-              }
-            : { ...q, y: CLAY_GROUND_Y };
-          const s = projectPoint(groundPoint);
-          if (!pathStarted) ctx.moveTo(s.x, s.y);
-          else ctx.lineTo(s.x, s.y);
-          pathStarted = true;
-          break;
-        }
-        const s = projectPoint(q);
-        if (!pathStarted) {
-          ctx.moveTo(s.x, s.y);
-          pathStarted = true;
-        } else {
-          ctx.lineTo(s.x, s.y);
-        }
-        previous = q;
-      }
-      if (pathStarted) ctx.stroke();
-      ctx.setLineDash([]);
-    }
-
-    function drawFallingTarget(p) {
-      const targetScreen = projectPoint(p);
-      drawTargetPath(Math.min(sim.t + 0.65, 3.4));
-      drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
-      ctx.fillStyle = "rgba(255,255,255,.9)";
-      ctx.font = "700 12px system-ui";
-      ctx.textAlign = "center";
-      ctx.fillText("fallo: cayendo", targetScreen.x, targetScreen.y - 20);
-      ui.lead.textContent = "-";
-    }
-
-    // Live target, lead cloud, and recommended sight point.
-    function drawTargetAndLead() {
-      if (!sim.target) {
-        return;
-      }
-      if (sim.mode === "ended") return;
-      const p = targetAt(sim.t);
-      if (!p) return;
-      if (sim.mode === "falling") {
-        drawFallingTarget(p);
-        return;
-      }
-      const v = targetVelocity(sim.t);
-      const recommended = recommendedAimAt(sim.t);
-      if (!recommended) return;
-
-      const targetScreen = projectPoint(p);
-      const desiredScreen = projectAim(recommended.yaw, recommended.pitch);
-      const shotNumber = sim.shotCount + 1;
-      const leadAboveGround = recommended.intercept.y > CLAY_GROUND_Y;
-      const idealRadiusPx = leadAboveGround ? patternScreenRadius(recommended.intercept, shotNumber, 1.2).px : 0;
-      const pelletSpeed = params.cartridge * 0.78;
-      const poi = sim.ribGain * Math.PI / 180;
-      const currentShot = centerShotClosest(anglesToDir(sim.gunYaw, sim.gunPitch + poi), pelletSpeed, sim.t);
-      const patternPoint = currentShot.pellet || currentShot.target || recommended.intercept;
-      const pattern = patternScreenRadius(patternPoint, shotNumber, 1.2);
-
-      drawTargetPath(Math.min(sim.t + 0.65, 3.4));
-
-      if (ui.showShot.checked) {
-        ctx.fillStyle = "rgba(215,237,255,.24)";
-        ctx.strokeStyle = "rgba(215,237,255,.75)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.ellipse(pattern.screen.x, pattern.screen.y, pattern.px * 1.25, pattern.px * 0.74, sim.target.angleDeg * Math.PI / 540, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = "rgba(215,237,255,.92)";
-        ctx.strokeStyle = "rgba(20,20,20,.55)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(pattern.screen.x, pattern.screen.y, 3.8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      }
-
-      if (ui.showLead.checked && leadAboveGround) {
-        ctx.fillStyle = "rgba(255,212,81,.24)";
-        ctx.strokeStyle = "rgba(255,212,81,.95)";
-        ctx.lineWidth = 2.4;
-        ctx.beginPath();
-        ctx.ellipse(desiredScreen.x, desiredScreen.y, idealRadiusPx * 0.76, idealRadiusPx * 0.48, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = "rgba(255,212,81,.98)";
-        ctx.strokeStyle = "rgba(20,20,20,.72)";
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.arc(desiredScreen.x, desiredScreen.y, 4.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      }
-
-      drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
-
-      const leadM = Math.hypot(recommended.intercept.x - p.x, recommended.intercept.y - p.y, recommended.intercept.z - p.z);
-      ui.lead.textContent = ui.showLead.checked ? (leadAboveGround ? `${leadM.toFixed(1)} m` : "suelo") : "oculto";
-      ui.target.textContent = `M${sim.target.machineIndex + 1} · ${Math.round(sim.target.angleDeg)} deg · ${sim.target.heightAt10.toFixed(1)} m/10m · ${Math.round(sim.target.landingDistance)} m`;
-    }
-
-    // Keeps the last shot cues visible briefly after break/fail so the user can
-    // compare where the recommended point was against the real shot line.
-    function drawFrozenCue() {
-      if (!sim.frozenCues.length) return;
-      for (const cue of sim.frozenCues) {
-        const alpha = clamp(1 - cue.age / analysisDuration(), 0, 1) * (cue.shot === 1 ? 0.78 : 1);
-        const targetScreen = projectPoint(cue.target);
-        const recommendedScreen = projectAim(cue.recommendedYaw, cue.recommendedPitch);
-        const aimScreen = projectAim(cue.aimYaw ?? cue.recommendedYaw, cue.aimPitch ?? cue.recommendedPitch);
-        const interceptScreen = projectPoint(cue.intercept);
-        const impactScreen = projectPoint(cue.impact);
-        const shotCenterScreen = cue.shotCenter ? projectPoint(cue.shotCenter) : null;
-        const patternScreen = shotCenterScreen || interceptScreen;
-        const idealRadiusPx = clamp((cue.idealRadius || cue.radius) * interceptScreen.scale * 1.2, 14, 72);
-        const shotRadiusPx = clamp((cue.shotRadius || cue.radius) * patternScreen.scale * 1.2, 14, 72);
-        const leadAboveGround = cue.intercept.y > CLAY_GROUND_Y;
-
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        if (ui.showLead.checked && leadAboveGround) {
-          ctx.setLineDash([5, 6]);
-          ctx.strokeStyle = "rgba(255,212,81,.95)";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(targetScreen.x, targetScreen.y);
-          ctx.lineTo(recommendedScreen.x, recommendedScreen.y);
-          ctx.stroke();
-          ctx.setLineDash([]);
-
-          ctx.fillStyle = "rgba(255,212,81,.22)";
-          ctx.strokeStyle = "rgba(255,212,81,.98)";
-          ctx.lineWidth = 2.4;
-          ctx.beginPath();
-          ctx.ellipse(recommendedScreen.x, recommendedScreen.y, idealRadiusPx * 0.76, idealRadiusPx * 0.48, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-        }
-
-        ctx.strokeStyle = "rgba(215,237,255,.8)";
-        ctx.lineWidth = 1.7;
-        ctx.beginPath();
-        ctx.ellipse(patternScreen.x, patternScreen.y, shotRadiusPx * 1.1, shotRadiusPx * 0.68, 0, 0, Math.PI * 2);
-        ctx.stroke();
-
-        if (shotCenterScreen) {
-          ctx.fillStyle = "rgba(215,237,255,.9)";
-          ctx.strokeStyle = "rgba(20,20,20,.55)";
-          ctx.lineWidth = 1.1;
-          ctx.beginPath();
-          ctx.arc(shotCenterScreen.x, shotCenterScreen.y, 4.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-        }
-
-        ctx.fillStyle = cue.hit ? "rgba(155,230,111,.95)" : "rgba(215,237,255,.42)";
-        ctx.strokeStyle = cue.hit ? "rgba(20,20,20,.65)" : "rgba(255,255,255,.65)";
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.arc(impactScreen.x, impactScreen.y, cue.hit ? 5.4 : 4.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = "#d90000";
-        ctx.strokeStyle = "rgba(255,255,255,.9)";
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.arc(aimScreen.x, aimScreen.y, 4.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = "rgba(255,255,255,.9)";
-        ctx.font = "500 11px system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText(String(cue.shot), aimScreen.x, aimScreen.y - 10);
-        drawClayDisc(targetScreen.x, targetScreen.y, 8, 0.76);
-        ctx.restore();
-      }
-    }
-
-    // Red bead/cursor plus optional translucent point-of-impact from rib gain.
-    function drawSight() {
-      if (sim.mode === "ended" && sim.frozenCues.length) return;
-      const aim = projectAim(sim.gunYaw, sim.gunPitch);
-      const poi = projectAim(sim.gunYaw, sim.gunPitch + sim.ribGain * Math.PI / 180);
-      ctx.save();
-      if (sim.ribGain > 0.0005) {
-        ctx.strokeStyle = "rgba(215,237,255,.42)";
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.moveTo(aim.x, aim.y);
-        ctx.lineTo(poi.x, poi.y);
-        ctx.stroke();
-        ctx.fillStyle = "rgba(215,237,255,.45)";
-        ctx.strokeStyle = "rgba(255,255,255,.55)";
-        ctx.beginPath();
-        ctx.arc(poi.x, poi.y, 5.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      }
-      ctx.fillStyle = "#d90000";
-      ctx.strokeStyle = "rgba(255,255,255,.86)";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(aim.x, aim.y, 3.4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function drawShots() {
-      const traceDuration = Math.max(SHOT_TRACE_BASE_DURATION, analysisDuration() * 0.34);
-      const burstDuration = Math.max(BURST_BASE_DURATION, analysisDuration() * 0.28);
-      for (const shot of sim.shots) {
-        const alpha = 1 - shot.age / traceDuration;
-        ctx.fillStyle = `rgba(235,247,255,${0.75 * alpha})`;
-        for (const pellet of shot.pellets) {
-          const p = projectPoint(pellet);
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-      for (const b of sim.bursts) {
-        const p = projectPoint(b.p);
-        const r = 20 + b.age * 70;
-        ctx.strokeStyle = b.hit ? `rgba(155,230,111,${1 - b.age / burstDuration})` : `rgba(255,107,104,${1 - b.age / burstDuration})`;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-    }
-
-    function drawFragments() {
-      const fragmentDuration = Math.max(FRAGMENT_BASE_DURATION, analysisDuration() * 0.72);
-      ctx.fillStyle = "var(--clay)";
-      ctx.strokeStyle = "rgba(255,255,255,.35)";
-      ctx.lineWidth = 1;
-      for (const fragment of sim.fragments) {
-        const p = projectPoint(fragment.p);
-        const alpha = clamp(1 - fragment.age / fragmentDuration, 0, 1);
-        ctx.globalAlpha = alpha;
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y - fragment.r);
-        ctx.lineTo(p.x + fragment.r * 1.2, p.y + fragment.r * 0.4);
-        ctx.lineTo(p.x - fragment.r * 0.8, p.y + fragment.r * 0.9);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    // -------------------------------------------------------------------------
-    // Correction panels
-    // -------------------------------------------------------------------------
-
-    function currentCorrectionCue() {
-      if (sim.frozenCues.length) return sim.frozenCues[sim.frozenCues.length - 1];
-      if (!sim.target || sim.mode === "ended") return null;
-      const target = targetAt(sim.t);
-      if (!target) return null;
-      const velocity = targetVelocity(sim.t);
-      const recommended = recommendedAimAt(sim.t);
-      if (!recommended) return null;
-      return {
-        age: 0,
-        hit: null,
-        target,
-        velocity,
-        intercept: recommended.intercept,
-        impact: null,
-        radius: patternRadius(distanceFromEye(recommended.intercept), sim.shotCount + 1),
-        idealRadius: patternRadius(distanceFromEye(recommended.intercept), sim.shotCount + 1)
-      };
-    }
-
-    /*
-      Decompose the miss in clay-relative axes:
-      - lead: ahead/behind along the clay ground-projected travel direction
-      - lateral: left/right from that travel line
-      - vertical: high/low
-    */
-    function correctionVectors(cue) {
-      const forward = normalize({ x: cue.velocity.x, y: 0, z: cue.velocity.z });
-      const right = { x: forward.z, y: 0, z: -forward.x };
-      const actual = cue.shotCenter || cue.impact;
-      if (!actual) return { forward, right, lead: null, lateral: null, vertical: null };
-      const delta = {
-        x: actual.x - cue.intercept.x,
-        y: actual.y - cue.intercept.y,
-        z: actual.z - cue.intercept.z
-      };
-      return {
-        forward,
-        right,
-        lead: delta.x * forward.x + delta.z * forward.z,
-        lateral: delta.x * right.x + delta.z * right.z,
-        vertical: delta.y
-      };
-    }
-
-    function drawCorrectionLegend(x, y, cue, metrics, verticalOnly = false) {
-      ctx.save();
-      ctx.font = "500 12px system-ui";
-      ctx.textAlign = "left";
-      ctx.fillStyle = "rgba(255,255,255,.86)";
-      if (!cue) {
-        ctx.fillText("sin plato", x, y);
-        ctx.restore();
-        return;
-      }
-      if (!cue.impact) {
-        ctx.fillText("naranja: plato  amarillo: punto ideal", x, y);
-        ctx.restore();
-        return;
-      }
-      const leadText = Math.abs(metrics.lead) < 0.12 ? "adelanto correcto" : `${metrics.lead > 0 ? "adelantado" : "retrasado"} ${Math.abs(metrics.lead).toFixed(1)} m`;
-      const lateralText = Math.abs(metrics.lateral) < 0.12 ? "linea correcta" : `${metrics.lateral > 0 ? "derecha" : "izquierda"} ${Math.abs(metrics.lateral).toFixed(1)} m`;
-      const verticalText = Math.abs(metrics.vertical) < 0.08 ? "altura correcta" : `${metrics.vertical > 0 ? "alto" : "bajo"} ${Math.abs(metrics.vertical).toFixed(1)} m`;
-      ctx.fillText(verticalOnly ? verticalText : `${leadText} · ${lateralText}`, x, y);
-      ctx.restore();
-    }
-
-    function cueForShotSlot(slot) {
-      const frozen = sim.frozenCues.find(cue => cue.shot === slot);
-      if (frozen) return frozen;
-      if (slot === 1 && sim.target && sim.mode !== "ended" && sim.shotCount === 0) {
-        const live = currentCorrectionCue();
-        return live ? { ...live, shot: slot } : null;
-      }
-      return null;
-    }
-
-    function correctionLabel(value, axis) {
-      const abs = Math.abs(value);
-      if (axis === "lead") {
-        if (abs < 0.12) return { text: "adelanto ok", color: "rgba(255,255,255,.72)" };
-        return {
-          text: `${value > 0 ? "retrasa" : "adelanta"} ${abs.toFixed(2)} m`,
-          color: value > 0 ? "rgba(125,183,255,.95)" : "rgba(255,180,84,.95)"
-        };
-      }
-      if (abs < 0.08) return { text: "altura ok", color: "rgba(255,255,255,.72)" };
-      return {
-        text: `${value > 0 ? "baja" : "sube"} ${abs.toFixed(2)} m`,
-        color: value > 0 ? "rgba(199,160,255,.95)" : "rgba(155,230,111,.95)"
-      };
-    }
-
-    // Combined shot diagnostic: horizontal = lead, vertical = height.
-    function drawCorrectionMini(x0, y0, bw, bh, cue, label) {
-      if (!cue || !cue.impact) return;
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(x0, y0, bw, bh);
-      ctx.clip();
-      ctx.fillStyle = "rgba(255,255,255,.055)";
-      ctx.fillRect(x0, y0, bw, bh);
-      ctx.font = "500 11px system-ui";
-      ctx.fillStyle = "rgba(255,255,255,.86)";
-      ctx.textAlign = "left";
-      ctx.fillText(label, x0 + 8, y0 + 14);
-
-      const cx = x0 + bw / 2;
-      const cy = y0 + bh / 2 + 18;
-      const axisW = bw - 44;
-      const axisH = bh - 88;
-      const aheadColor = "rgba(255,180,84,.9)";
-      const behindColor = "rgba(125,183,255,.9)";
-      const highColor = "rgba(155,230,111,.9)";
-      const lowColor = "rgba(199,160,255,.9)";
-      let leadScreenSign = 1;
-      if (cue && cue.velocity && cue.target) {
-        const a = projectPoint(cue.target);
-        const b = projectPoint({
-          x: cue.target.x + cue.velocity.x * 0.2,
-          y: cue.target.y + cue.velocity.y * 0.2,
-          z: cue.target.z + cue.velocity.z * 0.2
-        });
-        leadScreenSign = b.x >= a.x ? 1 : -1;
-      }
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = leadScreenSign > 0 ? behindColor : aheadColor;
-      ctx.beginPath();
-      ctx.moveTo(cx - axisW / 2, cy);
-      ctx.lineTo(cx, cy);
-      ctx.stroke();
-      ctx.strokeStyle = leadScreenSign > 0 ? aheadColor : behindColor;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(cx + axisW / 2, cy);
-      ctx.stroke();
-      ctx.strokeStyle = highColor;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - axisH / 2);
-      ctx.lineTo(cx, cy);
-      ctx.stroke();
-      ctx.strokeStyle = lowColor;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(cx, cy + axisH / 2);
-      ctx.stroke();
-
-      const pattern = cue.planePattern;
-      if (pattern?.pellets?.length) {
-        const shotDelta = {
-          x: cue.shotCenter.x - cue.impact.x,
-          y: cue.shotCenter.y - cue.impact.y,
-          z: cue.shotCenter.z - cue.impact.z
-        };
-        const shotU = dot(shotDelta, pattern.leadAxis);
-        const shotV = dot(shotDelta, pattern.heightAxis);
-        const maxPellet = Math.max(...pattern.pellets.map(p => Math.hypot(p.u, p.v)), 0.14, Math.hypot(shotU, shotV));
-        const scale = Math.min(axisW, axisH) * 0.43 / Math.max(0.16, maxPellet);
-        const clayR = clamp(0.075 * scale, 5, 13);
-        ctx.fillStyle = "rgba(255,112,18,.96)";
-        ctx.strokeStyle = "rgba(255,255,255,.9)";
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.arc(cx, cy, clayR, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        for (const pellet of pattern.pellets) {
-          const px = cx + pellet.u * scale;
-          const py = cy - pellet.v * scale;
-          if (px < x0 + 8 || px > x0 + bw - 8 || py < y0 + 24 || py > y0 + bh - 8) continue;
-          ctx.fillStyle = pellet.hit ? "rgba(155,230,111,.98)" : "rgba(215,237,255,.48)";
-          ctx.beginPath();
-          ctx.arc(px, py, pellet.hit ? 2.4 : 1.25, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.fillStyle = "#d90000";
-        ctx.strokeStyle = "rgba(255,255,255,.9)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(cx + shotU * scale, cy - shotV * scale, 3.7, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        const leadInfo = correctionLabel(shotU, "lead");
-        const heightInfo = correctionLabel(shotV, "height");
-        ctx.textAlign = "left";
-        ctx.font = "500 10px system-ui";
-        ctx.fillStyle = "rgba(255,255,255,.68)";
-        ctx.fillText("rojo = centro plomeo", x0 + 8, y0 + 30);
-        ctx.fillStyle = leadInfo.color;
-        ctx.fillText(leadInfo.text, x0 + 8, y0 + 44);
-        ctx.fillStyle = heightInfo.color;
-        ctx.fillText(heightInfo.text, x0 + 8, y0 + 58);
-      }
-      ctx.restore();
-    }
-
-    // -------------------------------------------------------------------------
-    // HUD, render loop, controls, and input events
-    // -------------------------------------------------------------------------
-
-    function drawCorrectionPanel() {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      const bw = Math.min(500, w - 32);
-      const bh = 202;
-      const x0 = 16;
-      const y0 = Math.max(16, h - bh - 16);
-      if (bw < 360) return;
-      ctx.save();
-      ctx.fillStyle = "rgba(8,12,10,.78)";
-      ctx.strokeStyle = "rgba(255,255,255,.28)";
-      ctx.beginPath();
-      ctx.roundRect(x0, y0, bw, bh, 8);
-      ctx.fill();
-      ctx.stroke();
-      ctx.font = "500 12px system-ui";
-      ctx.fillStyle = "rgba(255,255,255,.9)";
-      ctx.textAlign = "left";
-      ctx.fillText("correccion de disparo", x0 + 12, y0 + 18);
-      ctx.strokeStyle = "rgba(255,255,255,.18)";
-      ctx.beginPath();
-      ctx.moveTo(x0 + bw / 2, y0 + 28);
-      ctx.lineTo(x0 + bw / 2, y0 + bh - 8);
-      ctx.stroke();
-      const innerY = y0 + 30;
-      const innerH = bh - 40;
-      drawCorrectionMini(x0 + 8, innerY, bw / 2 - 12, innerH, cueForShotSlot(1), "tiro 1");
-      drawCorrectionMini(x0 + bw / 2 + 4, innerY, bw / 2 - 12, innerH, cueForShotSlot(2), "tiro 2");
-      ctx.restore();
-    }
-
-    function updateNormBadge() {
-      const target = sim.target || sim.lastTarget;
-      if (!target || sim.mode === "idle") {
-        normBadge.classList.remove("show");
-        normBadge.textContent = "";
-        return;
-      }
-      const check = verifyTarget(target);
-      if (!check) return;
-      const discipline = target.mode === "universal" ? "Universal FITASC" : target.mode === "olympic" ? "Foso olimpico ISSF" : target.robotNormative ? "Robot ABT" : "Robot popular";
-      const status = target.mode === "robot"
-        ? target.robotNormative ? "Compatible ABT" : "No normativo"
-        : check.ok ? "Cumple normativa" : "Revisar ajuste";
-      const statusClass = check.ok ? "ok" : "warn";
-      const windText = Math.abs(params.wind) > 0.01 ? " · validacion base sin viento" : "";
-      normBadge.innerHTML = `<span class="${statusClass}">${check.ok ? "✓" : "!"} ${status}</span> · ${discipline} · M${target.machineIndex + 1} · ${Math.round(target.angleDeg)}° · v0 ${check.speedKmh.toFixed(1)} km/h · h10 ${check.height10.toFixed(2)} m/${target.heightAt10.toFixed(2)} m · alcance ${check.landingDistance.toFixed(1)} m/${target.landingDistance.toFixed(1)} m · vuelo ${check.flightTime.toFixed(2)} s${windText}`;
-      normBadge.classList.add("show");
-    }
-
-    function drawHud() {
-      ui.state.textContent = sim.mode === "idle" ? "Esperando" : sim.mode === "reaction" ? "Retardo" : sim.mode === "tracking" ? "Seguimiento" : sim.mode === "falling" ? "Cayendo" : "Terminado";
-      ui.round.textContent = `${sim.roundIndex}/25 · ${sim.broken} rotos`;
-      ui.stationReadout.textContent = sim.station;
-      ui.aim.textContent = `${((sim.gunYaw - sim.viewYaw) * 180 / Math.PI).toFixed(1)} / ${((sim.gunPitch - sim.viewPitch) * 180 / Math.PI).toFixed(1)} deg`;
-      if (!sim.target) {
-        ui.target.textContent = "-";
-        ui.lead.textContent = "-";
-      }
-      updateNormBadge();
-    }
-
-    function drawLegend() {
-      if (!ui.showLegend.checked) return;
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      const showMouseHelp = w >= 760;
-      const panelW = Math.min(showMouseHelp ? 540 : 340, w - 32);
-      const panelH = 202;
-      const x0 = w - panelW - 16;
-      const y0 = h - panelH - 16;
-      if (panelW < 260 || y0 < 12) return;
-
-      ctx.save();
-      ctx.fillStyle = "rgba(8,12,10,.78)";
-      ctx.strokeStyle = "rgba(255,255,255,.28)";
-      ctx.beginPath();
-      ctx.roundRect(x0, y0, panelW, panelH, 8);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.font = "600 12px system-ui";
-      ctx.fillStyle = "rgba(255,255,255,.92)";
-      ctx.textAlign = "left";
-      ctx.textBaseline = "middle";
-      ctx.fillText("leyenda", x0 + 14, y0 + 18);
-
-      const textX = x0 + 54;
-      const iconX = x0 + 28;
-      const legendRight = showMouseHelp ? x0 + 330 : x0 + panelW - 14;
-      let y = y0 + 42;
-      function item(text, drawIcon) {
-        drawIcon(iconX, y);
-        ctx.font = "500 11px system-ui";
-        ctx.fillStyle = "rgba(255,255,255,.84)";
-        ctx.fillText(text, textX, y, legendRight - textX);
-        y += 22;
-      }
-
-      item("plato naranja: objetivo real", (x, yy) => {
-        drawClayDisc(x, yy, 8, 1);
-      });
-      item("amarillo: punto/area ideal de adelanto", (x, yy) => {
-        ctx.strokeStyle = "rgba(255,212,81,.96)";
-        ctx.fillStyle = "rgba(255,212,81,.18)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.ellipse(x, yy, 17, 9, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      });
-      item("azul: patron de plomeo estimado", (x, yy) => {
-        ctx.strokeStyle = "rgba(215,237,255,.76)";
-        ctx.fillStyle = "rgba(215,237,255,.18)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.ellipse(x, yy, 19, 10, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      });
-      item("rojo: punto de mira / donde disparas", (x, yy) => {
-        ctx.fillStyle = "#d90000";
-        ctx.strokeStyle = "rgba(255,255,255,.86)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(x, yy, 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      });
-      item("azul claro: centro fisico del disparo", (x, yy) => {
-        ctx.fillStyle = "rgba(215,237,255,.92)";
-        ctx.strokeStyle = "rgba(20,20,20,.55)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(x, yy, 4.6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      });
-      item("verde: impacto que rompe el plato", (x, yy) => {
-        ctx.fillStyle = "rgba(155,230,111,.96)";
-        ctx.strokeStyle = "rgba(20,20,20,.65)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(x, yy, 5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      });
-      item("naranja discontinua: trayectoria del plato", (x, yy) => {
-        ctx.strokeStyle = "rgba(255,100,0,.85)";
-        ctx.lineWidth = 2;
-        ctx.setLineDash([5, 5]);
-        ctx.beginPath();
-        ctx.moveTo(x - 16, yy + 6);
-        ctx.lineTo(x + 16, yy - 6);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      });
-
-      if (showMouseHelp) {
-        const mx = x0 + 365;
-        const my = y0 + 56;
-        ctx.strokeStyle = "rgba(255,255,255,.78)";
-        ctx.fillStyle = "rgba(255,255,255,.08)";
-        ctx.lineWidth = 1.4;
-        ctx.beginPath();
-        ctx.roundRect(mx, my - 28, 46, 66, 20);
-        ctx.fill();
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(mx + 23, my - 28);
-        ctx.lineTo(mx + 23, my - 4);
-        ctx.moveTo(mx, my - 3);
-        ctx.lineTo(mx + 46, my - 3);
-        ctx.stroke();
-        ctx.fillStyle = "rgba(255,255,255,.86)";
-        ctx.beginPath();
-        ctx.arc(mx + 23, my + 9, 3, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.font = "600 12px system-ui";
-        ctx.fillStyle = "rgba(255,255,255,.92)";
-        ctx.fillText("raton", mx - 10, y0 + 18);
-        ctx.font = "500 11px system-ui";
-        ctx.fillStyle = "rgba(255,255,255,.82)";
-        ctx.fillText("derecho: pedir plato", mx + 58, my - 16);
-        ctx.fillText("izquierdo: disparar", mx + 58, my + 6);
-        ctx.fillText("mover: apuntar", mx + 58, my + 28);
-      }
-      ctx.restore();
-    }
-
-    function render() {
-      drawBackground();
-      drawGrid();
-      drawTargetAndLead();
-      drawFrozenCue();
-      drawShots();
-      drawFragments();
-      drawSight();
-      drawCorrectionPanel();
-      drawHud();
-      drawLegend();
-    }
-
-    function loop(now) {
-      const realDt = clamp((now - sim.last) / 1000, 0, 0.05);
-      sim.last = now;
-      update(realDt * params.slow, realDt);
-      render();
-      requestAnimationFrame(loop);
-    }
-
-    // Rebuild the scheme selector when switching between Universal and Olympic.
-    function populateSchemes() {
-      const current = ui.scheme.value;
-      ui.scheme.innerHTML = "";
-      const source = params.mode === "universal" ? FU_SCHEMES : params.mode === "olympic" ? ISSF_SCHEMES : ROBOT_SCHEMES;
-      const prefix = params.mode === "universal" ? "FITASC Universal" : params.mode === "olympic" ? "ISSF Olimpica" : "Robot";
-      Object.keys(source).forEach((key, index) => {
-        const option = document.createElement("option");
-        option.value = key;
-        option.textContent = params.mode === "robot" ? source[key].name : `${prefix} ${index + 1}`;
-        ui.scheme.appendChild(option);
-      });
-      if (source[current]) ui.scheme.value = current;
-    }
-
-    // Single synchronization point from form controls to simulation parameters.
-    function syncControls() {
-      const previousMode = params.mode;
-      const previousScheme = params.scheme;
-      const previousStation = sim.station;
-      params.mode = ui.mode.value;
-      params.guard = ui.guard.value;
-      if (previousMode !== params.mode || ui.scheme.options.length === 0) populateSchemes();
-      params.scheme = ui.scheme.value;
-      params.slow = Number(ui.slow.value);
-      params.reaction = Number(ui.reaction.value);
-      params.cartridge = Number(ui.cartridge.value);
-      params.spread1 = Number(ui.spread1.value);
-      params.spread2 = Number(ui.spread2.value);
-      params.pelletVariance = Number(ui.pelletVariance.value);
-      params.analysis = Number(ui.analysis.value);
-      params.wind = Number(ui.wind.value);
-      params.zoom = Number(ui.zoom.value);
-      params.robotForce = Number(ui.robotForce.value);
-      params.robotPitch = Number(ui.robotPitch.value);
-      params.robotLateral = Number(ui.robotLateral.value);
-      if (!sim.stationLocked) {
-        sim.station = Number(ui.station.value);
-        sim.startStation = sim.station;
-      }
-      updateEye();
-      sim.ribGain = Number(ui.rib.value) / 100 * MAX_RIB_GAIN_DEG;
-      ui.slowValue.textContent = `${params.slow.toFixed(2)}x`;
-      ui.slowNote.style.display = params.slow >= 0.995 ? "none" : "block";
-      ui.reactionValue.textContent = `${params.reaction.toFixed(2)} s`;
-      ui.cartridgeValue.textContent = `${params.cartridge} m/s`;
-      ui.spread1Value.textContent = spreadLabel(params.spread1);
-      ui.spread2Value.textContent = spreadLabel(params.spread2);
-      ui.pelletVarianceValue.textContent = `${Math.round(params.pelletVariance)}%`;
-      ui.analysisValue.textContent = `${params.analysis.toFixed(1)} s`;
-      ui.windValue.textContent = `${params.wind.toFixed(1)} m/s`;
-      ui.zoomValue.textContent = `${params.zoom.toFixed(2)}x`;
-      ui.ribValue.textContent = `${Math.round(Number(ui.rib.value))}% / ${sim.ribGain.toFixed(2)} deg`;
-      ui.robotForceValue.textContent = `${Math.round(params.robotForce)}%`;
-      ui.robotPitchValue.textContent = `${params.robotPitch > 0 ? "+" : ""}${params.robotPitch.toFixed(0)}°`;
-      ui.robotLateralValue.textContent = `${Math.round(params.robotLateral)}%`;
-      ui.stationValue.textContent = sim.station;
-      ui.flat.setAttribute("aria-pressed", Number(ui.rib.value) < 20 ? "true" : "false");
-      ui.high.setAttribute("aria-pressed", Number(ui.rib.value) >= 20 ? "true" : "false");
-      const changedTargetContext = previousMode !== params.mode || previousScheme !== params.scheme || previousStation !== sim.station;
-      if (changedTargetContext && sim.mode === "idle") {
-        clearShotReview();
-        ui.result.textContent = "-";
-      }
-      if (sim.mode === "idle") setAimToGuard();
-    }
-
-    // Buttons and sliders.
-    ui.call.addEventListener("click", callTarget);
-    ui.repeat.addEventListener("click", repeatTarget);
-    ui.fire.addEventListener("click", fire);
-    ui.reset.addEventListener("click", reset);
-    ui.prevStation.addEventListener("click", () => {
-      ui.station.value = String(Math.max(1, Number(ui.station.value) - 1));
-      syncControls();
-      reset();
-    });
-    ui.nextStation.addEventListener("click", () => {
-      ui.station.value = String(Math.min(5, Number(ui.station.value) + 1));
-      syncControls();
-      reset();
-    });
-    ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
-    ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
-    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.pelletVariance, ui.analysis, ui.wind, ui.rib, ui.robotForce, ui.robotPitch, ui.robotLateral, ui.transparentGround, ui.showLegend, ui.showLead, ui.showShot, ui.showPath].forEach(control => {
-      control.addEventListener("input", syncControls);
-      control.addEventListener("change", syncControls);
-    });
-
-    // Mouse contract: right click calls the target, left click fires. The native
-    // cursor is hidden while the red bead drawn by canvas is the visible sight.
-    canvas.addEventListener("contextmenu", event => {
-      event.preventDefault();
-      callTarget();
-    });
-    canvas.addEventListener("mousedown", event => {
-      const rect = canvas.getBoundingClientRect();
-      aimFromScreen(event.clientX - rect.left, event.clientY - rect.top);
-      if (event.button === 0) fire();
-      if (event.button === 2) callTarget();
-    });
-    canvas.addEventListener("mousemove", event => {
-      if (document.pointerLockElement !== canvas) {
-        const rect = canvas.getBoundingClientRect();
-        aimFromScreen(event.clientX - rect.left, event.clientY - rect.top);
-        return;
-      }
-      const sensitivity = 0.0019;
-      sim.gunYaw += event.movementX * sensitivity;
-      sim.gunPitch -= event.movementY * sensitivity;
-      const aim = projectAim(sim.gunYaw, sim.gunPitch);
-      aimFromScreen(aim.x, aim.y);
-    });
-
-    // Keyboard controls are retained for laptop testing and fine adjustment.
-    window.addEventListener("keydown", event => {
-      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) event.preventDefault();
-      if (event.key === "Enter") callTarget();
-      if (event.key === " ") fire();
-      keys.add(event.key);
-    });
-    window.addEventListener("keyup", event => keys.delete(event.key));
-    window.addEventListener("resize", resize);
-
-    // Boot.
-    resize();
-    syncControls();
-    requestAnimationFrame(loop);
-  </script>
+  <footer>
+    <p>Construido por <strong>Roberto Canales Mora</strong>. Proyecto: <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">robertocanales.com/proyectos#plato</a>. Simulador: <a href="app.html">app.html</a>. Manual extendido: <a href="manual.html">manual.html</a>.</p>
+  </footer>
 </body>
 </html>
