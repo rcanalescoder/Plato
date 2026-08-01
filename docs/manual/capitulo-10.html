@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>10. Cómo funciona exactamente el simulador | Manual Plato</title>
+  <link rel="stylesheet" href="manual.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../../index.html"><span></span> Plato</a>
+    <nav>
+      <a href="../../app.html">Simulador</a>
+      <a href="../../index.html#indice">Indice</a>
+      <a href="indice-maestro.md">Fuente editorial</a>
+    </nav>
+  </header>
+  <main>
+    <aside class="chapter-index">
+      <strong>Manual</strong>
+      <a  href="capitulo-01.html">1. Qué es el tiro al plato y por qué existe este proyecto</a>
+      <a  href="capitulo-02.html">2. Cómo empezar a tirar al plato en España</a>
+      <a  href="capitulo-03.html">3. Seguridad antes que técnica</a>
+      <a  href="capitulo-04.html">4. Cómo es una cancha y cómo se desarrolla una serie</a>
+      <a  href="capitulo-05.html">5. Escopetas, culatas, chokes, cartuchos y equipamiento</a>
+      <a  href="capitulo-06.html">6. Por qué un principiante falla el plato</a>
+      <a  href="capitulo-07.html">7. Aprendizaje progresivo y Shu-Ha-Ri</a>
+      <a  href="capitulo-08.html">8. La geometría del adelantamiento explicada para tiradores</a>
+      <a  href="capitulo-09.html">9. La versión de ingeniería: el modelo físico</a>
+      <a class="active" href="capitulo-10.html">10. Cómo funciona exactamente el simulador</a>
+      <a  href="capitulo-11.html">11. Universal, Olímpico, Robot y otras modalidades</a>
+      <a  href="capitulo-12.html">12. Cómo utilizar el simulador para entrenar</a>
+      <a  href="capitulo-13.html">13. Limitaciones y uso responsable del modelo</a>
+      <a  href="capitulo-14.html">14. Coste del entrenamiento y utilidad económica</a>
+      <a  href="capitulo-15.html">15. Instalación, licencia, atribución y reutilización</a>
+      <a  href="capitulo-16.html">16. Fuentes, glosario, preguntas frecuentes y control documental</a>
+    </aside>
+    <article class="chapter">
+      <p class="eyebrow">Capitulo 10 de 16</p>
+      <h1>Cómo funciona exactamente el simulador</h1>
+      <p class="summary">Convierte la interfaz del simulador en un manual de uso práctico, control por control y estado por estado.</p>
+      <figure class="chapter-figure"><img src="../screenshots/vista-completa.png" alt="Pantalla completa con controles y ayudas"><figcaption>Pantalla completa con controles y ayudas</figcaption></figure>
+      <section class="reading-layers" aria-label="Capas de lectura">
+        <h2>Como leer este capitulo</h2>
+        <div class="layers">
+          <p><strong>Tirador:</strong> busca las ideas practicas y las senales que puedes observar en cancha.</p>
+          <p><strong>Simulador:</strong> relaciona cada concepto con controles, ayudas visuales y ejercicios repetibles.</p>
+          <p><strong>Tecnica:</strong> usa las formulas y limites como apoyo, no como sustituto de profesor o normativa.</p>
+        </div>
+      </section>
+      <h2>10.1. Acceso y requisitos</h2>
+<ul>
+<li>Navegador.</li>
+<li>Ordenador recomendado.</li>
+<li>Ratón.</li>
+<li>Resolución.</li>
+<li>Funcionamiento desde GitHub Pages.</li>
+<li>Ejecución local.</li>
+<li>Posible uso sin conexión, si está soportado.</li>
+</ul>
+<h2>10.2. Pantalla principal</h2>
+<ul>
+<li>Zona de simulación.</li>
+<li>Tirador y escopeta.</li>
+<li>Máquina.</li>
+<li>Plato.</li>
+<li>Trayectoria.</li>
+<li>Línea de tiro.</li>
+<li>Punto de impacto.</li>
+<li>Paneles de configuración.</li>
+<li>Indicadores.</li>
+</ul>
+<h2>10.3. Acción de pedir plato</h2>
+<ul>
+<li>Control utilizado.</li>
+<li>Inicio de la secuencia.</li>
+<li>Retardo.</li>
+<li>Selección de trayectoria.</li>
+<li>Reinicio de estados.</li>
+<li>Comportamiento según modalidad.</li>
+</ul>
+<h2>10.4. Acción de disparar</h2>
+<ul>
+<li>Control utilizado.</li>
+<li>Primer disparo.</li>
+<li>Segundo disparo.</li>
+<li>Cartuchos disponibles.</li>
+<li>Choke aplicado.</li>
+<li>Representación del plomeo.</li>
+<li>Resultado.</li>
+</ul>
+<h2>10.5. Movimiento de la escopeta</h2>
+<ul>
+<li>Seguimiento mediante ratón.</li>
+<li>Sensibilidad.</li>
+<li>Límites.</li>
+<li>Correspondencia entre cursor, cañón y punto de tiro.</li>
+<li>Diferencia frente al movimiento corporal real.</li>
+</ul>
+<h2>10.6. Selección de modalidad</h2>
+<ul>
+<li>Universal.</li>
+<li>Olímpico.</li>
+<li>Robot.</li>
+<li>Otras modalidades existentes en el código.</li>
+<li>Parámetros que cambian automáticamente.</li>
+<li>Parámetros que puede modificar el usuario.</li>
+</ul>
+<h2>10.7. Puestos de tiro</h2>
+<ul>
+<li>Selección de puesto.</li>
+<li>Cambio de perspectiva.</li>
+<li>Cambio de geometría.</li>
+<li>Efecto sobre los cruces.</li>
+<li>Uso para practicar diferentes referencias.</li>
+</ul>
+<h2>10.8. Velocidad del plato</h2>
+<ul>
+<li>Control de velocidad.</li>
+<li>Valor mostrado.</li>
+<li>Efecto visual.</li>
+<li>Efecto en el adelantamiento.</li>
+<li>Diferencia entre velocidad relativa y real.</li>
+</ul>
+<h2>10.9. Velocidad del cartucho</h2>
+<ul>
+<li>Control disponible.</li>
+<li>Influencia sobre el tiempo de vuelo.</li>
+<li>Comparación de cargas.</li>
+<li>Advertencia sobre simplificación.</li>
+</ul>
+<h2>10.10. Chokes</h2>
+<ul>
+<li>Choke del primer cañón.</li>
+<li>Choke del segundo cañón.</li>
+<li>Representación de la dispersión.</li>
+<li>Ejercicios para comparar resultados.</li>
+</ul>
+<h2>10.11. Ganancia de solista</h2>
+<ul>
+<li>Control.</li>
+<li>Modificación de la línea de disparo.</li>
+<li>Ejemplo de plato ascendente.</li>
+<li>Comparación entre configuración plana y elevada.</li>
+</ul>
+<h2>10.12. Viento</h2>
+<ul>
+<li>Activación.</li>
+<li>Dirección.</li>
+<li>Intensidad.</li>
+<li>Trayectoria modificada.</li>
+<li>Ejercicios de observación.</li>
+</ul>
+<h2>10.13. Cámara lenta</h2>
+<ul>
+<li>Activación.</li>
+<li>Qué permite observar.</li>
+<li>Movimiento del plato.</li>
+<li>Movimiento del plomeo.</li>
+<li>Punto de encuentro.</li>
+<li>Uso pedagógico.</li>
+</ul>
+<h2>10.14. Robot y parámetros extremos</h2>
+<ul>
+<li>Apertura horizontal.</li>
+<li>Altura.</li>
+<li>Velocidad.</li>
+<li>Irregularidad.</li>
+<li>Aleatoriedad.</li>
+<li>Platos extremos.</li>
+<li>Cómo restaurar valores reglados.</li>
+</ul>
+<h2>10.15. Repetición</h2>
+<ul>
+<li>Repetir el mismo plato.</li>
+<li>Mantener parámetros.</li>
+<li>Cambiar una variable.</li>
+<li>Comparar intentos.</li>
+<li>Reiniciar sesión.</li>
+</ul>
+<h2>10.16. Lectura de resultados</h2>
+<ul>
+<li>Impacto.</li>
+<li>Fallo por detrás.</li>
+<li>Fallo por delante.</li>
+<li>Fallo alto.</li>
+<li>Fallo bajo.</li>
+<li>Dispersión.</li>
+<li>Punto de encuentro.</li>
+<li>Indicadores disponibles en pantalla.</li>
+</ul>
+<h2>10.17. Escenarios guiados</h2>
+<ul>
+<li>Primer plato frontal.</li>
+<li>Plato cruzado medio.</li>
+<li>Plato muy cruzado.</li>
+<li>Plato ascendente.</li>
+<li>Comparación de dos cartuchos.</li>
+<li>Comparación de chokes.</li>
+<li>Robot extremo.</li>
+<li>Viento.</li>
+</ul>
+<h2>10.18. Ayuda integrada</h2>
+<ul>
+<li>Ayuda rápida.</li>
+<li>Explicación de controles.</li>
+<li>Enlace a la documentación completa.</li>
+<li>Enlace de GitHub Pages.</li>
+<li>Acceso desde móvil o escritorio.</li>
+<li>Apertura en nueva pestaña.</li>
+</ul>
+<h2>10.19. Capturas explicadas</h2>
+<p>Cada grupo de controles se documentará con:</p>
+<ul>
+<li>Captura real.</li>
+<li>Número de llamada.</li>
+<li>Nombre del parámetro.</li>
+<li>Qué modifica.</li>
+<li>Qué observar.</li>
+<li>Ejercicio recomendado.</li>
+<li>Limitación.</li>
+</ul>
+<h3>Infografías y recursos previstos</h3>
+<ul>
+<li><strong>Captura general anotada</strong></li>
+<li><strong>Mapa de controles</strong></li>
+<li><strong>Flujo pedir plato → seguir → disparar → analizar</strong></li>
+<li><strong>Galería de escenarios</strong></li>
+</ul>
+<hr>
+      <nav class="chapter-nav" aria-label="Navegacion de capitulos">
+        <a href="capitulo-09.html">Anterior: 9. La versión de ingeniería: el modelo físico</a>
+        <a href="capitulo-11.html">Siguiente: 11. Universal, Olímpico, Robot y otras modalidades</a>
+      </nav>
+    </article>
+  </main>
+</body>
+</html>
