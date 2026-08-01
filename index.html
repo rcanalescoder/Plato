@@ -492,7 +492,7 @@
         <li><strong>Universal:</strong> cinco maquinas dentro del foso. El señuelo naranja central indica la referencia de salida.</li>
         <li><strong>Olimpica:</strong> quince maquinas agrupadas por puestos. El señuelo activo se alinea con el puesto desde el que se tira.</li>
         <li><strong>Robot:</strong> una unica maquina oscilante o programable. Puede ser ABT compatible o popular no normativa, con fuerza, altura y lateralidad ajustables.</li>
-        <li><strong>Puesto:</strong> el tirador rota por los puestos 1 a 5 durante una tirada de 25 platos.</li>
+        <li><strong>Puesto:</strong> en todas las modalidades, incluido Robot, el tirador rota por los puestos 1 a 5 durante una tirada de 25 platos. Repetir plato no suma ni cambia de puesto.</li>
       </ul>
 
       <h3>Velocidad y trayectoria</h3>
@@ -864,7 +864,7 @@
     function advanceRound(hit) {
       if (hit) sim.broken += 1;
       sim.roundIndex = Math.min(25, sim.roundIndex + 1);
-      sim.pendingStation = params.mode === "robot" ? sim.station : stationForRound();
+      sim.pendingStation = stationForRound();
     }
 
     function applyPendingStation() {
