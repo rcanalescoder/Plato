@@ -413,10 +413,11 @@
     </section>
 
     <section class="controls" aria-label="Parametros fisicos">
-      <label class="control" title="Elige la disciplina: Universal usa cinco maquinas; Olimpica usa quince maquinas agrupadas por puesto.">Modalidad
+      <label class="control" title="Elige la disciplina: Universal usa cinco maquinas; Olimpica usa quince maquinas agrupadas por puesto; Robot usa una maquina oscilante con fuerza, altura y lateral regulables.">Modalidad
         <select id="modeControl">
           <option value="universal">Universal</option>
           <option value="olympic">Olimpica</option>
+          <option value="robot">Robot</option>
         </select>
       </label>
       <label class="control" title="Selecciona el esquema oficial/simulado de maquinas, angulos y alturas que se usara para sortear cada plato.">Esquema
@@ -461,6 +462,15 @@
       <label class="control" title="Elevacion balistica de la solista: hace que el disparo vaya por encima del punto de mira, sin cambiar la anchura visual de la solista.">Ganancia solista <span id="ribValue">0%</span>
         <input id="ribControl" type="range" min="0" max="100" step="5" value="0">
       </label>
+      <label class="control" title="Solo modalidad Robot: simula apretar o aflojar el muelle. Aumenta o reduce velocidad y alcance del plato.">Robot fuerza <span id="robotForceValue">100%</span>
+        <input id="robotForceControl" type="range" min="70" max="135" step="5" value="100">
+      </label>
+      <label class="control" title="Solo modalidad Robot: cambia la inclinacion vertical de la maquina. Valores altos hacen platos mas altos.">Robot altura <span id="robotPitchValue">0°</span>
+        <input id="robotPitchControl" type="range" min="-12" max="18" step="1" value="0">
+      </label>
+      <label class="control" title="Solo modalidad Robot: multiplica la apertura lateral del robot. Valores altos hacen platos mas cruzados.">Robot lateral <span id="robotLateralValue">100%</span>
+        <input id="robotLateralControl" type="range" min="50" max="140" step="5" value="100">
+      </label>
       <div class="hint">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
       <label class="switch-row" title="Alterna entre suelo opaco y suelo translucido para ver las maquinas bajo el foso."><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
       <label class="switch-row" title="Muestra u oculta la leyenda de colores y simbolos de la esquina inferior derecha."><input id="showLegend" type="checkbox" checked> leyenda</label>
@@ -481,12 +491,14 @@
       <ul>
         <li><strong>Universal:</strong> cinco maquinas dentro del foso. El señuelo naranja central indica la referencia de salida.</li>
         <li><strong>Olimpica:</strong> quince maquinas agrupadas por puestos. El señuelo activo se alinea con el puesto desde el que se tira.</li>
+        <li><strong>Robot:</strong> una unica maquina oscilante o programable. Puede ser ABT compatible o popular no normativa, con fuerza, altura y lateralidad ajustables.</li>
         <li><strong>Puesto:</strong> el tirador rota por los puestos 1 a 5 durante una tirada de 25 platos.</li>
       </ul>
 
       <h3>Velocidad y trayectoria</h3>
       <ul>
         <li>El plato sale de la boca del foso con una velocidad, un angulo lateral y una altura definidos por el esquema.</li>
+        <li>En <strong>Robot</strong>, los esquemas son secuencias de una maquina: circular, pseudoaleatoria o extrema. <strong>Robot fuerza</strong> cambia el alcance, <strong>Robot altura</strong> cambia la inclinacion y <strong>Robot lateral</strong> abre o cierra los angulos.</li>
         <li>La linea naranja discontinua muestra su trayectoria prevista. Si desactivas <strong>trayectoria</strong>, tambien se oculta la guia entre maquina y salida.</li>
         <li>La trayectoria no se pinta por debajo del suelo: cuando el plato cae, la ayuda deja de sugerir puntos imposibles.</li>
       </ul>
@@ -588,6 +600,9 @@
       analysis: document.getElementById("analysisControl"),
       wind: document.getElementById("windControl"),
       rib: document.getElementById("ribControl"),
+      robotForce: document.getElementById("robotForceControl"),
+      robotPitch: document.getElementById("robotPitchControl"),
+      robotLateral: document.getElementById("robotLateralControl"),
       transparentGround: document.getElementById("transparentGround"),
       showLegend: document.getElementById("showLegend"),
       state: document.getElementById("stateReadout"),
@@ -608,6 +623,9 @@
       analysisValue: document.getElementById("analysisValue"),
       windValue: document.getElementById("windValue"),
       ribValue: document.getElementById("ribValue"),
+      robotForceValue: document.getElementById("robotForceValue"),
+      robotPitchValue: document.getElementById("robotPitchValue"),
+      robotLateralValue: document.getElementById("robotLateralValue"),
       stationValue: document.getElementById("stationValue")
     };
 
@@ -643,6 +661,8 @@
       pendingStation: null,
       lastTarget: null,
       repeatingTarget: false,
+      robotIndex: 0,
+      robotSeed: 24681357,
       frozenCues: []
     };
 
@@ -660,6 +680,9 @@
       analysis: 4.8,
       wind: 0,
       zoom: 1,
+      robotForce: 100,
+      robotPitch: 0,
+      robotLateral: 100,
       mode: "universal",
       scheme: "fu1",
       guard: "neutral"
@@ -726,12 +749,73 @@
       issf9: [[1,40,3.0],[2,0,1.8],[3,-20,3.0],[4,15,3.0],[5,-10,1.5],[6,-35,2.0],[7,45,1.6],[8,0,2.8],[9,-30,3.0],[10,30,2.0],[11,-5,2.0],[12,-15,3.0],[13,35,2.9],[14,0,1.6],[15,-45,2.2]]
     };
 
+    const ROBOT_SCHEMES = {
+      robot_abt: {
+        name: "Robot ABT",
+        normative: true,
+        sequence: "random",
+        rows: [
+          [-35, 1.8, 72],
+          [-25, 2.6, 75],
+          [-10, 3.2, 75],
+          [0, 2.4, 75],
+          [15, 3.4, 76],
+          [28, 2.2, 74],
+          [42, 1.7, 72]
+        ]
+      },
+      robot_feria: {
+        name: "Robot feria circular",
+        normative: false,
+        sequence: "circular",
+        rows: [
+          [0, 4.6, 82],
+          [-14, 3.6, 78],
+          [-30, 2.4, 82],
+          [-48, 1.4, 88],
+          [-8, 2.0, 76],
+          [0, 2.2, 74],
+          [24, 2.2, 80],
+          [50, 1.4, 90],
+          [34, 4.2, 84]
+        ]
+      },
+      robot_extremo: {
+        name: "Robot popular extremo",
+        normative: false,
+        sequence: "weighted",
+        rows: [
+          [-55, 1.2, 94],
+          [-45, 1.5, 90],
+          [-24, 4.8, 88],
+          [0, 5.2, 92],
+          [28, 4.4, 88],
+          [45, 1.4, 92],
+          [55, 1.2, 96]
+        ]
+      },
+      robot_random: {
+        name: "Robot pseudoaleatorio",
+        normative: false,
+        sequence: "random",
+        rows: [
+          [-48, 1.5, 88],
+          [-34, 2.0, 84],
+          [-18, 4.0, 82],
+          [0, 3.0, 78],
+          [18, 4.2, 82],
+          [34, 2.0, 84],
+          [48, 1.5, 88]
+        ]
+      }
+    };
+
     // -------------------------------------------------------------------------
     // Station, lure, and guard geometry
     // -------------------------------------------------------------------------
 
     function stationSpacing() {
-      return params.mode === "universal" ? UNIVERSAL_STATION_SPACING : OLYMPIC_STATION_SPACING;
+      return params.mode === "olympic" ? OLYMPIC_STATION_SPACING : UNIVERSAL_STATION_SPACING;
     }
 
     function stationX(station) {
@@ -780,7 +864,7 @@
     function advanceRound(hit) {
       if (hit) sim.broken += 1;
       sim.roundIndex = Math.min(25, sim.roundIndex + 1);
-      sim.pendingStation = stationForRound();
+      sim.pendingStation = params.mode === "robot" ? sim.station : stationForRound();
     }
 
     function applyPendingStation() {
@@ -1078,6 +1162,23 @@
 
     function verifyTarget(target) {
       if (!target) return null;
+      if (target.mode === "robot") {
+        const horizontalSpeed = Math.hypot(target.v0.x, target.v0.z);
+        const height10 = clayHeightAtDistance(target, 10);
+        const landingTime = clayLandingTime(target);
+        const landingDistance = horizontalSpeed * landingTime;
+        return {
+          height10,
+          landingDistance,
+          flightTime: landingTime,
+          speedKmh: target.speedKmh,
+          distanceTolerance: target.robotNormative ? 5 : 0,
+          heightTolerance: target.robotNormative ? 0.08 : 0,
+          heightError: Math.abs(height10 - target.heightAt10),
+          distanceError: Math.abs(landingDistance - target.landingDistance),
+          ok: Boolean(target.robotNormative)
+        };
+      }
       const horizontalSpeed = Math.hypot(target.v0.x, target.v0.z);
       const height10 = clayHeightAtDistance(target, 10);
       const landingTime = clayLandingTime(target);
@@ -1099,6 +1200,71 @@
       };
     }
 
+    function robotRandom() {
+      sim.robotSeed = (Math.imul(sim.robotSeed, 1664525) + 1013904223) >>> 0;
+      return sim.robotSeed / 4294967296;
+    }
+
+    function nextRobotRow(robotScheme) {
+      const rows = robotScheme.rows;
+      if (robotScheme.sequence === "circular") {
+        const row = rows[sim.robotIndex % rows.length];
+        sim.robotIndex = (sim.robotIndex + 1) % rows.length;
+        return row;
+      }
+      if (robotScheme.sequence === "weighted") {
+        const weights = rows.map(row => Math.abs(row[0]) >= 40 || row[1] >= 4.4 ? 1.5 : 1);
+        const total = weights.reduce((sum, weight) => sum + weight, 0);
+        let pick = robotRandom() * total;
+        for (let i = 0; i < rows.length; i += 1) {
+          pick -= weights[i];
+          if (pick <= 0) return rows[i];
+        }
+        return rows[rows.length - 1];
+      }
+      return rows[Math.floor(robotRandom() * rows.length)];
+    }
+
+    function makeTargetFromBallistics({ angleDeg, heightAt10, landingDistance, machineIndex = 0, mode = params.mode, robotScheme = null }) {
+      const yaw = angleDeg * Math.PI / 180;
+      const launch = solveClayLaunch(landingDistance, heightAt10);
+      const horizontalSpeed = launch.horizontalSpeed;
+      const verticalSpeed = launch.verticalSpeed;
+      const speedKmh = Math.hypot(horizontalSpeed, verticalSpeed) * 3.6;
+      const elevDeg = Math.atan2(verticalSpeed, horizontalSpeed) * 180 / Math.PI;
+      const p0 = { x: lureX(), y: RELEASE_HEIGHT, z: TRENCH_FRONT };
+      const v0 = {
+        x: Math.sin(yaw) * horizontalSpeed,
+        y: verticalSpeed,
+        z: Math.cos(yaw) * horizontalSpeed
+      };
+      const launchDir = normalize(v0);
+      const launcherBackset = clamp((RELEASE_HEIGHT - MACHINE_HEIGHT) / Math.max(0.16, launchDir.y), 0.85, 1.8);
+      const machineOrigin = {
+        x: p0.x - launchDir.x * launcherBackset,
+        y: p0.y - launchDir.y * launcherBackset,
+        z: p0.z - launchDir.z * launcherBackset
+      };
+      return {
+        speedKmh,
+        angleDeg,
+        elevDeg,
+        heightAt10,
+        landingDistance,
+        machineIndex,
+        machineX: machineOrigin.x,
+        station: sim.station,
+        mode,
+        robotScheme,
+        robotNormative: robotScheme ? Boolean(robotScheme.normative) : false,
+        noCount: false,
+        visibleDelay: params.reaction,
+        machineOrigin,
+        p0,
+        v0
+      };
+    }
+
     /*
       callTarget() selects one machine from the active scheme and converts the
       table row into an initial velocity. Universal always emerges from the
@@ -1116,62 +1282,50 @@
       const schemeKey = ui.scheme.value;
       let entry;
       let machineIndex;
-      let machineX;
       let landingDistance;
+      let target;
       if (params.mode === "universal") {
         const scheme = FU_SCHEMES[schemeKey] || FU_SCHEMES.fu1;
         entry = scheme[Math.floor(rand(0, scheme.length))];
         machineIndex = entry[0] - 1;
-        machineX = (entry[0] - 3) * UNIVERSAL_MACHINE_SPACING;
         landingDistance = entry[3];
-      } else {
+        target = makeTargetFromBallistics({
+          angleDeg: entry[1],
+          heightAt10: entry[2],
+          landingDistance,
+          machineIndex,
+          mode: params.mode
+        });
+      } else if (params.mode === "olympic") {
         const scheme = ISSF_SCHEMES[schemeKey] || ISSF_SCHEMES.issf1;
         const first = (sim.station - 1) * 3;
         entry = scheme[first + Math.floor(rand(0, 3))];
         machineIndex = entry[0] - 1;
-        const bank = Math.floor(machineIndex / 3);
-        const within = machineIndex % 3;
-        machineX = (bank - 2) * OLYMPIC_MACHINE_GROUP_SPACING + (within - 1) * OLYMPIC_MACHINE_SPACING;
         landingDistance = 76;
+        target = makeTargetFromBallistics({
+          angleDeg: entry[1],
+          heightAt10: entry[2],
+          landingDistance,
+          machineIndex,
+          mode: params.mode
+        });
+      } else {
+        const robotScheme = ROBOT_SCHEMES[schemeKey] || ROBOT_SCHEMES.robot_feria;
+        const row = nextRobotRow(robotScheme);
+        const force = params.robotForce / 100;
+        const lateral = params.robotLateral / 100;
+        const angleDeg = clamp(row[0] * lateral, -62, 62);
+        const heightAt10 = clamp(row[1] + params.robotPitch * 0.085, 0.8, 5.8);
+        landingDistance = clamp(row[2] * force, 45, 120);
+        target = makeTargetFromBallistics({
+          angleDeg,
+          heightAt10,
+          landingDistance,
+          machineIndex: 0,
+          mode: "robot",
+          robotScheme
+        });
       }
-      const releaseX = lureX();
-      const angleDeg = entry[1];
-      const heightAt10 = entry[2];
-      const yaw = angleDeg * Math.PI / 180;
-      const launch = solveClayLaunch(landingDistance, heightAt10);
-      const horizontalSpeed = launch.horizontalSpeed;
-      const verticalSpeed = launch.verticalSpeed;
-      const speedKmh = Math.hypot(horizontalSpeed, verticalSpeed) * 3.6;
-      const elevDeg = Math.atan2(verticalSpeed, horizontalSpeed) * 180 / Math.PI;
-      const p0 = { x: releaseX, y: RELEASE_HEIGHT, z: TRENCH_FRONT };
-      const v0 = {
-        x: Math.sin(yaw) * horizontalSpeed,
-        y: verticalSpeed,
-        z: Math.cos(yaw) * horizontalSpeed
-      };
-      const launchDir = normalize(v0);
-      const launcherBackset = clamp((RELEASE_HEIGHT - MACHINE_HEIGHT) / Math.max(0.16, launchDir.y), 0.85, 1.8);
-      const machineOrigin = {
-        x: p0.x - launchDir.x * launcherBackset,
-        y: p0.y - launchDir.y * launcherBackset,
-        z: p0.z - launchDir.z * launcherBackset
-      };
-      const target = {
-        speedKmh,
-        angleDeg,
-        elevDeg,
-        heightAt10,
-        landingDistance,
-        machineIndex,
-        machineX: machineOrigin.x,
-        station: sim.station,
-        mode: params.mode,
-        noCount: false,
-        visibleDelay: params.reaction,
-        machineOrigin,
-        p0,
-        v0
-      };
       sim.lastTarget = cloneTarget(target);
       startTarget(target);
     }
@@ -1732,12 +1886,14 @@
       ctx.strokeStyle = "rgba(255,255,255,.62)";
       ctx.lineWidth = 2;
       drawWorldLine({ x: rangeMinX + 0.45, y: 0.06, z: TRENCH_FRONT }, { x: rangeMaxX - 0.45, y: 0.06, z: TRENCH_FRONT });
-      const count = params.mode === "universal" ? 5 : 15;
+      const count = params.mode === "olympic" ? 15 : params.mode === "universal" ? 5 : 1;
       const showReleaseGuide = sim.target && sim.mode !== "ended" && sim.shotCount < 2;
       for (let i = 0; i < count; i += 1) {
         const bank = Math.floor(i / 3);
         const within = i % 3;
-        const x = params.mode === "universal"
+        const x = params.mode === "robot"
+          ? 0
+          : params.mode === "universal"
           ? (i - 2) * UNIVERSAL_MACHINE_SPACING
           : (bank - 2) * OLYMPIC_MACHINE_GROUP_SPACING + (within - 1) * OLYMPIC_MACHINE_SPACING;
         if (ui.transparentGround.checked) {
@@ -2308,8 +2464,10 @@
       }
       const check = verifyTarget(target);
       if (!check) return;
-      const discipline = target.mode === "universal" ? "Universal FITASC" : "Foso olimpico ISSF";
-      const status = check.ok ? "Cumple normativa" : "Revisar ajuste";
+      const discipline = target.mode === "universal" ? "Universal FITASC" : target.mode === "olympic" ? "Foso olimpico ISSF" : target.robotNormative ? "Robot ABT" : "Robot popular";
+      const status = target.mode === "robot"
+        ? target.robotNormative ? "Compatible ABT" : "No normativo"
+        : check.ok ? "Cumple normativa" : "Revisar ajuste";
       const statusClass = check.ok ? "ok" : "warn";
       const windText = Math.abs(params.wind) > 0.01 ? " · validacion base sin viento" : "";
       normBadge.innerHTML = `<span class="${statusClass}">${check.ok ? "✓" : "!"} ${status}</span> · ${discipline} · M${target.machineIndex + 1} · ${Math.round(target.angleDeg)}° · v0 ${check.speedKmh.toFixed(1)} km/h · h10 ${check.height10.toFixed(2)} m/${target.heightAt10.toFixed(2)} m · alcance ${check.landingDistance.toFixed(1)} m/${target.landingDistance.toFixed(1)} m · vuelo ${check.flightTime.toFixed(2)} s${windText}`;
@@ -2482,12 +2640,12 @@
     function populateSchemes() {
       const current = ui.scheme.value;
       ui.scheme.innerHTML = "";
-      const source = params.mode === "universal" ? FU_SCHEMES : ISSF_SCHEMES;
-      const prefix = params.mode === "universal" ? "FITASC Universal" : "ISSF Olimpica";
+      const source = params.mode === "universal" ? FU_SCHEMES : params.mode === "olympic" ? ISSF_SCHEMES : ROBOT_SCHEMES;
+      const prefix = params.mode === "universal" ? "FITASC Universal" : params.mode === "olympic" ? "ISSF Olimpica" : "Robot";
       Object.keys(source).forEach((key, index) => {
         const option = document.createElement("option");
         option.value = key;
-        option.textContent = `${prefix} ${index + 1}`;
+        option.textContent = params.mode === "robot" ? source[key].name : `${prefix} ${index + 1}`;
         ui.scheme.appendChild(option);
       });
       if (source[current]) ui.scheme.value = current;
@@ -2511,6 +2669,9 @@
       params.analysis = Number(ui.analysis.value);
       params.wind = Number(ui.wind.value);
       params.zoom = Number(ui.zoom.value);
+      params.robotForce = Number(ui.robotForce.value);
+      params.robotPitch = Number(ui.robotPitch.value);
+      params.robotLateral = Number(ui.robotLateral.value);
       if (!sim.stationLocked) {
         sim.station = Number(ui.station.value);
         sim.startStation = sim.station;
@@ -2528,6 +2689,9 @@
       ui.windValue.textContent = `${params.wind.toFixed(1)} m/s`;
       ui.zoomValue.textContent = `${params.zoom.toFixed(2)}x`;
       ui.ribValue.textContent = `${Math.round(Number(ui.rib.value))}% / ${sim.ribGain.toFixed(2)} deg`;
+      ui.robotForceValue.textContent = `${Math.round(params.robotForce)}%`;
+      ui.robotPitchValue.textContent = `${params.robotPitch > 0 ? "+" : ""}${params.robotPitch.toFixed(0)}°`;
+      ui.robotLateralValue.textContent = `${Math.round(params.robotLateral)}%`;
       ui.stationValue.textContent = sim.station;
       ui.flat.setAttribute("aria-pressed", Number(ui.rib.value) < 20 ? "true" : "false");
       ui.high.setAttribute("aria-pressed", Number(ui.rib.value) >= 20 ? "true" : "false");
@@ -2556,7 +2720,7 @@
     });
     ui.flat.addEventListener("click", () => { ui.rib.value = 0; syncControls(); });
     ui.high.addEventListener("click", () => { ui.rib.value = 65; syncControls(); });
-    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.pelletVariance, ui.analysis, ui.wind, ui.rib, ui.transparentGround, ui.showLegend, ui.showLead, ui.showShot, ui.showPath].forEach(control => {
+    [ui.mode, ui.scheme, ui.station, ui.guard, ui.zoom, ui.slow, ui.reaction, ui.cartridge, ui.spread1, ui.spread2, ui.pelletVariance, ui.analysis, ui.wind, ui.rib, ui.robotForce, ui.robotPitch, ui.robotLateral, ui.transparentGround, ui.showLegend, ui.showLead, ui.showShot, ui.showPath].forEach(control => {
       control.addEventListener("input", syncControls);
       control.addEventListener("change", syncControls);
     });
