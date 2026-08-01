@@ -8,6 +8,8 @@ La aplicación se ejecuta como una página HTML autónoma y renderiza la escena 
 
 **Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a `index.html` muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación. El proyecto sigue siendo un único fichero ejecutable, por lo que también puede servirse localmente con `python3 -m http.server 8000` y abrir `http://localhost:8000/`.
 
+**Documentación pedagógica:** <a href="https://rcanalescoder.github.io/Plato/docs.html" target="_blank" rel="noopener">abrir la documentación en GitHub Pages</a>. Incluye infografías PNG generativas, explicación para tiradores, explicación técnica y bibliografía.
+
 ![Vista principal del simulador](docs/screenshots/vista-principal.png)
 
 ## 1. Alcance
@@ -38,6 +40,7 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Retardo salida**: tiempo breve entre pedir el plato y que este salga realmente del foso. Por defecto es `0,03 s`, pensado como retardo de sistema/lanzadora, no como reacción humana.
 - **Plomeo tiro 1 / Plomeo tiro 2**: ajustan la apertura del patrón de cada disparo, como una aproximación a chokes diferentes.
 - **Variación plomeo**: introduce irregularidad entre disparos: huecos, pequeñas agrupaciones y diferencias leves de velocidad entre perdigones.
+- **Energía residual**: el simulador calcula la pérdida de velocidad por distancia y exige una energía mínima para romper. Si un perdigón toca pero llega flojo, se marca como `Toque flojo`.
 - **Análisis**: controla cuánto tiempo quedan visibles los rastros y la rotura o caída del plato. La corrección del disparo se conserva hasta que el tirador cambia de puesto.
 - **Robot fuerza**: solo en modalidad Robot; simula apretar o aflojar el muelle, alterando velocidad inicial y alcance.
 - **Robot altura**: solo en modalidad Robot; suma o resta inclinación vertical a la máquina.
@@ -90,6 +93,7 @@ Fuentes consultadas:
 - [Beretta, guia de chokes OptimaChoke HP](https://estore.beretta.com/en-hu/utility/choke-tubes-guide)
 - [Beretta, guia de seleccion de choke](https://www.beretta.com/en-us/blog/how-to-choose-the-right-shotgun-choke-tube)
 - [Hunter-ed, Shotgun Choke and Shot String](https://www.hunter-ed.com/national/studyGuide/Shotgun-Choke-and-Shot-String/201099_92847/)
+- [NRA, Shotshell Ballistics, PDF](https://rangeservices.nra.org/media/4074/shotshell-ballistics.pdf)
 - [CPSA, reglas Automatic Ball Trap / Wobble, Booklet 7](https://www.cpsa.co.uk/userfiles/files/CPSA_Booklet_7.pdf)
 - [White Flyer, Shotgun Disciplines](https://whiteflyer.com/resources/shotgun-disciplines/)
 - [Promatic Super Sporter 8 Wobble](https://www.promaticus.com/product-page/super-sporter-8-wobble)
@@ -178,7 +182,10 @@ La aplicación calcula primero una intersección aproximada entre plato y centro
 El cartucho de referencia es RIO Star Team EVO Training. En la versión actual se modela como:
 
 - Velocidad configurable del cartucho.
-- Velocidad efectiva de perdigón: `velocidad_cartucho * 0.78`.
+- Velocidad efectiva inicial de perdigón: `velocidad_cartucho * 0.78`.
+- Pérdida de velocidad por distancia mediante una curva exponencial simplificada.
+- Energía residual individual por perdigón.
+- Umbral mínimo de rotura: si un perdigón toca pero llega por debajo del umbral, no rompe el plato.
 - 306 perdigones, aproximación compatible con una carga de 1 1/8 oz de plomo #7.5.
 - Dispersión configurable por separado para tiro 1 y tiro 2.
 - Patrón de nube no gaussiano, con variación por disparo, para aproximar un flujo de perdigones con anillos, huecos y agrupaciones internas.
@@ -196,9 +203,12 @@ Estos controles no cambian el número de perdigones; reducen o amplían el radio
 
 ```text
 radio_patron = 0.22 + apertura*0.0045 + distancia*(0.0035 + apertura*0.00003)
+distancia_perdigon(t) = ln(1 + k*v0*t) / k
+velocidad_residual(d) = v0 * e^(-k*d)
+energia = 0.5 * masa_perdigon * velocidad_residual^2
 ```
 
-Donde `apertura` es el valor del control correspondiente al tiro actual. Valores bajos representan chokes más cerrados.
+Donde `apertura` es el valor del control correspondiente al tiro actual. Valores bajos representan chokes más cerrados. La constante `k` es una aproximación práctica de arrastre, calibrada para mostrar que la energía cae con la distancia sin afirmar una curva exacta para todos los cartuchos.
 
 ### 7.1. Variación Realista del Plomeo
 
@@ -218,17 +228,17 @@ El objetivo no es representar una simulación CFD completa del taco, el rozamien
 
 ### 7.2. Impacto Físico
 
-Cada disparo genera direcciones individuales para todos los perdigones. Para cada perdigón se simula su trayectoria y se comprueba si pasa a menos de 7,5 cm del centro del plato:
+Cada disparo genera direcciones individuales para todos los perdigones. Para cada perdigón se simula su trayectoria, su pérdida de velocidad y su energía. La comprobación geométrica exige que pase a menos de 7,5 cm del centro del plato:
 
 ```text
-px(t) = ojo.x + dir.x * velocidad * t
-py(t) = ojo.y + dir.y * velocidad * t - 0.5*g*0.08*t^2
-pz(t) = ojo.z + dir.z * velocidad * t
+px(t) = ojo.x + dir.x * distancia_perdigon(t)
+py(t) = ojo.y + dir.y * distancia_perdigon(t) - 0.5*g*0.08*t^2
+pz(t) = ojo.z + dir.z * distancia_perdigon(t)
 ```
 
-El plato se rompe solo si algún perdigón intersecta físicamente su volumen simplificado. Por eso se puede apuntar cerca del área ideal y fallar: la nube tiene dispersión, el plato se mueve, el usuario puede quedar ligeramente retrasado/adelantado/alto/bajo y el cálculo se evalúa contra partículas individuales. Cuando el simulador indica `Roto borde`, significa que el centro del plomeo no iba perfectamente centrado, pero un perdigón periférico alcanzó el plato.
+El plato se rompe solo si algún perdigón intersecta físicamente su volumen simplificado y llega con energía suficiente. Por eso se puede apuntar cerca del área ideal y fallar: la nube tiene dispersión, el plato se mueve, el usuario puede quedar ligeramente retrasado/adelantado/alto/bajo, y además el perdigón puede llegar ya sin fuerza de rotura. Cuando el simulador indica `Roto borde`, significa que el centro del plomeo no iba perfectamente centrado, pero un perdigón periférico alcanzó el plato con energía suficiente. Cuando indica `Toque flojo`, hubo contacto geométrico por debajo del umbral de rotura.
 
-La comprobación de impacto usa un paso temporal fino (`0,00045 s`) para evitar que un perdigón rápido salte de un lado a otro del plato entre dos muestras sin registrar la colisión.
+La comprobación de impacto usa un paso temporal fino (`0,0007 s`) para evitar que un perdigón rápido salte de un lado a otro del plato entre dos muestras sin registrar la colisión. El intervalo máximo de evaluación se amplía para permitir tiros más largos, pero la energía residual limita la rotura efectiva.
 
 ## 8. Corrección Tras el Tiro
 
@@ -282,7 +292,8 @@ La tirada se modela como una serie de 25 platos:
 El simulador es una herramienta de entrenamiento visual y experimentación. Las magnitudes físicas están expresadas en metros, segundos y grados, pero algunas constantes son aproximaciones calibradas para una experiencia comprensible en pantalla:
 
 - La aerodinámica del plato se simplifica con gravedad efectiva.
-- La pérdida de velocidad de los perdigones por resistencia del aire no está todavía modelada con una curva completa.
+- La pérdida de velocidad de los perdigones se modela con una curva exponencial pedagógica, no con una tabla exacta por tamaño de plomo, temperatura, taco y cañón.
+- El umbral de energía de rotura es una aproximación entrenable; debe calibrarse con datos reales si se desea homologación.
 - El patrón de plomeo incluye variación por disparo, pero no modela deformación individual completa del plomo, rozamiento interno del taco ni turbulencia real.
 - La probabilidad real de rotura depende de cartucho, choke, cañón, viento, calidad del plato y distancia efectiva.
 
@@ -305,8 +316,10 @@ http://localhost:8000/
 ```text
 .
 ├── index.html
+├── docs.html
 ├── README.md
 ├── docs/
+│   ├── assets/       # infografías PNG generativas
 │   └── screenshots/
 └── auxiliares/        # scripts temporales locales, excluidos de git
 ```
