@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Plato | Simulador y manual de tiro al plato</title>
+  <title>Plato | Manual y simulador de tiro al plato</title>
   <!--
     Plato - Simulador y manual pedagogico de tiro al plato.
     Construido por Roberto Canales Mora.
@@ -13,15 +13,14 @@
   <style>
     :root {
       --ink: #121d17;
-      --muted: #5e6d63;
-      --line: #dce5dd;
-      --soft: #f5f8f5;
+      --muted: #5e6b62;
+      --line: #dbe5dc;
+      --soft: #f4f7f3;
       --soft-2: #eef4ef;
+      --dark: #13211a;
       --brand: #ff6a16;
-      --brand-dark: #b74600;
+      --brand-dark: #ad4000;
       --blue: #0f4f93;
-      --green: #28733a;
-      --red: #b42318;
       --gold: #e5ae22;
       --max: 1180px;
     }
@@ -40,13 +39,14 @@
 
     a {
       color: var(--blue);
-      font-weight: 750;
+      font-weight: 760;
       text-decoration: none;
     }
 
     a:hover { text-decoration: underline; }
 
     img {
+      display: block;
       max-width: 100%;
       height: auto;
     }
@@ -78,19 +78,13 @@
       font-size: 14px;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
     .brand {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 10px;
-      font-weight: 900;
       color: var(--ink);
+      font-size: 18px;
+      font-weight: 920;
     }
 
     .brand-dot {
@@ -101,19 +95,26 @@
       border: 1px solid rgba(0,0,0,.18);
     }
 
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
     header {
       border-bottom: 1px solid var(--line);
       background:
         linear-gradient(180deg, rgba(255,255,255,.88), #fff 74%),
-        radial-gradient(circle at 76% 18%, rgba(255,106,22,.16), transparent 34%),
-        radial-gradient(circle at 12% 10%, rgba(15,79,147,.10), transparent 32%);
+        radial-gradient(circle at 78% 15%, rgba(255,106,22,.16), transparent 34%),
+        radial-gradient(circle at 8% 12%, rgba(15,79,147,.12), transparent 32%);
     }
 
     .hero {
-      padding: 56px 0 44px;
+      padding: 58px 0 48px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(330px, 520px);
-      gap: 34px;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 520px);
+      gap: 36px;
       align-items: center;
     }
 
@@ -122,20 +123,20 @@
       color: var(--brand-dark);
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: .06em;
+      letter-spacing: .07em;
       font-size: 13px;
     }
 
     h1 {
       margin: 0;
-      max-width: 760px;
-      font-size: clamp(38px, 5.6vw, 74px);
+      max-width: 780px;
+      font-size: clamp(40px, 5.8vw, 76px);
       line-height: 1.02;
       letter-spacing: 0;
     }
 
     .lead {
-      max-width: 780px;
+      max-width: 820px;
       margin: 18px 0 0;
       color: var(--muted);
       font-size: clamp(18px, 2vw, 23px);
@@ -145,7 +146,7 @@
       display: flex;
       gap: 14px;
       flex-wrap: wrap;
-      margin-top: 26px;
+      margin-top: 28px;
     }
 
     .button {
@@ -164,9 +165,12 @@
     }
 
     .button.primary {
+      min-height: 66px;
+      padding: 0 32px;
       border-color: var(--brand);
       background: var(--brand);
       color: #fff;
+      font-size: 20px;
       box-shadow: 0 16px 36px rgba(255,106,22,.26);
     }
 
@@ -174,11 +178,6 @@
       border: 1px solid var(--line);
       background: #fff;
       box-shadow: 0 24px 60px rgba(20,32,26,.12);
-    }
-
-    .hero-card img {
-      display: block;
-      width: 100%;
     }
 
     .hero-card figcaption {
@@ -204,319 +203,254 @@
     }
 
     h3 {
-      margin: 26px 0 8px;
-      font-size: 22px;
+      margin: 0 0 8px;
+      font-size: 21px;
       line-height: 1.2;
     }
 
-    p {
-      max-width: 920px;
-      margin: 0 0 14px;
+    p { max-width: 930px; }
+
+    .grid-3,
+    .grid-2,
+    .chapter-grid {
+      display: grid;
+      gap: 18px;
     }
 
-    ul,
-    ol {
-      max-width: 940px;
-      padding-left: 22px;
-    }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .chapter-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-    li { margin: 8px 0; }
-
-    figure {
-      margin: 24px 0;
+    .card,
+    .chapter-card {
       border: 1px solid var(--line);
       background: #fff;
+      padding: 20px;
     }
 
-    figure img {
+    .card strong,
+    .chapter-card strong {
       display: block;
-      width: 100%;
+      color: var(--brand-dark);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
     }
 
-    figcaption {
-      padding: 13px 16px 15px;
-      border-top: 1px solid var(--line);
+    .chapter-card {
+      min-height: 172px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--ink);
+    }
+
+    .chapter-card:hover {
+      text-decoration: none;
+      border-color: rgba(255,106,22,.58);
+      box-shadow: 0 14px 30px rgba(20,32,26,.08);
+      transform: translateY(-1px);
+    }
+
+    .chapter-card p {
+      margin: 8px 0 0;
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.45;
     }
 
-    .grid {
+    .media-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 18px;
-      margin-top: 18px;
-    }
-
-    .card {
-      padding: 18px;
-      border: 1px solid var(--line);
-      background: var(--soft);
-    }
-
-    .card h3 {
-      margin-top: 0;
-      font-size: 20px;
-    }
-
-    .note {
-      max-width: 940px;
-      margin: 18px 0;
-      padding: 16px 18px;
-      border-left: 5px solid var(--brand);
-      background: var(--soft);
-    }
-
-    .safety { border-left-color: var(--red); }
-    .tech { border-left-color: var(--blue); }
-    .practice { border-left-color: var(--green); }
-
-    .screens {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .toc {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 12px;
       margin-top: 24px;
     }
 
-    .toc a {
-      display: block;
-      padding: 14px 16px;
+    figure { margin: 0; }
+
+    .media-row figure {
       border: 1px solid var(--line);
       background: #fff;
     }
 
-    table {
-      width: 100%;
-      max-width: 980px;
-      border-collapse: collapse;
-      margin: 18px 0;
-      font-size: 15px;
-    }
-
-    th,
-    td {
-      border: 1px solid var(--line);
+    .media-row figcaption {
       padding: 10px 12px;
-      vertical-align: top;
-      text-align: left;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid var(--line);
     }
 
-    th { background: var(--soft); }
-
-    code {
-      padding: 2px 5px;
-      border-radius: 5px;
-      background: #eef3ef;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: .94em;
+    .strip {
+      padding: 24px;
+      background: var(--soft);
+      border-left: 5px solid var(--brand);
     }
 
-    .source-list {
-      columns: 2 340px;
-      column-gap: 34px;
+    .toc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 18px 0 24px;
     }
 
     footer {
-      padding: 34px 0 48px;
+      padding: 34px 0 52px;
       color: var(--muted);
       font-size: 14px;
     }
 
-    @media (max-width: 860px) {
-      .hero { grid-template-columns: 1fr; }
-      .button { width: 100%; }
+    @media (max-width: 980px) {
+      .hero,
+      .grid-3,
+      .grid-2,
+      .media-row,
+      .chapter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero { padding-top: 38px; }
     }
   </style>
 </head>
 <body>
   <div class="topbar">
     <nav aria-label="Navegacion principal">
-      <a class="brand" href="#inicio"><span class="brand-dot" aria-hidden="true"></span>Plato</a>
+      <a class="brand" href="index.html"><span class="brand-dot"></span> Plato</a>
       <div class="nav-links">
-        <a href="app.html">Abrir simulador</a>
-        <a href="#manual">Manual</a>
-        <a href="#fisica">Fisica</a>
-        <a href="#app">Aplicacion</a>
-        <a href="#fuentes">Fuentes</a>
+        <a href="app.html">Simulador</a>
+        <a href="#indice">Indice</a>
+        <a href="docs/manual/capitulo-01.html">Manual</a>
+        <a href="docs.html">Tecnica</a>
+        <a href="manual.html">Manual continuo</a>
       </div>
     </nav>
   </div>
 
-  <header id="inicio">
+  <header>
     <div class="hero">
       <div>
-        <p class="eyebrow">Simulador + manual pedagogico</p>
-        <h1>Aprender a adelantar el plato antes de gastar cartuchos</h1>
-        <p class="lead">Un laboratorio visual para entender por que se falla: puestos, señuelo, salida del plato, adelanto, plomeo, energia residual, solista y correccion del primer y segundo tiro.</p>
+        <p class="eyebrow">Manual vivo + laboratorio visual</p>
+        <h1>Entender el adelanto antes de gastar cartuchos.</h1>
+        <p class="lead">Plato combina un simulador HTML de tiro al plato con un manual pedagogico por capitulos. La idea es explicar al tirador que ve, por que falla, como leer el plato y como relacionar esa intuicion con fisica, plomeo, cartucho, distancia y modalidad.</p>
         <div class="cta-row">
           <a class="button primary" href="app.html">Arrancar el simulador</a>
-          <a class="button" href="#manual">Leer el manual</a>
+          <a class="button" href="#indice">Ver indice del manual</a>
         </div>
       </div>
       <figure class="hero-card">
-        <a href="app.html" aria-label="Abrir simulador">
-          <img src="docs/screenshots/vista-principal.png" alt="Captura real del simulador de tiro al plato">
-        </a>
-        <figcaption>Captura real de la aplicación: punto de mira, señuelo, foso, trayectoria y campo desde el ojo del tirador.</figcaption>
+        <a href="app.html"><img src="docs/screenshots/vista-principal.png" alt="Captura principal del simulador Plato"></a>
+        <figcaption>El simulador se abre aparte para que la portada sea documentacion y no bloquee el entrenamiento.</figcaption>
       </figure>
     </div>
   </header>
 
   <main>
-    <section id="manual">
-      <h2>1. Por que este proyecto existe</h2>
-      <p>El tiro al plato no se entiende bien desde una explicación de dos frases. El principiante ve un disco naranja, apunta al disco, dispara y falla. La razón es sencilla de decir pero dificil de interiorizar: el plato se mueve mientras los perdigones viajan. Por eso el tiro efectivo no está exactamente donde el ojo ve el plato en el instante de disparar.</p>
-      <p>Este simulador nace para entrenar esa intuición. No pretende sustituir a un instructor, ni a un campo real, ni a la normativa de una federación. Pretende que el tirador vea, despacio y con ayudas, la relación entre velocidad, distancia, ángulo, plomeo y adelanto.</p>
-      <div class="toc" aria-label="Indice del manual">
-        <a href="#inicio-deporte">Deporte, licencia y club</a>
-        <a href="#seguridad">Seguridad y comportamiento</a>
-        <a href="#modalidades">Universal, Olímpico y Robot</a>
-        <a href="#escopeta">Escopeta, solista y culata</a>
-        <a href="#novato">Por qué falla un novato</a>
-        <a href="#fisica">Física e ingeniería</a>
-        <a href="#app">Cómo usar el simulador</a>
-        <a href="#licencia">Licencia y atribución</a>
-      </div>
-    </section>
-
-    <section id="inicio-deporte">
-      <h2>2. Antes del primer plato: club, federación y licencia</h2>
-      <p>Lo razonable al empezar no es comprar material a ciegas. Lo normal es acercarse a un club de tiro, hablar con la federación autonómica o con un instructor y entender qué permisos hacen falta. En España intervienen la licencia federativa, la formación y la licencia de armas correspondiente, que debe verificarse con fuentes oficiales.</p>
-      <p>La pescadilla que confunde a muchos principiantes es esta: para practicar necesitas estar dentro de un circuito legal y federado, pero para obtener permisos y aprender con seguridad necesitas acercarte antes a quien ya conoce ese circuito. Por eso el club suele ser la puerta de entrada más sensata.</p>
-      <figure>
-        <img src="docs/assets/manual-primer-plato.png" alt="Infografía del club al primer plato">
-        <figcaption>La ruta prudente combina club, formación, licencia federativa, licencia de armas y primera tirada acompañada.</figcaption>
-      </figure>
-    </section>
-
-    <section id="seguridad">
-      <h2>3. Seguridad: lo primero que hay que aprender</h2>
-      <p>La seguridad no es una sección secundaria. En una cancha real hay otros tiradores, árbitros, máquinas, ruido, presión y armas cargadas. Un principiante puede fallar platos; lo que no puede hacer es girarse con el arma cerrada, manipular nervioso un encasquillamiento o olvidar hacia dónde apuntan los cañones.</p>
-      <div class="grid">
+    <section id="proposito">
+      <h2>Una documentacion para tiradores y para gente tecnica</h2>
+      <div class="grid-3">
         <article class="card">
-          <h3>Al terminar el disparo</h3>
-          <p>Abrir el arma sin girarse, manteniendo los cañones hacia la zona de tiro. Solo después se abandona el puesto.</p>
+          <strong>Para empezar</strong>
+          <h3>Lenguaje de campo</h3>
+          <p>Primero se explica lo que nota el tirador: el plato aparece, la escopeta estorba si se tapa el objetivo, el swing se para, el disparo llega tarde o bajo.</p>
         </article>
         <article class="card">
-          <h3>Si algo se atasca</h3>
-          <p>Quedarse quieto, cañones en dirección segura y pedir asistencia. La improvisación con un arma es mala compañera.</p>
+          <strong>Para entrenar</strong>
+          <h3>Ejercicios repetibles</h3>
+          <p>Despues se conecta cada idea con el simulador: repetir plato, ocultar ayudas, comparar tiro 1 y tiro 2, variar plomeo, camara lenta y robot.</p>
         </article>
         <article class="card">
-          <h3>Equipo mínimo</h3>
-          <p>Gafas protectoras, protección auditiva, chaleco cómodo y cartuchos adecuados. El ruido de la cancha castiga más de lo que parece.</p>
+          <strong>Para auditar</strong>
+          <h3>Modelo fisico visible</h3>
+          <p>La parte tecnica documenta coordenadas, velocidades, alcances, energia residual, cuerda de perdigones, chokes y limites del modelo.</p>
         </article>
       </div>
-      <div class="note safety"><strong>Idea clave:</strong> primero se aprende a estar seguro en el puesto; luego ya se aprende a romper más platos.</div>
     </section>
 
-    <section id="modalidades">
-      <h2>4. Cómo es una cancha y por qué hay modalidades distintas</h2>
-      <p>En muchos clubes hay varias pistas. Algunas están configuradas para Foso Universal y otras para Foso Olímpico. En tiradas populares pueden aparecer robots o máquinas oscilantes. Desde fuera todo parece “tirar platos”, pero para el tirador cambia la lectura de salida, la velocidad, el ángulo, la altura y la distancia.</p>
-      <figure>
-        <img src="docs/assets/manual-modalidades-trap.png" alt="Infografía de modalidades de trap">
-        <figcaption>Universal, Olímpico y Robot comparten el problema físico del adelanto, pero no comparten la misma distribución de máquinas ni la misma previsibilidad.</figcaption>
-      </figure>
-      <table>
-        <thead><tr><th>Modalidad</th><th>Qué representa en el simulador</th><th>Qué aprende el tirador</th></tr></thead>
-        <tbody>
-          <tr><td>Universal</td><td>Cinco máquinas, señuelo central y rotación por puestos.</td><td>Base de lectura, adelantamiento y corrección.</td></tr>
-          <tr><td>Foso Olímpico</td><td>Quince máquinas agrupadas por puesto y esquemas reglados.</td><td>Más velocidad de lectura y adaptación a ángulos.</td></tr>
-          <tr><td>Robot / trillo</td><td>Una máquina oscilante con fuerza, altura y lateralidad regulables.</td><td>Comparar lo normativo con platos extremos de feria.</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section id="escopeta">
-      <h2>5. Escopeta de plato, solista y por qué el ojo manda</h2>
-      <p>El tirador no mira la escopeta como la miraría una cámara externa. Encara al hombro, adelanta la cara y alinea el ojo con la solista. Si la escopeta queda plana, puede ver casi solo una línea y el punto de mira; si sube el lomo o ajusta la culata, el punto efectivo de impacto cambia.</p>
-      <p>Esto importa porque una escopeta de caza no regulada puede obligar a tapar más plato. En cambio, una configuración de trap con lomo regulable permite que el disparo vaya algo por encima del punto de mira, facilitando ver el plato y corregir el segundo tiro.</p>
-      <figure>
-        <img src="docs/assets/manual-escopeta-solista.png" alt="Infografía de escopeta, solista y visión del tirador">
-        <figcaption>La solista no es decoración: define cómo se relacionan ojo, punto de mira y centro de impacto.</figcaption>
-      </figure>
-    </section>
-
-    <section id="novato">
-      <h2>6. Por qué un principiante falla tantos platos</h2>
-      <p>El error normal es disparar donde está el plato, como en una pantalla de videojuego. En la cancha real, el plato se mueve, el cartucho tarda en llegar, la nube se abre y la escopeta puede tapar parte de la visión. Por eso el fallo típico es quedarse retrasado y bajo.</p>
-      <p>Además está el cuerpo: el hombro no está acostumbrado, la cara puede levantarse, el encare cambia de un tiro al siguiente y aparece la tentación de disparar demasiado. Un tirador nuevo aprende mejor con pocas series conscientes, corrección clara y repetición de platos concretos.</p>
-      <div class="grid">
-        <article class="card"><h3>Retrasado</h3><p>El plato ya se fue cuando llega el plomeo.</p></article>
-        <article class="card"><h3>Bajo</h3><p>El plato sube y la nube pasa por debajo.</p></article>
-        <article class="card"><h3>Sin ver el segundo tiro</h3><p>La escopeta tapa el plato si la geometría ojo-solista no ayuda.</p></article>
+    <section id="lectura">
+      <h2>Como esta organizado</h2>
+      <div class="grid-2">
+        <div class="strip">
+          <h3>Pagina principal</h3>
+          <p>Esta pagina es la puerta de entrada: explica el proyecto, muestra capturas, enlaza el simulador y presenta el indice maestro.</p>
+        </div>
+        <div class="strip">
+          <h3>Capitulos separados</h3>
+          <p>El manual largo vive en paginas independientes dentro de <code>docs/manual/</code>. Asi se puede ampliar, revisar y reordenar sin convertir el sitio en una pared de texto.</p>
+        </div>
       </div>
-    </section>
-
-    <section id="fisica">
-      <h2>7. La física: adelanto, plomeo y energía residual</h2>
-      <p>El simulador calcula el plato como un objetivo móvil y el disparo como una nube de perdigones. Cada perdigón tiene dirección, pequeña variación, retardo, pérdida de velocidad y energía. No basta con tocar geométricamente: si llega demasiado lejos o demasiado flojo, puede no romper.</p>
-      <figure>
-        <img src="docs/assets/manual-fisica-adelanto.png" alt="Infografía de física de adelanto y energía">
-        <figcaption>El adelanto depende del tiempo de vuelo de los perdigones; la rotura depende además de la energía residual.</figcaption>
-      </figure>
-      <div class="note tech">
-        <strong>Versión técnica:</strong> el modelo usa trayectoria parabólica del plato con gravedad efectiva, dispersión por choke, perdigones individuales, curva de velocidad residual y umbral mínimo de energía. Es una aproximación pedagógica, no una certificación balística de un cartucho concreto.
-      </div>
-    </section>
-
-    <section id="robot">
-      <h2>8. Robot de feria, trillos y platos fuera de norma</h2>
-      <p>En tiradas populares puede haber una sola máquina o robot, a veces montado en condiciones menos estables y ajustado “a ojo”. Si se aprieta el muelle, se aumenta la inclinación o se abre el barrido lateral, aparecen platos que no se parecen a una cancha regulada: muy altos, muy bajos, muy laterales o muy rápidos.</p>
-      <p>Eso explica por qué alguien entrenado en un campo ortodoxo puede sufrir en una feria, y por qué tiradores acostumbrados a esos robots resuelven trayectorias raras. La modalidad Robot del simulador existe para estudiar esa diferencia sin llamar normativo a lo que no lo es.</p>
-    </section>
-
-    <section id="app">
-      <h2>9. Cómo se usa el simulador</h2>
-      <p>La aplicación permite pedir plato con botón derecho, disparar con botón izquierdo y mover el punto rojo con el ratón. Puede mostrar u ocultar ayuda de adelanto, trayectoria, plomeo y corrección. La repetición de plato sirve para entrenar una misma salida hasta que el cerebro aprende la relación entre velocidad, distancia y adelanto.</p>
-      <div class="screens">
+      <div class="media-row">
         <figure>
-          <img src="docs/screenshots/vista-completa.png" alt="Captura completa de la aplicación con controles">
-          <figcaption>Vista completa: controles, foso, puestos, señuelo, estado y leyenda.</figcaption>
+          <img src="docs/assets/manual-primer-plato.png" alt="Infografia pedagogica sobre el primer plato">
+          <figcaption>Primer objetivo: entender por que no basta con apuntar al plato.</figcaption>
         </figure>
         <figure>
-          <img src="docs/screenshots/correcciones-doble-tiro.png" alt="Captura de corrección del primer y segundo tiro">
-          <figcaption>Corrección del disparo: compara tiro 1 y tiro 2 para saber si quedaste alto, bajo, adelantado o retrasado.</figcaption>
+          <img src="docs/assets/manual-fisica-adelanto.png" alt="Infografia de fisica del adelantamiento">
+          <figcaption>El adelanto se explica como punto de encuentro en tiempo y espacio.</figcaption>
+        </figure>
+        <figure>
+          <img src="docs/screenshots/correcciones-doble-tiro.png" alt="Correccion de tiro 1 y tiro 2 en el simulador">
+          <figcaption>Las correcciones ayudan a ver si el disparo fue alto, bajo, adelantado o retrasado.</figcaption>
         </figure>
       </div>
-      <figure>
-        <img src="docs/assets/manual-entrenamiento.png" alt="Infografía de entrenamiento con simulador">
-        <figcaption>La aplicación no ahorra la práctica real, pero ayuda a llegar al campo con una idea mental más clara.</figcaption>
-      </figure>
-      <p><a class="button primary" href="app.html">Abrir ahora el simulador</a></p>
     </section>
 
-    <section id="fuentes">
-      <h2>10. Fuentes, normativa y límites</h2>
-      <p>La documentación combina fuentes oficiales, federativas, comerciales y divulgativas. Las fuentes oficiales prevalecen si hay discrepancias. La simulación se ha construido para aprender y comparar, no para homologar una cancha ni certificar munición.</p>
-      <ul class="source-list">
-        <li><a href="https://www.guardiacivil.es/es/servicios/armasyexplosivo/controldearmas/licencias_armas/" target="_blank" rel="noopener">Guardia Civil - licencias de armas</a></li>
-        <li><a href="https://www.boe.es/buscar/act.php?id=BOE-A-1993-6202" target="_blank" rel="noopener">BOE - Reglamento de Armas</a></li>
-        <li><a href="https://www.tirolimpico.org/" target="_blank" rel="noopener">Real Federación Española de Tiro Olímpico</a></li>
-        <li><a href="https://www.issf-sports.org/theissf/rules_and_regulations.ashx" target="_blank" rel="noopener">ISSF - reglas oficiales</a></li>
-        <li><a href="https://www.fitasc.com/uk/content/12" target="_blank" rel="noopener">FITASC - Universal Trench</a></li>
-        <li><a href="https://www.cpsa.co.uk/userfiles/files/CPSA_Booklet_7.pdf" target="_blank" rel="noopener">CPSA - ABT y Wobble</a></li>
-        <li><a href="https://rangeservices.nra.org/media/4074/shotshell-ballistics.pdf" target="_blank" rel="noopener">NRA - Shotshell Ballistics</a></li>
-        <li><a href="https://www.hunter-ed.com/national/studyGuide/Shotgun-Choke-and-Shot-String/201099_92847/" target="_blank" rel="noopener">Hunter-ed - Shot String</a></li>
-        <li><a href="https://whiteflyer.com/resources/shotgun-disciplines/" target="_blank" rel="noopener">White Flyer - disciplinas de escopeta</a></li>
-        <li><a href="https://www.beretta.com/en-us/product/dt11-international-trap-FA0095" target="_blank" rel="noopener">Beretta DT11 International Trap</a></li>
-      </ul>
+    <section id="indice">
+      <p class="eyebrow">Indice maestro extendido</p>
+      <h2>16 capitulos para construir el manual completo</h2>
+      <p>El indice se conserva tambien como fuente editorial en <a href="docs/manual/indice-maestro.md">docs/manual/indice-maestro.md</a>. Cada capitulo combina, cuando procede, explicacion para el tirador, que debe observar, relacion con el simulador, vision tecnica, fuentes y limites.</p>
+      <div class="toc-actions">
+        <a class="button" href="docs/manual/capitulo-01.html">Empezar por el capitulo 1</a>
+        <a class="button" href="app.html">Ir directamente al simulador</a>
+      </div>
+      <div class="chapter-grid">
+        <a class="chapter-card" href="docs/manual/capitulo-01.html"><strong>Capitulo 1</strong><h3>Que es el tiro al plato</h3><p>Deporte, dificultad y proposito del simulador.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-02.html"><strong>Capitulo 2</strong><h3>Empezar en Espana</h3><p>Club, federacion, autorizaciones y primer contacto.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-03.html"><strong>Capitulo 3</strong><h3>Seguridad</h3><p>Normas basicas antes que tecnica o resultados.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-04.html"><strong>Capitulo 4</strong><h3>Cancha y serie</h3><p>Puestos, foso, rotacion, plato valido y plato nulo.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-05.html"><strong>Capitulo 5</strong><h3>Escopeta y equipo</h3><p>Culata, solista, chokes, cartuchos y mantenimiento.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-06.html"><strong>Capitulo 6</strong><h3>Por que se falla</h3><p>Quedarse detras, bajo, tapar el plato o parar el swing.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-07.html"><strong>Capitulo 7</strong><h3>Aprendizaje progresivo</h3><p>Shu-Ha-Ri aplicado al tiro al plato.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-08.html"><strong>Capitulo 8</strong><h3>Geometria del adelanto</h3><p>Punto de encuentro explicado para tiradores.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-09.html"><strong>Capitulo 9</strong><h3>Modelo fisico</h3><p>Coordenadas, tiempo, plato, perdigones e impacto.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-10.html"><strong>Capitulo 10</strong><h3>Uso del simulador</h3><p>Controles, estados, ayudas visuales y resultados.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-11.html"><strong>Capitulo 11</strong><h3>Modalidades</h3><p>Universal, Olimpico, Robot y variantes populares.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-12.html"><strong>Capitulo 12</strong><h3>Entrenamiento</h3><p>Ejercicios, repeticion, camara lenta y analisis.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-13.html"><strong>Capitulo 13</strong><h3>Limites</h3><p>Que simplifica el modelo y como usarlo con criterio.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-14.html"><strong>Capitulo 14</strong><h3>Coste y utilidad</h3><p>Ahorro de cartuchos, tiempo y frustracion.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-15.html"><strong>Capitulo 15</strong><h3>Instalacion y licencia</h3><p>GitHub Pages, HTML local, MIT y atribucion.</p></a>
+        <a class="chapter-card" href="docs/manual/capitulo-16.html"><strong>Capitulo 16</strong><h3>Fuentes y glosario</h3><p>Bibliografia, preguntas frecuentes y control documental.</p></a>
+      </div>
+    </section>
+
+    <section id="capturas">
+      <h2>Capturas reales de la aplicacion</h2>
+      <div class="media-row">
+        <figure>
+          <img src="docs/screenshots/vista-completa.png" alt="Vista completa del simulador con controles">
+          <figcaption>Vista completa con controles, leyenda, foso, puestos y ayudas.</figcaption>
+        </figure>
+        <figure>
+          <img src="docs/screenshots/nube-adelanto.png" alt="Nube de adelanto sobre un plato en vuelo">
+          <figcaption>Nube de adelanto y patron de plomeo estimado durante el lance.</figcaption>
+        </figure>
+        <figure>
+          <img src="docs/screenshots/correcciones-doble-tiro.png" alt="Correcciones tras dos tiros">
+          <figcaption>Lectura posterior: donde estaba el disparo respecto al centroide ideal.</figcaption>
+        </figure>
+      </div>
     </section>
 
     <section id="licencia">
-      <h2>11. Licencia: se puede instalar, pero no borrar la autoría</h2>
-      <p>El proyecto se publica bajo licencia MIT. Al ser una página HTML, puede descargarse, instalarse localmente, copiarse, modificarse y redistribuirse. Pero toda copia o derivado debe conservar la referencia al autor original, <strong>Roberto Canales Mora</strong>, y el enlace a <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a>.</p>
-      <p>La atribución forma parte del aviso de copyright y de permiso que acompaña al software.</p>
+      <h2>Autor, licencia y uso responsable</h2>
+      <p>Construido por <strong>Roberto Canales Mora</strong>. Proyecto original: <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">robertocanales.com/proyectos#plato</a>.</p>
+      <p>El proyecto usa licencia MIT con atribucion obligatoria al autor original y a la pagina del proyecto. Puede instalarse, estudiarse y adaptarse, pero cualquier reutilizacion debe citar expresamente a Roberto Canales Mora y enlazar la pagina original.</p>
+      <p>El simulador es una herramienta pedagogica. No sustituye formacion presencial, normativa federativa, reglas de seguridad, supervision de un club ni homologacion oficial de una cancha.</p>
     </section>
   </main>
 
   <footer>
-    <p>Construido por <strong>Roberto Canales Mora</strong>. Proyecto: <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">robertocanales.com/proyectos#plato</a>. Simulador: <a href="app.html">app.html</a>. Manual extendido: <a href="manual.html">manual.html</a>.</p>
+    <p>Construido por <strong>Roberto Canales Mora</strong>. Simulador: <a href="app.html">app.html</a>. Manual por capitulos: <a href="docs/manual/capitulo-01.html">docs/manual/</a>. Manual continuo anterior: <a href="manual.html">manual.html</a>.</p>
   </footer>
 </body>
 </html>

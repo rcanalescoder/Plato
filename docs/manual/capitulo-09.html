@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>9. La versión de ingeniería: el modelo físico | Manual Plato</title>
+  <link rel="stylesheet" href="manual.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../../index.html"><span></span> Plato</a>
+    <nav>
+      <a href="../../app.html">Simulador</a>
+      <a href="../../index.html#indice">Indice</a>
+      <a href="indice-maestro.md">Fuente editorial</a>
+    </nav>
+  </header>
+  <main>
+    <aside class="chapter-index">
+      <strong>Manual</strong>
+      <a  href="capitulo-01.html">1. Qué es el tiro al plato y por qué existe este proyecto</a>
+      <a  href="capitulo-02.html">2. Cómo empezar a tirar al plato en España</a>
+      <a  href="capitulo-03.html">3. Seguridad antes que técnica</a>
+      <a  href="capitulo-04.html">4. Cómo es una cancha y cómo se desarrolla una serie</a>
+      <a  href="capitulo-05.html">5. Escopetas, culatas, chokes, cartuchos y equipamiento</a>
+      <a  href="capitulo-06.html">6. Por qué un principiante falla el plato</a>
+      <a  href="capitulo-07.html">7. Aprendizaje progresivo y Shu-Ha-Ri</a>
+      <a  href="capitulo-08.html">8. La geometría del adelantamiento explicada para tiradores</a>
+      <a class="active" href="capitulo-09.html">9. La versión de ingeniería: el modelo físico</a>
+      <a  href="capitulo-10.html">10. Cómo funciona exactamente el simulador</a>
+      <a  href="capitulo-11.html">11. Universal, Olímpico, Robot y otras modalidades</a>
+      <a  href="capitulo-12.html">12. Cómo utilizar el simulador para entrenar</a>
+      <a  href="capitulo-13.html">13. Limitaciones y uso responsable del modelo</a>
+      <a  href="capitulo-14.html">14. Coste del entrenamiento y utilidad económica</a>
+      <a  href="capitulo-15.html">15. Instalación, licencia, atribución y reutilización</a>
+      <a  href="capitulo-16.html">16. Fuentes, glosario, preguntas frecuentes y control documental</a>
+    </aside>
+    <article class="chapter">
+      <p class="eyebrow">Capitulo 9 de 16</p>
+      <h1>La versión de ingeniería: el modelo físico</h1>
+      <p class="summary">Documenta el modelo físico: coordenadas, tiempo, salida del plato, plomeo, energía residual y detección de impacto.</p>
+      <figure class="chapter-figure"><img src="../assets/infografia-geometria-adelanto.png" alt="Modelo físico del punto de encuentro"><figcaption>Modelo físico del punto de encuentro</figcaption></figure>
+      <section class="reading-layers" aria-label="Capas de lectura">
+        <h2>Como leer este capitulo</h2>
+        <div class="layers">
+          <p><strong>Tirador:</strong> busca las ideas practicas y las senales que puedes observar en cancha.</p>
+          <p><strong>Simulador:</strong> relaciona cada concepto con controles, ayudas visuales y ejercicios repetibles.</p>
+          <p><strong>Tecnica:</strong> usa las formulas y limites como apoyo, no como sustituto de profesor o normativa.</p>
+        </div>
+      </section>
+      <p>Este capítulo se escribirá después de revisar el código real. El índice define qué debe documentarse, pero no presupone todavía la implementación exacta.</p>
+<h2>9.1. Alcance del modelo</h2>
+<ul>
+<li>Qué fenómenos simula.</li>
+<li>Qué fenómenos simplifica.</li>
+<li>Qué variables son reales.</li>
+<li>Qué variables están escaladas.</li>
+<li>Qué resultados son visuales.</li>
+<li>Qué resultados son numéricos.</li>
+</ul>
+<h2>9.2. Sistema de coordenadas</h2>
+<ul>
+<li>Origen.</li>
+<li>Eje horizontal.</li>
+<li>Eje vertical.</li>
+<li>Profundidad.</li>
+<li>Posición del tirador.</li>
+<li>Posición de la máquina.</li>
+<li>Posición inicial del plato.</li>
+<li>Unidades utilizadas.</li>
+</ul>
+<h2>9.3. Tiempo de simulación</h2>
+<ul>
+<li>Reloj interno.</li>
+<li>Paso temporal.</li>
+<li>Actualización de posiciones.</li>
+<li>Velocidad de reproducción.</li>
+<li>Cámara lenta.</li>
+<li>Pausa y reinicio.</li>
+<li>Influencia del rendimiento del navegador.</li>
+</ul>
+<h2>9.4. Lanzamiento del plato</h2>
+<ul>
+<li>Posición inicial.</li>
+<li>Ángulo horizontal.</li>
+<li>Ángulo vertical.</li>
+<li>Velocidad inicial.</li>
+<li>Dirección.</li>
+<li>Variación aleatoria.</li>
+<li>Configuración por modalidad.</li>
+<li>Configuración de robot.</li>
+</ul>
+<h2>9.5. Movimiento del plato</h2>
+<ul>
+<li>Componentes de velocidad.</li>
+<li>Gravedad.</li>
+<li>Resistencia del aire, si está implementada.</li>
+<li>Viento, si está implementado.</li>
+<li>Pérdida de velocidad.</li>
+<li>Rotación visual.</li>
+<li>Final de la trayectoria.</li>
+</ul>
+<h2>9.6. Representación del disparo</h2>
+<ul>
+<li>Instante del disparo.</li>
+<li>Origen en el cañón.</li>
+<li>Dirección de la línea de tiro.</li>
+<li>Velocidad asignada.</li>
+<li>Trayectoria del conjunto de perdigones.</li>
+<li>Diferencia entre representar un perdigón y una nube.</li>
+</ul>
+<h2>9.7. Plomeo</h2>
+<ul>
+<li>Cono de dispersión.</li>
+<li>Radio de la nube.</li>
+<li>Densidad.</li>
+<li>Variación por choke.</li>
+<li>Variación por distancia.</li>
+<li>Primer cañón.</li>
+<li>Segundo cañón.</li>
+<li>Representación visual frente a modelización balística completa.</li>
+</ul>
+<h2>9.8. Chokes en el modelo</h2>
+<ul>
+<li>Parámetros disponibles.</li>
+<li>Modificación del ángulo de dispersión.</li>
+<li>Diferencia entre chokes.</li>
+<li>Cambio entre disparos.</li>
+<li>Limitaciones de la simplificación.</li>
+</ul>
+<h2>9.9. Velocidad del cartucho</h2>
+<ul>
+<li>Parámetro introducido.</li>
+<li>Conversión de unidades.</li>
+<li>Tiempo de vuelo.</li>
+<li>Influencia sobre el punto de encuentro.</li>
+<li>Influencia sobre la caída.</li>
+<li>Relación con las velocidades comerciales.</li>
+<li>Diferencia entre valor nominal y comportamiento real.</li>
+</ul>
+<h2>9.10. Ganancia de solista o ajuste de altura</h2>
+<ul>
+<li>Cómo se representa.</li>
+<li>Modificación de la línea de tiro.</li>
+<li>Diferencia entre mover el arma y cambiar el punto de impacto.</li>
+<li>Correspondencia aproximada con el ajuste de una culata real.</li>
+<li>Límites pedagógicos.</li>
+</ul>
+<h2>9.11. Viento</h2>
+<ul>
+<li>Dirección.</li>
+<li>Intensidad.</li>
+<li>Efecto aplicado al plato.</li>
+<li>Efecto aplicado al plomeo, si existe.</li>
+<li>Exageración visual.</li>
+<li>Utilidad para comparar escenarios.</li>
+</ul>
+<h2>9.12. Detección del impacto</h2>
+<ul>
+<li>Distancia entre plato y nube.</li>
+<li>Radio efectivo.</li>
+<li>Umbral.</li>
+<li>Número o densidad de perdigones.</li>
+<li>Momento de evaluación.</li>
+<li>Impacto, fallo y rotura visual.</li>
+<li>Posibles falsos positivos visuales.</li>
+</ul>
+<h2>9.13. Aleatoriedad</h2>
+<ul>
+<li>Parámetros deterministas.</li>
+<li>Variaciones aleatorias.</li>
+<li>Semilla, si existe.</li>
+<li>Repetición exacta.</li>
+<li>Repetición aproximada.</li>
+<li>Diferencias entre entrenamiento y robot.</li>
+</ul>
+<h2>9.14. Parámetros de cada modalidad</h2>
+<ul>
+<li>Configuración base.</li>
+<li>Rango de ángulos.</li>
+<li>Rango de alturas.</li>
+<li>Rango de velocidades.</li>
+<li>Carga de cartucho.</li>
+<li>Número de disparos.</li>
+<li>Nivel de variabilidad.</li>
+</ul>
+<h2>9.15. Validación del modelo</h2>
+<ul>
+<li>Pruebas unitarias o automáticas.</li>
+<li>Escenarios de referencia.</li>
+<li>Conservación de relaciones geométricas.</li>
+<li>Comparación con valores conocidos.</li>
+<li>Pruebas visuales.</li>
+<li>Casos extremos.</li>
+<li>Registro de discrepancias.</li>
+</ul>
+<h2>9.16. Fórmulas explicadas</h2>
+<ul>
+<li>Posición en función del tiempo.</li>
+<li>Componentes de velocidad.</li>
+<li>Caída.</li>
+<li>Intersección.</li>
+<li>Distancia entre plato y nube.</li>
+<li>Conversión de unidades.</li>
+<li>Explicación intuitiva junto a cada fórmula.</li>
+</ul>
+<h3>Infografías previstas</h3>
+<ul>
+<li><strong>«Del parámetro a la trayectoria»</strong></li>
+<li><strong>«Modelo físico completo del simulador»</strong></li>
+<li><strong>«Cómo se detecta un impacto»</strong></li>
+</ul>
+<hr>
+      <nav class="chapter-nav" aria-label="Navegacion de capitulos">
+        <a href="capitulo-08.html">Anterior: 8. La geometría del adelantamiento explicada para tiradores</a>
+        <a href="capitulo-10.html">Siguiente: 10. Cómo funciona exactamente el simulador</a>
+      </nav>
+    </article>
+  </main>
+</body>
+</html>
