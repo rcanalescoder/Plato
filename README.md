@@ -12,10 +12,11 @@ La aplicación se ejecuta como una página HTML autónoma y renderiza la escena 
 
 ## 1. Alcance
 
-El simulador representa una tirada de 25 platos en dos modalidades:
+El simulador representa una tirada de 25 platos en tres modalidades:
 
 - **Foso universal**: cinco máquinas dentro de una zanja. El señuelo naranja está centrado sobre la máquina 3 e indica el punto de salida del plato cuando la máquina está ajustada a cero grados.
 - **Foso olímpico**: quince máquinas agrupadas en cinco puestos. En este modo el señuelo activo se desplaza delante del puesto del tirador y los otros posibles señuelos se muestran en gris.
+- **Robot**: una única máquina oscilante/programable, inspirada en wobble trap, Automatic Ball Trap y tiradas populares con máquina robot. Puede trabajar con preset compatible ABT o con presets no normativos de feria/popular.
 
 El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m de altura. La escopeta no se dibuja como un objeto externo; el usuario ve el punto de mira rojo y, cuando hay ganancia de solista, un punto traslúcido que indica cómo sube el punto efectivo de impacto.
 
@@ -38,6 +39,9 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Plomeo tiro 1 / Plomeo tiro 2**: ajustan la apertura del patrón de cada disparo, como una aproximación a chokes diferentes.
 - **Variación plomeo**: introduce irregularidad entre disparos: huecos, pequeñas agrupaciones y diferencias leves de velocidad entre perdigones.
 - **Análisis**: controla cuánto tiempo quedan visibles los rastros y la rotura o caída del plato. La corrección del disparo se conserva hasta que el tirador cambia de puesto.
+- **Robot fuerza**: solo en modalidad Robot; simula apretar o aflojar el muelle, alterando velocidad inicial y alcance.
+- **Robot altura**: solo en modalidad Robot; suma o resta inclinación vertical a la máquina.
+- **Robot lateral**: solo en modalidad Robot; multiplica la apertura lateral de la secuencia.
 - **Ayuda**: abre una explicación para principiantes sobre modalidades, velocidades, cartuchos, aperturas, trayectorias y lectura de los elementos de pantalla.
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
@@ -69,6 +73,7 @@ La implementación toma como guía normas y tablas oficiales, pero no pretende s
 - **Foso universal FITASC**: cinco máquinas dentro de la zanja, puestos a 15 m del borde delantero del foso y un plato/señuelo sobre la máquina 3 para indicar la salida a 0 grados. Las máquinas se modelan sobre bases alineadas, separadas 1,10 m, con el pivote aproximadamente 0,50 m bajo el techo del foso y 0,50 m retrasado del borde delantero.
 - **Esquemas universal**: se modelan diez esquemas (`fu1` a `fu10`) con ángulos laterales de -45 a +45 grados, alturas de 1,5 a 3,5 m y distancias de 60 a 75 m.
 - **Foso olímpico ISSF**: quince máquinas agrupadas en cinco grupos de tres, uno por cada puesto; se modelan nueve esquemas (`issf1` a `issf9`) con distancia objetivo de 76 m.
+- **Robot / Wobble / ABT**: se añade como modalidad de entrenamiento no estrictamente federativa. El preset `Robot ABT` usa rangos compatibles con Automatic Ball Trap: alturas de 1,5-3,5 m a 10 m, ángulos amplios y alcance alrededor de 75 m. Los presets populares pueden superar esos márgenes y se etiquetan como `No normativo`.
 - **Plato**: se representa como disco naranja macizo con forma escalonada, aproximando el plato real de 110 mm de diámetro y 25-26 mm de altura descrito en reglas técnicas ISSF.
 
 Fuentes consultadas:
@@ -82,6 +87,12 @@ Fuentes consultadas:
 - [Beretta, guia de chokes OptimaChoke HP](https://estore.beretta.com/en-hu/utility/choke-tubes-guide)
 - [Beretta, guia de seleccion de choke](https://www.beretta.com/en-us/blog/how-to-choose-the-right-shotgun-choke-tube)
 - [Hunter-ed, Shotgun Choke and Shot String](https://www.hunter-ed.com/national/studyGuide/Shotgun-Choke-and-Shot-String/201099_92847/)
+- [CPSA, reglas Automatic Ball Trap / Wobble, Booklet 7](https://www.cpsa.co.uk/userfiles/files/CPSA_Booklet_7.pdf)
+- [White Flyer, Shotgun Disciplines](https://whiteflyer.com/resources/shotgun-disciplines/)
+- [Promatic Super Sporter 8 Wobble](https://www.promaticus.com/product-page/super-sporter-8-wobble)
+- [Laporte American Trap](https://www.laporte.biz/en/our-traps/american-trap/)
+- [Atlas Tri-Axis Wobble AT-250](https://www.atlastraps.com/Tri-axes-wobble-trap--AT250_p_204.html)
+- [Bowman ABT Base](https://bowmantraps.co.uk/product/abt-base/)
 
 ## 5. Salida del Plato
 
@@ -100,10 +111,18 @@ En FITASC Universal Trench la salida se define como inmediata tras la llamada, c
 
 La máquina activa visible bajo el suelo translúcido se coloca sobre la prolongación inversa del vector de lanzamiento. Por tanto, el tramo sólido máquina-boca y la trayectoria inicial del plato son colineales; si la trayectoria se curva después es por la integración de gravedad/viento, no por un quiebro artificial al salir del foso.
 
-La velocidad inicial no se elige al azar. Para cada fila de esquema se resuelve una parábola que cumple simultáneamente:
+La velocidad inicial no se elige al azar. Para cada fila de esquema reglado se resuelve una parábola que cumple simultáneamente:
 
 - altura exigida a 10 m;
 - distancia de caída del esquema: 60-75 m en Universal y 76 m en Olímpico.
+
+En modalidad **Robot**, cada fila también se expresa como ángulo, altura a 10 m y alcance. La diferencia es conceptual: `Robot ABT` se trata como compatible con ABT, mientras que `Robot feria circular`, `Robot popular extremo` y `Robot pseudoaleatorio` son intencionadamente no normativos. Sus controles modifican las filas base:
+
+- `Robot fuerza`: multiplica el alcance, como apretar o aflojar el muelle.
+- `Robot altura`: modifica la altura a 10 m, como cambiar la inclinación de la lanzadora.
+- `Robot lateral`: multiplica el ángulo horizontal, como abrir o cerrar el barrido.
+
+La banda superior muestra `Compatible ABT` o `No normativo` para que quede claro cuándo se está entrenando una situación de pueblo/feria y no una referencia federativa.
 
 En la parte superior de la escena aparece una banda de verificación con velocidad inicial, ángulo, altura real a 10 m, alcance calculado y un check de cumplimiento. Si el viento está activado, la banda indica que la validación corresponde al ajuste base de máquina sin viento.
 
