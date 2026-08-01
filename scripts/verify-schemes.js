@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const root = path.resolve(__dirname, "..");
-const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+const html = fs.readFileSync(path.join(root, "app.html"), "utf8");
 
 function extractObject(name) {
   const start = html.indexOf(`const ${name} = {`);

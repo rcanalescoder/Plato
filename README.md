@@ -4,9 +4,11 @@ Simulador 3D en HTML para estudiar el tiro al plato desde la perspectiva real de
 
 Construido por **Roberto Canales Mora**: [robertocanales.com/proyectos#plato](https://robertocanales.com/proyectos#plato). Licencia: [MIT](#14-licencia).
 
-La aplicación se ejecuta como una página HTML autónoma y renderiza la escena con `canvas`, sin dependencias externas. Está pensada para iterar rápido sobre la física y la representación visual antes de convertirla, si procede, en un juego completo o una experiencia VR.
+La aplicación se ejecuta como una página HTML autónoma (`app.html`) y renderiza la escena con `canvas`, sin dependencias externas. Está pensada para iterar rápido sobre la física y la representación visual antes de convertirla, si procede, en un juego completo o una experiencia VR.
 
-**Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a `index.html` muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación. El proyecto sigue siendo un único fichero ejecutable, por lo que también puede servirse localmente con `python3 -m http.server 8000` y abrir `http://localhost:8000/`.
+**Portada del proyecto:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir Plato en GitHub Pages</a>. La raíz publicada (`index.html`) es ahora una página pedagógica con capturas, manual, fuentes y un botón grande para arrancar el simulador.
+
+**Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/app.html" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a los ficheros HTML muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación.
 
 **Manual avanzado:** <a href="https://rcanalescoder.github.io/Plato/manual.html" target="_blank" rel="noopener">abrir el manual en GitHub Pages</a>. Incluye narrativa para tiradores, seguridad, equipamiento, modalidades, robots de feria, física y bibliografía.
 
@@ -147,7 +149,7 @@ El factor de gravedad reducido no intenta afirmar que el plato ignore la graveda
 
 ## 5.1. Verificación Automática de Esquemas
 
-El repositorio incluye una prueba sin dependencias para auditar todos los esquemas definidos en `index.html`:
+El repositorio incluye una prueba sin dependencias para auditar todos los esquemas definidos en `app.html`:
 
 ```bash
 node scripts/verify-schemes.js
@@ -157,7 +159,7 @@ La prueba recorre 185 lanzamientos teóricos: 50 de Universal y 135 de Olímpico
 
 Esta prueba es importante porque evita que un cambio visual rompa la física normativa sin que se note. La aplicación muestra arriba los mismos conceptos que audita el test: velocidad inicial, máquina, ángulo, altura a 10 m, alcance y tiempo de vuelo. El texto `Cumple normativa` no es decorativo: sale de recalcular la trayectoria del plato actual contra los valores de su esquema.
 
-Los esquemas están definidos como datos dentro del propio `index.html`. Para añadir o revisar una tabla, el flujo correcto es:
+Los esquemas están definidos como datos dentro del propio `app.html`. Para añadir o revisar una tabla, el flujo correcto es:
 
 1. modificar las filas de máquinas, ángulos, alturas y distancias;
 2. ejecutar `node scripts/verify-schemes.js`;
@@ -318,6 +320,7 @@ http://localhost:8000/
 ```text
 .
 ├── index.html
+├── app.html
 ├── manual.html
 ├── docs.html
 ├── README.md
