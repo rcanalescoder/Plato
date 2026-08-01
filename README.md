@@ -47,6 +47,8 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
 
+Si un plato sale de la ventana útil de tiro, el lance se cierra como fallo, desaparece la ayuda de adelanto y la tirada avanza al siguiente puesto sin esperar a que el plato caiga fuera de campo.
+
 La proyección usa un campo de visión vertical base de 48 grados. Así el tamaño percibido del foso y del plato depende del ángulo de visión, no del formato exacto del monitor; una pantalla más ancha muestra más campo lateral, pero no debería alejar artificialmente la escena. El control de zoom visual multiplica la focal de cámara para mejorar legibilidad sin tocar la geometría real del campo.
 
 ## 3. Geometría de Campo

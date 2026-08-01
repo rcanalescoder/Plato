@@ -1383,8 +1383,8 @@
           updateAim(simDt);
           return;
         }
-        if (p.z > 120) {
-          if (p) sim.mode = "ended";
+        if (p.z > 120 || isTargetOutOfUsefulView(p)) {
+          finishOutOfView();
         }
         if (p && p.y <= CLAY_GROUND_Y && sim.mode !== "ended") {
           createGroundBreak(p);
@@ -1431,6 +1431,15 @@
     // -------------------------------------------------------------------------
     // Breakage effects
     // -------------------------------------------------------------------------
+
+    function finishOutOfView() {
+      if (sim.mode === "ended") return;
+      sim.mode = "ended";
+      ui.lead.textContent = "-";
+      ui.result.textContent = sim.repeatingTarget ? "Repeticion: fuera de ventana" : "Fuera de ventana";
+      ui.result.style.color = "var(--muted)";
+      if (!sim.repeatingTarget) advanceRound(false);
+    }
 
     function createGroundBreak(p) {
       const ground = { x: p.x, y: 0.04, z: p.z };
@@ -1497,6 +1506,16 @@
 
     function analysisDuration() {
       return params.analysis;
+    }
+
+    function isTargetOutOfUsefulView(point) {
+      const screen = projectPoint(point);
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const marginX = Math.max(180, w * 0.16);
+      const marginY = Math.max(120, h * 0.18);
+      const pastMargin = screen.x < -marginX || screen.x > w + marginX || screen.y < -marginY || screen.y > h + marginY;
+      return pastMargin && point.z > TRENCH_FRONT + 8;
     }
 
     function pelletCount() {
