@@ -11,7 +11,7 @@
     Proyecto: https://robertocanales.com/proyectos#plato
     Licencia: MIT con atribucion obligatoria al autor original y a la pagina del proyecto.
   -->
-  <link rel="stylesheet" href="docs/manual-libro/assets/css/manual.css?v=20260802-4">
+  <link rel="stylesheet" href="docs/manual-libro/assets/css/manual.css?v=20260803-1">
 </head>
 <body>
 <a class="skip" href="#contenido">Saltar al contenido</a>
@@ -3540,9 +3540,11 @@
       <label for="fixed">Costes fijos anuales (€)
         <input id="fixed" type="number" min="0" step="0.01" inputmode="decimal" value="62">
       </label>
-      <div class="result" aria-live="polite"><span>Por visita</span><strong id="perVisit">47,40 €</strong></div>
-      <div class="result" aria-live="polite"><span>Mensual equivalente</span><strong id="monthly">52,57 €</strong></div>
-      <div class="result" aria-live="polite"><span>Anual estimado</span><strong id="annual">630,80 €</strong></div>
+      <div class="calc-results">
+        <div class="result" aria-live="polite"><span>Por visita</span><strong id="perVisit">47,40 €</strong></div>
+        <div class="result" aria-live="polite"><span>Mensual equivalente</span><strong id="monthly">52,57 €</strong></div>
+        <div class="result" aria-live="polite"><span>Anual estimado</span><strong id="annual">630,80 €</strong></div>
+      </div>
     </section>
 
     <p>Con los valores iniciales, cada visita incluye dos series de 6 euros. En cada serie se consumen 1,4 cajas de 8 euros y el viaje cuesta 13 euros. El resultado es de 47,40 euros por visita. Al repartir los 62 euros fijos entre doce meses, obtenemos un coste mensual equivalente de 52,57 euros y un coste anual de 630,80 euros. Si se cambia cualquier campo, el navegador actualiza los tres resultados. La palabra «equivalente» es importante. La cuota puede pagarse completa en enero y no poco a poco cada mes. La calculadora muestra un coste medio. Para saber cuándo sale realmente el dinero hace falta un calendario de pagos.</p>
