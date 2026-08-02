@@ -6,15 +6,11 @@ Construido por **Roberto Canales Mora**: [robertocanales.com/proyectos#plato](ht
 
 La aplicación se ejecuta como una página HTML autónoma (`app.html`) y renderiza la escena con `canvas`, sin dependencias externas. Está pensada para iterar rápido sobre la física y la representación visual antes de convertirla, si procede, en un juego completo o una experiencia VR.
 
-**Portada del proyecto:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir Plato en GitHub Pages</a>. La raíz publicada (`index.html`) es ahora una página pedagógica con capturas, manual, fuentes y un botón grande para arrancar el simulador.
+**Portada, manual y documentación:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir Plato en GitHub Pages</a>. La raíz publicada (`index.html`) es la fuente documental única: empieza con un enlace grande al simulador, muestra una captura real de un plato lanzado y reúne manual, fuentes, capturas e infografías.
 
 **Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/app.html" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a los ficheros HTML muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación.
 
-**Manual por capítulos:** <a href="https://rcanalescoder.github.io/Plato/docs/manual/capitulo-01.html" target="_blank" rel="noopener">abrir el manual extendido en GitHub Pages</a>. La documentación larga se divide en 16 capítulos navegables y se genera desde `docs/manual/indice-maestro.md` para poder ampliarla sin mantener una página kilométrica a mano.
-
-**Manual continuo anterior:** <a href="https://rcanalescoder.github.io/Plato/manual.html" target="_blank" rel="noopener">abrir manual.html</a>. Se conserva como versión narrativa de una sola página, pero la estructura principal del proyecto pasa a ser multipágina.
-
-**Documentación técnica breve:** <a href="https://rcanalescoder.github.io/Plato/docs.html" target="_blank" rel="noopener">abrir la documentación técnica en GitHub Pages</a>. Incluye infografías PNG generativas, explicación para tiradores, explicación técnica y bibliografía.
+No hay `docs.html` ni `manual.html` como fuentes paralelas. La documentación viva está consolidada en `index.html`; `app.html` enlaza de vuelta a sus secciones.
 
 ![Vista principal del simulador](docs/screenshots/vista-principal.png)
 
@@ -323,15 +319,12 @@ http://localhost:8000/
 .
 ├── index.html
 ├── app.html
-├── manual.html
-├── docs.html
 ├── README.md
 ├── docs/
 │   ├── assets/       # infografías PNG generativas
-│   ├── manual/       # índice maestro y 16 capítulos HTML
+│   ├── manual-libro/ # assets importados del manual único
 │   └── screenshots/
 ├── scripts/
-│   ├── generate-manual-pages.js
 │   └── verify-schemes.js
 └── auxiliares/        # scripts temporales locales, excluidos de git
 ```
