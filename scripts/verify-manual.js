@@ -105,6 +105,45 @@ if (/(?:experiencia|observaci[oó]n|relato|consejo) (?:de|aportad[oa] por) Rober
   fail("El cuerpo del libro vuelve a hablar de la experiencia de Roberto en tercera persona.");
 }
 
+// Readability guardrail for the main prose. Sources and revision notes contain
+// titles, legal names and URLs that should not be treated as normal sentences.
+const proseHtml = html
+  .replace(/<aside class="sidebar"[\s\S]*?<\/aside>/g, "")
+  .replace(/<ul class="section-sources">[\s\S]*?<\/ul>/g, "")
+  .replace(/<(?:p|aside) class="[^"]*source-note[^"]*">[\s\S]*?<\/(?:p|aside)>/g, "")
+  .replace(/<pre[\s\S]*?<\/pre>/g, "");
+const proseBlocks = [...proseHtml.matchAll(/<(p|figcaption|li|aside)\b[^>]*>([\s\S]*?)<\/\1>/g)]
+  .map(([, , block]) => block
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&(?:#\d+|#x[\da-f]+|\w+);/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim())
+  .filter(Boolean);
+const proseSentences = proseBlocks.flatMap((block) => block
+  .replace(/([.!?][»”"']?)\s+(?=[A-ZÁÉÍÓÚÜÑ¿¡«“"])/g, "$1\n")
+  .split("\n")
+  .map((sentence) => sentence.trim().split(/\s+/).length)
+  .filter((words) => words >= 4));
+const sortedSentenceLengths = [...proseSentences].sort((a, b) => a - b);
+const averageSentenceLength = proseSentences.reduce((sum, words) => sum + words, 0)
+  / Math.max(proseSentences.length, 1);
+const p95SentenceLength = sortedSentenceLengths[Math.floor((sortedSentenceLengths.length - 1) * 0.95)] ?? 0;
+const sentencesOver40Words = proseSentences.filter((words) => words > 40).length;
+const paragraphsOver150Words = proseBlocks.filter((block) => block.split(/\s+/).length > 150).length;
+
+if (averageSentenceLength > 16) {
+  fail(`La frase media tiene ${averageSentenceLength.toFixed(1)} palabras; el máximo editorial es 16.`);
+}
+if (p95SentenceLength > 30) {
+  fail(`El percentil 95 alcanza ${p95SentenceLength} palabras por frase; el máximo editorial es 30.`);
+}
+if (sentencesOver40Words > 15) {
+  fail(`Hay ${sentencesOver40Words} frases de más de 40 palabras; el máximo editorial es 15.`);
+}
+if (paragraphsOver150Words > 0) {
+  fail(`Hay ${paragraphsOver150Words} párrafos de más de 150 palabras.`);
+}
+
 if (failures.length) {
   console.error(`AUDITORÍA DEL MANUAL: ${failures.length} fallo(s)`);
   failures.forEach((message) => console.error(`- ${message}`));
@@ -114,5 +153,6 @@ if (failures.length) {
 console.log(
   `AUDITORÍA DEL MANUAL: OK · ${articles.length} subapartados · `
   + `${imageRefs.length} PNG únicos · ${chapterSummaries} resúmenes de capítulo · `
-  + `${personalNotes.length} comentarios personales diferenciados.`,
+  + `${personalNotes.length} comentarios personales diferenciados · `
+  + `frase media ${averageSentenceLength.toFixed(1)} palabras · P95 ${p95SentenceLength}.`,
 );
