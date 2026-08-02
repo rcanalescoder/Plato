@@ -50,6 +50,9 @@ main{min-width:0}
 .book-chapter p.opening{font-size:1.2rem;line-height:1.76;color:#314139;margin-bottom:20px}
 .book-figure{margin:34px 0 40px;border-radius:8px}
 .book-figure figcaption{font-size:.95rem;background:#fff}
+.micro-figure{max-width:520px;margin:12px 0 26px;border-radius:10px}
+.micro-figure img{background:#fff}
+.micro-figure figcaption{font-size:.84rem;line-height:1.45;padding:10px 12px}
 .book-chapter .screenshot-grid{margin:34px 0}
 .book-chapter .sources-list{margin-top:28px}
 .chapter-close{margin-top:44px;padding:22px 24px;border:1px solid var(--line);border-left:7px solid var(--blue);border-radius:12px;background:linear-gradient(180deg,#fff,#f7faf8)}
