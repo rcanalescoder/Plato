@@ -1,0 +1,100 @@
+#!/usr/bin/env node
+
+/*
+ * Reproducible structural audit for the public Plato book.
+ * It intentionally reads only tracked deliverables: index.html and the PNG
+ * assets referenced by each subsection.
+ */
+
+const crypto = require("node:crypto");
+const fs = require("node:fs");
+const path = require("node:path");
+
+const root = path.resolve(__dirname, "..");
+const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+const failures = [];
+
+function fail(message) {
+  failures.push(message);
+}
+
+const articles = [...html.matchAll(
+  /<article class="book-section"[^>]*id="([^"]+)"[^>]*data-section="(\d+\.\d+)"[^>]*>([\s\S]*?)<\/article>/g,
+)];
+
+if (articles.length !== 204) fail(`Se encontraron ${articles.length}/204 subapartados.`);
+
+const sectionNumbers = [];
+for (const article of articles) {
+  const [, id, number, block] = article;
+  const [chapter, section] = number.split(".").map(Number);
+  const expectedId = `s${String(chapter).padStart(2, "0")}-${String(section).padStart(2, "0")}`;
+  sectionNumbers.push(number);
+
+  if (id !== expectedId) fail(`${number}: id ${id}; se esperaba ${expectedId}.`);
+
+  const plainText = block
+    .replace(/<script[\s\S]*?<\/script>/g, " ")
+    .replace(/<style[\s\S]*?<\/style>/g, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&(?:#\d+|#x[\da-f]+|\w+);/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = plainText ? plainText.split(" ").length : 0;
+  if (words < 350) fail(`${number}: solo ${words} palabras.`);
+
+  const sourceLinks = [...block.matchAll(/<a\s+[^>]*href="https?:\/\/[^\"]+"/g)].length;
+  if (sourceLinks < 2) fail(`${number}: solo ${sourceLinks} fuentes externas enlazadas.`);
+  if (!/Revisi[oó]n:\s*2 de agosto de 2026/i.test(plainText)) fail(`${number}: falta la fecha de revisión.`);
+
+  const bridges = [...block.matchAll(/class="section-bridge"/g)].length;
+  if (bridges !== 1) fail(`${number}: contiene ${bridges} cierres editoriales; se esperaba uno.`);
+
+  const sectionImages = [...block.matchAll(
+    /<img[^>]+src="([^"]*\/subapartados\/[^"]+\.png)"[^>]*>/g,
+  )];
+  if (sectionImages.length !== 1) fail(`${number}: contiene ${sectionImages.length} PNG de subapartado.`);
+}
+
+if (new Set(sectionNumbers).size !== sectionNumbers.length) fail("Hay números de subapartado duplicados.");
+
+const imageRefs = [...html.matchAll(
+  /<img[^>]+src="([^"]*\/subapartados\/[^"]+\.png)"[^>]*>/g,
+)].map((match) => match[1]);
+if (imageRefs.length !== 204) fail(`El libro referencia ${imageRefs.length}/204 PNG de subapartado.`);
+if (new Set(imageRefs).size !== imageRefs.length) fail("Hay rutas PNG reutilizadas.");
+
+const hashes = new Map();
+for (const ref of imageRefs) {
+  const file = path.join(root, ref);
+  if (!fs.existsSync(file)) {
+    fail(`No existe ${ref}.`);
+    continue;
+  }
+  const buffer = fs.readFileSync(file);
+  if (buffer.subarray(1, 4).toString("ascii") !== "PNG") {
+    fail(`${ref} no contiene una firma PNG válida.`);
+    continue;
+  }
+  const width = buffer.readUInt32BE(16);
+  const height = buffer.readUInt32BE(20);
+  if (width !== height || width < 1000) fail(`${ref}: ${width}x${height}; debe ser cuadrada y >=1000 px.`);
+  const hash = crypto.createHash("sha256").update(buffer).digest("hex");
+  if (hashes.has(hash)) fail(`Imagen duplicada: ${ref} y ${hashes.get(hash)}.`);
+  hashes.set(hash, ref);
+}
+
+const chapterSummaries = [...html.matchAll(/class="chapter-summary"/g)].length;
+if (chapterSummaries < 16) fail(`Solo hay ${chapterSummaries}/16 resúmenes de capítulo.`);
+if (/\.svg(?:["')\s]|$)/i.test(html)) fail("El libro referencia un SVG.");
+
+if (failures.length) {
+  console.error(`AUDITORÍA DEL MANUAL: ${failures.length} fallo(s)`);
+  failures.forEach((message) => console.error(`- ${message}`));
+  process.exit(1);
+}
+
+console.log(
+  `AUDITORÍA DEL MANUAL: OK · ${articles.length} subapartados · `
+  + `${imageRefs.length} PNG únicos · ${chapterSummaries} resúmenes de capítulo.`,
+);

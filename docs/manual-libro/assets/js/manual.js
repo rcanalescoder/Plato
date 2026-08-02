@@ -1,6 +1,7 @@
 
 const q = document.querySelector('#search');
 const chapters = [...document.querySelectorAll('.chapter')];
+const readingSections = [...document.querySelectorAll('.chapter[id], .book-section[id]')];
 q?.addEventListener('input', () => {
   const term = q.value.trim().toLowerCase();
   chapters.forEach(ch => {
@@ -27,7 +28,7 @@ const obs=new IntersectionObserver(entries=>{
     }
   });
 },{rootMargin:'-20% 0px -70% 0px'});
-chapters.forEach(ch=>obs.observe(ch));
+readingSections.forEach(section=>obs.observe(section));
 
 function money(n){return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(n||0)}
 function calc(){
@@ -40,10 +41,15 @@ function calc(){
   const travel=v('travel');
   const annualFixed=v('fixed');
   const perVisit=series*court + series*boxes*boxPrice + travel;
-  const monthly=monthlyVisits*perVisit;
-  const annual=monthly*12+annualFixed;
-  document.getElementById('perVisit').textContent=money(perVisit);
-  document.getElementById('monthly').textContent=money(monthly);
-  document.getElementById('annual').textContent=money(annual);
+  const monthlyRecurring=monthlyVisits*perVisit;
+  const monthlyEquivalent=monthlyRecurring+annualFixed/12;
+  const annual=monthlyRecurring*12+annualFixed;
+  const write=(id,value)=>{
+    const output=document.getElementById(id);
+    if(output) output.textContent=money(value);
+  };
+  write('perVisit',perVisit);
+  write('monthly',monthlyEquivalent);
+  write('annual',annual);
 }
 document.querySelectorAll('.calc input').forEach(i=>i.addEventListener('input',calc));calc();
