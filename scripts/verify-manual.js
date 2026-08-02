@@ -94,6 +94,17 @@ const chapterSummaries = [...html.matchAll(/class="chapter-summary"/g)].length;
 if (chapterSummaries < 16) fail(`Solo hay ${chapterSummaries}/16 resúmenes de capítulo.`);
 if (/\.svg(?:["')\s]|$)/i.test(html)) fail("El libro referencia un SVG.");
 
+const personalNotes = [...html.matchAll(/<aside class="personal-note">([\s\S]*?)<\/aside>/g)];
+if (!personalNotes.length) fail("El libro no contiene comentarios personales diferenciados.");
+for (const [, block] of personalNotes) {
+  if (!/^<strong>Comentario personal\.<\/strong>/i.test(block.trim())) {
+    fail("Un comentario personal no utiliza la etiqueta editorial acordada.");
+  }
+}
+if (/(?:experiencia|observaci[oó]n|relato|consejo) (?:de|aportad[oa] por) Roberto|Roberto (?:recuerda|relata|describe|aconseja|observa|aporta|explica)/i.test(html)) {
+  fail("El cuerpo del libro vuelve a hablar de la experiencia de Roberto en tercera persona.");
+}
+
 if (failures.length) {
   console.error(`AUDITORÍA DEL MANUAL: ${failures.length} fallo(s)`);
   failures.forEach((message) => console.error(`- ${message}`));
@@ -102,5 +113,6 @@ if (failures.length) {
 
 console.log(
   `AUDITORÍA DEL MANUAL: OK · ${articles.length} subapartados · `
-  + `${imageRefs.length} PNG únicos · ${chapterSummaries} resúmenes de capítulo.`,
+  + `${imageRefs.length} PNG únicos · ${chapterSummaries} resúmenes de capítulo · `
+  + `${personalNotes.length} comentarios personales diferenciados.`,
 );
