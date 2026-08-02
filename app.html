@@ -46,8 +46,30 @@
     main {
       height: 100dvh;
       display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
       overflow: hidden;
+    }
+
+    .project-beta {
+      padding: 5px 10px;
+      border-bottom: 1px solid rgba(255,190,110,.36);
+      background: #2b2118;
+      color: #f8e8d3;
+      font-size: 11px;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .project-beta strong {
+      margin-right: 6px;
+      color: #ffb55f;
+      text-transform: uppercase;
+    }
+
+    .project-beta a {
+      margin-left: 5px;
+      color: #fff;
+      font-weight: 700;
     }
 
     .toolbar {
@@ -366,7 +388,7 @@
 
     @media (max-width: 1040px) {
       main {
-        grid-template-rows: auto minmax(220px, 1fr) auto;
+        grid-template-rows: auto auto minmax(220px, 1fr) auto;
       }
 
       .toolbar {
@@ -413,7 +435,7 @@
 
     @media (max-width: 560px) {
       main {
-        grid-template-rows: auto minmax(210px, 1fr) auto;
+        grid-template-rows: auto auto minmax(210px, 1fr) auto;
       }
 
       .toolbar {
@@ -441,6 +463,7 @@
 </head>
 <body>
   <main>
+    <aside class="project-beta" aria-label="Aviso de proyecto en beta"><strong>Proyecto en beta</strong>El libro y el simulador están pendientes de revisión. Se comparten para que cualquiera pueda ayudar a mejorarlos.<a href="mailto:rcanalesmora@gmail.com">rcanalesmora@gmail.com</a></aside>
     <section class="toolbar" aria-label="Controles principales">
       <div class="button-row">
         <button class="primary" id="callBtn" type="button" title="Solicita un nuevo plato. Tambien puedes pedirlo con el boton derecho del raton.">Pedir plato</button>
