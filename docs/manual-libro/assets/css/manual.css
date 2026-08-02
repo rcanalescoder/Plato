@@ -69,7 +69,7 @@ main{min-width:0}
 .technical-note{border-left-color:#1f5f93;background:#f2f7fb}
 .source-note{border-left-color:#6b7280;background:#f7f7f8;font-size:.92rem;color:var(--muted)}
 .source-note a{overflow-wrap:anywhere}
-.book-chapter .section-bridge{max-width:72ch;margin:30px 0 22px;padding:17px 0 0;border-top:1px solid #d4ded7;color:#3f5549;font-size:1rem;line-height:1.72;font-style:italic}
+.book-chapter .section-bridge{max-width:76ch;margin:10px 0 24px;padding:14px 17px;border-left:4px solid var(--green);border-radius:0 6px 6px 0;background:#f3f8f4;color:#31483b;font-size:1rem;line-height:1.72}
 .section-sources{margin:24px 0 10px;padding:15px 18px 15px 38px;border:1px solid var(--line);border-radius:8px;background:#fafcfb;color:var(--muted);font-size:.9rem;line-height:1.55}
 .section-sources::before{content:"Fuentes y revisión · 2 agosto 2026";display:block;margin:0 0 8px -20px;color:var(--ink);font-weight:900}
 .section-sources li{margin:6px 0}
@@ -104,9 +104,10 @@ main{min-width:0}
 .source-box{margin-top:20px;padding:16px;border-left:5px solid var(--green);background:#f0f8f1}
 .screenshot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .screenshot-grid figure{margin:0}
-.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:18px}
-.calc label{display:grid;gap:6px;font-weight:750}
-.calc input{padding:9px;border:1px solid #bfcac2;border-radius:8px;font:inherit}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:12px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:18px}
+.calc label{display:grid;gap:6px;min-width:0;font-weight:750}
+.calc input{width:100%;min-width:0;padding:9px;border:1px solid #bfcac2;border-radius:8px;font:inherit}
+.calc>div{min-width:0;overflow-wrap:anywhere}
 .result{font-size:1.35rem;font-weight:900;color:var(--blue)}
 .sources-list{display:grid;gap:12px}
 .source-item{border:1px solid var(--line);padding:14px;border-radius:10px}

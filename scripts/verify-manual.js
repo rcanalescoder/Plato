@@ -48,7 +48,13 @@ for (const article of articles) {
   if (!/Revisi[oó]n:\s*2 de agosto de 2026/i.test(plainText)) fail(`${number}: falta la fecha de revisión.`);
 
   const bridges = [...block.matchAll(/class="section-bridge"/g)].length;
-  if (bridges !== 1) fail(`${number}: contiene ${bridges} cierres editoriales; se esperaba uno.`);
+  if (bridges !== 1) fail(`${number}: contiene ${bridges} puentes de entrada; se esperaba uno.`);
+  const headingEnd = block.indexOf("</h3>");
+  const bridgeIndex = block.indexOf('class="section-bridge"');
+  const leadIndex = block.indexOf('class="section-lead"');
+  if (headingEnd < 0 || bridgeIndex < headingEnd || (leadIndex >= 0 && bridgeIndex > leadIndex)) {
+    fail(`${number}: el puente no abre el apartado inmediatamente después del título.`);
+  }
 
   const sectionImages = [...block.matchAll(
     /<img[^>]+src="([^"]*\/subapartados\/[^"]+\.png)"[^>]*>/g,
