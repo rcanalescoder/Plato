@@ -113,6 +113,10 @@ main{min-width:0}
 .result{font-size:1.35rem;font-weight:900;color:var(--blue)}
 .sources-list{display:grid;gap:12px}
 .source-item{border:1px solid var(--line);padding:14px;border-radius:10px}
+code{overflow-wrap:anywhere;word-break:break-word}
+pre{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.book-chapter table{width:100%;border-collapse:collapse}
+.book-chapter th,.book-chapter td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}
 mark{background:#fff0a6}
 footer{border-top:1px solid var(--line);padding:35px 18px;color:var(--muted)}
 footer>div{max-width:var(--max);margin:auto}
@@ -122,6 +126,7 @@ footer>div{max-width:var(--max);margin:auto}
  .hero-inner{padding-top:42px}
  .layout{grid-template-columns:1fr}.sidebar{position:static;border-right:0;border-bottom:1px solid var(--line);max-height:none;padding:0 0 18px}
  .search{min-width:150px;max-width:45vw}
+ .book-chapter table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 }
 @media print{
  .top,.sidebar,.layer-tabs{display:none!important}.layout{display:block;padding:0}.layer{display:block!important}

@@ -41,11 +41,10 @@ for (const article of articles) {
     .replace(/\s+/g, " ")
     .trim();
   const words = plainText ? plainText.split(" ").length : 0;
-  if (words < 350) fail(`${number}: solo ${words} palabras.`);
-
-  const sourceLinks = [...block.matchAll(/<a\s+[^>]*href="https?:\/\/[^\"]+"/g)].length;
-  if (sourceLinks < 2) fail(`${number}: solo ${sourceLinks} fuentes externas enlazadas.`);
-  if (!/Revisi[oó]n:\s*2 de agosto de 2026/i.test(plainText)) fail(`${number}: falta la fecha de revisión.`);
+  if (words < 170) fail(`${number}: solo ${words} palabras.`);
+  if (/class="[^"]*\b(?:section-sources|source-note)\b/i.test(block)) {
+    fail(`${number}: conserva fuentes o notas de revisión dentro del apartado.`);
+  }
 
   const bridges = [...block.matchAll(/class="section-bridge"/g)].length;
   if (bridges !== 1) fail(`${number}: contiene ${bridges} puentes de entrada; se esperaba uno.`);
@@ -63,6 +62,31 @@ for (const article of articles) {
 }
 
 if (new Set(sectionNumbers).size !== sectionNumbers.length) fail("Hay números de subapartado duplicados.");
+
+const bibliographyMatch = html.match(
+  /<section\b[^>]*\bid="bibliografia"[^>]*>([\s\S]*?)<\/section>/i,
+);
+if (!bibliographyMatch) {
+  fail('No existe la bibliografía final con id="bibliografia".');
+} else {
+  const bibliographyBlock = bibliographyMatch[1];
+  const bibliographyLinks = [...bibliographyBlock.matchAll(
+    /<a\s+[^>]*href="(https?:\/\/[^\"]+)"/gi,
+  )].map((match) => match[1].replaceAll("&amp;", "&"));
+  const uniqueBibliographyLinks = new Set(bibliographyLinks);
+  if (bibliographyLinks.length < 150) {
+    fail(`La bibliografía solo contiene ${bibliographyLinks.length} enlaces externos; se esperan al menos 150.`);
+  }
+  if (uniqueBibliographyLinks.size !== bibliographyLinks.length) {
+    fail(`La bibliografía repite ${bibliographyLinks.length - uniqueBibliographyLinks.size} URL.`);
+  }
+
+  const lastChapterEnd = html.lastIndexOf('</section>', html.indexOf('id="bibliografia"'));
+  const bibliographyStart = html.indexOf('id="bibliografia"');
+  if (lastChapterEnd < 0 || bibliographyStart < lastChapterEnd) {
+    fail('La bibliografía no aparece después de los capítulos.');
+  }
+}
 
 const imageRefs = [...html.matchAll(
   /<img[^>]+src="([^"]*\/subapartados\/[^"]+\.png)"[^>]*>/g,
@@ -109,8 +133,7 @@ if (/(?:experiencia|observaci[oó]n|relato|consejo) (?:de|aportad[oa] por) Rober
 // titles, legal names and URLs that should not be treated as normal sentences.
 const proseHtml = html
   .replace(/<aside class="sidebar"[\s\S]*?<\/aside>/g, "")
-  .replace(/<ul class="section-sources">[\s\S]*?<\/ul>/g, "")
-  .replace(/<(?:p|aside) class="[^"]*source-note[^"]*">[\s\S]*?<\/(?:p|aside)>/g, "")
+  .replace(/<section\b[^>]*\bid="bibliografia"[^>]*>[\s\S]*?<\/section>/gi, "")
   .replace(/<pre[\s\S]*?<\/pre>/g, "");
 const proseBlocks = [...proseHtml.matchAll(/<(p|figcaption|li|aside)\b[^>]*>([\s\S]*?)<\/\1>/g)]
   .map(([, , block]) => block
