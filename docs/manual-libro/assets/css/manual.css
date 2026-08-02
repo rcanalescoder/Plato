@@ -52,6 +52,14 @@ main{min-width:0}
 .book-figure figcaption{font-size:.95rem;background:#fff}
 .book-chapter .screenshot-grid{margin:34px 0}
 .book-chapter .sources-list{margin-top:28px}
+.chapter-close{margin-top:44px;padding:22px 24px;border:1px solid var(--line);border-left:7px solid var(--blue);border-radius:12px;background:linear-gradient(180deg,#fff,#f7faf8)}
+.chapter-close h3{margin:0 0 12px!important;font-size:1.28rem!important;color:var(--blue)}
+.chapter-close ul{margin:0 0 16px;padding-left:22px}
+.chapter-close li{margin:7px 0;font-size:1.02rem;line-height:1.58}
+.chapter-close .expert-note{margin:18px 0 0;padding:15px 16px;border-radius:10px;background:#eef6ef;color:#203127;font-size:1rem;line-height:1.68}
+.chapter-close .expert-note strong{color:var(--green)}
+.final-conclusions{border-bottom:0}
+.final-conclusions .chapter-close{border-left-color:var(--orange);background:linear-gradient(180deg,#fff,#fff8f3)}
 .layer-tabs{display:flex;gap:8px;margin:18px 0 12px;flex-wrap:wrap}
 .layer-tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 14px;font-weight:800;cursor:pointer}
 .layer-tabs button.active{background:var(--ink);color:#fff}
