@@ -1,6 +1,6 @@
 # Plato
 
-Simulador 3D en HTML para estudiar el tiro al plato desde la perspectiva real del ojo del tirador. El objetivo no es inventar un juego abstracto, sino construir un laboratorio visual de física aplicada: salida del plato, velocidad, ángulo, reacción del tirador, adelanto, dispersión del cartucho y corrección tras el primer y segundo tiro.
+Simulador 3D en HTML para estudiar el tiro al plato desde la perspectiva real del ojo del tirador. El objetivo no es inventar un juego abstracto, sino construir un laboratorio visual de física aplicada: salida del plato, velocidad, ángulo, respuesta humana, adelanto, dispersión del cartucho y corrección tras el primer y segundo tiro.
 
 Construido por **Roberto Canales Mora**: [robertocanales.com/proyectos#plato](https://robertocanales.com/proyectos#plato). Licencia: [MIT](#14-licencia).
 
@@ -8,7 +8,7 @@ La aplicación se ejecuta como una página HTML autónoma (`app.html`) y renderi
 
 **Portada, manual y documentación:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir Plato en GitHub Pages</a>. La raíz publicada (`index.html`) es la fuente documental única: empieza con un enlace grande al simulador, muestra una captura real de un plato lanzado y reúne manual, fuentes, capturas e infografías.
 
-El manual está planteado como un libro continuo para tiradores que empiezan y para lectores expertos. Cada capítulo desarrolla una idea con prosa pedagógica, cada subapartado incorpora una microinfografía PNG generativa propia, el capítulo remata con una infografía PNG de síntesis, cierra con un resumen de lo aprendido y añade una nota de lectura experta para instructores, técnicos o personas vinculadas a federaciones. El cierre final sintetiza conclusiones útiles y líneas futuras de validación.
+El manual está planteado como un libro continuo para tiradores que empiezan y para lectores expertos. Sus 204 subapartados desarrollan una idea con prosa pedagógica, una infografía PNG generativa propia, fuentes fechadas, un caso práctico y una lectura técnica. Cada capítulo cierra con un resumen de lo aprendido y el cierre final sintetiza conclusiones útiles y líneas futuras de validación.
 
 **Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/app.html" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a los ficheros HTML muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación.
 
@@ -16,13 +16,28 @@ No hay `docs.html` ni `manual.html` como fuentes paralelas. La documentación vi
 
 ![Vista principal del simulador](docs/screenshots/vista-principal.png)
 
+## Método Editorial Del Libro
+
+La unidad de investigación no es el capítulo completo, sino cada uno de los 204 subapartados. El proceso aplicado a cada unidad exige:
+
+1. Formular la duda real que debe poder resolver el lector.
+2. Investigar fuentes adecuadas a la materia: normativa, federaciones, documentación técnica, fabricantes, literatura científica, clubes o código del simulador.
+3. Separar expresamente hechos comprobados, variaciones territoriales o deportivas, experiencia práctica y simplificaciones del modelo.
+4. Explicar primero el concepto con lenguaje accesible y abrir después una capa técnica verificable.
+5. Desarrollar un caso, una situación de cancha o un ejercicio concreto.
+6. Incorporar una infografía generativa PNG exclusiva, cuadrada y de fondo blanco; ninguna ruta ni imagen se reutiliza entre apartados.
+7. Mostrar las fuentes y la fecha de revisión junto al texto que sostienen.
+8. Revisar continuidad, contradicciones y enlaces con el resto del libro.
+
+La validación automática comprueba que existen exactamente 204 artículos y 204 PNG distintos, que cada imagen es un PNG cuadrado de al menos 1000 px, que cada apartado tiene extensión sustantiva, fuentes visibles, fecha de revisión, texto alternativo específico y su imagen contractual. La revisión editorial añade la comprobación humana de prosa, utilidad pedagógica y coherencia científica.
+
 ## 1. Alcance
 
 El simulador representa una tirada de 25 platos en tres modalidades:
 
 - **Foso universal**: cinco máquinas dentro de una zanja. El señuelo naranja está centrado sobre la máquina 3 e indica el punto de salida del plato cuando la máquina está ajustada a cero grados.
 - **Foso olímpico**: quince máquinas agrupadas en cinco puestos. En este modo el señuelo activo se desplaza delante del puesto del tirador y los otros posibles señuelos se muestran en gris.
-- **Robot**: una única máquina oscilante/programable, inspirada en wobble trap, Automatic Ball Trap y tiradas populares con máquina robot. Puede trabajar con preset compatible ABT o con presets no normativos de feria/popular. El tirador también rota por los cinco puestos, igual que en una tirada completa.
+- **Robot**: una única máquina oscilante/programable. Incluye ABT CPSA 2026 y Trap1 FITASC 2025 como perfiles reglados separados, además de tres modelos populares no normativos. El tirador también rota por los cinco puestos.
 
 El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m de altura. La escopeta no se dibuja como un objeto externo; el usuario ve el punto de mira rojo y, cuando hay ganancia de solista, un punto traslúcido que indica cómo sube el punto efectivo de impacto.
 
@@ -82,14 +97,14 @@ La implementación toma como guía normas y tablas oficiales, pero no pretende s
 
 - **Foso universal FITASC**: cinco máquinas dentro de la zanja, puestos a 15 m del borde delantero del foso y un plato/señuelo sobre la máquina 3 para indicar la salida a 0 grados. Las máquinas se modelan sobre bases alineadas, separadas 1,10 m, con el pivote aproximadamente 0,50 m bajo el techo del foso y 0,50 m retrasado del borde delantero.
 - **Esquemas universal**: se modelan diez esquemas (`fu1` a `fu10`) con ángulos laterales de -45 a +45 grados, alturas de 1,5 a 3,5 m y distancias de 60 a 75 m.
-- **Foso olímpico ISSF**: quince máquinas agrupadas en cinco grupos de tres, uno por cada puesto; se modelan nueve esquemas (`issf1` a `issf9`) con distancia objetivo de 76 m.
-- **Robot / Wobble / ABT**: se añade como modalidad de entrenamiento no estrictamente federativa. El preset `Robot ABT` usa rangos compatibles con Automatic Ball Trap: alturas de 1,5-3,5 m a 10 m, ángulos amplios y alcance alrededor de 75 m. Los presets populares pueden superar esos márgenes y se etiquetan como `No normativo`.
+- **Foso olímpico ISSF**: quince máquinas agrupadas en cinco grupos de tres; se transcriben las diez tablas (`issf1` a `issf10`) de la segunda impresión ISSF 2026 y se usa la distancia objetivo de 76 ±1 m.
+- **Robot / ABT / Trap1**: `ABT CPSA 2026` usa 70 ±1 m, sector de ±30° y altura de 1,5-3,5 m a 10 m. `Trap1 FITASC 2025` usa 50 ±2 m, sector recomendado de ±22° y altura de 1,7-2,7 m en la instalación modelada. Los presets de feria circular, popular extremo y pseudoaleatorio se etiquetan como `Modelo no normativo`.
 - **Plato**: se representa como disco naranja macizo con forma escalonada, aproximando el plato real de 110 mm de diámetro y 25-26 mm de altura descrito en reglas técnicas ISSF.
 
 Fuentes consultadas:
 
-- [FITASC, International Rules Universal Trench 2025](https://www.fitasc.com/upload/images/reglements/2025_rglt_fu_eng.pdf)
-- [ISSF, Rules](https://www.issf-sports.org/rules)
+- [FITASC, International Rules Universal Trench 2025](https://api.fitasc.com/media/2025-rglt-fu-eng-6825cd1e3ae7b895386562.pdf)
+- [ISSF Rule Book 2026, segunda impresión](https://backoffice.issf-sports.org/getfile.aspx?file=ISSF-Rule-Book-2026-Edition-2025-Second-Print-07-2026-Effective-1-July-2026.pdf&inst=455&mod=docf&pane=1)
 - [ISSF technical target dimensions, PDF federativo](https://www.asia-shooting.org/wp-content/uploads/2023/01/ISSF_Technical_Rules_Draft_01.01.2023-6.pdf)
 - [USA Shooting / ISSF General Technical Rules, referencia de puestos y foso](https://usashooting.org/app/uploads/2022/04/2013_USAS_GTR.pdf)
 - [RIO Star Team EVO Training, ficha comercial](https://centerfiresystems.com/collections/ammunition-shotshells/products/rio-ammunition-star-team-evo-training-12-gauge-2-75-1-1-8-oz-7-5-shot-box-or-case)
@@ -98,7 +113,8 @@ Fuentes consultadas:
 - [Beretta, guia de seleccion de choke](https://www.beretta.com/en-us/blog/how-to-choose-the-right-shotgun-choke-tube)
 - [Hunter-ed, Shotgun Choke and Shot String](https://www.hunter-ed.com/national/studyGuide/Shotgun-Choke-and-Shot-String/201099_92847/)
 - [NRA, Shotshell Ballistics, PDF](https://rangeservices.nra.org/media/4074/shotshell-ballistics.pdf)
-- [CPSA, reglas Automatic Ball Trap / Wobble, Booklet 7](https://www.cpsa.co.uk/userfiles/files/CPSA_Booklet_7.pdf)
+- [CPSA Booklet 1, Rules 2026, Automatic Ball Trap](https://www.cpsa.co.uk/files/download/2644/CPSA-Booklet-1---Rules-26.pdf)
+- [FITASC, Trap1 2025](https://api.fitasc.com/media/2025-rglt-trap1-eng-6825cd64b76c7218197857.pdf)
 - [White Flyer, Shotgun Disciplines](https://whiteflyer.com/resources/shotgun-disciplines/)
 - [Promatic Super Sporter 8 Wobble](https://www.promaticus.com/product-page/super-sporter-8-wobble)
 - [Laporte American Trap](https://www.laporte.biz/en/our-traps/american-trap/)
@@ -127,13 +143,13 @@ La velocidad inicial no se elige al azar. Para cada fila de esquema reglado se r
 - altura exigida a 10 m;
 - distancia de caída del esquema: 60-75 m en Universal y 76 m en Olímpico.
 
-En modalidad **Robot**, cada fila también se expresa como ángulo, altura a 10 m y alcance. La diferencia es conceptual: `Robot ABT` se trata como compatible con ABT, mientras que `Robot feria circular`, `Robot popular extremo` y `Robot pseudoaleatorio` son intencionadamente no normativos. Sus controles modifican las filas base:
+En modalidad **Robot**, ABT y Trap1 generan posiciones continuas dentro de sus límites; los tres modelos populares recorren o sortean filas. Sus controles modifican la configuración base:
 
 - `Robot fuerza`: multiplica el alcance, como apretar o aflojar el muelle.
 - `Robot altura`: modifica la altura a 10 m, como cambiar la inclinación de la lanzadora.
 - `Robot lateral`: multiplica el ángulo horizontal, como abrir o cerrar el barrido.
 
-La banda superior muestra `Compatible ABT` o `No normativo` para que quede claro cuándo se está entrenando una situación de pueblo/feria y no una referencia federativa.
+La banda superior muestra `Dentro de límites`, `Fuera de límites` o `Modelo no normativo`. Universal y Olímpico usan `Cumple tabla oficial` cuando el lanzamiento reproduce la fila correspondiente.
 
 En la parte superior de la escena aparece una banda de verificación con velocidad inicial, ángulo, altura real a 10 m, alcance calculado y un check de cumplimiento. Si el viento está activado, la banda indica que la validación corresponde al ajuste base de máquina sin viento.
 
@@ -155,9 +171,9 @@ El repositorio incluye una prueba sin dependencias para auditar todos los esquem
 node scripts/verify-schemes.js
 ```
 
-La prueba recorre 185 lanzamientos teóricos: 50 de Universal y 135 de Olímpico. Falla si alguna fila no reproduce su altura a 10 m o si el alcance se sale de tolerancia: ±5 m para Universal y ±1 m para Olímpico.
+La prueba compara primero las tablas extraídas de `app.html` con fixtures reglamentarios independientes y después recorre 200 lanzamientos: 50 de Universal y 150 de Olímpico. Falla si una fila difiere de su fuente o si la física no reproduce altura y alcance. También comprueba metadatos y límites de ABT CPSA y Trap1 FITASC.
 
-Esta prueba es importante porque evita que un cambio visual rompa la física normativa sin que se note. La aplicación muestra arriba los mismos conceptos que audita el test: velocidad inicial, máquina, ángulo, altura a 10 m, alcance y tiempo de vuelo. El texto `Cumple normativa` no es decorativo: sale de recalcular la trayectoria del plato actual contra los valores de su esquema.
+Esta prueba evita que una edición rompa las tablas o su geometría sin que se note. La aplicación muestra arriba los mismos conceptos que audita el test: velocidad de modelo, máquina, ángulo, altura a 10 m, alcance y tiempo de vuelo. `Cumple tabla oficial` es una verificación de software, no una homologación de cancha.
 
 Los esquemas están definidos como datos dentro del propio `app.html`. Para añadir o revisar una tabla, el flujo correcto es:
 
@@ -232,17 +248,26 @@ El objetivo no es representar una simulación CFD completa del taco, el rozamien
 
 ### 7.2. Impacto Físico
 
-Cada disparo genera direcciones individuales para todos los perdigones. Para cada perdigón se simula su trayectoria, su pérdida de velocidad y su energía. La comprobación geométrica exige que pase a menos de 7,5 cm del centro del plato:
+Cada disparo genera direcciones individuales para todos los perdigones. Para cada uno se simulan trayectoria, pérdida de velocidad y energía relativa al plato. La comprobación geométrica usa un radio de 5,5 cm, correspondiente al plato de 110 mm:
 
 ```text
 px(t) = ojo.x + dir.x * distancia_perdigon(t)
-py(t) = ojo.y + dir.y * distancia_perdigon(t) - 0.5*g*0.08*t^2
+py(t) = ojo.y + dir.y * distancia_perdigon(t) - 0.5*g*t_local^2
 pz(t) = ojo.z + dir.z * distancia_perdigon(t)
 ```
 
 El plato se rompe solo si algún perdigón intersecta físicamente su volumen simplificado y llega con energía suficiente. Por eso se puede apuntar cerca del área ideal y fallar: la nube tiene dispersión, el plato se mueve, el usuario puede quedar ligeramente retrasado/adelantado/alto/bajo, y además el perdigón puede llegar ya sin fuerza de rotura. Cuando el simulador indica `Roto borde`, significa que el centro del plomeo no iba perfectamente centrado, pero un perdigón periférico alcanzó el plato con energía suficiente. Cuando indica `Toque flojo`, hubo contacto geométrico por debajo del umbral de rotura.
 
-La comprobación de impacto usa un paso temporal fino (`0,0007 s`) para evitar que un perdigón rápido salte de un lado a otro del plato entre dos muestras sin registrar la colisión. El intervalo máximo de evaluación se amplía para permitir tiros más largos, pero la energía residual limita la rotura efectiva.
+La integración avanza en intervalos de `0,0007 s`, pero no se limita a comparar sus extremos: calcula la máxima aproximación del movimiento relativo dentro de cada segmento. Así un perdigón rápido no puede saltarse el plato entre muestras. El volumen se simplifica como una esfera y el umbral de `0,55 J` no está calibrado contra un lote real.
+
+La auditoría determinista se ejecuta con:
+
+```bash
+node scripts/verify-ballistics.js
+node scripts/verify-manual.js
+```
+
+Comprueba centro, borde a 55 mm, exterior a 56 mm, energía insuficiente, alcance efectivo, diferencia entre chokes, variación sembrada, equivalencia entre cámara lenta y tiempo real, ganancia de solista, guía amarilla y separación entre tiro 1 y tiro 2.
 
 ## 8. Corrección Tras el Tiro
 
@@ -327,13 +352,17 @@ http://localhost:8000/
 │   ├── manual-libro/ # assets importados del manual único
 │   └── screenshots/
 ├── scripts/
-│   └── verify-schemes.js
+│   ├── verify-schemes.js
+│   ├── verify-ballistics.js
+│   └── verify-manual.js
 └── auxiliares/        # scripts temporales locales, excluidos de git
 ```
 
 ## 14. Licencia
 
-Este proyecto se publica bajo licencia MIT.
+Este proyecto se publica bajo licencia MIT. El texto canónico está en [`LICENSE`](LICENSE) y su traducción informativa al castellano en [`LICENCIA_ES.md`](LICENCIA_ES.md).
+
+Salvo que un archivo indique expresamente otra procedencia o licencia, este alcance comprende el código fuente, la documentación original, las capturas del simulador y las infografías PNG creadas para Plato. Las fuentes externas enlazadas se citan como bibliografía y conservan sus propios derechos; no se redistribuyen como si fueran obra del proyecto.
 
 Copyright (c) 2026 Roberto Canales Mora
 
