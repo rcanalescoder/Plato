@@ -20,10 +20,12 @@ Convertir la documentacion del simulador en un manual pedagogico de alto nivel, 
 
 ## Estructura Actual
 
-- `manual.html`: manual avanzado editorial.
-- `docs.html`: documentacion tecnica breve.
-- `index.html`: simulador.
-- `docs/assets/manual-*.png`: infografias PNG generativas horizontales.
+- `index.html`: fuente documental unica, portada del proyecto, manual completo, indice, fuentes, capturas e infografias.
+- `app.html`: simulador interactivo. La aplicacion enlaza de vuelta a secciones concretas de `index.html`.
+- `docs/manual-libro/assets/`: infografias, capturas, CSS y JS importados del paquete editorial.
+- `docs/assets/` y `docs/screenshots/`: assets historicos reutilizables cuando aporten valor.
+
+No debe reintroducirse una documentacion paralela en `docs.html`, `manual.html` o capitulos HTML separados salvo que el usuario cambie explicitamente la arquitectura. La fuente de verdad editorial es `index.html`.
 
 ## Capítulos Que Conviene Ampliar
 
