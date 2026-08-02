@@ -8,7 +8,7 @@ La aplicación se ejecuta como una página HTML autónoma (`app.html`) y renderi
 
 **Portada, manual y documentación:** <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">abrir Plato en GitHub Pages</a>. La raíz publicada (`index.html`) es la fuente documental única: empieza con un enlace grande al simulador, muestra una captura real de un plato lanzado y reúne manual, fuentes, capturas e infografías.
 
-El manual está planteado como un libro continuo para tiradores que empiezan y para lectores expertos. Cada capítulo desarrolla una idea con prosa pedagógica, remata con una infografía PNG generativa distinta, cierra con un resumen de lo aprendido y añade una nota de lectura experta para instructores, técnicos o personas vinculadas a federaciones. El cierre final sintetiza conclusiones útiles y líneas futuras de validación.
+El manual está planteado como un libro continuo para tiradores que empiezan y para lectores expertos. Cada capítulo desarrolla una idea con prosa pedagógica, cada subapartado incorpora una microinfografía PNG generativa propia, el capítulo remata con una infografía PNG de síntesis, cierra con un resumen de lo aprendido y añade una nota de lectura experta para instructores, técnicos o personas vinculadas a federaciones. El cierre final sintetiza conclusiones útiles y líneas futuras de validación.
 
 **Probar la aplicación:** <a href="https://rcanalescoder.github.io/Plato/app.html" target="_blank" rel="noopener">abrir el simulador en GitHub Pages</a>. En GitHub, el enlace directo a los ficheros HTML muestra el código; GitHub Pages es la URL publicada que ejecuta la aplicación.
 
