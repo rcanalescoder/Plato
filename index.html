@@ -267,7 +267,6 @@
   <p>La dificultad está en que el blanco no espera. Mientras el tirador lo ve, decide y mueve la escopeta, el plato sigue avanzando. También avanzan y se abren los perdigones. Por eso <strong>no basta con apuntar al lugar donde está el plato</strong>: hay que buscar el punto en el que ambos movimientos se encontrarán.</p>
   <p>La experiencia ayuda a coordinar mirada, cuerpo y arma. No hace falta una vista extraordinaria. Los expertos destacan sobre todo por organizar mejor la tarea y mantener un movimiento estable.</p>
 
-  <aside class="technical-note"><strong>Capa técnica.</strong> Una descripción mínima del encuentro necesita dos estados que cambian con el tiempo: la posición del plato y la posición del plomeo. El plomeo es la nube que forman los perdigones al avanzar y abrirse. El acierto solo es posible cuando ambos volúmenes se solapan con condiciones suficientes de impacto. El modelo puede representar esa relación. No puede reproducir por sí solo el encare, el retroceso, la presión competitiva ni la manipulación segura de un arma real.</aside>
 </article>
 
   <article class="book-section" id="s01-02" data-section="1.2">
@@ -283,7 +282,6 @@
   <p>Antes del plato actual se probaron blancos de vidrio y otros diseños. En 1882, George Ligowsky patentó un disco cóncavo y frágil pensado para girar, volar y romperse. La patente no demuestra que fuera el único inventor, pero sí muestra que ya se estudiaban la forma, la rotación y la rotura.</p>
   <p>La gran evolución fue unir el blanco con máquinas repetibles, campos medidos y reglas comunes. La organización que hoy conocemos como ISSF nació en 1907 y FITASC adoptó su nombre actual en 1938. El tiro de escopeta a blancos voladores apareció en el entorno olímpico de 1900, aunque aquellas pruebas no eran iguales al Trap moderno. <strong>El deporte actual es el resultado de una evolución técnica y reglamentaria</strong>.</p>
 
-  <aside class="technical-note"><strong>Capa técnica.</strong> La rotación estabiliza la orientación del disco. Su geometría modifica el flujo de aire. La patente histórica formulaba ese objetivo en términos mecánicos, pero no es un modelo aerodinámico moderno. Este manual tratará la sustentación y el arrastre como fenómenos que deben validarse. No los presentará como una explicación cerrada derivada de una patente.</aside>
 </article>
 
   <article class="book-section" id="s01-03" data-section="1.3">
@@ -300,7 +298,6 @@
   <p>El club aplica las normas en la vida diaria: acceso, horarios, supervisión y uso de las canchas. Puede ofrecer formación, entrenamientos, competiciones y tiradas sociales. No son lo mismo. Cambian la documentación, la puntuación y el reglamento, pero <strong>la seguridad y las autorizaciones siempre son obligatorias</strong>.</p>
 
   <aside class="personal-note"><strong>Comentario personal.</strong> Mi experiencia en La Bastida, Toledo, me mostró que el propio campo puede ser una puerta de entrada. Conocer las instalaciones, hablar con personas de la federación y buscar formación ayuda a ordenar los primeros pasos. Es un ejemplo territorial, no un procedimiento nacional. Cada comunidad, club, licencia y convocatoria puede introducir requisitos propios. El capítulo 2 reconstruirá ese recorrido con normativa administrativa y federativa específica.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> La organización deportiva funciona también como sistema de control de versiones. Una simulación que afirme representar una modalidad debe indicar organismo, edición de reglas, esquema y excepciones nacionales. «Trap» sin versión ni alcance es una etiqueta insuficiente para validar parámetros.</aside>
 </article>
 
   <article class="book-section" id="s01-04" data-section="1.4">
@@ -316,7 +313,6 @@
   <p>En Skeet, los platos salen de dos casetas laterales y cruzan trayectorias conocidas. En Sporting y Compak Sporting, varias máquinas presentan vuelos muy distintos: cruces, entradas, salidas y otros recorridos.</p>
   <p>El Doble Trap lanza dos blancos a la vez y ya no forma parte del programa olímpico actual. Las máquinas robotizadas pueden seguir un reglamento o una configuración local. Por eso <strong>«robot» describe una máquina, no una modalidad universal</strong>.</p>
 
-  <aside class="technical-note"><strong>Capa técnica.</strong> Para un simulador, una modalidad no debería ser solo un nombre de menú. Es un conjunto de restricciones: posiciones de lanzamiento, distribución de ángulos, condición de altura o alcance, secuencia, número de disparos y reglas de validez. Los presets de Plato son modelos documentados y no certificados de una cancha.</aside>
 </article>
 
   <article class="book-section" id="s01-05" data-section="1.5">
@@ -332,7 +328,6 @@
   <p>La idea básica puede resumirse así: <code>adelanto = velocidad del plato × tiempo hasta el encuentro</code>. Es una simplificación, porque el plato pierde velocidad, sube y baja, y los perdigones también frenan y se dispersan. Aun así, explica por qué <strong>el disparo debe dirigirse a una posición futura</strong>.</p>
   <p>Un fallo tampoco deja una marca como una diana. El tirador puede haberse quedado detrás o bajo, haber frenado la escopeta o levantado la cabeza. Antes de corregir hay que descubrir cuál de esos pasos falló.</p>
 
-  <aside class="technical-note"><strong>Capa técnica.</strong> Un modelo serio separa, como mínimo, trayectoria del plato, orientación del disparo, propagación y dispersión del plomeo, instante de disparo y criterio de contacto. La fórmula lineal anterior es pedagógica. No reemplaza la integración con gravedad, arrastre, rotación, viento y distribución tridimensional.</aside>
 </article>
 
   <article class="book-section" id="s01-06" data-section="1.6">
@@ -349,7 +344,6 @@
   <p>La repetición de entrenamiento no debe confundirse con un plato nulo de competición. Tampoco crea una receta válida para todos los vuelos. Después de entender una relación, hay que volver a situaciones variables y comprobar si el aprendizaje se mantiene.</p>
 
   <aside class="personal-note"><strong>Comentario personal.</strong> Me resultaba frustrante avanzar por la rotación sin saber por qué había fallado. De ahí surgió la idea de aprovechar la repetición del mismo plato para comparar decisiones, cuando la instalación y la supervisión lo permiten.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> La repetibilidad requiere registrar el estado completo: puesto, máquina, posición inicial, velocidad, ángulos, viento, semilla de variación y parámetros del disparo. Si «repetir» conserva solo parte del estado, el experimento es aproximado. Debe declararse así.</aside>
 </article>
 
   <article class="book-section" id="s01-07" data-section="1.7">
@@ -366,7 +360,6 @@
   <p>Plato no enseña a manipular un arma ni reproduce peso, retroceso, ruido o presión competitiva. Tampoco concede autorizaciones ni sustituye a un instructor. La práctica real debe hacerse en una instalación autorizada y con supervisión adecuada.</p>
 
   <aside class="personal-note"><strong>Comentario personal.</strong> Esta es la motivación con la que construí el proyecto. Explica su origen, pero no constituye una historia oficial del deporte ni una evidencia de eficacia.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> El repositorio es la fuente primaria para afirmar qué hace el simulador. Cada versión del manual debería registrar el commit o la fecha inspeccionada. Si una función cambia, la explicación y las capturas deben actualizarse con ella.</aside>
 </article>
 
   <article class="book-section" id="s01-08" data-section="1.8">
@@ -382,7 +375,6 @@
   <p>El simulador también permite comparar trayectorias y repetir una salida sin cambiar el resto de parámetros. Así puede estudiarse por separado el efecto del puesto, el viento, la velocidad o la apertura del plomeo.</p>
   <p>La nube de perdigones se representa de forma simplificada. Sirve para comprender dispersión y margen, pero no sustituye una prueba de plomeo con la escopeta y el cartucho reales. El objetivo final es <strong>tomar una decisión, observar el resultado y revisar la hipótesis</strong>.</p>
 
-  <aside class="technical-note"><strong>Capa técnica.</strong> Cada objetivo puede convertirse en una prueba: repetibilidad del estado, monotonicidad de ciertas relaciones, conservación de unidades, comparación con esquemas oficiales, inspección del patrón y ausencia de soluciones bajo el suelo. Monotonicidad significa que una relación cambia siempre en el mismo sentido cuando se modifica una variable concreta. Una visualización educativa gana credibilidad cuando su afirmación es comprobable.</aside>
 </article>
 
   <article class="book-section" id="s01-09" data-section="1.9">
@@ -399,7 +391,6 @@
   <p>La parte técnica explica unidades, fórmulas y límites del modelo. En la práctica real siempre mandan la ley, el reglamento vigente, las instrucciones del campo y el responsable de seguridad.</p>
 
   <aside class="field-note"><strong>Método de lectura.</strong> Lleva al campo una sola pregunta útil por sesión. El manual pretende afinar la atención. No pretende llenar la cabeza de instrucciones simultáneas.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Cita siempre el número de capítulo, la versión del simulador, los valores utilizados y la fecha de la fuente. Ese registro permite repetir la prueba. También evita discutir sobre configuraciones distintas que tienen el mismo nombre.</aside>
 </article>
 
   <div class="chapter-summary">
@@ -1065,7 +1056,6 @@
   <p>En la práctica, la elección empieza por el uso. Trap busca estabilidad, un encare repetible y una imagen pensada para platos que se alejan. Sporting obliga a resolver salidas, alturas y direcciones variadas. Una escopeta ligera de campo puede ser cómoda al caminar y rápida al moverla. Pero, si todo lo demás es igual, menos peso también aumenta la velocidad del retroceso libre. Una de competición suele añadir peso, cierres preparados para mucho uso, opciones de equilibrio y culatas más especializadas. Son tendencias de diseño, no garantías de que una escopeta concreta encaje.</p>
   <p>Antes de comparar modelos hay que fijar una base mínima: calibre y recámara compatibles con la disciplina, funcionamiento conocido, revisión hecha y práctica segura de apertura y descarga. Solo después tiene sentido comparar sensaciones. Un arma que rompe más platos en cinco intentos puede haber tenido trayectorias fáciles. Un arma que permite veinte encares iguales da una pista más útil para aprender.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Ana prueba una superpuesta sporting, una trap y una semiautomática de tiro con el mismo instructor. No cuenta solo platos rotos. Anota si monta siempre en el mismo punto, si ve el plato sobre la banda, si el arma le cansa los brazos y si puede demostrar a simple vista que está descargada. Esos datos ayudan más en una primera elección que una marca o un precio.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Intervienen muchas cosas a la vez: peso total, centro de gravedad, momento de inercia, caída y ventaja de la culata, altura de banda y funcionamiento de la acción. No hay un único dato llamado “calidad de tiro”. El simulador puede mostrar línea visual, punto de impacto y dispersión, pero no reproduce peso, vibración, ciclo de una semiautomática ni ajuste al cuerpo.</aside>
 
 </article>
 
@@ -1079,7 +1069,6 @@
   <p>Para un principiante, “dos cañones” no significa siempre “dos gatillos”. Muchas superpuestas modernas tienen un solo gatillo y un mecanismo que pasa al segundo cañón. Algunas de competición llevan grupos de disparo desmontables. Aun así, el llamado cassette no es una pieza universal ni aparece en todas. Tampoco debe sacarse en la cancha como rutina. Cualquier desmontaje se hace según el manual, con el arma descargada y en un lugar adecuado.</p>
   <p>Al probar una superpuesta conviene mirar más que la apertura. Hay que ver si la llave se acciona sin perder control, si el guardamanos calienta o resbala, si los expulsores mandan las vainas donde deben y si el selector se entiende sin duda. Una acción nueva puede ir firme. Pero una dureza repentina, un cierre incompleto o marcas raras piden revisión, no más fuerza.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> En el puesto, Luis carga solo cuando le toca. Cierra con los cañones hacia la zona de vuelo y dispara. Sin girarse, abre, mira las dos recámaras y deja las vainas según la norma del campo. Si una sigue sin disparar, mantiene la dirección y llama al árbitro. Abrir por iniciativa propia durante un fallo puede ir contra el procedimiento de la modalidad.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> La báscula recibe esfuerzos repetidos en tetones, bulones, cierres y zonas de apoyo. El equilibrio depende de cómo se reparte el peso entre culata, báscula y cañones, no solo del peso total. La regulación entre cañones y el plomeo real se verifican en banco de plomeo. No se deducen porque los tubos parezcan paralelos.</aside>
 
 </article>
 
@@ -1093,7 +1082,6 @@
   <p>Decir que en España una semiautomática “lleva tres cartuchos” necesita contexto. Algunas normas de caza limitan el depósito a dos cartuchos. Con uno en la recámara, eso permite tres disparos sin recargar. El Reglamento de Armas tiene además límites generales distintos para armas largas semiautomáticas. En una cancha manda la disciplina y solo se cargan los cartuchos permitidos cuando toca. No debe convertirse una regla de caza en una capacidad deportiva universal.</p>
   <p>La elección entre gases e inercia tampoco se decide con una frase hecha. El sistema por gases toma parte de esos gases y los lleva a un pistón. Suele exigir limpiar y revisar esa zona. El sistema inercial aprovecha el movimiento relativo de masas y tiene otro mantenimiento y otra sensibilidad al montaje. La compatibilidad con cargas ligeras y la descarga se comprueban en el manual del modelo y con munición autorizada. Nunca se introducen cartuchos para probar fuera del puesto.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Marta termina dos disparos y deja el cierre atrás. El instructor le pide una demostración completa: dedo fuera del disparador, boca en dirección segura, ventana abierta, recámara visible, elevador y depósito comprobados. Después pone un indicador de recámara si el club lo exige. La rutina es algo más lenta al principio. Precisamente por eso debe aprenderse bien.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Una semiautomática hecha para platos puede llevar cañones largos, banda de competición, chokes intercambiables, suplementos de caída y ventaja, pesos de equilibrado y amortiguación. Llamarlas a todas armas de caza ocultaría ese trabajo técnico. Su fiabilidad también depende de carga, limpieza, montaje y especificaciones del fabricante.</aside>
 
 </article>
 
@@ -1108,7 +1096,6 @@
   <p>En el encare, el principiante puede notar más anchura cerca de la boca y una empuñadura distinta, sobre todo con culatas rectas o inglesas. No debe intentar centrar cada cañón por separado. El ojo se alinea con el plano para el que fue diseñada el arma, y el plomeo conjunto se comprueba en papel. Si los dos cañones centran de forma incompatible, la solución es técnica. No es cambiar la puntería entre disparos.</p>
   <p>El doble gatillo, si existe, permite escoger directamente qué cañón dispara primero. Un solo gatillo puede llevar selector o una secuencia fija. Esa diferencia obliga a conocer el modelo, pero no cambia la regla básica: toda comprobación se hace con la acción abierta, las recámaras visibles y siguiendo el manual.</p>
   <aside class="personal-note"><strong>Comentario personal.</strong> He visto paralelas en tiradas populares. Esa observación muestra variedad cultural, no una frecuencia nacional medida. Si alguien lleva una heredada, la conversación útil no es si está pasada de moda. Es qué marca su recámara, qué cartucho permite, cómo funciona su seguro y cuándo la revisó un armero.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Los ejes de los dos cañones convergen y se regulan para que sus plomeos sirvan a las distancias de diseño. La anchura aparente puede influir en la referencia periférica. El momento de inercia depende del conjunto completo. Ninguna de esas propiedades permite predecir el resultado sin probar encare y plomeo.</aside>
 
 </article>
 
@@ -1122,7 +1109,6 @@
   <p>La culata también cambia la tarea. La culata es la parte que apoya en hombro, cara y mano. Browning explica que el ojo actúa como mira trasera. También explica que una culata más recta, con menor caída, se usa en armas de trap y skeet para blancos que suelen subir. Una escopeta de plato puede añadir lomo regulable, banda elevada, pesos y cañones largos. Una sporting busca estabilidad sin perder capacidad para blancos variados. Ninguna geometría compensa un encare doloroso o poco repetible.</p>
   <p>El coste debe mirarse durante toda la vida del equipo. Una opción barata que no admite repuestos, ajuste o servicio puede salir cara. Una plataforma de competición sobrada puede ser innecesaria para quien todavía no sabe qué modalidad prefiere. Al presupuesto hay que sumar revisión, maletín, chokes, herramientas y posibles cambios de culata. Probar material del club permite esperar hasta tener criterios propios.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Diego empieza con una escopeta de caza revisada y prestada por el club. Tras dos series nota golpe en el pómulo y necesidad de esconder el plato. Antes de comprar una trap, el instructor comprueba longitud, caída, dominancia y punto de impacto. Ven que un ajuste temporal y una montura más repetible resuelven parte del problema. Lo demás orienta una compra mejor pensada.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> La durabilidad no se deduce solo de “acero frente a madera” ni del precio. Importan el diseño del cierre, los materiales, el tratamiento, el ajuste de superficies, los repuestos y el mantenimiento. Los fabricantes de competición ofrecen configuraciones y equilibrado porque el uso es exigente. Aun así, cada modelo tiene su propio programa de servicio.</aside>
   <aside class="personal-note"><strong>Comentario personal.</strong> En una mañana he llegado a superar los cien disparos. Lo cuento para mostrar la intensidad de una jornada concreta, no como promedio ni como cifra que haya que repetir.</aside>
 </article>
 
@@ -1136,7 +1122,6 @@
   <p>También cambia el reglamento. FITASC Foso Universal permite hasta 28 g de plomo y define cinco máquinas y esquemas. Los reglamentos de Sporting organizan presentaciones variadas. ISSF controla en sus pruebas una carga nominal máxima de 24 g con tolerancia de control. Para elegir cartucho, choke y orden de cañones hay que leer la edición vigente de la modalidad. No basta aplicar “trap igual a 24 g” a todo lo que tenga un foso.</p>
   <p>Quien alterna disciplinas puede usar una sola escopeta y cambiar configuración, usar juegos de cañones o tener armas dedicadas. Cada opción cuesta aprendizaje. Si cambian altura de ojo, peso o velocidad de swing, también cambia la referencia corporal. Para un principiante suele ser más útil mantener una configuración durante varias sesiones y anotar qué limitación aparece antes de añadir otra variable.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Sara usa una sporting de banda media en Universal y se siente cómoda, pero tapa algunos platos altos. No compra una trap de inmediato. Primero prueba en banco dónde impacta su arma y trabaja el encare. Después compara una culata más alta. Decide por patrón repetido y comodidad, no porque el nombre comercial mande.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Un punto de impacto descrito como 60/40 o 70/30 indica qué parte aproximada del patrón queda sobre y bajo el punto de referencia a una distancia de prueba. No es una ganancia angular universal. Depende del método, la distancia, el cartucho y el patrón. El simulador debe tratar su “ganancia de solista” como una simplificación para enseñar, no como copia de una configuración comercial.</aside>
 
 </article>
 
@@ -1151,7 +1136,6 @@
   <p>También hay partes que se parecen pero no hacen lo mismo. La cantonera transmite el apoyo al hombro. El talón y la punta son sus extremos. El guardamanos sirve para sujetar y completa el cierre del conjunto basculante. El guardamonte protege el gatillo. La boca es el extremo del cañón y nunca un asa. Nombrarlas bien ayuda a dar instrucciones de seguridad breves y claras.</p>
   <p>Una ficha personal con foto y términos del fabricante evita pasar nombres equivocados de un arma a otra. También permite señalar una anomalía al responsable sin inventar palabras ni manipular el arma para enseñarla.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Antes de la primera práctica, el instructor entrega una superpuesta abierta y descargada. El alumno señala recámaras, boca, seguro, gatillo y llave sin accionar nada. Después repite la identificación en una semiautomática con el cierre bloqueado. Así ve por qué “está abierta” se demuestra de forma distinta en cada mecanismo.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> En el modelo físico interesa separar el origen del disparo, el eje del ánima, la línea visual de la banda y el punto de impacto. En el arma real esas líneas se relacionan por la geometría de la culata y la banda, y por la regulación de los cañones. Dibujar el disparo desde el punto de mira sería una simplificación visual que debe avisarse.</aside>
 
 </article>
 
@@ -1171,7 +1155,6 @@
   <figure class="figure supplemental-figure"><img loading="lazy" src="docs/manual-libro/assets/images/infografias/extras/05-08-comprobacion-segura-ajuste.png" alt="Comprobación excepcional de la alineación ojo, banda y punto desde delante de una escopeta abierta y totalmente descargada, dirigida por un instructor competente y sin munición presente" width="1254" height="1254"><figcaption>Esta comprobación frontal existe como práctica de campo, pero implica que alguien esté delante de las bocas. No se improvisa: solo la dirige una persona competente, con el arma abierta y totalmente descargada, recámaras verificadas y sin munición; siempre se prefieren alternativas más seguras.</figcaption></figure>
   <p>La ropa de invierno cambia la longitud efectiva y el apoyo. Por eso el ajuste debe comprobarse en las condiciones habituales, sin perseguir diferencias mínimas cada semana.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Pablo repite cinco encares descargados. El instructor ve que inclina la cabeza, corrige primero la postura y solo después mueve el lomo. Finalmente comprueba el resultado en una plancha de plomeo.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Un ajuste quieto no garantiza un buen encare en movimiento. Se anotan las medidas, se cambia una sola variable y se vuelve a comprobar.</aside>
 
 </article>
 
@@ -1188,7 +1171,6 @@
   <figure class="figure supplemental-figure"><img loading="lazy" src="docs/manual-libro/assets/images/infografias/extras/05-09-dos-monedas.png" alt="Vista desde el ojo del tirador que compara banda plana, dos monedas como referencia y ganancia visible" width="1254" height="1254"><figcaption>Las dos monedas ofrecen una referencia visual sencilla. La ganancia real y el punto de impacto se confirman en una plancha de plomeo.</figcaption></figure>
   <p>Los postes deben quedar firmes y dentro de los límites del manual. La posición inicial se marca para poder recuperarla. Tras cada cambio se hacen encares descargados y se comprueba que nada se mueve.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Elena pierde el plato al cubrirlo. Tras varios plomeos bajos con un encare estable, el instructor sube un poco el lomo, anota el cambio y repite la prueba. Si mejora sin causar molestias, mantiene el ajuste varias sesiones.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Los porcentajes 50/50, 70/30 o 100/0 describen cómo se reparte el patrón alrededor de un punto de referencia en condiciones de ensayo. Beretta declara rangos concretos para algunas bandas B-Fast; Krieghoff ofrece otros. No deben aplicarse a cualquier arma ni convertirse directamente en el porcentaje de “ganancia” del simulador.</aside>
 
 </article>
 
@@ -1204,7 +1186,6 @@
   <p>El peso añadido atrás desplaza el equilibrio. También puede cambiar la velocidad con la que el arma arranca o se detiene. Por eso un ajuste cómodo para el cuerpo aún debe probarse en movimiento. Una culata que coloca bien el ojo puede cambiar la sensación de swing si modifica mucho el reparto de masas.</p>
   <p>Topes, escalas y tornillos deben permitir volver a una referencia. Sin registro, la regulación se convierte en una cadena de sensaciones imposibles de comparar.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Un tirador cambia longitud, lomo y cantonera el mismo día y mejora dos platos. No sabe qué le ayudó. Un ajuste trazable empieza con medidas y fotos. Primero fija la longitud para permitir un montaje libre. Luego adapta el apoyo de la cantonera, centra el ojo y solo entonces valida la altura. Cada paso se anota y puede deshacerse.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Más grados de libertad crean más combinaciones y más riesgo de sobreajuste. Un protocolo de ajuste personalizado al cuerpo, llamado <em>fitting</em>, trata comodidad, repetición y punto de impacto como resultados que hay que medir. Los tornillos tienen pares, inserciones mínimas y límites fijados por el fabricante. Pasar esos límites puede aflojar la pieza o causar lesión.</aside>
 
 </article>
 
@@ -1219,7 +1200,6 @@
   <p>El punto intermedio, si existe, sirve sobre todo para comprobar que el ojo no está descentrado. No crea una línea de alza como en un rifle. Si las dos bolitas parecen separarse al montar, la causa puede estar en la altura de la cara o en la inclinación del arma. Esa comprobación se hace antes de pedir el plato. Durante el vuelo, intentar recomponer una figura geométrica quita atención al movimiento.</p>
   <p>La anchura, el acabado mate y la ventilación cambian el contraste y la sensación de calor. No sustituyen una culata que coloque bien el ojo. Una banda que parece cómoda en el armero debe probarse con la luz y la postura reales de la cancha.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Javier cambia un punto blanco por fibra naranja porque lo distingue mejor. En el primer entrenamiento empieza a mirarlo y falla detrás. El instructor no quita la fibra. Hace tres encares sin plato para confirmar alineación y después pide foco en el borde delantero del plato. El accesorio queda como referencia, no como objetivo.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Línea de mira, eje del ánima y centro del patrón forman una geometría angular. La banda no dirige físicamente los perdigones, salvo que su regulación haga orientar el arma de otra manera. Ventilación y puentes también cambian masa y disipación térmica. Beretta describe ambos propósitos en sus bandas de competición.</aside>
 
 </article>
 
@@ -1235,7 +1215,6 @@
   <p>El tubo debe estar limpio, sin golpes y bien asentado. Se revisa con el arma descargada. Si se afloja, sobresale o presenta daños, se deja de usar hasta que lo revise una persona competente.</p>
   <p>Los chokes extendidos se identifican mejor, pero siguen siendo piezas sometidas a presión. Su marca no garantiza la compatibilidad.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Con la misma escopeta y cartuchería, un instructor compara varios plomeos por choke. Observa centro, densidad y regularidad. Un solo cartucho no representa la variación normal.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> El simulador representa el choke como apertura de un cono o como radio creciente. Sirve para comparar relaciones, pero no reproduce cuerda longitudinal, deformación de perdigones, taco, turbulencia, huecos ni asimetrías. Debe evitar una nube perfecta y uniforme, porque sugeriría una precisión que no existe.</aside>
 
 </article>
 
@@ -1250,7 +1229,6 @@
   <p>El lote y la conservación importan. Vainas deformadas, humedad, corrosión o cartuchos de origen dudoso se apartan siguiendo las indicaciones del fabricante y del campo. No se mezclan calibres en el bolsillo. Un cartucho menor puede entrar de forma peligrosa en un cañón mayor y quedar como obstrucción. La inspección se hace antes de cargar. No se intenta reparar ni recargar munición durante la serie.</p>
   <p>La caja original conserva lote y especificaciones. Esa información hace falta si aparece una anomalía o se comparan resultados de plomeo. Separar lotes evita culpar al choke o a la técnica de una variación de cartuchería.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Antes de una competición, Nuria no cambia de 24 a 28 g por un consejo informal. Lee reglamento y convocatoria, comprueba recámara y manual, confirma el perdigón permitido y prueba plomeo y retroceso con tiempo. Si entrena dos modalidades, registra cada cartucho por lote para no atribuir al arma un cambio de munición.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> Con el mismo tamaño, más gramos implican más perdigones y posible mayor densidad. Con la misma masa, un perdigón menor implica más unidades, pero con menor masa individual. Arrastre, deformación y dispersión rompen cualquier equivalencia simple entre velocidad de boca y energía sobre el plato.</aside>
 
 </article>
 
@@ -1265,7 +1243,6 @@
   <p>La bolsa completa lleva lo necesario para estar ordenado, no un taller portátil: documentación, protección de repuesto, lentes en funda, paño, agua y la herramienta de choke del arma. Medicación, calor y fatiga pueden afectar al control y a la atención. El equipo no los corrige. Si unas lentes se empañan o un protector impide oír al árbitro, se sale de la secuencia y se resuelve antes de seguir.</p>
   <p>Todo elemento debe colocarse sin invadir el puesto vecino ni obligar a dejar el arma apoyada de forma improvisada. El orden del chaleco también debe mantenerse igual entre series.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> En una mañana bajo cubierta, Álvaro nota que la patilla de sus gafas abre el casco. Antes de disparar ajusta un modelo compatible y comprueba que los tapones están bien puestos. Lleva 25 cartuchos en un bolsillo y vainas en otro, el paño sujeto al chaleco y el móvil silenciado. El orden reduce manipulaciones mientras otros tiran.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> La cifra de atenuación del embalaje procede de laboratorio y no equivale siempre a protección real. NIOSH prioriza selección, colocación y prueba de ajuste. Para las gafas, el manual debe remitir al marcado y a la norma aplicable del producto. No debe llamar “protectoras” a cualquier lente de color.</aside>
 
 </article>
 
@@ -1280,7 +1257,6 @@
   <p>La inspección final no consiste solo en que el metal brille. Se comprueba que el ánima esté libre, que las superficies queden secas donde el manual no pide lubricación y que no falte ninguna pieza ni herramienta. Madera, polímeros y acabados reciben productos compatibles. Un disolvente adecuado para depósitos del cañón puede dañar barnices, adhesivos o cantoneras. El arma se guarda cuando su humedad está estabilizada. Nunca se deja mojada dentro de una funda cerrada. Antes de la siguiente salida se repite una comprobación funcional descargada, porque transporte y almacenamiento también pueden aflojar piezas o mostrar corrosión.</p>
   <p><strong>Mapa de cierre del capítulo.</strong> Mantener bien exige reconocer primero lo que se inspecciona. Vuelve a <a href="#s05-07">5.7, Partes de una escopeta</a>, para localizar cañones, báscula, cierre, guardamanos y piezas esenciales. La revisión de <a href="#s05-08">5.8, La culata y el cuerpo</a>, y de los ajustes de <a href="#s05-09">5.9</a> y <a href="#s05-10">5.10</a> recuerda que limpiar no autoriza a cambiar medidas ni sustituye un ajuste profesional. Por último, <a href="#s05-12">5.12, Chokes</a>, y <a href="#s05-13">5.13, Cartuchos</a>, conectan constricción, combinación real arma-munición y distancia de plomeo. El mantenimiento conserva esa combinación en condiciones seguras, pero solo una prueba en plancha permite comprobar su patrón.</p>
   <aside class="field-note"><strong>Ejemplo concreto.</strong> Tras una sesión húmeda, Carmen descarga y transporta según las normas. En casa, separa la munición, limpia desde la recámara, seca el metal, revisa chokes y anota que la apertura va más dura. No fuerza la llave ni lima superficies. Guarda el arma sin acceso de terceros y concierta revisión antes de la próxima tirada.</aside>
-  <aside class="technical-note"><strong>Capa técnica.</strong> La frecuencia depende de disparos, ambiente, material y manual. Un registro de fechas, incidencias, apriete de chokes y servicio ayuda a distinguir suciedad de desgaste. Browning recomienda limpieza diaria en su arma de tiro Citori Plus y advierte contra desmontar más allá de lo explicado.</aside>
 
 </article>
 
