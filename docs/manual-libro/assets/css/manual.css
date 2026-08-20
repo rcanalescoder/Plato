@@ -33,6 +33,7 @@ h1{font-size:clamp(2.6rem,7vw,6.2rem);line-height:.98;letter-spacing:0;margin:.1
 .hero-primary{min-height:62px;padding:0 28px!important;background:var(--orange)!important;border-color:var(--orange)!important;color:#fff!important;font-size:1.15rem;font-weight:950;box-shadow:0 18px 34px rgba(232,92,13,.24)}
 .hero-secondary{min-height:62px;padding:0 22px!important;font-size:1.05rem;font-weight:900;background:rgba(255,255,255,.94)!important}
 .hero-caption{margin:13px 0 0!important;color:#d9e8de!important;font-size:.9rem!important}
+.hero-size{font-size:.78rem;font-weight:800;color:var(--muted);letter-spacing:.03em}
 .warning{margin-top:22px;border-left:6px solid #ff6b5f;background:rgba(30,16,14,.84);color:#fff;padding:16px 18px;max-width:760px}
 .layout{max-width:var(--max);margin:auto;display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:36px;padding:30px 18px 80px}
 .sidebar{position:sticky;top:78px;align-self:start;max-height:calc(100vh - 95px);overflow:auto;border-right:1px solid var(--line);padding-right:18px}
