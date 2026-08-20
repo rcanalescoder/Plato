@@ -4094,6 +4094,241 @@ const CuadernoPDF = (function () {
     return page;
   }
 
+  // ---------------------------------------------------------------------------
+  // Portada y cierre
+  // ---------------------------------------------------------------------------
+
+  /*
+    Un cuaderno impreso viaja solo. Acaba en una carpeta, en el coche o en manos
+    de otra persona, lejos de la web donde se explica qué es, con qué ajustes se
+    hizo y, sobre todo, qué NO es. Por eso el documento se abre con una portada
+    que lo sitúa y se cierra con el aviso de uso y la licencia: quien lo
+    encuentre suelto tiene que poder juzgarlo sin más contexto que el papel.
+  */
+
+  // Escribe un párrafo ajustado a un ancho y devuelve la y siguiente.
+  function paragraph(p, value, x, y, maxWidth, options = {}) {
+    const size = options.size || 17;
+    const lineHeight = options.lineHeight || Math.round(size * 1.6);
+    p.save();
+    p.font = `${options.weight || 400} ${size}px system-ui`;
+    p.fillStyle = options.color || INK;
+    p.textAlign = "left";
+    p.textBaseline = "top";
+    let line = "";
+    let cursor = y;
+    value.split(" ").forEach(word => {
+      const attempt = line ? `${line} ${word}` : word;
+      if (p.measureText(attempt).width > maxWidth && line) {
+        p.fillText(line, x, cursor);
+        cursor += lineHeight;
+        line = word;
+      } else {
+        line = attempt;
+      }
+    });
+    if (line) {
+      p.fillText(line, x, cursor);
+      cursor += lineHeight;
+    }
+    p.restore();
+    return cursor;
+  }
+
+  function heading(p, value, x, y) {
+    text(p, value, x, y, { size: 21, weight: 700, color: ACCENT });
+    p.save();
+    p.strokeStyle = LINE;
+    p.lineWidth = 1;
+    p.beginPath();
+    p.moveTo(x, y + 32);
+    p.lineTo(x + 60, y + 32);
+    p.stroke();
+    p.restore();
+    return y + 52;
+  }
+
+  function bullet(p, value, x, y, maxWidth) {
+    text(p, "·", x, y, { size: 17, weight: 700, color: ACCENT });
+    return paragraph(p, value, x + 18, y, maxWidth - 18) + 6;
+  }
+
+  function generatedOn() {
+    try {
+      return new Date().toLocaleDateString("es-ES", { day: "2-digit", month: "long", year: "numeric" });
+    } catch (error) {
+      return new Date().toISOString().slice(0, 10);
+    }
+  }
+
+  function renderCoverPage(entries) {
+    const { page, p } = newPage();
+    const left = 92;
+    const colW = 740;
+    const rightX = 900;
+    const rightW = 760;
+
+    p.save();
+    p.fillStyle = ACCENT;
+    p.fillRect(0, 0, PAGE_W, 12);
+    p.restore();
+
+    text(p, "PLATO · SIMULADOR Y LIBRO DE TIRO AL PLATO", left, 78, { size: 17, weight: 700, color: ACCENT });
+    text(p, "Cuaderno de", left, 118, { size: 58, weight: 700 });
+    text(p, "puntos de disparo", left, 186, { size: 58, weight: 700 });
+    text(p, `${modeLabel()}  ·  ${schemeLabel()}  ·  ${entries.length} platos`, left, 272, { size: 25, color: INK_SOFT });
+
+    let y = 348;
+    y = heading(p, "Qué tienes en las manos", left, y);
+    y = paragraph(p, "Una tirada completa, plato a plato, tal y como la vería el tirador desde su puesto. " +
+      "Para cada plato se dibuja la trayectoria entera y se marcan cinco instantes sobre ella: " +
+      "recién salido, subiendo, en el cenit, bajando y casi en el suelo.", left, y, colW);
+    y = paragraph(p, "En cada instante se indica dónde está el plato y cuánto hay que adelantar para " +
+      "romperlo, medido como lo ve el ojo. Sirve para componer la tirada antes de ir al campo: " +
+      "qué disparas antes, cuánto adelantas y qué te ocurre si te retrasas.", left, y + 10, colW);
+
+    y = heading(p, "Cómo se lee cada ficha", left, y + 26);
+    y = bullet(p, "El número grande es el adelanto que percibe el ojo, perpendicular a la línea de mirada. " +
+      "Debajo aparece también en anchos de plato y en grados.", left, y, colW);
+    y = bullet(p, "La separación real en tres dimensiones va en letra pequeña: incluye la profundidad, " +
+      "que el ojo no ve, y por eso es un número mucho mayor.", left, y, colW);
+    y = bullet(p, "Todas las fichas comparten escala, de modo que los adelantos son comparables de un " +
+      "plato a otro. La cabecera dice cuánto se ha girado la vista y con qué encuadre.", left, y, colW);
+    y = bullet(p, "El color del instante avisa de la distancia: en distancia, al límite o ya fuera de " +
+      "alcance útil.", left, y, colW);
+
+    y = heading(p, "Qué no es", left, y + 26);
+    y = bullet(p, "No es una medida de campo: son cifras de un modelo pedagógico, con sus " +
+      "simplificaciones. La última página lo explica en detalle.", left, y, colW);
+    y = bullet(p, "No homologa una instalación ni certifica una trayectoria. En competición decide " +
+      "siempre el personal autorizado.", left, y, colW);
+    y = bullet(p, "No sustituye a un instructor, a las normas del campo ni a los requisitos legales.", left, y, colW);
+
+    let ry = 348;
+    ry = heading(p, "Generado con estos ajustes", rightX, ry);
+    p.save();
+    p.fillStyle = "#f4f7f9";
+    p.fillRect(rightX, ry - 8, rightW, 104);
+    p.restore();
+    ry = paragraph(p, paramsLine().replace(/\s+·\s+/g, "   ·   "), rightX + 18, ry + 12, rightW - 36, { size: 16, color: INK });
+    ry += 26;
+    ry = paragraph(p, "Cambia cualquiera de ellos en el simulador y vuelve a pulsar «Generar cuaderno»: " +
+      "el documento se rehace con los tuyos. Una solista elevada o un viento distinto dan otro cuadro.",
+      rightX, ry, rightW, { size: 16, color: INK_SOFT });
+
+    ry = heading(p, "El proyecto", rightX, ry + 26);
+    ry = paragraph(p, "Plato es un simulador y un libro gratuitos para aprender tiro al plato, escritos por " +
+      "Roberto Canales Mora. El libro explica la cancha, la seguridad, las modalidades y la geometría del " +
+      "adelantamiento; el simulador permite repetir un mismo plato cambiando una sola variable.", rightX, ry, rightW);
+    ry = paragraph(p, "Proyecto, contacto y repositorio en GitHub:", rightX, ry + 10, rightW, { size: 16, color: INK_SOFT });
+    text(p, "www.robertocanales.com/proyectos#plato", rightX, ry + 4, { size: 20, weight: 700, color: ACCENT });
+    text(p, "rcanalescoder.github.io/Plato", rightX, ry + 36, { size: 20, weight: 700, color: ACCENT });
+
+    ry = heading(p, "Qué hay en las páginas siguientes", rightX, ry + 88);
+    ry = bullet(p, "Un índice de la tirada: tabla con puesto, máquina, ángulo, altura, caída y adelanto " +
+      "de cada plato, y una vista cenital con todas las trayectorias juntas.", rightX, ry, rightW);
+    ry = bullet(p, `Una ficha por plato, ${entries.length} en total, en el orden en que los verías durante la tirada.`, rightX, ry, rightW);
+    ry = bullet(p, "El aviso de uso y la licencia, al final. Si imprimes solo una parte, imprime también esa hoja.", rightX, ry, rightW);
+
+    p.save();
+    p.strokeStyle = LINE;
+    p.lineWidth = 1;
+    p.beginPath();
+    p.moveTo(left, PAGE_H - 118);
+    p.lineTo(PAGE_W - left, PAGE_H - 118);
+    p.stroke();
+    p.restore();
+
+    paragraph(p, "Aviso: las cifras de este cuaderno son una estimación de un modelo pedagógico, no una " +
+      "medida de campo. Lee el aviso de uso y la licencia en la última página antes de llevarlo a la cancha.",
+      left, PAGE_H - 98, PAGE_W - left * 2, { size: 16, weight: 600, color: INK });
+    text(p, `Generado el ${generatedOn()} desde el simulador Plato  ·  Licencia MIT con atribución  ·  Documento no oficial`,
+      left, PAGE_H - 40, { size: 14, color: INK_SOFT });
+
+    return page;
+  }
+
+  function renderClosingPage() {
+    const { page, p } = newPage();
+    const left = 92;
+    const colW = 740;
+    const rightX = 900;
+    const rightW = 760;
+
+    p.save();
+    p.fillStyle = ACCENT;
+    p.fillRect(0, 0, PAGE_W, 12);
+    p.restore();
+
+    text(p, "Aviso de uso y licencia", left, 78, { size: 44, weight: 700 });
+    text(p, "Léelo antes de aplicar nada de este cuaderno en una cancha", left, 142, { size: 20, color: INK_SOFT });
+
+    let y = 214;
+    y = heading(p, "Esto es una estimación, no una medida", left, y);
+    y = paragraph(p, "Las trayectorias, los tiempos y los adelantos salen de un modelo simplificado que " +
+      "resuelve una parábola visual a partir de la altura y el alcance del plato, con gravedad reducida y " +
+      "una salida visual común. No mide una lanzadora real, no reproduce toda la aerodinámica del disco ni " +
+      "sustituye una tabla balística del cartucho que uses.", left, y, colW);
+    y = paragraph(p, "Las tablas de esquemas reproducen valores publicados por las federaciones, pero este " +
+      "documento no homologa ninguna instalación ni certifica ninguna trayectoria. En competición decide " +
+      "siempre el personal autorizado.", left, y + 10, colW);
+
+    y = heading(p, "La responsabilidad del tiro es tuya", left, y + 26);
+    y = paragraph(p, "Usa estas cifras como punto de partida para observar y comparar, nunca como una " +
+      "instrucción que seguir a ciegas. Comprueba tus propios números en el campo, con tu arma, tu cartucho " +
+      "y las condiciones del día, y corrige lo que haga falta.", left, y, colW);
+    y = paragraph(p, "Este material no sustituye la formación presencial, las normas del campo, la ayuda de " +
+      "un instructor o un armero, ni los requisitos legales vigentes. La seguridad y las decisiones de tiro " +
+      "son responsabilidad de quien dispara.", left, y + 10, colW);
+
+    y = heading(p, "Antes de llevarlo a la cancha", left, y + 26);
+    y = bullet(p, "Comprueba que el esquema de la portada es de verdad el que se va a lanzar. " +
+      "Pregúntalo al responsable en lugar de suponerlo.", left, y, colW);
+    y = bullet(p, "Los adelantos dependen del cartucho y de la solista que pusiste al generar el " +
+      "cuaderno. Con otro material, las cifras cambian.", left, y, colW);
+    y = bullet(p, "Trata cada número como una hipótesis que vas a contrastar tirando, no como el " +
+      "resultado que deberías obtener.", left, y, colW);
+
+    let ry = 214;
+    ry = heading(p, "Licencia MIT con atribución", rightX, ry);
+    ry = paragraph(p, "Copyright (c) 2026 Roberto Canales Mora", rightX, ry, rightW, { size: 17, weight: 700 });
+    ry = paragraph(p, "Se concede permiso, libre de cargos, para usar, copiar, modificar, fusionar, publicar, " +
+      "distribuir, sublicenciar y vender copias de este software y su documentación, y para permitir lo mismo " +
+      "a quienes lo reciban, con una condición: conservar siempre la referencia al autor original, Roberto " +
+      "Canales Mora, junto con el enlace a www.robertocanales.com. Esa atribución forma parte del aviso de " +
+      "copyright que debe acompañar a todas las copias.", rightX, ry + 8, rightW, { size: 16 });
+    ry = paragraph(p, "EL SOFTWARE SE PROPORCIONA «TAL CUAL», SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O " +
+      "IMPLÍCITA. EN NINGÚN CASO EL AUTOR SERÁ RESPONSABLE DE NINGUNA RECLAMACIÓN, DAÑO U OTRA " +
+      "RESPONSABILIDAD DERIVADA DEL SOFTWARE O DE SU USO.", rightX, ry + 10, rightW, { size: 14, color: INK_SOFT });
+
+    ry = heading(p, "Dónde está todo", rightX, ry + 26);
+    ry = paragraph(p, "Libro completo, simulador y código fuente:", rightX, ry, rightW, { size: 16, color: INK_SOFT });
+    text(p, "www.robertocanales.com/proyectos#plato", rightX, ry + 4, { size: 20, weight: 700, color: ACCENT });
+    text(p, "rcanalescoder.github.io/Plato", rightX, ry + 36, { size: 20, weight: 700, color: ACCENT });
+    text(p, "rcanalesmora@gmail.com", rightX, ry + 68, { size: 17, color: INK_SOFT });
+
+    ry = heading(p, "El proyecto está en beta", rightX, ry + 122);
+    ry = paragraph(p, "El libro y el simulador están pendientes de revisión y se comparten para que " +
+      "cualquiera pueda probarlos, detectar errores y ayudar a mejorarlos. Si encuentras algo que no " +
+      "cuadra con tu experiencia en cancha, con el reglamento que se te aplica o con las cifras que " +
+      "mides tú, escribe: esa clase de aviso es la que hace que el modelo mejore.", rightX, ry, rightW, { size: 16 });
+
+    p.save();
+    p.strokeStyle = LINE;
+    p.lineWidth = 1;
+    p.beginPath();
+    p.moveTo(left, PAGE_H - 76);
+    p.lineTo(PAGE_W - left, PAGE_H - 76);
+    p.stroke();
+    p.restore();
+
+    text(p, "Plato · simulador y libro de tiro al plato · Roberto Canales Mora · Licencia MIT con atribución",
+      left, PAGE_H - 56, { size: 15, color: INK_SOFT });
+    text(p, `Plato · cuaderno generado el ${generatedOn()}`, PAGE_W - left, PAGE_H - 56, { size: 15, color: INK_SOFT, align: "right" });
+
+    return page;
+  }
+
   function renderIndexPage(entries) {
     const { page, p } = newPage();
 
@@ -4330,14 +4565,23 @@ const CuadernoPDF = (function () {
         entries.push(analysis);
       }
 
-      setStatus("Componiendo portada…");
+      setStatus("Componiendo portada, índice y cierre…");
       await sleep();
-      const index = renderIndexPage(entries);
-      images.unshift({
-        bytes: CuadernoPDF.dataUrlToBytes(index.toDataURL("image/jpeg", JPEG_QUALITY)),
+
+      /*
+        El orden final es portada -> índice de la tirada -> fichas -> aviso y
+        licencia. Las dos primeras se anteponen en orden inverso porque unshift
+        empuja por delante.
+      */
+      const asPage = canvas => ({
+        bytes: CuadernoPDF.dataUrlToBytes(canvas.toDataURL("image/jpeg", JPEG_QUALITY)),
         w: PAGE_W,
         h: PAGE_H
       });
+
+      images.push(asPage(renderClosingPage()));
+      images.unshift(asPage(renderIndexPage(entries)));
+      images.unshift(asPage(renderCoverPage(entries)));
 
       const blob = CuadernoPDF.build(images, PT_W, PT_H);
       const name = `cuaderno-plato-${params.mode}-${ui.scheme.value}.pdf`;
