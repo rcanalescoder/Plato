@@ -459,6 +459,25 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
+    .notebook {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .notebook .hint {
+      flex: 1 1 240px;
+      min-width: 0;
+    }
+
+    .notebook button[disabled] {
+      opacity: .6;
+      cursor: progress;
+    }
+
   </style>
 </head>
 <body>
@@ -562,6 +581,10 @@
       <div class="hint">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
       <label class="switch-row" title="Alterna entre suelo opaco y suelo translucido para ver las maquinas bajo el foso."><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
       <label class="switch-row" title="Muestra u oculta la leyenda de colores y simbolos de la esquina inferior derecha."><input id="showLegend" type="checkbox" checked> leyenda</label>
+      <div class="notebook">
+        <button id="cuadernoBtn" type="button" title="Genera un PDF imprimible con toda la tirada del esquema actual. Para cada plato dibuja su trayectoria con cinco instantes marcados y el adelanto que hay que llevar en cada uno. Usa los ajustes que tengas puestos ahora mismo.">Generar cuaderno</button>
+        <div class="hint" id="cuadernoStatus">Cuaderno PDF imprimible de la tirada completa, con los ajustes actuales: una ficha por plato con cinco instantes y su adelanto. Universal 25 fichas, Olimpica 15, Robot 25.</div>
+      </div>
       <div class="project-links">
         <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Powered by www.robertocanales.com</a>
         <a href="index.html" target="_blank" rel="noopener">Manual</a>
@@ -3103,6 +3126,1243 @@
     resize();
     syncControls();
     requestAnimationFrame(loop);
+  </script>
+  <script>
+/*
+  Escritor PDF mínimo para el cuaderno de puntos de disparo, sin dependencias.
+
+  Sólo hace falta una cosa: componer N páginas donde cada página es una imagen
+  JPEG a sangre (la ficha ya viene dibujada en un canvas). Al embeber el JPEG
+  tal cual con el filtro /DCTDecode no hace falta comprimir nada por nuestra
+  cuenta, así que el fichero se construye con concatenación de bytes.
+
+  Estructura generada:
+    1  -> /Catalog
+    2  -> /Pages
+    3+3i -> /Page      (una por ficha)
+    4+3i -> contenido  (coloca la imagen ocupando el MediaBox)
+    5+3i -> /XObject imagen JPEG
+*/
+const CuadernoPDF = (function () {
+  const enc = new TextEncoder();
+
+  function dataUrlToBytes(dataUrl) {
+    const raw = atob(dataUrl.split(",")[1]);
+    const bytes = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; i += 1) bytes[i] = raw.charCodeAt(i);
+    return bytes;
+  }
+
+  function build(images, ptW, ptH) {
+    const chunks = [];
+    let len = 0;
+    const put = data => {
+      const bytes = typeof data === "string" ? enc.encode(data) : data;
+      chunks.push(bytes);
+      len += bytes.length;
+    };
+
+    const offsets = [];
+    const count = images.length;
+    const pageIds = [];
+    for (let i = 0; i < count; i += 1) pageIds.push(3 + i * 3);
+
+    put("%PDF-1.4\n");
+    put(new Uint8Array([0x25, 0xe2, 0xe3, 0xcf, 0xd3, 0x0a]));
+
+    offsets[1] = len;
+    put("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+
+    offsets[2] = len;
+    put(`2 0 obj\n<< /Type /Pages /Count ${count} /Kids [${pageIds.map(id => `${id} 0 R`).join(" ")}] >>\nendobj\n`);
+
+    for (let i = 0; i < count; i += 1) {
+      const pageId = 3 + i * 3;
+      const contentId = pageId + 1;
+      const imageId = pageId + 2;
+      const image = images[i];
+      const content = `q\n${ptW} 0 0 ${ptH} 0 0 cm\n/Im0 Do\nQ\n`;
+
+      offsets[pageId] = len;
+      put(
+        `${pageId} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${ptW} ${ptH}] ` +
+        `/Resources << /XObject << /Im0 ${imageId} 0 R >> >> /Contents ${contentId} 0 R >>\nendobj\n`
+      );
+
+      offsets[contentId] = len;
+      put(`${contentId} 0 obj\n<< /Length ${content.length} >>\nstream\n${content}endstream\nendobj\n`);
+
+      offsets[imageId] = len;
+      put(
+        `${imageId} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${image.w} /Height ${image.h} ` +
+        `/ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${image.bytes.length} >>\nstream\n`
+      );
+      put(image.bytes);
+      put("\nendstream\nendobj\n");
+    }
+
+    const total = 2 + count * 3;
+    const xrefOffset = len;
+    let xref = `xref\n0 ${total + 1}\n0000000000 65535 f \n`;
+    for (let i = 1; i <= total; i += 1) {
+      xref += `${String(offsets[i]).padStart(10, "0")} 00000 n \n`;
+    }
+    put(xref);
+    put(`trailer\n<< /Size ${total + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`);
+
+    return new Blob(chunks, { type: "application/pdf" });
+  }
+
+  return { build, dataUrlToBytes };
+})();
+
+/*
+  ===========================================================================
+  Cuaderno de puntos de disparo
+  ===========================================================================
+
+  Genera, con los ajustes que el usuario tenga puestos en el simulador, un PDF
+  A4 apaisado imprimible: una portada con la tabla del esquema y la vista
+  cenital de la tirada, y después una ficha por plato con la escena desde el
+  ojo del tirador y varios instantes marcados sobre la misma trayectoria
+  (salida, subiendo, cenit, bajando y casi en el suelo). Cada instante lleva su
+  plato, su punto de adelanto y el reparto de ese adelanto en centímetros,
+  anchos de plato y grados.
+
+  Sirve para componer la tirada antes de ir al campo: qué se dispara antes,
+  cuánto hay que adelantar y qué ocurre si uno se retrasa.
+
+  Reutiliza la física y la escena del propio simulador (targetAt,
+  recommendedAimAt, projectPoint, drawGrid, drawTrap...) en lugar de
+  reimplementarlas, de modo que el cuaderno no puede desincronizarse del
+  comportamiento que el usuario acaba de ver en pantalla.
+
+  Para dibujar cada ficha suspende el bucle de animación sustituyendo update()
+  y render() por funciones vacías, fija el tamaño del canvas para tener una
+  resolución de impresión estable, dibuja y, al terminar, restaura el estado
+  anterior. Todo ocurre en el navegador: no hay servidor ni dependencias.
+*/
+(function () {
+  "use strict";
+
+  // ---------------------------------------------------------------------------
+  // Constantes de página y estilo del cuaderno
+  // ---------------------------------------------------------------------------
+
+  const PAGE_W = 1754;             // A4 apaisado a 150 ppp
+  const PAGE_H = 1240;
+  const PT_W = 842;                // A4 apaisado en puntos PDF
+  const PT_H = 595;
+  const JPEG_QUALITY = 0.92;
+  const CLAY_WIDTH_M = 0.11;       // ancho del plato ISSF, unidad práctica de adelanto
+
+  const INK = "#12181c";
+  const INK_SOFT = "#5b6a72";
+  const LINE = "#c9d4da";
+  const ACCENT = "#b45309";
+  const LEAD_COLOR = "#c08a00";
+
+  const SCENE = { x: 40, y: 150, w: 1674, h: 800 };
+  const SCENE_CSS_W = 1180;
+  const SCENE_CSS_H = Math.round(SCENE_CSS_W * SCENE.h / SCENE.w);
+  const SCENE_SCALE = SCENE.w / SCENE_CSS_W;
+
+  const MOMENT_SETS = {
+    4: ["salida", "cenit", "bajada", "suelo"],
+    5: ["salida", "subida", "cenit", "bajada", "suelo"],
+    6: ["salida", "subida-temprana", "subida", "cenit", "bajada", "suelo"],
+    7: ["salida", "subida-temprana", "subida", "cenit", "bajada", "bajada-larga", "suelo"]
+  };
+
+  const MOMENT_LABEL = {
+    "salida": "Salida",
+    "subida-temprana": "Recién arrancado",
+    "subida": "Subiendo",
+    "cenit": "Cenit",
+    "bajada": "Bajando",
+    "bajada-larga": "Bajada larga",
+    "suelo": "Casi en el suelo"
+  };
+
+  const MOMENT_NOTE = {
+    "salida": "primer vistazo",
+    "subida-temprana": "tiro muy rápido",
+    "subida": "ventana buena",
+    "cenit": "máxima altura",
+    "bajada": "vas tarde",
+    "bajada-larga": "muy tarde",
+    "suelo": "límite del lance"
+  };
+
+  // ---------------------------------------------------------------------------
+  // Utilidades
+  // ---------------------------------------------------------------------------
+
+  const num = (value, decimals = 1) => Number(value).toFixed(decimals).replace(".", ",");
+  const signed = (value, decimals = 0) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${num(Math.abs(value), decimals)}`;
+  const sleep = () => new Promise(resolve => window.setTimeout(resolve, 0));
+
+  function modeLabel() {
+    if (params.mode === "universal") return "Foso universal";
+    if (params.mode === "olympic") return "Foso olímpico";
+    return "Robot";
+  }
+
+  function schemeLabel() {
+    const option = ui.scheme.options[ui.scheme.selectedIndex];
+    return option ? option.textContent : ui.scheme.value;
+  }
+
+  function paramsLine() {
+    const rib = Number(ui.rib.value);
+    return [
+      `cartucho ${params.cartridge} m/s`,
+      `solista ${rib}% (${num(sim.ribGain, 2)}°)`,
+      `viento ${num(params.wind, 1)} m/s`,
+      `retardo ${num(params.reaction, 2)} s`,
+      `plomeo 1 ${spreadLabel(params.spread1)}`,
+      `guardia ${ui.guard.options[ui.guard.selectedIndex].textContent.toLowerCase()}`
+    ].join("  ·  ");
+  }
+
+  // ---------------------------------------------------------------------------
+  // Construcción de la lista de platos del cuaderno
+  // ---------------------------------------------------------------------------
+
+  /*
+    En el simulador el plato se sortea dentro del esquema. Para un cuaderno
+    impreso eso no sirve: hace falta una enumeración determinista y completa.
+
+    · Universal: 5 puestos × 5 máquinas del esquema = 25 fichas exactas.
+    · Olímpico: 5 puestos × 3 máquinas asignadas a ese puesto = 15 fichas.
+    · Robot: 25 tiradas consecutivas de la secuencia, con semilla fija.
+  */
+  function buildCards() {
+    const cards = [];
+    const key = ui.scheme.value;
+
+    if (params.mode === "universal") {
+      const rows = FU_SCHEMES[key] || FU_SCHEMES.fu1;
+      for (let station = 1; station <= 5; station += 1) {
+        rows.forEach(row => cards.push({
+          station,
+          machineIndex: row[0] - 1,
+          angleDeg: row[1],
+          heightAt10: row[2],
+          landingDistance: row[3]
+        }));
+      }
+    } else if (params.mode === "olympic") {
+      const rows = ISSF_SCHEMES[key] || ISSF_SCHEMES.issf1;
+      for (let station = 1; station <= 5; station += 1) {
+        for (let k = 0; k < 3; k += 1) {
+          const row = rows[(station - 1) * 3 + k];
+          cards.push({
+            station,
+            machineIndex: row[0] - 1,
+            angleDeg: row[1],
+            heightAt10: row[2],
+            landingDistance: 76
+          });
+        }
+      }
+    } else {
+      const scheme = ROBOT_SCHEMES[key] || ROBOT_SCHEMES.robot_feria;
+      const savedIndex = sim.robotIndex;
+      const savedSeed = sim.robotSeed;
+      sim.robotIndex = 0;
+      sim.robotSeed = 24681357;
+      const start = Number(ui.station.value);
+      for (let i = 0; i < 25; i += 1) {
+        const row = nextRobotRow(scheme);
+        cards.push({
+          station: ((start - 1 + i) % 5) + 1,
+          machineIndex: 0,
+          angleDeg: clamp(row[0] * (params.robotLateral / 100), -62, 62),
+          heightAt10: clamp(row[1] + params.robotPitch * 0.085, 0.8, 5.8),
+          landingDistance: clamp(row[2] * (params.robotForce / 100), 45, 120),
+          robotScheme: scheme
+        });
+      }
+      sim.robotIndex = savedIndex;
+      sim.robotSeed = savedSeed;
+    }
+
+    return cards;
+  }
+
+  function buildTarget(card) {
+    sim.station = card.station;
+    updateEye();
+    setAimToGuard();
+    const target = makeTargetFromBallistics({
+      angleDeg: card.angleDeg,
+      heightAt10: card.heightAt10,
+      landingDistance: card.landingDistance,
+      machineIndex: card.machineIndex,
+      mode: params.mode,
+      robotScheme: card.robotScheme || null
+    });
+    target.visibleDelay = params.reaction;
+    return target;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Instantes de la trayectoria y cálculo del adelanto en cada uno
+  // ---------------------------------------------------------------------------
+
+  function momentTimes(target, keys) {
+    const apex = Math.max(0.08, target.v0.y / (g * 0.42));
+    const land = clayLandingTime(target);
+    const table = {
+      "salida": 0.22,
+      "subida-temprana": apex * 0.35,
+      "subida": apex * 0.62,
+      "cenit": apex,
+      "bajada": apex + (land - apex) * 0.42,
+      "bajada-larga": apex + (land - apex) * 0.72,
+      "suelo": land * 0.94
+    };
+    return keys.map(key => ({ key, tau: clamp(table[key], 0.12, land * 0.97) }));
+  }
+
+  /*
+    El adelanto se descompone en el plano perpendicular a la línea de mirada,
+    que es como lo percibe el tirador: tanto a un lado y tanto por encima.
+  */
+  function leadMetrics(clay, intercept) {
+    const los = normalize({ x: clay.x - eye.x, y: clay.y - eye.y, z: clay.z - eye.z });
+    const right = normalize(cross({ x: 0, y: 1, z: 0 }, los));
+    const up = cross(los, right);
+    const d = { x: intercept.x - clay.x, y: intercept.y - clay.y, z: intercept.z - clay.z };
+    const distance = Math.hypot(clay.x - eye.x, clay.y - eye.y, clay.z - eye.z);
+    const lateral = dot(d, right);
+    const vertical = dot(d, up);
+    const total = Math.hypot(d.x, d.y, d.z);
+    const perceived = Math.hypot(lateral, vertical);
+    return {
+      distance,
+      lateral,
+      vertical,
+      total,
+      perceived,
+      clays: perceived / CLAY_WIDTH_M,
+      lateralDeg: Math.atan2(lateral, distance) * 180 / Math.PI,
+      verticalDeg: Math.atan2(vertical, distance) * 180 / Math.PI
+    };
+  }
+
+  function sampleMoments(target, keys) {
+    sim.target = target;
+    sim.mode = "tracking";
+    return momentTimes(target, keys).map(moment => {
+      const time = target.visibleDelay + moment.tau;
+      const clay = targetAt(time);
+      const recommended = recommendedAimAt(time);
+      if (!clay || !recommended) return null;
+      return {
+        ...moment,
+        time,
+        clay,
+        recommended,
+        metrics: leadMetrics(clay, recommended.intercept)
+      };
+    }).filter(Boolean).filter(moment => moment.clay.y > CLAY_GROUND_Y + 0.05);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Encuadre y dibujo de la escena
+  // ---------------------------------------------------------------------------
+
+  let savedCanvas = null;
+
+  function prepareCanvas(width, height, scale) {
+    savedCanvas = { styleWidth: canvas.style.width, styleHeight: canvas.style.height };
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    void canvas.offsetWidth;
+    canvas.width = Math.round(width * scale);
+    canvas.height = Math.round(height * scale);
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  }
+
+  function restoreCanvas() {
+    if (!savedCanvas) return;
+    canvas.style.width = savedCanvas.styleWidth;
+    canvas.style.height = savedCanvas.styleHeight;
+    savedCanvas = null;
+    resize();
+  }
+
+  // Versión sin recorte de projectAim(): el punto de mira puede quedar fuera de
+  // cuadro y necesitamos saberlo para calcular el encuadre.
+  function projectAngles(yaw, pitch) {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const f = cameraFocalLength();
+    return {
+      x: w / 2 + Math.tan(yaw - sim.viewYaw) * f,
+      y: h / 2 - Math.tan(pitch - sim.viewPitch) * f
+    };
+  }
+
+  let framing = { yawDeg: 0, pitchDeg: 0 };
+
+  function framePoints(moments) {
+    const points = [activeLurePoint(), guardPoint()];
+    moments.forEach(moment => {
+      points.push(moment.clay);
+      points.push(moment.recommended.intercept);
+    });
+    return points;
+  }
+
+  /*
+    La vista del simulador es fija en la dirección del señuelo. En una ficha
+    impresa eso deja la acción apelotonada en una esquina, así que se recentra
+    el encuadre sobre el conjunto de puntos marcados. El señuelo y el punto de
+    espera siempre entran, de modo que el foso sigue sirviendo de referencia.
+    La cabecera indica cuánto se ha girado la vista respecto a la salida.
+  */
+  function recenterView(moments) {
+    const base = { yaw: sim.viewYaw, pitch: sim.viewPitch };
+    let yawMin = Infinity;
+    let yawMax = -Infinity;
+    let pitchMin = Infinity;
+    let pitchMax = -Infinity;
+    framePoints(moments).forEach(point => {
+      const rel = { x: point.x - eye.x, y: point.y - eye.y, z: point.z - eye.z };
+      const yaw = Math.atan2(rel.x, rel.z);
+      const pitch = Math.atan2(rel.y, Math.hypot(rel.x, rel.z));
+      yawMin = Math.min(yawMin, yaw);
+      yawMax = Math.max(yawMax, yaw);
+      pitchMin = Math.min(pitchMin, pitch);
+      pitchMax = Math.max(pitchMax, pitch);
+    });
+    sim.viewYaw = (yawMin + yawMax) / 2;
+    sim.viewPitch = (pitchMin + pitchMax) / 2;
+    framing = {
+      yawDeg: (sim.viewYaw - base.yaw) * 180 / Math.PI,
+      pitchDeg: (sim.viewPitch - base.pitch) * 180 / Math.PI
+    };
+  }
+
+  /*
+    Con la vista ya centrada se busca la focal máxima que mantiene dentro del
+    cuadro todos los puntos de interés.
+  */
+  function fitZoom(moments, autofit) {
+    if (!autofit) return params.zoom;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const marginX = 110;
+    const marginY = 90;
+    let focal = Infinity;
+    framePoints(moments).forEach(point => {
+      const rel = { x: point.x - eye.x, y: point.y - eye.y, z: point.z - eye.z };
+      const yaw = Math.atan2(rel.x, rel.z) - sim.viewYaw;
+      const pitch = Math.atan2(rel.y, Math.hypot(rel.x, rel.z)) - sim.viewPitch;
+      const tx = Math.abs(Math.tan(yaw));
+      const ty = Math.abs(Math.tan(pitch));
+      if (tx > 1e-4) focal = Math.min(focal, (w / 2 - marginX) / tx);
+      if (ty > 1e-4) focal = Math.min(focal, (h / 2 - marginY) / ty);
+    });
+    const base = (h * 0.5) / Math.tan((VERTICAL_FOV_DEG * Math.PI / 180) * 0.5);
+    return clamp(focal / base, 0.32, 2.4);
+  }
+
+  function drawFullPath(target) {
+    const land = clayLandingTime(target);
+    ctx.strokeStyle = "rgba(255,110,20,.85)";
+    ctx.lineWidth = 2.4;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    for (let tau = 0; tau <= land; tau += 0.02) {
+      const q = targetAt(target.visibleDelay + tau);
+      if (!q) continue;
+      const s = projectPoint(q);
+      if (tau === 0) ctx.moveTo(s.x, s.y);
+      else ctx.lineTo(s.x, s.y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function haloText(text, x, y, size = 14, align = "center") {
+    ctx.save();
+    ctx.font = `700 ${size}px system-ui`;
+    ctx.textAlign = align;
+    ctx.textBaseline = "middle";
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "rgba(10,14,16,.82)";
+    ctx.strokeText(text, x, y);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+
+  const PILL_W = 96;
+  const PILL_H = 32;
+
+  function overlaps(a, b) {
+    return Math.abs(a.x - b.x) * 2 < a.w + b.w + 10 && Math.abs(a.y - b.y) * 2 < a.h + b.h + 10;
+  }
+
+  function placePill(placed, x, y) {
+    const offsets = [[0, 0], [0, -38], [0, -76], [0, 38], [0, 76], [0, -114], [0, 114], [0, -152], [0, 152]];
+    for (const [dx, dy] of offsets) {
+      const box = { x: x + dx, y: y + dy, w: PILL_W, h: PILL_H };
+      if (!placed.some(other => overlaps(box, other))) {
+        placed.push(box);
+        return box;
+      }
+    }
+    const box = { x, y, w: PILL_W, h: PILL_H };
+    placed.push(box);
+    return box;
+  }
+
+  function drawPill(box, index, seconds) {
+    const x = box.x - box.w / 2;
+    const y = box.y - box.h / 2;
+    const r = box.h / 2;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + box.w, y, x + box.w, y + box.h, r);
+    ctx.arcTo(x + box.w, y + box.h, x, y + box.h, r);
+    ctx.arcTo(x, y + box.h, x, y, r);
+    ctx.arcTo(x, y, x + box.w, y, r);
+    ctx.closePath();
+    ctx.fillStyle = "rgba(14,19,22,.92)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.85)";
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    ctx.fillStyle = "#ffd451";
+    ctx.beginPath();
+    ctx.arc(x + r + 2, box.y, r - 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#0e1316";
+    ctx.font = "700 15px system-ui";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(index), x + r + 2, box.y + 0.5);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "700 15px system-ui";
+    ctx.textAlign = "left";
+    ctx.fillText(`${seconds} s`, x + r * 2 + 6, box.y + 0.5);
+    ctx.restore();
+  }
+
+  function drawSceneCard(target, moments, options) {
+    drawBackground();
+    drawGrid();
+    drawFullPath(target);
+
+    // Punto de espera: donde está el arma antes de pedir el plato.
+    const wait = projectAngles(sim.gunYaw, sim.gunPitch);
+    ctx.save();
+    ctx.strokeStyle = "rgba(255,80,80,.95)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(wait.x, wait.y, 9, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(wait.x - 14, wait.y);
+    ctx.lineTo(wait.x + 14, wait.y);
+    ctx.moveTo(wait.x, wait.y - 14);
+    ctx.lineTo(wait.x, wait.y + 14);
+    ctx.stroke();
+    ctx.restore();
+    haloText("espera", wait.x, wait.y + 26, 13);
+
+    const placed = [{ x: wait.x, y: wait.y, w: 90, h: 46 }];
+    const busy = [{ x: wait.x, y: wait.y, w: 90, h: 46 }];
+    moments.forEach((moment, index) => {
+      const clayScreen = projectPoint(moment.clay);
+      const bead = projectAngles(moment.recommended.yaw, moment.recommended.pitch);
+      const pattern = patternScreenRadius(moment.recommended.intercept, 1, 1.2);
+
+      if (options.showPattern) {
+        ctx.save();
+        ctx.fillStyle = "rgba(255,212,81,.16)";
+        ctx.strokeStyle = "rgba(255,212,81,.92)";
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.ellipse(bead.x, bead.y, pattern.px * 0.76, pattern.px * 0.48, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.strokeStyle = "rgba(255,255,255,.7)";
+      ctx.lineWidth = 1.4;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(clayScreen.x, clayScreen.y);
+      ctx.lineTo(bead.x, bead.y);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.fillStyle = "#ff8a18";
+      drawClayDisc(clayScreen.x, clayScreen.y, clamp(clayScreen.scale * 0.2, 5, 17));
+
+      ctx.save();
+      ctx.fillStyle = "rgba(255,212,81,.98)";
+      ctx.strokeStyle = "rgba(20,20,20,.75)";
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.arc(bead.x, bead.y, 4.6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      const side = bead.x >= canvas.clientWidth / 2 ? 1 : -1;
+      const box = placePill(placed, bead.x + side * (PILL_W / 2 + 18), bead.y - 34);
+      ctx.save();
+      ctx.strokeStyle = "rgba(255,255,255,.6)";
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(bead.x, bead.y);
+      ctx.lineTo(box.x - side * (PILL_W / 2), box.y);
+      ctx.stroke();
+      ctx.restore();
+      drawPill(box, index + 1, num(moment.tau, 2));
+      busy.push(box);
+      busy.push({ x: clayScreen.x, y: clayScreen.y, w: 40, h: 30 });
+      busy.push({ x: bead.x, y: bead.y, w: pattern.px * 1.6, h: pattern.px });
+    });
+
+    return busy;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Vista cenital (se dibuja ya sobre el lienzo de la página)
+  // ---------------------------------------------------------------------------
+
+  function planBox(p, x, y, w, h, title) {
+    p.save();
+    p.fillStyle = "rgba(255,255,255,.93)";
+    p.strokeStyle = "rgba(18,24,28,.35)";
+    p.lineWidth = 1.5;
+    p.beginPath();
+    p.rect(x, y, w, h);
+    p.fill();
+    p.stroke();
+    p.fillStyle = INK_SOFT;
+    p.font = "700 16px system-ui";
+    p.textAlign = "left";
+    p.textBaseline = "top";
+    p.fillText(title, x + 14, y + 11);
+    p.restore();
+  }
+
+  function planProjector(x, y, w, h, xRange, zMax) {
+    const padLeft = 18;
+    const padRight = 18;
+    const padTop = 42;
+    const padBottom = 26;
+    const innerW = w - padLeft - padRight;
+    const innerH = h - padTop - padBottom;
+    const scale = Math.min(innerW / (xRange * 2), innerH / zMax);
+    const cx = x + padLeft + innerW / 2;
+    const bottom = y + h - padBottom;
+    return {
+      scale,
+      to: (wx, wz) => ({ x: cx + wx * scale, y: bottom - wz * scale })
+    };
+  }
+
+  function drawPlanCommon(p, proj, xRange, zMax) {
+    p.save();
+    p.strokeStyle = "rgba(18,24,28,.14)";
+    p.lineWidth = 1;
+    p.font = "600 11px system-ui";
+    p.fillStyle = INK_SOFT;
+    p.textAlign = "left";
+    p.textBaseline = "bottom";
+    for (let z = 20; z <= zMax; z += 20) {
+      const a = proj.to(-xRange, z);
+      const b = proj.to(xRange, z);
+      p.beginPath();
+      p.moveTo(a.x, a.y);
+      p.lineTo(b.x, b.y);
+      p.stroke();
+      p.fillText(`${z} m`, a.x + 4, a.y - 3);
+    }
+
+    // Foso y línea de puestos.
+    const trenchA = proj.to(-3.2, TRENCH_FRONT);
+    const trenchB = proj.to(3.2, TRENCH_FRONT);
+    p.strokeStyle = "rgba(18,24,28,.65)";
+    p.lineWidth = 3;
+    p.beginPath();
+    p.moveTo(trenchA.x, trenchA.y);
+    p.lineTo(trenchB.x, trenchB.y);
+    p.stroke();
+
+    p.fillStyle = "rgba(18,24,28,.35)";
+    for (let station = 1; station <= 5; station += 1) {
+      const s = proj.to(stationX(station), 0);
+      p.beginPath();
+      p.arc(s.x, s.y, 3.4, 0, Math.PI * 2);
+      p.fill();
+    }
+    p.restore();
+  }
+
+  function drawPlanCard(p, x, y, w, h, target, moments) {
+    const land = clayLandingTime(target);
+    let maxX = 6;
+    let maxZ = TRENCH_FRONT + 10;
+    for (let tau = 0; tau <= land; tau += 0.05) {
+      const q = targetAt(target.visibleDelay + tau);
+      if (!q) continue;
+      maxX = Math.max(maxX, Math.abs(q.x) + 3);
+      maxZ = Math.max(maxZ, q.z + 6);
+    }
+    maxX = Math.max(maxX, Math.abs(eye.x) + 3);
+
+    planBox(p, x, y, w, h, "Vista cenital");
+    const proj = planProjector(x, y, w, h, maxX, maxZ);
+    drawPlanCommon(p, proj, maxX, maxZ);
+
+    p.save();
+    const eyePoint = proj.to(eye.x, 0);
+    p.fillStyle = "#c62828";
+    p.beginPath();
+    p.arc(eyePoint.x, eyePoint.y, 5, 0, Math.PI * 2);
+    p.fill();
+
+    p.strokeStyle = ACCENT;
+    p.lineWidth = 2;
+    p.setLineDash([6, 5]);
+    p.beginPath();
+    for (let tau = 0; tau <= land; tau += 0.03) {
+      const q = targetAt(target.visibleDelay + tau);
+      if (!q) continue;
+      const s = proj.to(q.x, q.z);
+      if (tau === 0) p.moveTo(s.x, s.y);
+      else p.lineTo(s.x, s.y);
+    }
+    p.stroke();
+    p.setLineDash([]);
+
+    moments.forEach((moment, index) => {
+      const s = proj.to(moment.clay.x, moment.clay.z);
+      const lead = proj.to(moment.recommended.intercept.x, moment.recommended.intercept.z);
+      p.strokeStyle = LEAD_COLOR;
+      p.lineWidth = 1.4;
+      p.beginPath();
+      p.moveTo(s.x, s.y);
+      p.lineTo(lead.x, lead.y);
+      p.stroke();
+
+      p.fillStyle = "#12181c";
+      p.beginPath();
+      p.arc(s.x, s.y, 8.5, 0, Math.PI * 2);
+      p.fill();
+      p.fillStyle = "#ffffff";
+      p.font = "700 11px system-ui";
+      p.textAlign = "center";
+      p.textBaseline = "middle";
+      p.fillText(String(index + 1), s.x, s.y + 0.5);
+    });
+    p.restore();
+  }
+
+  function drawPlanIndex(p, x, y, w, h, entries) {
+    let maxX = 8;
+    let maxZ = 40;
+    entries.forEach(entry => {
+      const land = clayLandingTime(entry.target);
+      for (let tau = 0; tau <= land; tau += 0.08) {
+        sim.target = entry.target;
+        const q = targetAt(entry.target.visibleDelay + tau);
+        if (!q) continue;
+        maxX = Math.max(maxX, Math.abs(q.x) + 3);
+        maxZ = Math.max(maxZ, q.z + 6);
+      }
+    });
+
+    planBox(p, x, y, w, h, "Vista cenital · todos los platos del esquema");
+    const proj = planProjector(x, y, w, h, maxX, maxZ);
+    drawPlanCommon(p, proj, maxX, maxZ);
+
+    const colors = ["#1565c0", "#2e7d32", "#ad1457", "#ef6c00", "#4527a0"];
+    const byMachine = params.mode === "universal";
+    const colorIndex = card => (byMachine ? card.machineIndex : card.station - 1) % colors.length;
+    p.save();
+    entries.forEach(entry => {
+      sim.target = entry.target;
+      const land = clayLandingTime(entry.target);
+      p.strokeStyle = colors[colorIndex(entry.card)];
+      p.globalAlpha = 0.75;
+      p.lineWidth = 1.6;
+      p.beginPath();
+      for (let tau = 0; tau <= land; tau += 0.05) {
+        const q = targetAt(entry.target.visibleDelay + tau);
+        if (!q) continue;
+        const s = proj.to(q.x, q.z);
+        if (tau === 0) p.moveTo(s.x, s.y);
+        else p.lineTo(s.x, s.y);
+      }
+      p.stroke();
+      const end = targetAt(entry.target.visibleDelay + land * 0.99);
+      if (end) {
+        const s = proj.to(end.x, end.z);
+        p.globalAlpha = 1;
+        p.fillStyle = colors[colorIndex(entry.card)];
+        p.beginPath();
+        p.arc(s.x, s.y, 3.4, 0, Math.PI * 2);
+        p.fill();
+      }
+    });
+    p.globalAlpha = 1;
+
+    p.font = "600 12px system-ui";
+    p.textAlign = "left";
+    p.textBaseline = "middle";
+    colors.forEach((color, index) => {
+      const lx = x + 18 + index * 104;
+      const ly = y + h - 12;
+      p.fillStyle = color;
+      p.fillRect(lx, ly - 5, 22, 4);
+      p.fillStyle = INK_SOFT;
+      p.fillText(byMachine ? `máquina ${index + 1}` : `puesto ${index + 1}`, lx + 27, ly - 3);
+    });
+    p.restore();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Composición de páginas
+  // ---------------------------------------------------------------------------
+
+  function newPage() {
+    const page = document.createElement("canvas");
+    page.width = PAGE_W;
+    page.height = PAGE_H;
+    const p = page.getContext("2d");
+    p.fillStyle = "#ffffff";
+    p.fillRect(0, 0, PAGE_W, PAGE_H);
+    return { page, p };
+  }
+
+  function text(p, value, x, y, options = {}) {
+    p.save();
+    p.font = `${options.weight || 600} ${options.size || 16}px system-ui`;
+    p.fillStyle = options.color || INK;
+    p.textAlign = options.align || "left";
+    p.textBaseline = options.baseline || "top";
+    p.fillText(value, x, y);
+    p.restore();
+  }
+
+  function rangeState(distance) {
+    if (distance <= 38) return { color: "#2e7d32", label: "en distancia" };
+    if (distance <= 48) return { color: "#ef6c00", label: "al límite" };
+    return { color: "#9aa5ab", label: "fuera de alcance útil" };
+  }
+
+  function drawMomentStrip(p, moments, x, y, w, h) {
+    const gap = 14;
+    const boxW = (w - gap * (moments.length - 1)) / moments.length;
+    const k = boxW < 270 ? 0.86 : 1;                 // tipografía adaptada al nº de instantes
+    const fs = size => Math.round(size * k);
+
+    moments.forEach((moment, index) => {
+      const bx = x + index * (boxW + gap);
+      const state = rangeState(moment.metrics.distance);
+
+      p.save();
+      p.fillStyle = "#f5f8f9";
+      p.strokeStyle = LINE;
+      p.lineWidth = 1.4;
+      p.beginPath();
+      p.rect(bx, y, boxW, h);
+      p.fill();
+      p.stroke();
+      p.fillStyle = state.color;
+      p.fillRect(bx, y, boxW, 6);
+      p.restore();
+
+      p.save();
+      p.fillStyle = "#12181c";
+      p.beginPath();
+      p.arc(bx + 26, y + 38, 14, 0, Math.PI * 2);
+      p.fill();
+      p.fillStyle = "#fff";
+      p.font = `700 ${fs(16)}px system-ui`;
+      p.textAlign = "center";
+      p.textBaseline = "middle";
+      p.fillText(String(index + 1), bx + 26, y + 38.5);
+      p.restore();
+
+      text(p, MOMENT_LABEL[moment.key], bx + 48, y + 22, { size: fs(17), weight: 700 });
+      text(p, `${num(moment.tau, 2)} s tras salir`, bx + 48, y + 44, { size: fs(13), color: INK_SOFT });
+
+      text(p, `${num(moment.metrics.perceived * 100, 0)} cm`, bx + 16, y + 74, { size: fs(34), weight: 700, color: ACCENT });
+      text(p, `≈ ${num(moment.metrics.clays, 1)} platos`, bx + 16, y + 114, { size: fs(15), color: INK_SOFT });
+
+      const lateralWord = moment.metrics.lateral >= 0 ? "dcha." : "izda.";
+      const verticalWord = moment.metrics.vertical >= 0 ? "arriba" : "abajo";
+      text(p, `${num(Math.abs(moment.metrics.lateral) * 100, 0)} cm ${lateralWord}  ·  ${num(Math.abs(moment.metrics.vertical) * 100, 0)} cm ${verticalWord}`, bx + 16, y + 140, { size: fs(15), weight: 700 });
+      text(p, `${signed(moment.metrics.lateralDeg, 2)}° lateral · ${signed(moment.metrics.verticalDeg, 2)}° vertical`, bx + 16, y + 164, { size: fs(12), color: INK_SOFT });
+
+      text(p, `plato a ${num(moment.metrics.distance, 0)} m · altura ${num(moment.clay.y, 1)} m · separación real ${num(moment.metrics.total, 1)} m`, bx + 16, y + 190, { size: fs(13), color: INK_SOFT });
+      text(p, `${MOMENT_NOTE[moment.key]} · ${state.label}`, bx + 16, y + 212, { size: fs(13), color: state.color, weight: 700 });
+    });
+  }
+
+  /*
+    La vista cenital va superpuesta a la escena, así que se coloca en la esquina
+    que menos tape: marcas, pastillas y punto de espera cambian de sitio en cada
+    plato y una posición fija acabaría escondiendo justo lo importante.
+  */
+  function choosePlanCorner(busy) {
+    const w = 440;
+    const h = 300;
+    const pad = 12;
+    const k = SCENE.w / SCENE_CSS_W;
+    const boxes = (busy || []).map(box => ({
+      x0: SCENE.x + (box.x - box.w / 2) * k,
+      y0: SCENE.y + (box.y - box.h / 2) * k,
+      x1: SCENE.x + (box.x + box.w / 2) * k,
+      y1: SCENE.y + (box.y + box.h / 2) * k
+    }));
+    const corners = [
+      { x: SCENE.x + pad, y: SCENE.y + SCENE.h - h - pad, w, h },
+      { x: SCENE.x + SCENE.w - w - pad, y: SCENE.y + SCENE.h - h - pad, w, h },
+      { x: SCENE.x + pad, y: SCENE.y + pad, w, h },
+      { x: SCENE.x + SCENE.w - w - pad, y: SCENE.y + pad, w, h }
+    ];
+    let best = corners[0];
+    let bestArea = Infinity;
+    corners.forEach(corner => {
+      const area = boxes.reduce((sum, box) => {
+        const ox = Math.max(0, Math.min(corner.x + w, box.x1) - Math.max(corner.x, box.x0));
+        const oy = Math.max(0, Math.min(corner.y + h, box.y1) - Math.max(corner.y, box.y0));
+        return sum + ox * oy;
+      }, 0);
+      if (area < bestArea) {
+        bestArea = area;
+        best = corner;
+      }
+    });
+    return best;
+  }
+
+  function renderCardPage(card, target, moments, index, total, busy) {
+    const { page, p } = newPage();
+
+    text(p, `Plato ${index + 1} de ${total}`, 40, 38, { size: 15, color: INK_SOFT, weight: 700 });
+    text(p, `Puesto ${card.station}  ·  Máquina ${card.machineIndex + 1}`, 40, 60, { size: 34, weight: 700 });
+    text(
+      p,
+      `ángulo ${signed(card.angleDeg, 0)}°  ·  altura ${num(card.heightAt10, 1)} m a 10 m  ·  caída ${num(card.landingDistance, 0)} m  ·  ${num(target.speedKmh, 0)} km/h  ·  elevación ${num(target.elevDeg, 1)}°`,
+      40,
+      108,
+      { size: 16, color: INK_SOFT }
+    );
+
+    text(p, `${modeLabel()} · ${schemeLabel()}`, PAGE_W - 40, 38, { size: 18, weight: 700, align: "right" });
+    text(p, paramsLine(), PAGE_W - 40, 66, { size: 13, color: INK_SOFT, align: "right" });
+    const turned = Math.abs(framing.yawDeg) > 0.05 || Math.abs(framing.pitchDeg) > 0.05
+      ? ` · vista girada ${signed(framing.yawDeg, 0)}° en horizontal y ${signed(framing.pitchDeg, 0)}° en vertical`
+      : "";
+    text(p, `encuadre ${num(params.zoom, 2)}x sobre el campo base de ${VERTICAL_FOV_DEG}° vertical${turned}`, PAGE_W - 40, 88, { size: 12, color: INK_SOFT, align: "right" });
+
+    p.drawImage(canvas, SCENE.x, SCENE.y, SCENE.w, SCENE.h);
+    p.save();
+    p.strokeStyle = "rgba(18,24,28,.55)";
+    p.lineWidth = 1.5;
+    p.strokeRect(SCENE.x + 0.5, SCENE.y + 0.5, SCENE.w - 1, SCENE.h - 1);
+    p.restore();
+
+    const plan = choosePlanCorner(busy);
+    drawPlanCard(p, plan.x, plan.y, plan.w, plan.h, target, moments);
+
+    drawMomentStrip(p, moments, 40, 965, PAGE_W - 80, 240);
+
+    text(p, "Plato · cuaderno de puntos de disparo · generado desde el simulador, no es un documento oficial", 40, PAGE_H - 26, { size: 12, color: INK_SOFT });
+    text(p, `${modeLabel()} ${schemeLabel()} · puesto ${card.station} · máquina ${card.machineIndex + 1}`, PAGE_W - 40, PAGE_H - 26, { size: 12, color: INK_SOFT, align: "right" });
+
+    return page;
+  }
+
+  function renderIndexPage(entries) {
+    const { page, p } = newPage();
+
+    text(p, "Cuaderno de puntos de disparo", 40, 44, { size: 38, weight: 700 });
+    text(p, `${modeLabel()}  ·  ${schemeLabel()}  ·  ${entries.length} platos`, 40, 94, { size: 20, color: INK_SOFT });
+    text(p, paramsLine(), 40, 124, { size: 14, color: INK_SOFT });
+
+    const tableX = 40;
+    const tableY = 190;
+    const colW = 600;
+    const rowH = Math.min(33, Math.floor(820 / Math.max(1, entries.length)));
+    const headers = ["#", "puesto", "máq.", "ángulo", "alt. 10 m", "caída", "adelanto en la ventana buena"];
+    const xs = [0, 34, 100, 152, 232, 320, 386];
+
+    p.save();
+    p.fillStyle = "#eef3f5";
+    p.fillRect(tableX, tableY - 6, colW, 30);
+    p.restore();
+    headers.forEach((header, i) => text(p, header, tableX + xs[i] + 8, tableY, { size: 13, weight: 700, color: INK_SOFT }));
+
+    entries.forEach((entry, index) => {
+      const y = tableY + 32 + index * rowH;
+      if (index % 2 === 1) {
+        p.save();
+        p.fillStyle = "#f7fafb";
+        p.fillRect(tableX, y - 5, colW, rowH);
+        p.restore();
+      }
+      const values = [
+        String(index + 1),
+        String(entry.card.station),
+        String(entry.card.machineIndex + 1),
+        `${signed(entry.card.angleDeg, 0)}°`,
+        `${num(entry.card.heightAt10, 1)} m`,
+        `${num(entry.card.landingDistance, 0)} m`,
+        entry.reference
+          ? `${num(entry.reference.metrics.perceived * 100, 0)} cm  ·  ${num(entry.reference.metrics.clays, 1)} platos  ·  ${num(entry.reference.tau, 2)} s`
+          : "-"
+      ];
+      values.forEach((value, i) => text(p, value, tableX + xs[i] + 8, y, { size: 14 }));
+    });
+
+    p.save();
+    p.strokeStyle = LINE;
+    p.lineWidth = 1;
+    p.strokeRect(tableX + 0.5, tableY - 6.5, colW, 32 + entries.length * rowH);
+    p.restore();
+
+    drawPlanIndex(p, 680, 190, PAGE_W - 720, 830, entries);
+
+    text(
+      p,
+      "El adelanto es el que ve el tirador: separación aparente entre plato y punto de mira, medida perpendicular a la línea de mirada.",
+      40,
+      PAGE_H - 140,
+      { size: 14, color: INK_SOFT }
+    );
+    text(
+      p,
+      "La tabla usa el instante «subiendo», la ventana buena de tiro; cada ficha detalla los demás instantes.",
+      40,
+      PAGE_H - 168,
+      { size: 14, color: INK_SOFT }
+    );
+    text(
+      p,
+      "Rojo: punto de espera del arma.  Naranja: plato.  Amarillo: dónde poner el punto de mira.  Elipse amarilla: plomeo estimado del primer tiro.",
+      40,
+      PAGE_H - 112,
+      { size: 14, color: INK_SOFT }
+    );
+    text(p, "Plato · generado desde el simulador, no es un documento oficial", 40, PAGE_H - 26, { size: 12, color: INK_SOFT });
+
+    return page;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Orquestación
+  // ---------------------------------------------------------------------------
+
+  let busy = false;
+  let originalRender = null;
+  let originalUpdate = null;
+  let savedState = null;
+
+  function suspendSimulator() {
+    originalRender = render;
+    originalUpdate = update;
+    render = function () {};
+    update = function () {};
+    savedState = {
+      station: sim.station,
+      target: sim.target,
+      mode: sim.mode,
+      t: sim.t,
+      zoom: params.zoom,
+      viewYaw: sim.viewYaw,
+      viewPitch: sim.viewPitch,
+      gunYaw: sim.gunYaw,
+      gunPitch: sim.gunPitch
+    };
+  }
+
+  function resumeSimulator() {
+    restoreCanvas();
+    if (savedState) {
+      sim.station = savedState.station;
+      sim.target = savedState.target;
+      sim.mode = savedState.mode;
+      sim.t = savedState.t;
+      params.zoom = savedState.zoom;
+      sim.viewYaw = savedState.viewYaw;
+      sim.viewPitch = savedState.viewPitch;
+      sim.gunYaw = savedState.gunYaw;
+      sim.gunPitch = savedState.gunPitch;
+      savedState = null;
+    }
+    if (originalRender) render = originalRender;
+    if (originalUpdate) update = originalUpdate;
+    originalRender = null;
+    originalUpdate = null;
+    updateEye();
+    syncControls();
+  }
+
+  /*
+    El análisis es la parte cara (una optimización de adelanto por instante),
+    así que se hace una sola vez por plato y se reutiliza para dibujar. Además
+    guarda el encuadre elegido, para poder imponer después uno común a todo el
+    cuaderno: si cada ficha llevara su propia escala, los adelantos no serían
+    comparables de un plato a otro.
+  */
+  function analyseCard(card, options) {
+    const keys = MOMENT_SETS[options.momentCount] || MOMENT_SETS[5];
+    const target = buildTarget(card);
+    const moments = sampleMoments(target, keys);
+    framing = { yawDeg: 0, pitchDeg: 0 };
+    let view = { yaw: sim.viewYaw, pitch: sim.viewPitch };
+    let zoom = Number(ui.zoom.value);
+    if (options.framing !== "fija") {
+      recenterView(moments);
+      view = { yaw: sim.viewYaw, pitch: sim.viewPitch };
+      zoom = fitZoom(moments, true);
+    }
+    return {
+      card,
+      target,
+      moments,
+      view,
+      zoom,
+      delta: framing,
+      reference: moments.find(moment => moment.key === "subida") || moments[1] || moments[0]
+    };
+  }
+
+  function drawAnalysed(analysis, options, zoom) {
+    const target = buildTarget(analysis.card);
+    sim.target = target;
+    sim.mode = "tracking";
+    sim.viewYaw = analysis.view.yaw;
+    sim.viewPitch = analysis.view.pitch;
+    framing = analysis.delta;
+    params.zoom = zoom;
+    return drawSceneCard(target, analysis.moments, options);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Configuración del cuaderno y estado del botón
+  // ---------------------------------------------------------------------------
+
+  /*
+    El cuaderno se genera siempre con esta configuración. Se deja como
+    constantes con nombre, y no como controles, para no añadir tres ajustes más
+    a una pantalla que ya tiene muchos.
+
+    · momentCount 5 -> salida, subiendo, cenit, bajando y casi en el suelo.
+    · framing "comun" -> una única escala para todas las fichas, de modo que
+      los adelantos son comparables de un plato a otro. Con encuadre por ficha
+      cada plato saldría lo más grande posible, pero comparar dejaría de tener
+      sentido.
+    · showPattern -> dibuja la elipse del plomeo estimado del primer tiro.
+  */
+  const OPTIONS = { momentCount: 5, framing: "comun", showPattern: true };
+
+  function setStatus(message) {
+    const node = document.getElementById("cuadernoStatus");
+    if (node) node.textContent = message;
+  }
+
+  function setBusyUI(active) {
+    const trigger = document.getElementById("cuadernoBtn");
+    if (!trigger) return;
+    trigger.disabled = active;
+    trigger.textContent = active ? "Generando cuaderno..." : "Generar cuaderno";
+  }
+
+  // ---------------------------------------------------------------------------
+  // Generación del PDF
+  // ---------------------------------------------------------------------------
+
+  async function generate() {
+    if (busy) return;
+    busy = true;
+    setBusyUI(true);
+    const options = OPTIONS;
+    const images = [];
+    try {
+      suspendSimulator();
+      const cards = buildCards();
+      prepareCanvas(SCENE_CSS_W, SCENE_CSS_H, SCENE_SCALE);
+
+      const analyses = [];
+      for (let i = 0; i < cards.length; i += 1) {
+        setStatus(`Calculando adelantos ${i + 1} de ${cards.length}…`);
+        await sleep();
+        analyses.push(analyseCard(cards[i], options));
+      }
+
+      const commonZoom = analyses.reduce((min, analysis) => Math.min(min, analysis.zoom), Infinity);
+      const entries = [];
+
+      for (let i = 0; i < analyses.length; i += 1) {
+        setStatus(`Dibujando ficha ${i + 1} de ${analyses.length}…`);
+        await sleep();
+        const analysis = analyses[i];
+        const zoom = options.framing === "comun" ? commonZoom : analysis.zoom;
+        const occupied = drawAnalysed(analysis, options, zoom);
+        const page = renderCardPage(analysis.card, analysis.target, analysis.moments, i, analyses.length, occupied);
+        images.push({
+          bytes: CuadernoPDF.dataUrlToBytes(page.toDataURL("image/jpeg", JPEG_QUALITY)),
+          w: PAGE_W,
+          h: PAGE_H
+        });
+        entries.push(analysis);
+      }
+
+      setStatus("Componiendo portada…");
+      await sleep();
+      const index = renderIndexPage(entries);
+      images.unshift({
+        bytes: CuadernoPDF.dataUrlToBytes(index.toDataURL("image/jpeg", JPEG_QUALITY)),
+        w: PAGE_W,
+        h: PAGE_H
+      });
+
+      const blob = CuadernoPDF.build(images, PT_W, PT_H);
+      const name = `cuaderno-plato-${params.mode}-${ui.scheme.value}.pdf`;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 4000);
+      setStatus(`Listo: ${images.length} páginas · ${(blob.size / 1048576).toFixed(1)} MB · ${name}`);
+    } catch (error) {
+      setStatus(`Error: ${error.message}`);
+      throw error;
+    } finally {
+      resumeSimulator();
+      setBusyUI(false);
+      busy = false;
+    }
+  }
+
+  const trigger = document.getElementById("cuadernoBtn");
+  if (trigger) trigger.addEventListener("click", generate);
+})();
   </script>
 </body>
 </html>
