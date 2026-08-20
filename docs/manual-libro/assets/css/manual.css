@@ -74,6 +74,10 @@ main{min-width:0}
 .personal-note{margin:22px 0 26px;padding:17px 19px;border:1px solid #b9dfe1;border-left:6px solid var(--teal);border-radius:0 8px 8px 0;background:#edf9f9;color:#183f42;line-height:1.7}
 .personal-note strong{display:block;margin-bottom:5px;color:#075f64;font-size:.82rem;font-weight:950;letter-spacing:.05em;text-transform:uppercase}
 .technical-note{border-left-color:#1f5f93;background:#f2f7fb}
+.download-note{margin:18px 0 24px;padding:15px 18px;border-left:4px solid var(--orange);background:#fff7f1;color:var(--ink);line-height:1.65}
+.download-note strong{display:block;margin-bottom:4px}
+.download-note a{color:#a8420a;text-decoration:underline}
+.download-note .meta{display:block;margin-top:4px;color:var(--muted);font-size:.88rem}
 .source-note{border-left-color:#6b7280;background:#f7f7f8;font-size:.92rem;color:var(--muted)}
 .source-note a{overflow-wrap:anywhere}
 .book-chapter .section-bridge{max-width:76ch;margin:10px 0 24px;padding:14px 17px;border-left:4px solid var(--green);border-radius:0 6px 6px 0;background:#f3f8f4;color:#31483b;font-size:1rem;line-height:1.72}
