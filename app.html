@@ -3225,7 +3225,7 @@ const CuadernoPDF = (function () {
   A4 apaisado imprimible: una portada con la tabla del esquema y la vista
   cenital de la tirada, y después una ficha por plato con la escena desde el
   ojo del tirador y varios instantes marcados sobre la misma trayectoria
-  (salida, subiendo, cenit, bajando y casi en el suelo). Cada instante lleva su
+  (salida, pronto, ventana buena, al límite y ya tarde). Cada instante lleva su
   plato, su punto de adelanto y el reparto de ese adelanto en centímetros,
   anchos de plato y grados.
 
@@ -3255,6 +3255,7 @@ const CuadernoPDF = (function () {
   const PT_H = 595;
   const JPEG_QUALITY = 0.92;
   const CLAY_WIDTH_M = 0.11;       // ancho del plato ISSF, unidad práctica de adelanto
+  const USEFUL_RANGE_MAX = 48;     // metros; más allá, el plato ya está fuera de alcance útil
 
   const INK = "#12181c";
   const INK_SOFT = "#5b6a72";
@@ -3267,31 +3268,37 @@ const CuadernoPDF = (function () {
   const SCENE_CSS_H = Math.round(SCENE_CSS_W * SCENE.h / SCENE.w);
   const SCENE_SCALE = SCENE.w / SCENE_CSS_W;
 
+  /*
+    Los instantes se nombran por la decisión de tiro, no por la anatomía de la
+    parábola. Un cuaderno para componer la tirada tiene que responder a «cuándo
+    disparo y cuánto adelanto»; dónde está el plato en cada momento ya se lee en
+    el dibujo y en la tira de datos de cada ficha.
+  */
   const MOMENT_SETS = {
-    4: ["salida", "cenit", "bajada", "suelo"],
-    5: ["salida", "subida", "cenit", "bajada", "suelo"],
-    6: ["salida", "subida-temprana", "subida", "cenit", "bajada", "suelo"],
-    7: ["salida", "subida-temprana", "subida", "cenit", "bajada", "bajada-larga", "suelo"]
+    4: ["salida", "ventana", "limite", "tarde"],
+    5: ["salida", "pronto", "ventana", "limite", "tarde"],
+    6: ["salida", "muy-pronto", "pronto", "ventana", "limite", "tarde"],
+    7: ["salida", "muy-pronto", "pronto", "ventana", "limite", "tarde", "muy-tarde"]
   };
 
   const MOMENT_LABEL = {
     "salida": "Salida",
-    "subida-temprana": "Recién arrancado",
-    "subida": "Subiendo",
-    "cenit": "Cenit",
-    "bajada": "Bajando",
-    "bajada-larga": "Bajada larga",
-    "suelo": "Casi en el suelo"
+    "muy-pronto": "Muy pronto",
+    "pronto": "Pronto",
+    "ventana": "Ventana buena",
+    "limite": "Al límite",
+    "tarde": "Vas tarde",
+    "muy-tarde": "Muy tarde"
   };
 
   const MOMENT_NOTE = {
     "salida": "primer vistazo",
-    "subida-temprana": "tiro muy rápido",
-    "subida": "ventana buena",
-    "cenit": "máxima altura",
-    "bajada": "vas tarde",
-    "bajada-larga": "muy tarde",
-    "suelo": "límite del lance"
+    "muy-pronto": "tiro apresurado",
+    "pronto": "tiro rápido",
+    "ventana": "el tiro cómodo",
+    "limite": "último tiro útil",
+    "tarde": "ya no llega bien",
+    "muy-tarde": "límite del lance"
   };
 
   // ---------------------------------------------------------------------------
@@ -3313,16 +3320,65 @@ const CuadernoPDF = (function () {
     return option ? option.textContent : ui.scheme.value;
   }
 
-  function paramsLine() {
+  // Valores con los que arranca el simulador. Sirven de referencia para señalar
+  // en el cuaderno qué ha tocado el usuario.
+  const PARAM_DEFAULTS = { cartridge: 400, rib: 0, wind: 0, reaction: 0.03, spread1: 30, guard: "neutral" };
+
+  function paramsParts() {
     const rib = Number(ui.rib.value);
     return [
-      `cartucho ${params.cartridge} m/s`,
-      `solista ${rib}% (${num(sim.ribGain, 2)}°)`,
-      `viento ${num(params.wind, 1)} m/s`,
-      `retardo ${num(params.reaction, 2)} s`,
-      `plomeo 1 ${spreadLabel(params.spread1)}`,
-      `guardia ${ui.guard.options[ui.guard.selectedIndex].textContent.toLowerCase()}`
-    ].join("  ·  ");
+      { text: `cartucho ${params.cartridge} m/s`, changed: params.cartridge !== PARAM_DEFAULTS.cartridge },
+      { text: `solista ${rib}% (${num(sim.ribGain, 2)}°)`, changed: rib !== PARAM_DEFAULTS.rib },
+      { text: `viento ${num(params.wind, 1)} m/s`, changed: Math.abs(params.wind - PARAM_DEFAULTS.wind) > 0.001 },
+      { text: `retardo ${num(params.reaction, 2)} s`, changed: Math.abs(params.reaction - PARAM_DEFAULTS.reaction) > 0.001 },
+      { text: `plomeo 1 ${spreadLabel(params.spread1)}`, changed: params.spread1 !== PARAM_DEFAULTS.spread1 },
+      { text: `guardia ${ui.guard.options[ui.guard.selectedIndex].textContent.toLowerCase()}`, changed: params.guard !== PARAM_DEFAULTS.guard }
+    ];
+  }
+
+  const paramsChanged = () => paramsParts().some(part => part.changed);
+
+  function paramsLine() {
+    return paramsParts().map(part => part.text).join("  ·  ");
+  }
+
+  /*
+    Los ajustes se pintan resaltando en color los que se han cambiado respecto
+    al arranque del simulador.
+
+    El motivo es que un adelanto no significa nada sin la combinación que lo
+    produjo: con la solista elevada o con viento, las mismas cifras dejan de
+    valer. La ficha impresa se separa de la pantalla donde se generó, así que
+    tiene que gritar por sí sola con qué se hizo.
+  */
+  function drawParamsLine(p, x, y, size, align = "left") {
+    const parts = paramsParts();
+    const sep = "  ·  ";
+    p.save();
+    p.textAlign = "left";
+    p.textBaseline = "top";
+    const widthOf = part => {
+      p.font = `${part.changed ? 700 : 400} ${size}px system-ui`;
+      return p.measureText(part.text).width;
+    };
+    p.font = `400 ${size}px system-ui`;
+    const sepWidth = p.measureText(sep).width;
+    const total = parts.reduce((sum, part) => sum + widthOf(part), 0) + sepWidth * (parts.length - 1);
+    let cursor = align === "right" ? x - total : x;
+    parts.forEach((part, i) => {
+      if (i) {
+        p.font = `400 ${size}px system-ui`;
+        p.fillStyle = INK_SOFT;
+        p.fillText(sep, cursor, y);
+        cursor += sepWidth;
+      }
+      p.font = `${part.changed ? 700 : 400} ${size}px system-ui`;
+      p.fillStyle = part.changed ? ACCENT : INK_SOFT;
+      p.fillText(part.text, cursor, y);
+      cursor += p.measureText(part.text).width;
+    });
+    p.restore();
+    return total;
   }
 
   // ---------------------------------------------------------------------------
@@ -3411,17 +3467,50 @@ const CuadernoPDF = (function () {
   // Instantes de la trayectoria y cálculo del adelanto en cada uno
   // ---------------------------------------------------------------------------
 
+  /*
+    Instante en que el plato se aleja más allá del alcance con el que trabaja
+    este cuaderno. Es el final de la ventana de tiro.
+  */
+  function usefulHorizon(target, land) {
+    const step = Math.max(0.015, land / 240);
+    let last = 0.12;
+    for (let t = 0.12; t <= land; t += step) {
+      const clay = targetAt(target.visibleDelay + t);
+      if (!clay) break;
+      // Se devuelve el último instante que TODAVÍA está a tiro, no el primero
+      // que ya se pasó: si no, la tarjeta diría «último tiro útil» mientras el
+      // estado de distancia la marca como fuera de alcance.
+      if (Math.hypot(clay.x - eye.x, clay.y - eye.y, clay.z - eye.z) > USEFUL_RANGE_MAX) return last;
+      last = t;
+    }
+    return land * 0.94;
+  }
+
+  /*
+    Los instantes se reparten dentro de la ventana de tiro, no a lo largo de
+    toda la parábola.
+
+    Repartirlos por la anatomía del vuelo parecía lo natural, pero daba un mal
+    cuaderno justo donde más falta hace: en olímpico el plato vuela 76 m y en
+    ABT 70 m, así que cuando llega al cenit ya está a unos 50 m, fuera de
+    alcance útil. Tres de las cinco tarjetas describían entonces platos que ya
+    no se pueden romper. Ahora cuatro instantes caen dentro de la ventana y el
+    quinto se deja a propósito fuera, como aviso de lo que cuesta retrasarse.
+  */
   function momentTimes(target, keys) {
-    const apex = Math.max(0.08, target.v0.y / (g * 0.42));
     const land = clayLandingTime(target);
+    const horizon = clamp(usefulHorizon(target, land), 0.3, land * 0.97);
+    const first = Math.min(0.22, horizon * 0.3);
+    const span = Math.max(0.08, horizon - first);
+    const beyond = Math.max(0.1, land - horizon);
     const table = {
-      "salida": 0.22,
-      "subida-temprana": apex * 0.35,
-      "subida": apex * 0.62,
-      "cenit": apex,
-      "bajada": apex + (land - apex) * 0.42,
-      "bajada-larga": apex + (land - apex) * 0.72,
-      "suelo": land * 0.94
+      "salida": first,
+      "muy-pronto": first + span * 0.16,
+      "pronto": first + span * 0.36,
+      "ventana": first + span * 0.66,
+      "limite": horizon,
+      "tarde": horizon + beyond * 0.45,
+      "muy-tarde": horizon + beyond * 0.82
     };
     return keys.map(key => ({ key, tau: clamp(table[key], 0.12, land * 0.97) }));
   }
@@ -3964,7 +4053,7 @@ const CuadernoPDF = (function () {
 
   function rangeState(distance) {
     if (distance <= 38) return { color: "#2e7d32", label: "en distancia" };
-    if (distance <= 48) return { color: "#ef6c00", label: "al límite" };
+    if (distance <= USEFUL_RANGE_MAX) return { color: "#ef6c00", label: "al límite" };
     return { color: "#9aa5ab", label: "fuera de alcance útil" };
   }
 
@@ -4070,11 +4159,19 @@ const CuadernoPDF = (function () {
     );
 
     text(p, `${modeLabel()} · ${schemeLabel()}`, PAGE_W - 40, 38, { size: 18, weight: 700, align: "right" });
-    text(p, paramsLine(), PAGE_W - 40, 66, { size: 13, color: INK_SOFT, align: "right" });
+    text(
+      p,
+      paramsChanged()
+        ? "AJUSTES PROPIOS · LOS ADELANTOS DE ESTA FICHA SOLO VALEN CON ESTA COMBINACIÓN"
+        : "LOS ADELANTOS DE ESTA FICHA SOLO VALEN CON ESTOS AJUSTES",
+      PAGE_W - 40, 66,
+      { size: 12, weight: 700, color: ACCENT, align: "right" }
+    );
+    drawParamsLine(p, PAGE_W - 40, 86, 13, "right");
     const turned = Math.abs(framing.yawDeg) > 0.05 || Math.abs(framing.pitchDeg) > 0.05
       ? ` · vista girada ${signed(framing.yawDeg, 0)}° en horizontal y ${signed(framing.pitchDeg, 0)}° en vertical`
       : "";
-    text(p, `encuadre ${num(params.zoom, 2)}x sobre el campo base de ${VERTICAL_FOV_DEG}° vertical${turned}`, PAGE_W - 40, 88, { size: 12, color: INK_SOFT, align: "right" });
+    text(p, `encuadre ${num(params.zoom, 2)}x sobre el campo base de ${VERTICAL_FOV_DEG}° vertical${turned}`, PAGE_W - 40, 108, { size: 12, color: INK_SOFT, align: "right" });
 
     p.drawImage(canvas, SCENE.x, SCENE.y, SCENE.w, SCENE.h);
     p.save();
@@ -4181,8 +4278,8 @@ const CuadernoPDF = (function () {
     let y = 348;
     y = heading(p, "Qué tienes en las manos", left, y);
     y = paragraph(p, "Una tirada completa, plato a plato, tal y como la vería el tirador desde su puesto. " +
-      "Para cada plato se dibuja la trayectoria entera y se marcan cinco instantes sobre ella: " +
-      "recién salido, subiendo, en el cenit, bajando y casi en el suelo.", left, y, colW);
+      "Para cada plato se dibuja la trayectoria entera y se marcan cinco instantes sobre ella, " +
+      "repartidos por la ventana en la que todavía está a tiro, más uno ya tarde.", left, y, colW);
     y = paragraph(p, "En cada instante se indica dónde está el plato y cuánto hay que adelantar para " +
       "romperlo, medido como lo ve el ojo. Sirve para componer la tirada antes de ir al campo: " +
       "qué disparas antes, cuánto adelantas y qué te ocurre si te retrasas.", left, y + 10, colW);
@@ -4212,9 +4309,12 @@ const CuadernoPDF = (function () {
     p.restore();
     ry = paragraph(p, paramsLine().replace(/\s+·\s+/g, "   ·   "), rightX + 18, ry + 12, rightW - 36, { size: 16, color: INK });
     ry += 26;
-    ry = paragraph(p, "Cambia cualquiera de ellos en el simulador y vuelve a pulsar «Generar cuaderno»: " +
-      "el documento se rehace con los tuyos. Una solista elevada o un viento distinto dan otro cuadro.",
-      rightX, ry, rightW, { size: 16, color: INK_SOFT });
+    ry = paragraph(p, "Todos los adelantos de este cuaderno valen únicamente para esa combinación. " +
+      "Con otro cartucho, otra solista, otro plomeo o con viento, las cifras cambian y este cuaderno " +
+      "deja de servir: hay que generar uno nuevo.", rightX, ry, rightW, { size: 16, weight: 600 });
+    ry = paragraph(p, "Se hace desde el simulador, cambiando lo que quieras y volviendo a pulsar " +
+      "«Generar cuaderno». En cada ficha, los ajustes que no son los de arranque aparecen resaltados en color.",
+      rightX, ry + 8, rightW, { size: 16, color: INK_SOFT });
 
     ry = heading(p, "El proyecto", rightX, ry + 26);
     ry = paragraph(p, "Plato es un simulador y un libro gratuitos para aprender tiro al plato, escritos por " +
@@ -4334,7 +4434,7 @@ const CuadernoPDF = (function () {
 
     text(p, "Cuaderno de puntos de disparo", 40, 44, { size: 38, weight: 700 });
     text(p, `${modeLabel()}  ·  ${schemeLabel()}  ·  ${entries.length} platos`, 40, 94, { size: 20, color: INK_SOFT });
-    text(p, paramsLine(), 40, 124, { size: 14, color: INK_SOFT });
+    drawParamsLine(p, 40, 124, 14, "left");
 
     const tableX = 40;
     const tableY = 190;
@@ -4480,7 +4580,7 @@ const CuadernoPDF = (function () {
       view,
       zoom,
       delta: framing,
-      reference: moments.find(moment => moment.key === "subida") || moments[1] || moments[0]
+      reference: moments.find(moment => moment.key === "ventana") || moments[1] || moments[0]
     };
   }
 
@@ -4504,7 +4604,7 @@ const CuadernoPDF = (function () {
     constantes con nombre, y no como controles, para no añadir tres ajustes más
     a una pantalla que ya tiene muchos.
 
-    · momentCount 5 -> salida, subiendo, cenit, bajando y casi en el suelo.
+    · momentCount 5 -> salida, pronto, ventana buena, al límite y ya tarde.
     · framing "comun" -> una única escala para todas las fichas, de modo que
       los adelantos son comparables de un plato a otro. Con encuadre por ficha
       cada plato saldría lo más grande posible, pero comparar dejaría de tener

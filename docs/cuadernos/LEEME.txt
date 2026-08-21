@@ -7,9 +7,15 @@ platos y vista cenital), despues una ficha por plato, y cierra con el aviso de
 uso y la licencia.
 
 En cada ficha se dibuja la escena desde el ojo del tirador con la trayectoria
-completa y cinco instantes marcados sobre ella: salida, subiendo, cenit,
-bajando y casi en el suelo. En cada instante se indica donde esta el plato y
-cuanto hay que adelantar, en centimetros, en anchos de plato y en grados.
+completa y cinco instantes marcados sobre ella. Cuatro caen dentro de la
+ventana en la que el plato todavia esta a tiro (salida, pronto, ventana buena
+y al limite) y el quinto queda a proposito fuera, para ver lo que cuesta
+retrasarse. En cada instante se indica donde esta el plato y cuanto hay que
+adelantar, en centimetros, en anchos de plato y en grados.
+
+IMPORTANTE: los adelantos valen SOLO para los ajustes con los que se genero el
+cuaderno. Van impresos en la cabecera de cada ficha, y los que no son los de
+arranque del simulador aparecen resaltados en color.
 
   cuaderno-puntos-de-disparo-universal-fu1.pdf   Foso universal, FITASC Universal 1, 25 fichas, 28 paginas
   cuaderno-puntos-de-disparo-olimpico-issf1.pdf  Foso olimpico, ISSF Olimpica 1, 15 fichas, 18 paginas
