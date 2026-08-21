@@ -66,6 +66,17 @@ El punto de vista principal es el del ojo derecho del tirador, situado a 1,70 m 
 - **Robot lateral**: solo en modalidad Robot; multiplica la apertura lateral de la secuencia.
 - **Repetir plato**: repite el mismo plato desde el mismo puesto, sin sumar plato ni avanzar la rotación.
 - **Ayuda**: abre una explicación para principiantes sobre modalidades, velocidades, cartuchos, aperturas, trayectorias y lectura de los elementos de pantalla.
+- **Generar cuaderno**: produce un PDF A4 apaisado imprimible con toda la tirada del esquema activo y lo descarga. Ver [2.1](#21-cuaderno-de-puntos-de-disparo).
+
+### 2.1. Cuaderno de Puntos de Disparo
+
+El botón **Generar cuaderno**, al final del panel de parámetros, compone un PDF con la tirada completa: 25 fichas en Universal y en Robot, 15 en Olímpica. Cada ficha dibuja la trayectoria de un plato vista desde el ojo del tirador, con cinco instantes marcados sobre ella y, en cada uno, el adelanto que hay que llevar expresado en centímetros, en anchos de plato y en grados.
+
+Cuatro de esos instantes se reparten dentro de la ventana en la que el plato todavía está a tiro; el quinto queda fuera a propósito, para mostrar lo que cuesta retrasarse. El documento abre con una portada que lo explica y cierra con el aviso de uso y la licencia.
+
+El cuaderno se genera con **los ajustes que haya puestos en ese momento**, que se imprimen en la cabecera de cada ficha resaltando en color los que no son los de arranque. Un adelanto no significa nada sin la combinación que lo produjo: con otra solista, otro cartucho o con viento, hay que generar uno nuevo.
+
+Todo ocurre en el navegador, sin servidor ni dependencias. En `docs/cuadernos/` hay tres cuadernos ya generados —uno por modalidad, con los mismos ajustes para que sean comparables— y un ZIP con los tres.
 
 La escena no se mueve al apuntar. El suelo, el foso, el señuelo y las marcas permanecen fijos; lo que se mueve es el punto de mira, igual que en la percepción del tirador cuando conserva la cabeza alineada y desplaza la escopeta.
 
@@ -349,6 +360,7 @@ http://localhost:8000/
 ├── README.md
 ├── docs/
 │   ├── assets/       # infografías PNG generativas
+│   ├── cuadernos/    # cuadernos de puntos de disparo ya generados, y su ZIP
 │   ├── manual-libro/ # assets importados del manual único
 │   └── screenshots/
 ├── scripts/
