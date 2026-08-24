@@ -478,204 +478,1057 @@
       cursor: progress;
     }
 
+    .lang-pick {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .lang-pick select {
+      width: auto;
+      padding: 3px 6px;
+      font-size: 12px;
+    }
+
   </style>
 </head>
 <body>
   <main>
-    <aside class="project-beta" aria-label="Aviso de proyecto en beta"><strong>Proyecto en beta</strong>El libro y el simulador están pendientes de revisión. Se comparten para que cualquiera pueda ayudar a mejorarlos.<a href="mailto:rcanalesmora@gmail.com">rcanalesmora@gmail.com</a></aside>
-    <section class="toolbar" aria-label="Controles principales">
+    <aside class="project-beta" aria-label="Aviso de proyecto en beta"><strong data-i18n="beta.tag">Proyecto en beta</strong><span data-i18n="beta.text">El libro y el simulador están pendientes de revisión. Se comparten para que cualquiera pueda ayudar a mejorarlos.</span><a href="mailto:rcanalesmora@gmail.com">rcanalesmora@gmail.com</a></aside>
+    <section class="toolbar" data-i18n-aria="aria.toolbar" aria-label="Controles principales">
       <div class="button-row">
-        <button class="primary" id="callBtn" type="button" title="Solicita un nuevo plato. Tambien puedes pedirlo con el boton derecho del raton.">Pedir plato</button>
-        <button id="repeatBtn" type="button" title="Repite exactamente el plato anterior desde el mismo puesto, sin contar como nuevo plato de la tirada.">Repetir plato</button>
-        <button class="danger" id="fireBtn" type="button" title="Dispara el cartucho actual. Tambien puedes disparar con el boton izquierdo del raton.">Disparar</button>
-        <button id="resetBtn" type="button" title="Reinicia la tirada de 25 platos y limpia los disparos y fragmentos visibles.">Reset</button>
-        <button id="prevStationBtn" type="button" title="Retrocede el puesto seleccionado o actual.">Puesto -</button>
-        <button id="nextStationBtn" type="button" title="Avanza el puesto seleccionado o actual.">Puesto +</button>
+        <button class="primary" id="callBtn" type="button" data-i18n="btn.call" data-i18n-title="btn.call.t" title="Solicita un nuevo plato. Tambien puedes pedirlo con el boton derecho del raton.">Pedir plato</button>
+        <button id="repeatBtn" type="button" data-i18n="btn.repeat" data-i18n-title="btn.repeat.t" title="Repite exactamente el plato anterior desde el mismo puesto, sin contar como nuevo plato de la tirada.">Repetir plato</button>
+        <button class="danger" id="fireBtn" type="button" data-i18n="btn.fire" data-i18n-title="btn.fire.t" title="Dispara el cartucho actual. Tambien puedes disparar con el boton izquierdo del raton.">Disparar</button>
+        <button id="resetBtn" type="button" data-i18n="btn.reset" data-i18n-title="btn.reset.t" title="Reinicia la tirada de 25 platos y limpia los disparos y fragmentos visibles.">Reset</button>
+        <button id="prevStationBtn" type="button" data-i18n="btn.prevStation" data-i18n-title="btn.prevStation.t" title="Retrocede el puesto seleccionado o actual.">Puesto -</button>
+        <button id="nextStationBtn" type="button" data-i18n="btn.nextStation" data-i18n-title="btn.nextStation.t" title="Avanza el puesto seleccionado o actual.">Puesto +</button>
       </div>
-      <div class="segmented" aria-label="Tipo de solista">
-        <button id="flatBtn" type="button" aria-pressed="true" title="Solista sin ganancia: el punto de mira y el centro de impacto salen practicamente alineados.">Plana</button>
-        <button id="highBtn" type="button" aria-pressed="false" title="Solista con ganancia: el impacto sale algo por encima del punto de mira.">Alta</button>
+      <div class="segmented" data-i18n-aria="aria.ribType" aria-label="Tipo de solista">
+        <button id="flatBtn" type="button" aria-pressed="true" data-i18n="btn.flat" data-i18n-title="btn.flat.t" title="Solista sin ganancia: el punto de mira y el centro de impacto salen practicamente alineados.">Plana</button>
+        <button id="highBtn" type="button" aria-pressed="false" data-i18n="btn.high" data-i18n-title="btn.high.t" title="Solista con ganancia: el impacto sale algo por encima del punto de mira.">Alta</button>
       </div>
       <div class="status">
-        <div class="stat" title="Fase actual del simulador: esperando, retardo de salida, seguimiento, caida o terminado."><span>Estado</span><strong id="stateReadout">Esperando</strong></div>
-        <div class="stat" title="Contador de la tirada: platos consumidos de 25 y platos rotos. Las repeticiones no suman."><span>Tirada</span><strong id="roundReadout">0/25 · 0 rotos</strong></div>
-        <div class="stat" title="Puesto de tiro actual. La tirada rota por los puestos 1 a 5."><span>Puesto</span><strong id="stationReadout">3</strong></div>
-        <div class="stat" title="Maquina, angulo, altura a 10 m y distancia del plato actual."><span>Plato</span><strong id="targetReadout">-</strong></div>
-        <div class="stat" title="Distancia aproximada entre el plato y el punto fisico recomendado de adelanto."><span>Adelanto</span><strong id="leadReadout">-</strong></div>
-        <div class="stat" title="Angulos actuales del punto de mira respecto al eje del ojo del tirador."><span>Encare</span><strong id="aimReadout">0.0 deg</strong></div>
-        <div class="stat" title="Resultado del ultimo disparo o del plato actual."><span>Resultado</span><strong id="resultReadout">-</strong></div>
+        <div class="stat" data-i18n-title="stat.state.t" title="Fase actual del simulador: esperando, retardo de salida, seguimiento, caida o terminado."><span data-i18n="stat.state">Estado</span><strong id="stateReadout">Esperando</strong></div>
+        <div class="stat" data-i18n-title="stat.round.t" title="Contador de la tirada: platos consumidos de 25 y platos rotos. Las repeticiones no suman."><span data-i18n="stat.round">Tirada</span><strong id="roundReadout">0/25 · 0 rotos</strong></div>
+        <div class="stat" data-i18n-title="stat.station.t" title="Puesto de tiro actual. La tirada rota por los puestos 1 a 5."><span data-i18n="stat.station">Puesto</span><strong id="stationReadout">3</strong></div>
+        <div class="stat" data-i18n-title="stat.target.t" title="Maquina, angulo, altura a 10 m y distancia del plato actual."><span data-i18n="stat.target">Plato</span><strong id="targetReadout">-</strong></div>
+        <div class="stat" data-i18n-title="stat.lead.t" title="Distancia aproximada entre el plato y el punto fisico recomendado de adelanto."><span data-i18n="stat.lead">Adelanto</span><strong id="leadReadout">-</strong></div>
+        <div class="stat" data-i18n-title="stat.aim.t" title="Angulos actuales del punto de mira respecto al eje del ojo del tirador."><span data-i18n="stat.aim">Encare</span><strong id="aimReadout">0.0 deg</strong></div>
+        <div class="stat" data-i18n-title="stat.result.t" title="Resultado del ultimo disparo o del plato actual."><span data-i18n="stat.result">Resultado</span><strong id="resultReadout">-</strong></div>
       </div>
       <div class="switch-row">
-        <label title="Muestra u oculta el punto y area amarilla donde conviene apuntar para interceptar el plato."><input id="showLead" type="checkbox" checked> ayuda adelanto</label>
-        <label title="Muestra u oculta el patron azul estimado del plomeo donde estas apuntando."><input id="showShot" type="checkbox" checked> plomeo</label>
-        <label title="Muestra u oculta la trayectoria naranja del plato."><input id="showPath" type="checkbox" checked> trayectoria</label>
+        <label data-i18n-title="sw.lead.t" title="Muestra u oculta el punto y area amarilla donde conviene apuntar para interceptar el plato."><input id="showLead" type="checkbox" checked> <span data-i18n="sw.lead">ayuda adelanto</span></label>
+        <label data-i18n-title="sw.pattern.t" title="Muestra u oculta el patron azul estimado del plomeo donde estas apuntando."><input id="showShot" type="checkbox" checked> <span data-i18n="sw.pattern">plomeo</span></label>
+        <label data-i18n-title="sw.path.t" title="Muestra u oculta la trayectoria naranja del plato."><input id="showPath" type="checkbox" checked> <span data-i18n="sw.path">trayectoria</span></label>
+        <label class="lang-pick" data-i18n-title="lang.t" title="Idioma de la aplicación."><span data-i18n="lang.label">Idioma</span>
+          <select id="langControl" aria-label="Language"></select>
+        </label>
       </div>
     </section>
 
-    <section class="scene" aria-label="Simulador desde el ojo del tirador">
+    <section class="scene" data-i18n-aria="aria.scene" aria-label="Simulador desde el ojo del tirador">
       <canvas id="simCanvas"></canvas>
       <div class="banner" id="banner">PLATO</div>
       <div class="norm-badge" id="normBadge" aria-live="polite"></div>
-      <div class="slow-note" id="slowNote"><strong>Camara lenta</strong> activa para analizar. Para probar tiempo real, sube <strong>Camara lenta</strong> a 1.00x.</div>
+      <div class="slow-note" id="slowNote" data-i18n-html="scene.slowNote"><strong>Camara lenta</strong> activa para analizar. Para probar tiempo real, sube <strong>Camara lenta</strong> a 1.00x.</div>
     </section>
 
-    <section class="controls" aria-label="Parametros fisicos">
-      <label class="control" title="Elige la disciplina: Universal usa cinco maquinas; Olimpica usa quince maquinas agrupadas por puesto; Robot usa una maquina oscilante con fuerza, altura y lateral regulables.">Modalidad
+    <section class="controls" data-i18n-aria="aria.controls" aria-label="Parametros fisicos">
+      <label class="control" data-i18n-title="ctl.mode.t" title="Elige la disciplina: Universal usa cinco maquinas; Olimpica usa quince maquinas agrupadas por puesto; Robot usa una maquina oscilante con fuerza, altura y lateral regulables."><span data-i18n="ctl.mode">Modalidad</span>
         <select id="modeControl">
-          <option value="universal">Universal</option>
-          <option value="olympic">Olimpica</option>
-          <option value="robot">Robot</option>
+          <option value="universal" data-i18n="mode.universal">Universal</option>
+          <option value="olympic" data-i18n="mode.olympic">Olimpica</option>
+          <option value="robot" data-i18n="mode.robot">Robot</option>
         </select>
       </label>
-      <label class="control" title="Selecciona el esquema oficial/simulado de maquinas, angulos y alturas que se usara para sortear cada plato.">Esquema
+      <label class="control" data-i18n-title="ctl.scheme.t" title="Selecciona el esquema oficial/simulado de maquinas, angulos y alturas que se usara para sortear cada plato."><span data-i18n="ctl.scheme">Esquema</span>
         <select id="schemeControl"></select>
       </label>
-      <label class="control" title="Puesto inicial o actual del tirador. La tirada avanza rotando 1, 2, 3, 4, 5.">Puesto <span id="stationValue">3</span>
+      <label class="control" data-i18n-title="ctl.station.t" title="Puesto inicial o actual del tirador. La tirada avanza rotando 1, 2, 3, 4, 5."><span data-i18n="ctl.station">Puesto</span> <span id="stationValue">3</span>
         <input id="stationControl" type="range" min="1" max="5" step="1" value="3">
       </label>
-      <label class="control" title="Define donde empieza apuntando el tirador antes de pedir plato: al señuelo o algo alto segun el puesto.">Guardia
+      <label class="control" data-i18n-title="ctl.guard.t" title="Define donde empieza apuntando el tirador antes de pedir plato: al señuelo o algo alto segun el puesto."><span data-i18n="ctl.guard">Guardia</span>
         <select id="guardControl">
-          <option value="neutral">Neutra</option>
-          <option value="high">Alta por puesto</option>
+          <option value="neutral" data-i18n="guard.neutral">Neutra</option>
+          <option value="high" data-i18n="guard.high">Alta por puesto</option>
         </select>
       </label>
-      <label class="control" title="Acerca visualmente la escena sin cambiar la distancia real al foso ni la fisica.">Zoom visual <span id="zoomValue">1.00x</span>
+      <label class="control" data-i18n-title="ctl.zoom.t" title="Acerca visualmente la escena sin cambiar la distancia real al foso ni la fisica."><span data-i18n="ctl.zoom">Zoom visual</span> <span id="zoomValue">1.00x</span>
         <input id="zoomControl" type="range" min="1" max="2.2" step="0.05" value="1">
       </label>
-      <label class="control" title="Factor temporal del simulador. 1.00x es tiempo real; valores menores ayudan a analizar el adelanto.">Camara lenta <span id="slowValue">0.35x</span>
+      <label class="control" data-i18n-title="ctl.slow.t" title="Factor temporal del simulador. 1.00x es tiempo real; valores menores ayudan a analizar el adelanto."><span data-i18n="ctl.slow">Camara lenta</span> <span id="slowValue">0.35x</span>
         <input id="slowControl" type="range" min="0.15" max="1" step="0.05" value="0.35">
       </label>
-      <label class="control" title="Retardo breve entre pedir el plato y que salga del foso. En competicion la salida debe sentirse inmediata; este ajuste simula el retardo del sistema de llamada/lanzadora.">Retardo salida <span id="reactionValue">0.03 s</span>
+      <label class="control" data-i18n-title="ctl.reaction.t" title="Retardo breve entre pedir el plato y que salga del foso. En competicion la salida debe sentirse inmediata; este ajuste simula el retardo del sistema de llamada/lanzadora."><span data-i18n="ctl.reaction">Retardo salida</span> <span id="reactionValue">0.03 s</span>
         <input id="reactionControl" type="range" min="0" max="0.35" step="0.01" value="0.03">
       </label>
-      <label class="control" title="Velocidad nominal del cartucho. El modelo aplica despues una reduccion efectiva aproximada; no sustituye una tabla balistica medida del cartucho real.">Cartucho <span id="cartridgeValue">400 m/s</span>
+      <label class="control" data-i18n-title="ctl.cartridge.t" title="Velocidad nominal del cartucho. El modelo aplica despues una reduccion efectiva aproximada; no sustituye una tabla balistica medida del cartucho real."><span data-i18n="ctl.cartridge">Cartucho</span> <span id="cartridgeValue">400 m/s</span>
         <input id="cartridgeControl" type="range" min="360" max="430" step="5" value="400">
       </label>
-      <label class="control" title="Apertura del patron de perdigones para el primer disparo, equivalente al choke seleccionado.">Plomeo tiro 1 <span id="spread1Value">3/4</span>
+      <label class="control" data-i18n-title="ctl.spread1.t" title="Apertura del patron de perdigones para el primer disparo, equivalente al choke seleccionado."><span data-i18n="ctl.spread1">Plomeo tiro 1</span> <span id="spread1Value">3/4</span>
         <input id="spread1Control" type="range" min="0" max="100" step="5" value="30">
       </label>
-      <label class="control" title="Apertura del patron de perdigones para el segundo disparo, normalmente mas cerrado.">Plomeo tiro 2 <span id="spread2Value">Full</span>
+      <label class="control" data-i18n-title="ctl.spread2.t" title="Apertura del patron de perdigones para el segundo disparo, normalmente mas cerrado."><span data-i18n="ctl.spread2">Plomeo tiro 2</span> <span id="spread2Value">Full</span>
         <input id="spread2Control" type="range" min="0" max="100" step="5" value="20">
       </label>
-      <label class="control" title="Variacion realista entre disparos: cambia microhuecos, deformacion y velocidad relativa de los perdigones.">Variacion plomeo <span id="pelletVarianceValue">45%</span>
+      <label class="control" data-i18n-title="ctl.variance.t" title="Variacion realista entre disparos: cambia microhuecos, deformacion y velocidad relativa de los perdigones."><span data-i18n="ctl.variance">Variacion plomeo</span> <span id="pelletVarianceValue">45%</span>
         <input id="pelletVarianceControl" type="range" min="0" max="100" step="5" value="45">
       </label>
-      <label class="control" title="Tiempo durante el que se mantienen visibles las ayudas y correcciones despues del disparo o fallo.">Analisis <span id="analysisValue">4.8 s</span>
+      <label class="control" data-i18n-title="ctl.analysis.t" title="Tiempo durante el que se mantienen visibles las ayudas y correcciones despues del disparo o fallo."><span data-i18n="ctl.analysis">Analisis</span> <span id="analysisValue">4.8 s</span>
         <input id="analysisControl" type="range" min="1.8" max="8" step="0.2" value="4.8">
       </label>
-      <label class="control" title="Viento lateral aplicado a la trayectoria del plato. Negativo empuja a un lado y positivo al contrario.">Viento <span id="windValue">0.0 m/s</span>
+      <label class="control" data-i18n-title="ctl.wind.t" title="Viento lateral aplicado a la trayectoria del plato. Negativo empuja a un lado y positivo al contrario."><span data-i18n="ctl.wind">Viento</span> <span id="windValue">0.0 m/s</span>
         <input id="windControl" type="range" min="-4" max="4" step="0.2" value="0">
       </label>
-      <label class="control" title="Elevacion balistica de la solista: hace que el disparo vaya por encima del punto de mira, sin cambiar la anchura visual de la solista.">Ganancia solista <span id="ribValue">0%</span>
+      <label class="control" data-i18n-title="ctl.rib.t" title="Elevacion balistica de la solista: hace que el disparo vaya por encima del punto de mira, sin cambiar la anchura visual de la solista."><span data-i18n="ctl.rib">Ganancia solista</span> <span id="ribValue">0%</span>
         <input id="ribControl" type="range" min="0" max="100" step="5" value="0">
       </label>
-      <label class="control" title="Solo modalidad Robot: simula apretar o aflojar el muelle. Aumenta o reduce velocidad y alcance del plato.">Robot fuerza <span id="robotForceValue">100%</span>
+      <label class="control" data-i18n-title="ctl.robotForce.t" title="Solo modalidad Robot: simula apretar o aflojar el muelle. Aumenta o reduce velocidad y alcance del plato."><span data-i18n="ctl.robotForce">Robot fuerza</span> <span id="robotForceValue">100%</span>
         <input id="robotForceControl" type="range" min="70" max="135" step="5" value="100">
       </label>
-      <label class="control" title="Solo modalidad Robot: cambia la inclinacion vertical de la maquina. Valores altos hacen platos mas altos.">Robot altura <span id="robotPitchValue">0°</span>
+      <label class="control" data-i18n-title="ctl.robotPitch.t" title="Solo modalidad Robot: cambia la inclinacion vertical de la maquina. Valores altos hacen platos mas altos."><span data-i18n="ctl.robotPitch">Robot altura</span> <span id="robotPitchValue">0°</span>
         <input id="robotPitchControl" type="range" min="-12" max="18" step="1" value="0">
       </label>
-      <label class="control" title="Solo modalidad Robot: multiplica la apertura lateral del robot. Valores altos hacen platos mas cruzados.">Robot lateral <span id="robotLateralValue">100%</span>
+      <label class="control" data-i18n-title="ctl.robotLateral.t" title="Solo modalidad Robot: multiplica la apertura lateral del robot. Valores altos hacen platos mas cruzados."><span data-i18n="ctl.robotLateral">Robot lateral</span> <span id="robotLateralValue">100%</span>
         <input id="robotLateralControl" type="range" min="50" max="140" step="5" value="100">
       </label>
-      <div class="hint">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
-      <label class="switch-row" title="Alterna entre suelo opaco y suelo translucido para ver las maquinas bajo el foso."><input id="transparentGround" type="checkbox" checked> suelo translúcido / ver máquinas</label>
-      <label class="switch-row" title="Muestra u oculta la leyenda de colores y simbolos de la esquina inferior derecha."><input id="showLegend" type="checkbox" checked> leyenda</label>
+      <div class="hint" data-i18n="hint.keys">Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.</div>
+      <label class="switch-row" data-i18n-title="sw.ground.t" title="Alterna entre suelo opaco y suelo translucido para ver las maquinas bajo el foso."><input id="transparentGround" type="checkbox" checked> <span data-i18n="sw.ground">suelo translúcido / ver máquinas</span></label>
+      <label class="switch-row" data-i18n-title="sw.legend.t" title="Muestra u oculta la leyenda de colores y simbolos de la esquina inferior derecha."><input id="showLegend" type="checkbox" checked> <span data-i18n="sw.legend">leyenda</span></label>
       <div class="notebook">
-        <button id="cuadernoBtn" type="button" title="Genera un PDF imprimible con toda la tirada del esquema actual. Para cada plato dibuja su trayectoria con cinco instantes marcados y el adelanto que hay que llevar en cada uno. Usa los ajustes que tengas puestos ahora mismo.">Generar cuaderno</button>
-        <div class="hint" id="cuadernoStatus">Cuaderno PDF imprimible de la tirada completa, con los ajustes actuales: una ficha por plato con cinco instantes y su adelanto. Universal 25 fichas, Olimpica 15, Robot 25.</div>
+        <button id="cuadernoBtn" type="button" data-i18n="nb.button" data-i18n-title="nb.button.t" title="Genera un PDF imprimible con toda la tirada del esquema actual. Para cada plato dibuja su trayectoria con cinco instantes marcados y el adelanto que hay que llevar en cada uno. Usa los ajustes que tengas puestos ahora mismo.">Generar cuaderno</button>
+        <div class="hint" id="cuadernoStatus" data-i18n="nb.idle">Cuaderno PDF imprimible de la tirada completa, con los ajustes actuales: una ficha por plato con cinco instantes y su adelanto. Universal 25 fichas, Olimpica 15, Robot 25.</div>
       </div>
       <div class="project-links">
         <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Powered by www.robertocanales.com</a>
-        <a href="index.html" target="_blank" rel="noopener">Manual</a>
-        <a href="index.html#ingenieria" target="_blank" rel="noopener">Documentacion tecnica</a>
-        <a href="#ayuda">Ayuda rapida</a>
-        <a href="#licencia-mit">Licencia MIT</a>
+        <a id="manualLink" href="index.html" target="_blank" rel="noopener" data-i18n="link.manual">Manual</a>
+        <a id="techLink" href="index.html#ingenieria" target="_blank" rel="noopener" data-i18n="link.tech">Documentacion tecnica</a>
+        <a href="#ayuda" data-i18n="link.help">Ayuda rapida</a>
+        <a href="#licencia-mit" data-i18n="link.license">Licencia MIT</a>
       </div>
     </section>
   </main>
 
-  <section id="ayuda" class="license-panel" aria-label="Ayuda del simulador">
-    <article class="license-card">
+  <section id="ayuda" class="license-panel" data-i18n-aria="aria.help" aria-label="Ayuda del simulador">
+    <article class="license-card" data-i18n-html="help.body">
       <h2>Ayuda del Simulador</h2>
       <p>Este laboratorio muestra el tiro al plato desde el ojo del tirador. La idea principal es aprender a leer el vuelo del plato y entender donde hay que llevar el punto de mira para que la nube de perdigones lo intercepte.</p>
+    </article>
+  </section>
+
+  <section id="licencia-mit" class="license-panel" data-i18n-aria="aria.license" aria-label="Licencia MIT">
+    <article class="license-card" data-i18n-html="license.body">
+      <h2>Licencia MIT</h2>
+    </article>
+  </section>
+
+  <script>
+    /*
+      ===========================================================================
+      Internacionalización
+      ===========================================================================
+
+      Plato es un fichero único que se publica en GitHub Pages sin paso de
+      compilación, así que los idiomas viven aquí, en un diccionario, y no en
+      copias del simulador. Duplicar app.html por idioma habría condenado el
+      proyecto a mantener dos motores de física divergiendo en silencio.
+
+      Para añadir un idioma basta con añadir su bloque a I18N y su entrada a
+      LANGS. Lo que falte cae al español, de modo que una traducción incompleta
+      degrada bien en vez de mostrar claves crudas.
+
+      Convenios de las claves:
+        · "algo"        -> texto visible          (data-i18n)
+        · "algo.t"      -> atributo title          (data-i18n-title)
+        · "algo.body"   -> bloque HTML completo    (data-i18n-html)
+        · "aria.algo"   -> aria-label              (data-i18n-aria)
+
+      Terminología acordada (ES -> EN): plato -> clay, adelanto -> lead,
+      plomeo -> pattern, solista -> rib, foso -> trap, señuelo -> marker clay,
+      puesto -> station, tirada -> round, guardia -> hold, encare -> aim,
+      cuaderno -> notebook. Foso universal es "Universal Trench" y foso
+      olímpico es "Olympic Trap", que son los nombres oficiales FITASC e ISSF.
+    */
+
+    const LANGS = [
+      { code: "es", label: "Español" },
+      { code: "en", label: "English" }
+    ];
+
+    const I18N = {
+      es: {
+        "html.title": "Laboratorio de Adelanto - Tiro al Plato",
+        "lang.label": "Idioma",
+        "lang.t": "Idioma de la aplicación. La elección se recuerda en este navegador.",
+
+        "beta.tag": "Proyecto en beta",
+        "beta.text": "El libro y el simulador están pendientes de revisión. Se comparten para que cualquiera pueda ayudar a mejorarlos.",
+
+        "aria.toolbar": "Controles principales",
+        "aria.ribType": "Tipo de solista",
+        "aria.scene": "Simulador desde el ojo del tirador",
+        "aria.controls": "Parámetros físicos",
+        "aria.help": "Ayuda del simulador",
+        "aria.license": "Licencia MIT",
+
+        "btn.call": "Pedir plato",
+        "btn.call.t": "Solicita un nuevo plato. También puedes pedirlo con el botón derecho del ratón.",
+        "btn.repeat": "Repetir plato",
+        "btn.repeat.t": "Repite exactamente el plato anterior desde el mismo puesto, sin contar como nuevo plato de la tirada.",
+        "btn.fire": "Disparar",
+        "btn.fire.t": "Dispara el cartucho actual. También puedes disparar con el botón izquierdo del ratón.",
+        "btn.reset": "Reset",
+        "btn.reset.t": "Reinicia la tirada de 25 platos y limpia los disparos y fragmentos visibles.",
+        "btn.prevStation": "Puesto -",
+        "btn.prevStation.t": "Retrocede el puesto seleccionado o actual.",
+        "btn.nextStation": "Puesto +",
+        "btn.nextStation.t": "Avanza el puesto seleccionado o actual.",
+        "btn.flat": "Plana",
+        "btn.flat.t": "Solista sin ganancia: el punto de mira y el centro de impacto salen prácticamente alineados.",
+        "btn.high": "Alta",
+        "btn.high.t": "Solista con ganancia: el impacto sale algo por encima del punto de mira.",
+
+        "stat.state": "Estado",
+        "stat.state.t": "Fase actual del simulador: esperando, retardo de salida, seguimiento, caída o terminado.",
+        "stat.round": "Tirada",
+        "stat.round.t": "Contador de la tirada: platos consumidos de 25 y platos rotos. Las repeticiones no suman.",
+        "stat.station": "Puesto",
+        "stat.station.t": "Puesto de tiro actual. La tirada rota por los puestos 1 a 5.",
+        "stat.target": "Plato",
+        "stat.target.t": "Máquina, ángulo, altura a 10 m y distancia del plato actual.",
+        "stat.lead": "Adelanto",
+        "stat.lead.t": "Distancia aproximada entre el plato y el punto físico recomendado de adelanto.",
+        "stat.aim": "Encare",
+        "stat.aim.t": "Ángulos actuales del punto de mira respecto al eje del ojo del tirador.",
+        "stat.result": "Resultado",
+        "stat.result.t": "Resultado del último disparo o del plato actual.",
+
+        "sw.lead": "ayuda adelanto",
+        "sw.lead.t": "Muestra u oculta el punto y área amarilla donde conviene apuntar para interceptar el plato.",
+        "sw.pattern": "plomeo",
+        "sw.pattern.t": "Muestra u oculta el patrón azul estimado del plomeo donde estás apuntando.",
+        "sw.path": "trayectoria",
+        "sw.path.t": "Muestra u oculta la trayectoria naranja del plato.",
+        "sw.ground": "suelo translúcido / ver máquinas",
+        "sw.ground.t": "Alterna entre suelo opaco y suelo translúcido para ver las máquinas bajo el foso.",
+        "sw.legend": "leyenda",
+        "sw.legend.t": "Muestra u oculta la leyenda de colores y símbolos de la esquina inferior derecha.",
+
+        "scene.slowNote": "<strong>Cámara lenta</strong> activa para analizar. Para probar tiempo real, sube <strong>Cámara lenta</strong> a 1.00x.",
+
+        "ctl.mode": "Modalidad",
+        "ctl.mode.t": "Elige la disciplina: Universal usa cinco máquinas; Olímpica usa quince máquinas agrupadas por puesto; Robot usa una máquina oscilante con fuerza, altura y lateral regulables.",
+        "mode.universal": "Universal",
+        "mode.olympic": "Olímpica",
+        "mode.robot": "Robot",
+        "ctl.scheme": "Esquema",
+        "ctl.scheme.t": "Selecciona el esquema oficial o simulado de máquinas, ángulos y alturas que se usará para sortear cada plato.",
+        "ctl.station": "Puesto",
+        "ctl.station.t": "Puesto inicial o actual del tirador. La tirada avanza rotando 1, 2, 3, 4, 5.",
+        "ctl.guard": "Guardia",
+        "ctl.guard.t": "Define dónde empieza apuntando el tirador antes de pedir plato: al señuelo o algo alto según el puesto.",
+        "guard.neutral": "Neutra",
+        "guard.high": "Alta por puesto",
+        "ctl.zoom": "Zoom visual",
+        "ctl.zoom.t": "Acerca visualmente la escena sin cambiar la distancia real al foso ni la física.",
+        "ctl.slow": "Cámara lenta",
+        "ctl.slow.t": "Factor temporal del simulador. 1.00x es tiempo real; valores menores ayudan a analizar el adelanto.",
+        "ctl.reaction": "Retardo salida",
+        "ctl.reaction.t": "Retardo breve entre pedir el plato y que salga del foso. En competición la salida debe sentirse inmediata; este ajuste simula el retardo del sistema de llamada y lanzadora.",
+        "ctl.cartridge": "Cartucho",
+        "ctl.cartridge.t": "Velocidad nominal del cartucho. El modelo aplica después una reducción efectiva aproximada; no sustituye una tabla balística medida del cartucho real.",
+        "ctl.spread1": "Plomeo tiro 1",
+        "ctl.spread1.t": "Apertura del patrón de perdigones para el primer disparo, equivalente al choke seleccionado.",
+        "ctl.spread2": "Plomeo tiro 2",
+        "ctl.spread2.t": "Apertura del patrón de perdigones para el segundo disparo, normalmente más cerrado.",
+        "ctl.variance": "Variación plomeo",
+        "ctl.variance.t": "Variación realista entre disparos: cambia microhuecos, deformación y velocidad relativa de los perdigones.",
+        "ctl.analysis": "Análisis",
+        "ctl.analysis.t": "Tiempo durante el que se mantienen visibles las ayudas y correcciones después del disparo o fallo.",
+        "ctl.wind": "Viento",
+        "ctl.wind.t": "Viento lateral aplicado a la trayectoria del plato. Negativo empuja a un lado y positivo al contrario.",
+        "ctl.rib": "Ganancia solista",
+        "ctl.rib.t": "Elevación balística de la solista: hace que el disparo vaya por encima del punto de mira, sin cambiar la anchura visual de la solista.",
+        "ctl.robotForce": "Robot fuerza",
+        "ctl.robotForce.t": "Solo modalidad Robot: simula apretar o aflojar el muelle. Aumenta o reduce velocidad y alcance del plato.",
+        "ctl.robotPitch": "Robot altura",
+        "ctl.robotPitch.t": "Solo modalidad Robot: cambia la inclinación vertical de la máquina. Valores altos hacen platos más altos.",
+        "ctl.robotLateral": "Robot lateral",
+        "ctl.robotLateral.t": "Solo modalidad Robot: multiplica la apertura lateral del robot. Valores altos hacen platos más cruzados.",
+
+        "hint.keys": "Cursores: mover encare. Espacio: disparar. Enter: pedir plato. La nube amarilla es donde conviene llevar el punto; la azul es el centro probable del plomeo.",
+
+        "nb.button": "Generar cuaderno",
+        "nb.button.busy": "Generando cuaderno...",
+        "nb.button.t": "Genera un PDF imprimible con toda la tirada del esquema actual. Para cada plato dibuja su trayectoria con cinco instantes marcados y el adelanto que hay que llevar en cada uno. Usa los ajustes que tengas puestos ahora mismo.",
+        "nb.idle": "Cuaderno PDF imprimible de la tirada completa, con los ajustes actuales: una ficha por plato con cinco instantes y su adelanto. Universal 25 fichas, Olímpica 15, Robot 25.",
+
+        "link.manual": "Manual",
+        "link.tech": "Documentación técnica",
+        "link.help": "Ayuda rápida",
+        "link.license": "Licencia MIT",
+
+        "scheme.prefix.universal": "FITASC Universal",
+        "scheme.prefix.olympic": "ISSF Olímpica",
+        "scheme.robot_feria": "Robot feria circular (modelo)",
+        "scheme.robot_extremo": "Robot popular extremo (modelo)",
+        "scheme.robot_random": "Robot pseudoaleatorio (modelo)",
+
+        "sim.banner.pull": "PLATO",
+        "sim.banner.repeat": "REPETIR",
+        "sim.state.idle": "Esperando",
+        "sim.state.reaction": "Retardo",
+        "sim.state.tracking": "Seguimiento",
+        "sim.state.falling": "Cayendo",
+        "sim.state.ended": "Terminado",
+        "sim.round.broken": "rotos",
+        "sim.hidden": "oculto",
+        "sim.ground": "suelo",
+        "sim.outOfWindow": "Fuera de ventana",
+        "sim.repeat.outOfWindow": "Repetición: fuera de ventana",
+        "sim.repeat": "Repetición",
+        "sim.hit": "Roto",
+        "sim.edge": "borde",
+        "sim.centre": "centro",
+        "sim.pellet": "perdigón",
+        "sim.weak": "Toque flojo",
+        "sim.repeat.weak": "Repetición toque flojo",
+        "sim.miss": "Fallo",
+        "sim.repeat.miss": "Repetición fallo",
+        "sim.missWait": "Fallo: 2 tiros, espera caída",
+        "sim.repeat.missWait": "Repetición fallada: espera caída",
+        "sim.lost": "Perdido: cayó al suelo",
+        "sim.missLost": "Fallo / perdido: cayó al suelo",
+        "sim.repeat.lost": "Repetición perdida: cayó al suelo",
+        "sim.repeat.missLost": "Repetición fallada / perdida: cayó al suelo",
+        "badge.universal": "Universal FITASC",
+        "badge.olympic": "Foso olímpico ISSF",
+        "badge.robotPopular": "Robot popular",
+        "badge.inLimits": "Dentro de límites",
+        "badge.outLimits": "Fuera de límites",
+        "badge.nonStandard": "Modelo no normativo",
+        "badge.matches": "Cumple tabla oficial",
+        "badge.review": "Revisar ajuste",
+        "badge.speed": "velocidad modelo",
+        "badge.range": "alcance",
+        "badge.flight": "vuelo",
+        "badge.noWind": " · validación base sin viento",
+        "cv.noTarget": "sin plato",
+        "cv.hint": "naranja: plato  amarillo: punto ideal",
+        "cv.leadOk": "adelanto correcto",
+        "cv.ahead": "adelantado",
+        "cv.behind": "retrasado",
+        "cv.lineOk": "línea correcta",
+        "cv.right": "derecha",
+        "cv.left": "izquierda",
+        "cv.heightOk": "altura correcta",
+        "cv.high": "alto",
+        "cv.low": "bajo",
+        "cv.missFalling": "fallo: cayendo",
+        "cv.redCentre": "rojo = centro plomeo",
+        "cv.corrTitle": "corrección de disparo",
+        "cv.shot1": "tiro 1",
+        "cv.shot2": "tiro 2",
+        "cv.leadOkShort": "adelanto ok",
+        "cv.delay": "retrasa",
+        "cv.advance": "adelanta",
+        "cv.heightOkShort": "altura ok",
+        "cv.lower": "baja",
+        "cv.raise": "sube",
+        "cv.legend": "leyenda",
+        "cv.legend.clay": "plato naranja: objetivo real",
+        "cv.legend.lead": "amarillo: punto/área ideal de adelanto",
+        "cv.legend.pattern": "azul: patrón de plomeo estimado",
+        "cv.legend.aim": "rojo: punto de mira / donde disparas",
+        "cv.legend.shotCentre": "azul claro: centro físico del disparo",
+        "cv.legend.hit": "verde: impacto que rompe el plato",
+        "cv.legend.path": "naranja discontinua: trayectoria del plato",
+        "cv.mouse": "ratón",
+        "cv.mouse.right": "derecho: pedir plato",
+        "cv.mouse.left": "izquierdo: disparar",
+        "cv.mouse.move": "mover: apuntar",
+        "cv.wait": "espera",
+        "spread.open": "abierto",
+        "sim.shot": "tiro",
+
+        "nbk.moment.salida": "Salida",
+        "nbk.moment.muy-pronto": "Muy pronto",
+        "nbk.moment.pronto": "Pronto",
+        "nbk.moment.ventana": "Ventana buena",
+        "nbk.moment.limite": "Al límite",
+        "nbk.moment.tarde": "Vas tarde",
+        "nbk.moment.muy-tarde": "Muy tarde",
+        "nbk.note.salida": "primer vistazo",
+        "nbk.note.muy-pronto": "tiro apresurado",
+        "nbk.note.pronto": "tiro rápido",
+        "nbk.note.ventana": "el tiro cómodo",
+        "nbk.note.limite": "último tiro útil",
+        "nbk.note.tarde": "ya no llega bien",
+        "nbk.note.muy-tarde": "límite del lance",
+        "nbk.range.in": "en distancia",
+        "nbk.range.limit": "al límite",
+        "nbk.range.out": "fuera de alcance útil",
+        "nbk.mode.universal": "Foso universal",
+        "nbk.mode.olympic": "Foso olímpico",
+        "nbk.plan.title": "Vista cenital",
+        "nbk.plan.all": "Vista cenital · todos los platos del esquema",
+        "nbk.wait": "espera",
+        "nbk.card.of": "Plato {a} de {b}",
+        "nbk.card.station": "Puesto",
+        "nbk.card.machine": "Máquina",
+        "nbk.card.angle": "ángulo",
+        "nbk.card.height": "altura",
+        "nbk.card.at10": "m a 10 m",
+        "nbk.card.fall": "caída",
+        "nbk.card.elev": "elevación",
+        "nbk.card.framing": "encuadre {z}x sobre el campo base de {f}° vertical",
+        "nbk.card.turned": " · vista girada {h}° en horizontal y {v}° en vertical",
+        "nbk.card.warnOwn": "AJUSTES PROPIOS · LOS ADELANTOS DE ESTA FICHA SOLO VALEN CON ESTA COMBINACIÓN",
+        "nbk.card.warnDefault": "LOS ADELANTOS DE ESTA FICHA SOLO VALEN CON ESTOS AJUSTES",
+        "nbk.card.foot": "Plato · cuaderno de puntos de disparo · generado desde el simulador, no es un documento oficial",
+        "nbk.strip.after": "s tras salir",
+        "nbk.strip.clays": "platos",
+        "nbk.strip.right": "dcha.",
+        "nbk.strip.left": "izda.",
+        "nbk.strip.up": "arriba",
+        "nbk.strip.down": "abajo",
+        "nbk.strip.lateral": "lateral",
+        "nbk.strip.vertical": "vertical",
+        "nbk.strip.clayAt": "plato a",
+        "nbk.strip.heightAt": "altura",
+        "nbk.strip.realSep": "separación real",
+        "nbk.strip.targets": "platos",
+        "nbk.index.h.station": "puesto",
+        "nbk.index.h.machine": "máq.",
+        "nbk.index.h.angle": "ángulo",
+        "nbk.index.h.h10": "alt. 10 m",
+        "nbk.index.h.fall": "caída",
+        "nbk.index.h.lead": "adelanto en la ventana buena",
+        "nbk.index.note1": "El adelanto es el que ve el tirador: separación aparente entre plato y punto de mira, medida perpendicular a la línea de mirada.",
+        "nbk.index.note2": "La tabla usa el instante «ventana buena», el tiro cómodo; cada ficha detalla los demás instantes.",
+        "nbk.index.note3": "Rojo: punto de espera del arma.  Naranja: plato.  Amarillo: dónde poner el punto de mira.  Elipse amarilla: plomeo estimado del primer tiro.",
+        "nbk.p.cartridge": "cartucho",
+        "nbk.p.rib": "solista",
+        "nbk.p.wind": "viento",
+        "nbk.p.delay": "retardo",
+        "nbk.p.pattern1": "plomeo 1",
+        "nbk.p.hold": "guardia",
+        "nbk.st.computing": "Calculando adelantos {i} de {n}…",
+        "nbk.st.drawing": "Dibujando ficha {i} de {n}…",
+        "nbk.st.composing": "Componiendo portada, índice y cierre…",
+        "nbk.st.done": "Listo: {p} páginas · {mb} MB · {name}",
+        "nbk.st.error": "Error",
+        "nbk.file": "cuaderno-plato",
+        "nbk.locale": "es-ES",
+        "nbk.decimal": ",",
+
+        "nbk.cover.1": "PLATO · SIMULADOR Y LIBRO DE TIRO AL PLATO",
+        "nbk.cover.2": "Cuaderno de",
+        "nbk.cover.3": "puntos de disparo",
+        "nbk.cover.4": "Qué tienes en las manos",
+        "nbk.cover.5": "Una tirada completa, plato a plato, tal y como la vería el tirador desde su puesto. Para cada plato se dibuja la trayectoria entera y se marcan cinco instantes sobre ella, repartidos por la ventana en la que todavía está a tiro, más uno ya tarde.",
+        "nbk.cover.6": "En cada instante se indica dónde está el plato y cuánto hay que adelantar para romperlo, medido como lo ve el ojo. Sirve para componer la tirada antes de ir al campo: qué disparas antes, cuánto adelantas y qué te ocurre si te retrasas.",
+        "nbk.cover.7": "Cómo se lee cada ficha",
+        "nbk.cover.8": "El número grande es el adelanto que percibe el ojo, perpendicular a la línea de mirada. Debajo aparece también en anchos de plato y en grados.",
+        "nbk.cover.9": "La separación real en tres dimensiones va en letra pequeña: incluye la profundidad, que el ojo no ve, y por eso es un número mucho mayor.",
+        "nbk.cover.10": "Todas las fichas comparten escala, de modo que los adelantos son comparables de un plato a otro. La cabecera dice cuánto se ha girado la vista y con qué encuadre.",
+        "nbk.cover.11": "El color del instante avisa de la distancia: en distancia, al límite o ya fuera de alcance útil.",
+        "nbk.cover.12": "Qué no es",
+        "nbk.cover.13": "No es una medida de campo: son cifras de un modelo pedagógico, con sus simplificaciones. La última página lo explica en detalle.",
+        "nbk.cover.14": "No homologa una instalación ni certifica una trayectoria. En competición decide siempre el personal autorizado.",
+        "nbk.cover.15": "No sustituye a un instructor, a las normas del campo ni a los requisitos legales.",
+        "nbk.cover.16": "Generado con estos ajustes",
+        "nbk.cover.18": "Todos los adelantos de este cuaderno valen únicamente para esa combinación. Con otro cartucho, otra solista, otro plomeo o con viento, las cifras cambian y este cuaderno deja de servir: hay que generar uno nuevo.",
+        "nbk.cover.19": "Se hace desde el simulador, cambiando lo que quieras y volviendo a pulsar «Generar cuaderno». En cada ficha, los ajustes que no son los de arranque aparecen resaltados en color.",
+        "nbk.cover.20": "El proyecto",
+        "nbk.cover.21": "Plato es un simulador y un libro gratuitos para aprender tiro al plato, escritos por Roberto Canales Mora. El libro explica la cancha, la seguridad, las modalidades y la geometría del adelantamiento; el simulador permite repetir un mismo plato cambiando una sola variable.",
+        "nbk.cover.22": "Proyecto, contacto y repositorio en GitHub:",
+        "nbk.cover.23": "www.robertocanales.com/proyectos#plato",
+        "nbk.cover.24": "rcanalescoder.github.io/Plato",
+        "nbk.cover.25": "Qué hay en las páginas siguientes",
+        "nbk.cover.26": "Un índice de la tirada: tabla con puesto, máquina, ángulo, altura, caída y adelanto de cada plato, y una vista cenital con todas las trayectorias juntas.",
+        "nbk.cover.27": "El aviso de uso y la licencia, al final. Si imprimes solo una parte, imprime también esa hoja.",
+        "nbk.cover.28": "Aviso: las cifras de este cuaderno son una estimación de un modelo pedagógico, no una medida de campo. Lee el aviso de uso y la licencia en la última página antes de llevarlo a la cancha.",
+        "nbk.close.1": "Aviso de uso y licencia",
+        "nbk.close.2": "Léelo antes de aplicar nada de este cuaderno en una cancha",
+        "nbk.close.3": "Esto es una estimación, no una medida",
+        "nbk.close.4": "Las trayectorias, los tiempos y los adelantos salen de un modelo simplificado que resuelve una parábola visual a partir de la altura y el alcance del plato, con gravedad reducida y una salida visual común. No mide una lanzadora real, no reproduce toda la aerodinámica del disco ni sustituye una tabla balística del cartucho que uses.",
+        "nbk.close.5": "Las tablas de esquemas reproducen valores publicados por las federaciones, pero este documento no homologa ninguna instalación ni certifica ninguna trayectoria. En competición decide siempre el personal autorizado.",
+        "nbk.close.6": "La responsabilidad del tiro es tuya",
+        "nbk.close.7": "Usa estas cifras como punto de partida para observar y comparar, nunca como una instrucción que seguir a ciegas. Comprueba tus propios números en el campo, con tu arma, tu cartucho y las condiciones del día, y corrige lo que haga falta.",
+        "nbk.close.8": "Este material no sustituye la formación presencial, las normas del campo, la ayuda de un instructor o un armero, ni los requisitos legales vigentes. La seguridad y las decisiones de tiro son responsabilidad de quien dispara.",
+        "nbk.close.9": "Antes de llevarlo a la cancha",
+        "nbk.close.10": "Comprueba que el esquema de la portada es de verdad el que se va a lanzar. Pregúntalo al responsable en lugar de suponerlo.",
+        "nbk.close.11": "Los adelantos dependen del cartucho y de la solista que pusiste al generar el cuaderno. Con otro material, las cifras cambian.",
+        "nbk.close.12": "Trata cada número como una hipótesis que vas a contrastar tirando, no como el resultado que deberías obtener.",
+        "nbk.close.13": "Licencia MIT con atribución",
+        "nbk.close.14": "Copyright (c) 2026 Roberto Canales Mora",
+        "nbk.close.15": "Se concede permiso, libre de cargos, para usar, copiar, modificar, fusionar, publicar, distribuir, sublicenciar y vender copias de este software y su documentación, y para permitir lo mismo a quienes lo reciban, con una condición: conservar siempre la referencia al autor original, Roberto Canales Mora, junto con el enlace a www.robertocanales.com. Esa atribución forma parte del aviso de copyright que debe acompañar a todas las copias.",
+        "nbk.close.16": "EL SOFTWARE SE PROPORCIONA «TAL CUAL», SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA. EN NINGÚN CASO EL AUTOR SERÁ RESPONSABLE DE NINGUNA RECLAMACIÓN, DAÑO U OTRA RESPONSABILIDAD DERIVADA DEL SOFTWARE O DE SU USO.",
+        "nbk.close.17": "Dónde está todo",
+        "nbk.close.18": "Libro completo, simulador y código fuente:",
+        "nbk.close.19": "www.robertocanales.com/proyectos#plato",
+        "nbk.close.20": "rcanalescoder.github.io/Plato",
+        "nbk.close.21": "rcanalesmora@gmail.com",
+        "nbk.close.22": "El proyecto está en beta",
+        "nbk.close.23": "El libro y el simulador están pendientes de revisión y se comparten para que cualquiera pueda probarlos, detectar errores y ayudar a mejorarlos. Si encuentras algo que no cuadra con tu experiencia en cancha, con el reglamento que se te aplica o con las cifras que mides tú, escribe: esa clase de aviso es la que hace que el modelo mejore.",
+        "nbk.close.24": "Plato · simulador y libro de tiro al plato · Roberto Canales Mora · Licencia MIT con atribución",
+        "nbk.index.1": "Cuaderno de puntos de disparo",
+        "nbk.index.2": "Plato · generado desde el simulador, no es un documento oficial",
+        "scheme.robot_abt": "ABT CPSA 2026",
+        "scheme.robot_trap1": "Trap1 FITASC 2025"
+      },
+
+      en: {
+        "html.title": "Lead Trainer - Clay Target Shooting",
+        "lang.label": "Language",
+        "lang.t": "Interface language. Your choice is remembered in this browser.",
+
+        "beta.tag": "Beta project",
+        "beta.text": "The book and the simulator are still under review. They are shared so that anyone can try them out and help improve them.",
+
+        "aria.toolbar": "Main controls",
+        "aria.ribType": "Rib type",
+        "aria.scene": "Simulator from the shooter's eye",
+        "aria.controls": "Physical parameters",
+        "aria.help": "Simulator help",
+        "aria.license": "MIT licence",
+
+        "btn.call": "Call target",
+        "btn.call.t": "Calls for a new clay. You can also call it with the right mouse button.",
+        "btn.repeat": "Repeat target",
+        "btn.repeat.t": "Repeats exactly the previous clay from the same station, without counting as a new target in the round.",
+        "btn.fire": "Fire",
+        "btn.fire.t": "Fires the current cartridge. You can also fire with the left mouse button.",
+        "btn.reset": "Reset",
+        "btn.reset.t": "Restarts the 25-target round and clears the shots and fragments on screen.",
+        "btn.prevStation": "Station -",
+        "btn.prevStation.t": "Moves back to the previous station.",
+        "btn.nextStation": "Station +",
+        "btn.nextStation.t": "Moves on to the next station.",
+        "btn.flat": "Flat",
+        "btn.flat.t": "Rib without gain: the aiming point and the centre of impact come out practically aligned.",
+        "btn.high": "High",
+        "btn.high.t": "Rib with gain: the impact lands somewhat above the aiming point.",
+
+        "stat.state": "State",
+        "stat.state.t": "Current phase of the simulator: waiting, release delay, tracking, falling or finished.",
+        "stat.round": "Round",
+        "stat.round.t": "Round counter: targets used out of 25, and targets broken. Repeats do not count.",
+        "stat.station": "Station",
+        "stat.station.t": "Current shooting station. The round rotates through stations 1 to 5.",
+        "stat.target": "Target",
+        "stat.target.t": "Machine, angle, height at 10 m and distance of the current clay.",
+        "stat.lead": "Lead",
+        "stat.lead.t": "Approximate distance between the clay and the recommended physical lead point.",
+        "stat.aim": "Aim",
+        "stat.aim.t": "Current angles of the aiming point relative to the shooter's eye axis.",
+        "stat.result": "Result",
+        "stat.result.t": "Result of the last shot or of the current clay.",
+
+        "sw.lead": "lead aid",
+        "sw.lead.t": "Shows or hides the yellow point and area where you should aim to intercept the clay.",
+        "sw.pattern": "pattern",
+        "sw.pattern.t": "Shows or hides the estimated blue shot pattern where you are aiming.",
+        "sw.path": "trajectory",
+        "sw.path.t": "Shows or hides the orange trajectory of the clay.",
+        "sw.ground": "translucent ground / see machines",
+        "sw.ground.t": "Switches between opaque ground and translucent ground, to see the machines under the trap.",
+        "sw.legend": "legend",
+        "sw.legend.t": "Shows or hides the legend of colours and symbols in the bottom right corner.",
+
+        "scene.slowNote": "<strong>Slow motion</strong> is on so you can analyse. To try real time, raise <strong>Slow motion</strong> to 1.00x.",
+
+        "ctl.mode": "Discipline",
+        "ctl.mode.t": "Choose the discipline: Universal uses five machines; Olympic uses fifteen machines grouped by station; Robot uses a single oscillating machine with adjustable force, height and spread.",
+        "mode.universal": "Universal Trench",
+        "mode.olympic": "Olympic Trap",
+        "mode.robot": "Robot",
+        "ctl.scheme": "Scheme",
+        "ctl.scheme.t": "Selects the official or simulated scheme of machines, angles and heights used to draw each clay.",
+        "ctl.station": "Station",
+        "ctl.station.t": "Starting or current station of the shooter. The round advances rotating 1, 2, 3, 4, 5.",
+        "ctl.guard": "Hold",
+        "ctl.guard.t": "Sets where the shooter starts pointing before calling: at the marker clay, or somewhat high depending on the station.",
+        "guard.neutral": "Neutral",
+        "guard.high": "High, by station",
+        "ctl.zoom": "Visual zoom",
+        "ctl.zoom.t": "Brings the scene visually closer without changing the real distance to the trap or the physics.",
+        "ctl.slow": "Slow motion",
+        "ctl.slow.t": "Time factor of the simulator. 1.00x is real time; lower values help you analyse the lead.",
+        "ctl.reaction": "Release delay",
+        "ctl.reaction.t": "Short delay between calling the target and its release from the trap. In competition the release must feel immediate; this setting models the delay of the call and trap system.",
+        "ctl.cartridge": "Cartridge",
+        "ctl.cartridge.t": "Nominal cartridge velocity. The model then applies an approximate effective reduction; it does not replace a measured ballistic table for a real cartridge.",
+        "ctl.spread1": "Pattern, shot 1",
+        "ctl.spread1.t": "Spread of the pellet pattern for the first shot, equivalent to the choke chosen.",
+        "ctl.spread2": "Pattern, shot 2",
+        "ctl.spread2.t": "Spread of the pellet pattern for the second shot, normally tighter.",
+        "ctl.variance": "Pattern variance",
+        "ctl.variance.t": "Realistic variation between shots: changes micro-gaps, deformation and relative velocity of the pellets.",
+        "ctl.analysis": "Analysis",
+        "ctl.analysis.t": "How long the aids and corrections stay visible after the shot or the miss.",
+        "ctl.wind": "Wind",
+        "ctl.wind.t": "Crosswind applied to the clay trajectory. Negative pushes one way, positive the other.",
+        "ctl.rib": "Rib gain",
+        "ctl.rib.t": "Ballistic elevation of the rib: makes the shot land above the aiming point, without changing how wide the rib looks.",
+        "ctl.robotForce": "Robot force",
+        "ctl.robotForce.t": "Robot only: models tightening or loosening the spring. Raises or lowers the clay's speed and range.",
+        "ctl.robotPitch": "Robot height",
+        "ctl.robotPitch.t": "Robot only: changes the vertical tilt of the machine. Higher values give higher clays.",
+        "ctl.robotLateral": "Robot spread",
+        "ctl.robotLateral.t": "Robot only: multiplies the robot's lateral spread. Higher values give more crossing clays.",
+
+        "hint.keys": "Arrow keys: move the aim. Space: fire. Enter: call target. The yellow cloud is where the aiming point should go; the blue one is the likely centre of the pattern.",
+
+        "nb.button": "Generate notebook",
+        "nb.button.busy": "Generating notebook...",
+        "nb.button.t": "Generates a printable PDF with the whole round of the current scheme. For each clay it draws its trajectory with five moments marked on it and the lead you need at each one. It uses the settings you have right now.",
+        "nb.idle": "Printable PDF notebook of the whole round, with the current settings: one sheet per clay with five moments and their lead. Universal 25 sheets, Olympic 15, Robot 25.",
+
+        "link.manual": "Book",
+        "link.tech": "Technical documentation",
+        "link.help": "Quick help",
+        "link.license": "MIT licence",
+
+        "scheme.prefix.universal": "FITASC Universal",
+        "scheme.prefix.olympic": "ISSF Olympic",
+        "scheme.robot_feria": "Circular fairground robot (model)",
+        "scheme.robot_extremo": "Extreme local robot (model)",
+        "scheme.robot_random": "Pseudo-random robot (model)",
+
+        "sim.banner.pull": "PULL",
+        "sim.banner.repeat": "REPEAT",
+        "sim.state.idle": "Waiting",
+        "sim.state.reaction": "Delay",
+        "sim.state.tracking": "Tracking",
+        "sim.state.falling": "Falling",
+        "sim.state.ended": "Finished",
+        "sim.round.broken": "broken",
+        "sim.hidden": "hidden",
+        "sim.ground": "ground",
+        "sim.outOfWindow": "Out of window",
+        "sim.repeat.outOfWindow": "Repeat: out of window",
+        "sim.repeat": "Repeat",
+        "sim.hit": "Broken",
+        "sim.edge": "edge",
+        "sim.centre": "centre",
+        "sim.pellet": "pellet",
+        "sim.weak": "Weak hit",
+        "sim.repeat.weak": "Repeat weak hit",
+        "sim.miss": "Miss",
+        "sim.repeat.miss": "Repeat miss",
+        "sim.missWait": "Miss: 2 shots, waiting for the fall",
+        "sim.repeat.missWait": "Repeat missed: waiting for the fall",
+        "sim.lost": "Lost: hit the ground",
+        "sim.missLost": "Miss / lost: hit the ground",
+        "sim.repeat.lost": "Repeat lost: hit the ground",
+        "sim.repeat.missLost": "Repeat missed / lost: hit the ground",
+        "badge.universal": "FITASC Universal Trench",
+        "badge.olympic": "ISSF Olympic Trap",
+        "badge.robotPopular": "Popular robot",
+        "badge.inLimits": "Within limits",
+        "badge.outLimits": "Outside limits",
+        "badge.nonStandard": "Non-regulated model",
+        "badge.matches": "Matches official table",
+        "badge.review": "Check the setting",
+        "badge.speed": "model speed",
+        "badge.range": "range",
+        "badge.flight": "flight",
+        "badge.noWind": " · base validation without wind",
+        "cv.noTarget": "no clay",
+        "cv.hint": "orange: clay  yellow: ideal point",
+        "cv.leadOk": "lead correct",
+        "cv.ahead": "too far ahead",
+        "cv.behind": "behind",
+        "cv.lineOk": "line correct",
+        "cv.right": "right",
+        "cv.left": "left",
+        "cv.heightOk": "height correct",
+        "cv.high": "high",
+        "cv.low": "low",
+        "cv.missFalling": "miss: falling",
+        "cv.redCentre": "red = pattern centre",
+        "cv.corrTitle": "shot correction",
+        "cv.shot1": "shot 1",
+        "cv.shot2": "shot 2",
+        "cv.leadOkShort": "lead ok",
+        "cv.delay": "delay by",
+        "cv.advance": "lead by",
+        "cv.heightOkShort": "height ok",
+        "cv.lower": "lower by",
+        "cv.raise": "raise by",
+        "cv.legend": "legend",
+        "cv.legend.clay": "orange clay: the real target",
+        "cv.legend.lead": "yellow: ideal lead point or area",
+        "cv.legend.pattern": "blue: estimated shot pattern",
+        "cv.legend.aim": "red: aiming point / where you shoot",
+        "cv.legend.shotCentre": "light blue: physical centre of the shot",
+        "cv.legend.hit": "green: impact that breaks the clay",
+        "cv.legend.path": "dashed orange: trajectory of the clay",
+        "cv.mouse": "mouse",
+        "cv.mouse.right": "right: call target",
+        "cv.mouse.left": "left: fire",
+        "cv.mouse.move": "move: aim",
+        "cv.wait": "hold",
+        "spread.open": "open",
+        "sim.shot": "shot",
+
+        "nbk.moment.salida": "Release",
+        "nbk.moment.muy-pronto": "Very early",
+        "nbk.moment.pronto": "Early",
+        "nbk.moment.ventana": "Good window",
+        "nbk.moment.limite": "At the limit",
+        "nbk.moment.tarde": "You are late",
+        "nbk.moment.muy-tarde": "Far too late",
+        "nbk.note.salida": "first glimpse",
+        "nbk.note.muy-pronto": "rushed shot",
+        "nbk.note.pronto": "quick shot",
+        "nbk.note.ventana": "the comfortable shot",
+        "nbk.note.limite": "last useful shot",
+        "nbk.note.tarde": "no longer reaching well",
+        "nbk.note.muy-tarde": "edge of the throw",
+        "nbk.range.in": "within reach",
+        "nbk.range.limit": "at the limit",
+        "nbk.range.out": "beyond useful range",
+        "nbk.mode.universal": "Universal Trench",
+        "nbk.mode.olympic": "Olympic Trap",
+        "nbk.plan.title": "Plan view",
+        "nbk.plan.all": "Plan view · every clay in the scheme",
+        "nbk.wait": "hold",
+        "nbk.card.of": "Clay {a} of {b}",
+        "nbk.card.station": "Station",
+        "nbk.card.machine": "Machine",
+        "nbk.card.angle": "angle",
+        "nbk.card.height": "height",
+        "nbk.card.at10": "m at 10 m",
+        "nbk.card.fall": "fall",
+        "nbk.card.elev": "elevation",
+        "nbk.card.framing": "framing {z}x over the base field of {f}° vertical",
+        "nbk.card.turned": " · view turned {h}° horizontally and {v}° vertically",
+        "nbk.card.warnOwn": "YOUR OWN SETTINGS · THE LEADS ON THIS SHEET ARE VALID ONLY WITH THIS COMBINATION",
+        "nbk.card.warnDefault": "THE LEADS ON THIS SHEET ARE VALID ONLY WITH THESE SETTINGS",
+        "nbk.card.foot": "Plato · shot point notebook · generated from the simulator, not an official document",
+        "nbk.strip.after": "s after release",
+        "nbk.strip.clays": "clays",
+        "nbk.strip.right": "right",
+        "nbk.strip.left": "left",
+        "nbk.strip.up": "up",
+        "nbk.strip.down": "down",
+        "nbk.strip.lateral": "lateral",
+        "nbk.strip.vertical": "vertical",
+        "nbk.strip.clayAt": "clay at",
+        "nbk.strip.heightAt": "height",
+        "nbk.strip.realSep": "real separation",
+        "nbk.strip.targets": "clays",
+        "nbk.index.h.station": "station",
+        "nbk.index.h.machine": "mach.",
+        "nbk.index.h.angle": "angle",
+        "nbk.index.h.h10": "h. 10 m",
+        "nbk.index.h.fall": "fall",
+        "nbk.index.h.lead": "lead in the good window",
+        "nbk.index.note1": "The lead is the one the shooter sees: the apparent separation between clay and aiming point, measured perpendicular to the line of sight.",
+        "nbk.index.note2": "The table uses the «good window» moment, the comfortable shot; each sheet details the other moments.",
+        "nbk.index.note3": "Red: the gun's hold point.  Orange: the clay.  Yellow: where to put the aiming point.  Yellow ellipse: estimated pattern of the first shot.",
+        "nbk.p.cartridge": "cartridge",
+        "nbk.p.rib": "rib",
+        "nbk.p.wind": "wind",
+        "nbk.p.delay": "delay",
+        "nbk.p.pattern1": "pattern 1",
+        "nbk.p.hold": "hold",
+        "nbk.st.computing": "Computing leads {i} of {n}…",
+        "nbk.st.drawing": "Drawing sheet {i} of {n}…",
+        "nbk.st.composing": "Composing cover, index and closing page…",
+        "nbk.st.done": "Done: {p} pages · {mb} MB · {name}",
+        "nbk.st.error": "Error",
+        "nbk.file": "plato-notebook",
+        "nbk.locale": "en-GB",
+        "nbk.decimal": ".",
+
+        "nbk.cover.1": "PLATO · CLAY TARGET SIMULATOR AND BOOK",
+        "nbk.cover.2": "Shot point",
+        "nbk.cover.3": "notebook",
+        "nbk.cover.4": "What you have in your hands",
+        "nbk.cover.5": "A complete round, clay by clay, exactly as the shooter would see it from the station. For each clay the whole trajectory is drawn, with five moments marked on it, spread across the window in which the clay is still within reach, plus one that is already late.",
+        "nbk.cover.6": "At each moment it tells you where the clay is and how much lead you need to break it, measured as the eye sees it. It is meant for planning the round before you go to the ground: what you shoot first, how much you lead, and what happens to you if you are late.",
+        "nbk.cover.7": "How to read each sheet",
+        "nbk.cover.8": "The large figure is the lead as the eye perceives it, perpendicular to the line of sight. Below it also appears in clay widths and in degrees.",
+        "nbk.cover.9": "The real three-dimensional separation is in small print: it includes the depth, which the eye does not see, and that is why it is a much larger number.",
+        "nbk.cover.10": "Every sheet shares the same scale, so leads are comparable from one clay to another. The header says how much the view has been turned and with what framing.",
+        "nbk.cover.11": "The colour of each moment warns you about distance: within reach, at the limit, or already beyond useful range.",
+        "nbk.cover.12": "What it is not",
+        "nbk.cover.13": "It is not a field measurement: these are figures from a teaching model, with its simplifications. The last page explains this in detail.",
+        "nbk.cover.14": "It does not certify an installation or a trajectory. In competition the authorised officials always decide.",
+        "nbk.cover.15": "It does not replace an instructor, the rules of the ground, or the legal requirements.",
+        "nbk.cover.16": "Generated with these settings",
+        "nbk.cover.18": "Every lead in this notebook is valid only for that combination. With another cartridge, another rib, another choke or with wind, the figures change and this notebook stops being useful: you have to generate a new one.",
+        "nbk.cover.19": "You do that from the simulator, changing whatever you want and pressing «Generate notebook» again. On each sheet, the settings that are not the start-up ones appear highlighted in colour.",
+        "nbk.cover.20": "The project",
+        "nbk.cover.21": "Plato is a free simulator and book for learning clay target shooting, written by Roberto Canales Mora. The book explains the ground, safety, the disciplines and the geometry of lead; the simulator lets you repeat the same clay changing one single variable.",
+        "nbk.cover.22": "Project, contact and repository on GitHub:",
+        "nbk.cover.23": "www.robertocanales.com/proyectos#plato",
+        "nbk.cover.24": "rcanalescoder.github.io/Plato",
+        "nbk.cover.25": "What is on the following pages",
+        "nbk.cover.26": "An index of the round: a table with station, machine, angle, height, fall and lead for each clay, and a plan view with all the trajectories together.",
+        "nbk.cover.27": "The notice of use and the licence, at the end. If you print only part of it, print that sheet too.",
+        "nbk.cover.28": "Notice: the figures in this notebook are an estimate from a teaching model, not a field measurement. Read the notice of use and the licence on the last page before taking it to the ground.",
+        "nbk.close.1": "Notice of use and licence",
+        "nbk.close.2": "Read it before applying anything from this notebook on a shooting ground",
+        "nbk.close.3": "This is an estimate, not a measurement",
+        "nbk.close.4": "The trajectories, the times and the leads come from a simplified model that solves a visual parabola from the height and the range of the clay, with reduced gravity and a common visual release. It does not measure a real trap, it does not reproduce the full aerodynamics of the disc, and it does not replace a ballistic table for the cartridge you use.",
+        "nbk.close.5": "The scheme tables reproduce values published by the federations, but this document does not certify any installation or any trajectory. In competition the authorised officials always decide.",
+        "nbk.close.6": "The responsibility for the shot is yours",
+        "nbk.close.7": "Use these figures as a starting point for observing and comparing, never as an instruction to follow blindly. Check your own numbers on the ground, with your gun, your cartridge and the conditions of the day, and correct whatever needs correcting.",
+        "nbk.close.8": "This material does not replace in-person training, the rules of the ground, the help of an instructor or a gunsmith, or the legal requirements in force. Safety and shooting decisions are the responsibility of whoever pulls the trigger.",
+        "nbk.close.9": "Before taking it to the ground",
+        "nbk.close.10": "Check that the scheme on the cover really is the one that is going to be thrown. Ask whoever is in charge instead of assuming it.",
+        "nbk.close.11": "The leads depend on the cartridge and the rib you set when generating the notebook. With different equipment, the figures change.",
+        "nbk.close.12": "Treat every number as a hypothesis you are going to test by shooting, not as the result you ought to get.",
+        "nbk.close.13": "MIT licence with attribution",
+        "nbk.close.14": "Copyright (c) 2026 Roberto Canales Mora",
+        "nbk.close.15": "Permission is granted, free of charge, to use, copy, modify, merge, publish, distribute, sublicense and sell copies of this software and its documentation, and to permit the same to those who receive it, on one condition: always preserving the reference to the original author, Roberto Canales Mora, together with the link to www.robertocanales.com. That attribution forms part of the copyright notice that must accompany all copies.",
+        "nbk.close.16": "THE SOFTWARE IS PROVIDED «AS IS», WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.",
+        "nbk.close.17": "Where everything is",
+        "nbk.close.18": "Full book, simulator and source code:",
+        "nbk.close.19": "www.robertocanales.com/proyectos#plato",
+        "nbk.close.20": "rcanalescoder.github.io/Plato",
+        "nbk.close.21": "rcanalesmora@gmail.com",
+        "nbk.close.22": "The project is in beta",
+        "nbk.close.23": "The book and the simulator are still under review and are shared so that anyone can try them, find errors and help improve them. If you find something that does not match your experience on the ground, the rules that apply to you, or the figures you measure yourself, write in: that kind of report is what makes the model better.",
+        "nbk.close.24": "Plato · clay target simulator and book · Roberto Canales Mora · MIT licence with attribution",
+        "nbk.index.1": "Shot point notebook",
+        "nbk.index.2": "Plato · generated from the simulator, not an official document",
+        "scheme.robot_abt": "ABT CPSA 2026",
+        "scheme.robot_trap1": "FITASC Trap1 2025"
+      }
+    };
+
+    let LANG = "es";
+
+    /*
+      El idioma se decide, por orden: lo que pida la URL (?lang=en), lo que el
+      usuario eligiera antes en este navegador, y por último lo que anuncie el
+      navegador. Así un enlace compartido manda sobre la preferencia guardada,
+      que es lo que espera quien recibe el enlace.
+    */
+    function pickLanguage() {
+      let saved = null;
+      try { saved = localStorage.getItem("plato.lang"); } catch (error) { saved = null; }
+      const asked = new URLSearchParams(location.search).get("lang");
+      const browser = (navigator.language || "es").slice(0, 2).toLowerCase();
+      return [asked, saved, browser].find(code => code && I18N[code]) || "es";
+    }
+
+    // Lo que falte en un idioma cae al español en vez de mostrar la clave cruda.
+    function t(key) {
+      const dict = I18N[LANG] || I18N.es;
+      if (key in dict) return dict[key];
+      if (key in I18N.es) return I18N.es[key];
+      return key;
+    }
+
+    function applyLanguage(lang) {
+      LANG = I18N[lang] ? lang : "es";
+      try { localStorage.setItem("plato.lang", LANG); } catch (error) { /* modo privado */ }
+
+      document.documentElement.lang = LANG;
+      document.title = t("html.title");
+
+      document.querySelectorAll("[data-i18n]").forEach(node => { node.textContent = t(node.dataset.i18n); });
+      document.querySelectorAll("[data-i18n-html]").forEach(node => { node.innerHTML = t(node.dataset.i18nHtml); });
+      document.querySelectorAll("[data-i18n-title]").forEach(node => { node.title = t(node.dataset.i18nTitle); });
+      document.querySelectorAll("[data-i18n-aria]").forEach(node => { node.setAttribute("aria-label", t(node.dataset.i18nAria)); });
+
+      // El libro tiene un fichero por idioma, así que los enlaces cambian de destino.
+      const book = LANG === "es" ? "index.html" : `${LANG}/index.html`;
+      const manual = document.getElementById("manualLink");
+      const tech = document.getElementById("techLink");
+      if (manual) manual.href = book;
+      if (tech) tech.href = `${book}#ingenieria`;
+    }
+
+    function setupLanguagePicker() {
+      const picker = document.getElementById("langControl");
+      if (!picker) return;
+      picker.innerHTML = "";
+      LANGS.forEach(entry => {
+        const option = document.createElement("option");
+        option.value = entry.code;
+        option.textContent = entry.label;
+        picker.appendChild(option);
+      });
+      picker.value = LANG;
+      picker.addEventListener("change", () => {
+        applyLanguage(picker.value);
+        if (typeof relocalizeSimulator === "function") relocalizeSimulator();
+      });
+    }
+
+    LANG = pickLanguage();
+
+    /*
+      Los paneles de ayuda y licencia son prosa larga y estable: se guardan como
+      bloques de HTML completos en vez de trocearlos en decenas de claves, que
+      sólo complicaría traducirlos y revisarlos.
+    */
+
+    I18N.es["help.body"] = `
+      <h2>Ayuda del Simulador</h2>
+      <p>Este laboratorio muestra el tiro al plato desde el ojo del tirador. La idea principal es aprender a leer el vuelo del plato y entender dónde hay que llevar el punto de mira para que la nube de perdigones lo intercepte.</p>
 
       <h3>Modalidades</h3>
       <ul>
-        <li><strong>Universal:</strong> cinco maquinas dentro del foso. El señuelo naranja central indica la referencia de salida.</li>
-        <li><strong>Olimpica:</strong> quince maquinas agrupadas por puestos. El señuelo activo se alinea con el puesto desde el que se tira.</li>
-        <li><strong>Robot:</strong> una unica maquina oscilante. Incluye perfiles reglamentarios separados para ABT CPSA y Trap1 FITASC, ademas de modelos populares no normativos.</li>
+        <li><strong>Universal:</strong> cinco máquinas dentro del foso. El señuelo naranja central indica la referencia de salida.</li>
+        <li><strong>Olímpica:</strong> quince máquinas agrupadas por puestos. El señuelo activo se alinea con el puesto desde el que se tira.</li>
+        <li><strong>Robot:</strong> una única máquina oscilante. Incluye perfiles reglamentarios separados para ABT CPSA y Trap1 FITASC, además de modelos populares no normativos.</li>
         <li><strong>Puesto:</strong> en todas las modalidades, incluido Robot, el tirador rota por los puestos 1 a 5 durante una tirada de 25 platos. Repetir plato no suma ni cambia de puesto.</li>
       </ul>
 
       <h3>Velocidad y trayectoria</h3>
       <ul>
-        <li>El plato sale de la boca del foso con una velocidad, un angulo lateral y una altura definidos por el esquema.</li>
-        <li>En <strong>Robot</strong>, ABT y Trap1 generan angulos y alturas continuos dentro de sus limites oficiales. Los modelos de feria usan secuencias circulares, pseudoaleatorias o extremas. <strong>Robot fuerza</strong>, <strong>Robot altura</strong> y <strong>Robot lateral</strong> permiten salir deliberadamente de la norma para comparar.</li>
-        <li>La linea naranja discontinua muestra su trayectoria prevista. Si desactivas <strong>trayectoria</strong>, tambien se oculta la guia entre maquina y salida.</li>
+        <li>El plato sale de la boca del foso con una velocidad, un ángulo lateral y una altura definidos por el esquema.</li>
+        <li>En <strong>Robot</strong>, ABT y Trap1 generan ángulos y alturas continuos dentro de sus límites oficiales. Los modelos de feria usan secuencias circulares, pseudoaleatorias o extremas. <strong>Robot fuerza</strong>, <strong>Robot altura</strong> y <strong>Robot lateral</strong> permiten salir deliberadamente de la norma para comparar.</li>
+        <li>La línea naranja discontinua muestra su trayectoria prevista. Si desactivas <strong>trayectoria</strong>, también se oculta la guía entre máquina y salida.</li>
         <li>La trayectoria no se pinta por debajo del suelo: cuando el plato cae, la ayuda deja de sugerir puntos imposibles.</li>
       </ul>
 
       <h3>Cartucho y plomeo</h3>
       <ul>
-        <li>El cartucho define una velocidad nominal. Plato usa el 78% como velocidad efectiva inicial y un arrastre exponencial simplificado: es una aproximacion declarada, no una curva calibrada de RIO ni de un lote concreto.</li>
-        <li>Antes del tiro, el plomeo azul es la envolvente estimada del cono. Despues del tiro, la nube azul congelada y el panel proceden de las mismas 306 trayectorias que se evaluaron fisicamente.</li>
-        <li>El contacto usa el radio fisico del plato ISSF, 55 mm. Un toque no siempre rompe: si el perdigon llega con menos de 0,55 J en este modelo aproximado, se marca como <strong>toque flojo</strong>. Ese umbral no esta calibrado para certificar un plato o cartucho real.</li>
-        <li><strong>Plomeo tiro 1</strong> y <strong>Plomeo tiro 2</strong> permiten abrir o cerrar el patron, como harian choques distintos.</li>
-        <li><strong>Variacion plomeo</strong> introduce huecos, agrupaciones y pequenas diferencias de velocidad entre perdigones. Asi el plomeo se comporta como una nube 3D simplificada, no como un circulo perfecto.</li>
+        <li>El cartucho define una velocidad nominal. Plato usa el 78% como velocidad efectiva inicial y un arrastre exponencial simplificado: es una aproximación declarada, no una curva calibrada de un lote concreto.</li>
+        <li>Antes del tiro, el plomeo azul es la envolvente estimada del cono. Después del tiro, la nube azul congelada y el panel proceden de las mismas 306 trayectorias que se evaluaron físicamente.</li>
+        <li>El contacto usa el radio físico del plato ISSF, 55 mm. Un toque no siempre rompe: si el perdigón llega con menos de 0,55 J en este modelo aproximado, se marca como <strong>toque flojo</strong>. Ese umbral no está calibrado para certificar un plato o cartucho real.</li>
+        <li><strong>Plomeo tiro 1</strong> y <strong>Plomeo tiro 2</strong> permiten abrir o cerrar el patrón, como harían chokes distintos.</li>
+        <li><strong>Variación plomeo</strong> introduce huecos, agrupaciones y pequeñas diferencias de velocidad entre perdigones. Así el plomeo se comporta como una nube 3D simplificada, no como un círculo perfecto.</li>
       </ul>
 
       <h3>Adelanto</h3>
       <ul>
-        <li>El plato sigue moviendose mientras los perdigones viajan. Por eso normalmente no se apunta exactamente al plato, sino un poco por delante.</li>
-        <li>El area amarilla es la ayuda de adelanto: donde conviene llevar el punto rojo para que la nube alcance al plato.</li>
-        <li>Si ocultas <strong>ayuda adelanto</strong>, la fisica sigue calculandose, pero no se muestra la pista amarilla.</li>
+        <li>El plato sigue moviéndose mientras los perdigones viajan. Por eso normalmente no se apunta exactamente al plato, sino un poco por delante.</li>
+        <li>El área amarilla es la ayuda de adelanto: donde conviene llevar el punto rojo para que la nube alcance al plato.</li>
+        <li>Si ocultas <strong>ayuda adelanto</strong>, la física sigue calculándose, pero no se muestra la pista amarilla.</li>
       </ul>
 
       <h3>Elementos en pantalla</h3>
       <ul>
         <li><strong>Plato naranja:</strong> objetivo real.</li>
         <li><strong>Punto rojo:</strong> punto de mira; donde disparas.</li>
-        <li><strong>Area amarilla:</strong> punto o zona ideal de adelanto.</li>
-        <li><strong>Area azul:</strong> envolvente estimada antes de disparar; nube fisica evaluada despues del tiro.</li>
-        <li><strong>Punto azul claro:</strong> centro fisico del disparo.</li>
+        <li><strong>Área amarilla:</strong> punto o zona ideal de adelanto.</li>
+        <li><strong>Área azul:</strong> envolvente estimada antes de disparar; nube física evaluada después del tiro.</li>
+        <li><strong>Punto azul claro:</strong> centro físico del disparo.</li>
         <li><strong>Punto verde:</strong> impacto que rompe el plato.</li>
         <li><strong>Señuelo S:</strong> referencia visual de salida del plato.</li>
-        <li><strong>Ventanas de correccion:</strong> resumen de si el tiro quedo alto, bajo, adelantado, retrasado o fuera de linea.</li>
+        <li><strong>Ventanas de corrección:</strong> resumen de si el tiro quedó alto, bajo, adelantado, retrasado o fuera de línea.</li>
       </ul>
 
-      <h3>Como usarlo</h3>
+      <h3>Cómo usarlo</h3>
       <ul>
-        <li>Empieza con <strong>Camara lenta</strong> baja para ver la relacion entre plato, adelanto y plomeo.</li>
+        <li>Empieza con <strong>Cámara lenta</strong> baja para ver la relación entre plato, adelanto y plomeo.</li>
         <li>Sube el zoom visual si el señuelo o el plato se ven demasiado pequeños en tu pantalla.</li>
-        <li>Prueba primero con la ayuda amarilla activada; despues ocultala para entrenar la estimacion mental.</li>
-        <li>Usa <strong>Repetir plato</strong> para practicar una salida dificil sin avanzar la tirada.</li>
+        <li>Prueba primero con la ayuda amarilla activada; después ocúltala para entrenar la estimación mental.</li>
+        <li>Usa <strong>Repetir plato</strong> para practicar una salida difícil sin avanzar la tirada.</li>
       </ul>
 
       <h3>Cuaderno imprimible</h3>
       <ul>
-        <li><strong>Generar cuaderno</strong>, al final del panel de parametros, produce un PDF A4 apaisado con toda la tirada del esquema activo: 25 fichas en Universal y en Robot, 15 en Olimpica.</li>
-        <li>Cada ficha dibuja la trayectoria de un plato con cinco instantes marcados sobre ella. Cuatro caen dentro de la ventana en la que el plato todavia esta a tiro y el quinto queda fuera, para ver lo que cuesta retrasarse.</li>
-        <li>En cada instante se indica donde esta el plato y cuanto hay que adelantar, en centimetros, en anchos de plato y en grados.</li>
+        <li><strong>Generar cuaderno</strong>, al final del panel de parámetros, produce un PDF A4 apaisado con toda la tirada del esquema activo: 25 fichas en Universal y en Robot, 15 en Olímpica.</li>
+        <li>Cada ficha dibuja la trayectoria de un plato con cinco instantes marcados sobre ella. Cuatro caen dentro de la ventana en la que el plato todavía está a tiro y el quinto queda fuera, para ver lo que cuesta retrasarse.</li>
+        <li>En cada instante se indica dónde está el plato y cuánto hay que adelantar, en centímetros, en anchos de plato y en grados.</li>
         <li>El cuaderno sale con <strong>los ajustes que tengas puestos en ese momento</strong>. Van impresos en la cabecera de cada ficha, resaltando en color los que no son los de arranque: con otra solista o con viento, las cifras dejan de valer y hay que generar uno nuevo.</li>
         <li>Tarda algo menos de un minuto y se descarga solo. Abre con una portada que explica el documento y cierra con el aviso de uso y la licencia.</li>
+        <li>El cuaderno se genera en el idioma que tengas seleccionado.</li>
       </ul>
 
-      <p><a href="#">Cerrar</a> · <a href="index.html" target="_blank" rel="noopener">Manual completo</a> · <a href="index.html#ingenieria" target="_blank" rel="noopener">Documentacion tecnica</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>
-    </article>
-  </section>
+      <p><a href="#">Cerrar</a> · <a href="index.html" target="_blank" rel="noopener">Manual completo</a> · <a href="index.html#ingenieria" target="_blank" rel="noopener">Documentación técnica</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>`;
 
-  <section id="licencia-mit" class="license-panel" aria-label="Licencia MIT">
-    <article class="license-card">
+    I18N.en["help.body"] = `
+      <h2>Simulator Help</h2>
+      <p>This trainer shows clay target shooting from the shooter's eye. The main idea is to learn to read the flight of the clay and to understand where the aiming point has to go for the cloud of pellets to intercept it.</p>
+
+      <h3>Disciplines</h3>
+      <ul>
+        <li><strong>Universal Trench:</strong> five machines inside the trap. The central orange marker clay shows the release reference.</li>
+        <li><strong>Olympic Trap:</strong> fifteen machines grouped by station. The active marker lines up with the station you are shooting from.</li>
+        <li><strong>Robot:</strong> a single oscillating machine. It includes separate regulated profiles for ABT CPSA and FITASC Trap1, plus non-regulated popular models.</li>
+        <li><strong>Station:</strong> in every discipline, Robot included, the shooter rotates through stations 1 to 5 during a 25-target round. Repeating a target neither counts nor changes station.</li>
+      </ul>
+
+      <h3>Speed and trajectory</h3>
+      <ul>
+        <li>The clay leaves the mouth of the trap with a speed, a lateral angle and a height set by the scheme.</li>
+        <li>In <strong>Robot</strong>, ABT and Trap1 generate continuous angles and heights within their official limits. The fairground models use circular, pseudo-random or extreme sequences. <strong>Robot force</strong>, <strong>Robot height</strong> and <strong>Robot spread</strong> let you leave the rules deliberately, so you can compare.</li>
+        <li>The dashed orange line shows the predicted trajectory. If you turn <strong>trajectory</strong> off, the guide between machine and release is hidden too.</li>
+        <li>The trajectory is not drawn below the ground: once the clay has fallen, the aid stops suggesting impossible points.</li>
+      </ul>
+
+      <h3>Cartridge and pattern</h3>
+      <ul>
+        <li>The cartridge sets a nominal velocity. Plato uses 78% of it as the initial effective velocity, plus a simplified exponential drag: a stated approximation, not a calibrated curve for a particular batch.</li>
+        <li>Before the shot, the blue pattern is the estimated envelope of the cone. After the shot, the frozen blue cloud and the panel come from the same 306 trajectories that were evaluated physically.</li>
+        <li>Contact uses the physical radius of an ISSF clay, 55 mm. A hit does not always break: if the pellet arrives with less than 0.55 J in this approximate model, it is marked as a <strong>weak hit</strong>. That threshold is not calibrated to certify a real clay or cartridge.</li>
+        <li><strong>Pattern, shot 1</strong> and <strong>Pattern, shot 2</strong> open or tighten the pattern, as different chokes would.</li>
+        <li><strong>Pattern variance</strong> introduces gaps, clusters and small velocity differences between pellets. That way the pattern behaves like a simplified 3D cloud rather than a perfect circle.</li>
+      </ul>
+
+      <h3>Lead</h3>
+      <ul>
+        <li>The clay keeps moving while the pellets travel. That is why you do not normally aim exactly at the clay, but a little ahead of it.</li>
+        <li>The yellow area is the lead aid: where the red point should go for the cloud to reach the clay.</li>
+        <li>If you hide the <strong>lead aid</strong>, the physics is still computed, but the yellow cue is not shown.</li>
+      </ul>
+
+      <h3>What you see on screen</h3>
+      <ul>
+        <li><strong>Orange clay:</strong> the real target.</li>
+        <li><strong>Red point:</strong> the aiming point; where you shoot.</li>
+        <li><strong>Yellow area:</strong> the ideal lead point or zone.</li>
+        <li><strong>Blue area:</strong> estimated envelope before firing; physically evaluated cloud after the shot.</li>
+        <li><strong>Light blue point:</strong> physical centre of the shot.</li>
+        <li><strong>Green point:</strong> the impact that breaks the clay.</li>
+        <li><strong>Marker S:</strong> visual reference for the clay's release.</li>
+        <li><strong>Correction panels:</strong> a summary of whether the shot was high, low, ahead, behind or off line.</li>
+      </ul>
+
+      <h3>How to use it</h3>
+      <ul>
+        <li>Start with <strong>Slow motion</strong> low, to see the relation between clay, lead and pattern.</li>
+        <li>Raise the visual zoom if the marker or the clay look too small on your screen.</li>
+        <li>Try it first with the yellow aid on; then hide it to train your own estimation.</li>
+        <li>Use <strong>Repeat target</strong> to practise a difficult release without advancing the round.</li>
+      </ul>
+
+      <h3>Printable notebook</h3>
+      <ul>
+        <li><strong>Generate notebook</strong>, at the end of the parameters panel, produces an A4 landscape PDF with the whole round of the active scheme: 25 sheets in Universal and Robot, 15 in Olympic.</li>
+        <li>Each sheet draws the trajectory of one clay with five moments marked on it. Four of them fall inside the window in which the clay is still within reach, and the fifth falls outside, to show what being late costs.</li>
+        <li>At each moment it tells you where the clay is and how much lead you need, in centimetres, in clay widths and in degrees.</li>
+        <li>The notebook comes out with <strong>the settings you have at that moment</strong>. They are printed in the header of every sheet, highlighting in colour those that are not the start-up ones: with a different rib or with wind, the figures stop being valid and you have to generate a new one.</li>
+        <li>It takes a little under a minute and downloads on its own. It opens with a cover explaining the document and closes with the notice of use and the licence.</li>
+        <li>The notebook is generated in the language you have selected.</li>
+      </ul>
+
+      <p><a href="#">Close</a> · <a href="en/index.html" target="_blank" rel="noopener">Full book</a> · <a href="en/index.html#ingenieria" target="_blank" rel="noopener">Technical documentation</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Plato project</a></p>`;
+
+    I18N.es["license.body"] = `
       <h2>Licencia MIT</h2>
       <p>Copyright (c) 2026 Roberto Canales Mora</p>
       <p>Por la presente se concede permiso, libre de cargos, a cualquier persona que obtenga una copia de este software y de los archivos de documentación asociados, para tratar el software sin restricción, incluyendo sin limitación los derechos de uso, copia, modificación, fusión, publicación, distribución, sublicencia y/o venta de copias del software, y para permitir a las personas a quienes se les proporcione el software que hagan lo mismo, sujeto a las siguientes condiciones:</p>
       <p>Al usar, copiar, modificar, distribuir o publicar versiones derivadas de este proyecto debe conservarse siempre la referencia al autor original, <strong>Roberto Canales Mora</strong>, junto con el enlace a <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a>. Esta atribución forma parte del aviso de copyright y de permiso que debe acompañar a todas las copias o partes sustanciales del software.</p>
       <p>El aviso de copyright anterior y este aviso de permiso se incluirán en todas las copias o partes sustanciales del software.</p>
       <p>EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITÁNDOSE A GARANTÍAS DE COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO LOS AUTORES O TITULARES DEL COPYRIGHT SERÁN RESPONSABLES DE NINGUNA RECLAMACIÓN, DAÑO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIÓN CONTRACTUAL, EXTRACONTRACTUAL O DE OTRO TIPO, QUE SURJA DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O EL USO U OTRAS OPERACIONES EN EL SOFTWARE.</p>
-      <p><a href="#">Cerrar</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>
-    </article>
-  </section>
+      <p><a href="#">Cerrar</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proyecto Plato</a></p>`;
+
+    I18N.en["license.body"] = `
+      <h2>MIT Licence</h2>
+      <p>Copyright (c) 2026 Roberto Canales Mora</p>
+      <p>Original project: <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">https://robertocanales.com/proyectos#plato</a></p>
+      <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+      <p>When using, copying, modifying, distributing or publishing derived versions of this project, the reference to the original author, <strong>Roberto Canales Mora</strong>, must always be preserved, together with the link to <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a>. That attribution forms part of the copyright and permission notice that must accompany all copies or substantial portions of the Software.</p>
+      <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+      <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      <p><a href="#">Close</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Plato project</a></p>`;
+  </script>
 
   <script>
     /*
@@ -1269,7 +2122,8 @@
       if (!keepCorrections) sim.frozenCues = [];
     }
 
-    function startTarget(target, label = "PLATO") {
+    function startTarget(target, label = null) {
+      label = label || t("sim.banner.pull");
       sim.target = cloneTarget(target);
       sim.target.visibleDelay = params.reaction;
       sim.repeatingTarget = Boolean(sim.target.noCount);
@@ -1523,7 +2377,7 @@
       syncStationUi();
       updateEye();
       setAimToGuard();
-      startTarget({ ...sim.lastTarget, noCount: true }, "REPETIR");
+      startTarget({ ...sim.lastTarget, noCount: true }, t("sim.banner.repeat"));
     }
 
     function reset() {
@@ -1622,7 +2476,7 @@
       if (sim.mode === "ended") return;
       sim.mode = "ended";
       ui.lead.textContent = "-";
-      ui.result.textContent = sim.repeatingTarget ? "Repeticion: fuera de ventana" : "Fuera de ventana";
+      ui.result.textContent = sim.repeatingTarget ? t("sim.repeat.outOfWindow") : t("sim.outOfWindow");
       ui.result.style.color = "var(--muted)";
       if (!sim.repeatingTarget) advanceRound(false);
     }
@@ -1633,8 +2487,8 @@
       sim.fragments.push(...makeFragments(ground, 24, 1.6));
       const missedBothShots = sim.shotCount >= 2;
       ui.result.textContent = sim.repeatingTarget
-        ? missedBothShots ? "Repeticion fallada / perdida: cayo al suelo" : "Repeticion perdida: cayo al suelo"
-        : missedBothShots ? "Fallo / perdido: cayo al suelo" : "Perdido: cayo al suelo";
+        ? missedBothShots ? t("sim.repeat.missLost") : t("sim.repeat.lost")
+        : missedBothShots ? t("sim.missLost") : t("sim.lost");
       ui.result.style.color = "var(--bad)";
       if (!sim.repeatingTarget) advanceRound(false);
     }
@@ -1671,7 +2525,7 @@
       if (value <= 35) return "3/4";
       if (value <= 55) return "1/2";
       if (value <= 75) return "1/4";
-      return "abierto";
+      return t("spread.open");
     }
 
     function patternRadius(distance, shotNumber = sim.shotCount + 1) {
@@ -2011,17 +2865,17 @@
       sim.bursts.push({ age: 0, p: impact, hit });
       const edgeHit = hit && shotCenter.distance > radius * 0.65;
       ui.result.textContent = hit
-        ? `${sim.repeatingTarget ? "Repeticion" : "Roto"} ${edgeHit ? "borde" : "centro"}: perdigon ${hitInfo.pellet + 1}/${dirs.length} · ${hitInfo.energy.toFixed(2)} J`
+        ? `${sim.repeatingTarget ? t("sim.repeat") : t("sim.hit")} ${edgeHit ? t("sim.edge") : t("sim.centre")}: ${t("sim.pellet")} ${hitInfo.pellet + 1}/${dirs.length} · ${hitInfo.energy.toFixed(2)} J`
         : weakContact
-        ? `${sim.repeatingTarget ? "Repeticion toque flojo" : "Toque flojo"} ${nearest.energy.toFixed(2)} J`
-        : `${sim.repeatingTarget ? "Repeticion fallo" : "Fallo"} tiro ${sim.shotCount}/2`;
+        ? `${sim.repeatingTarget ? t("sim.repeat.weak") : t("sim.weak")} ${nearest.energy.toFixed(2)} J`
+        : `${sim.repeatingTarget ? t("sim.repeat.miss") : t("sim.miss")} ${t("sim.shot")} ${sim.shotCount}/2`;
       ui.result.style.color = hit ? "var(--good)" : "var(--bad)";
       if (hit) {
         sim.fragments.push(...makeFragments(impact, 36, 2.4));
         sim.mode = "ended";
         if (!sim.repeatingTarget) advanceRound(true);
       } else if (sim.shotCount >= 2) {
-        ui.result.textContent = sim.repeatingTarget ? "Repeticion fallada: espera caida" : "Fallo: 2 tiros, espera caida";
+        ui.result.textContent = sim.repeatingTarget ? t("sim.repeat.missWait") : t("sim.missWait");
         sim.mode = "falling";
       }
     }
@@ -2361,7 +3215,7 @@
       ctx.fillStyle = "rgba(255,255,255,.9)";
       ctx.font = "700 12px system-ui";
       ctx.textAlign = "center";
-      ctx.fillText("fallo: cayendo", targetScreen.x, targetScreen.y - 20);
+      ctx.fillText(t("cv.missFalling"), targetScreen.x, targetScreen.y - 20);
       ui.lead.textContent = "-";
     }
 
@@ -2433,7 +3287,7 @@
       drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
 
       const leadM = Math.hypot(recommended.intercept.x - p.x, recommended.intercept.y - p.y, recommended.intercept.z - p.z);
-      ui.lead.textContent = ui.showLead.checked ? (leadAboveGround ? `${leadM.toFixed(1)} m` : "suelo") : "oculto";
+      ui.lead.textContent = ui.showLead.checked ? (leadAboveGround ? `${leadM.toFixed(1)} m` : t("sim.ground")) : t("sim.hidden");
       ui.target.textContent = `M${sim.target.machineIndex + 1} · ${Math.round(sim.target.angleDeg)} deg · ${sim.target.heightAt10.toFixed(1)} m/10m · ${Math.round(sim.target.landingDistance)} m`;
     }
 
@@ -2639,18 +3493,18 @@
       ctx.textAlign = "left";
       ctx.fillStyle = "rgba(255,255,255,.86)";
       if (!cue) {
-        ctx.fillText("sin plato", x, y);
+        ctx.fillText(t("cv.noTarget"), x, y);
         ctx.restore();
         return;
       }
       if (!cue.impact) {
-        ctx.fillText("naranja: plato  amarillo: punto ideal", x, y);
+        ctx.fillText(t("cv.hint"), x, y);
         ctx.restore();
         return;
       }
-      const leadText = Math.abs(metrics.lead) < 0.12 ? "adelanto correcto" : `${metrics.lead > 0 ? "adelantado" : "retrasado"} ${Math.abs(metrics.lead).toFixed(1)} m`;
-      const lateralText = Math.abs(metrics.lateral) < 0.12 ? "linea correcta" : `${metrics.lateral > 0 ? "derecha" : "izquierda"} ${Math.abs(metrics.lateral).toFixed(1)} m`;
-      const verticalText = Math.abs(metrics.vertical) < 0.08 ? "altura correcta" : `${metrics.vertical > 0 ? "alto" : "bajo"} ${Math.abs(metrics.vertical).toFixed(1)} m`;
+      const leadText = Math.abs(metrics.lead) < 0.12 ? t("cv.leadOk") : `${metrics.lead > 0 ? t("cv.ahead") : t("cv.behind")} ${Math.abs(metrics.lead).toFixed(1)} m`;
+      const lateralText = Math.abs(metrics.lateral) < 0.12 ? t("cv.lineOk") : `${metrics.lateral > 0 ? t("cv.right") : t("cv.left")} ${Math.abs(metrics.lateral).toFixed(1)} m`;
+      const verticalText = Math.abs(metrics.vertical) < 0.08 ? t("cv.heightOk") : `${metrics.vertical > 0 ? t("cv.high") : t("cv.low")} ${Math.abs(metrics.vertical).toFixed(1)} m`;
       ctx.fillText(verticalOnly ? verticalText : `${leadText} · ${lateralText}`, x, y);
       ctx.restore();
     }
@@ -2668,15 +3522,15 @@
     function correctionLabel(value, axis) {
       const abs = Math.abs(value);
       if (axis === "lead") {
-        if (abs < 0.12) return { text: "adelanto ok", color: "rgba(255,255,255,.72)" };
+        if (abs < 0.12) return { text: t("cv.leadOkShort"), color: "rgba(255,255,255,.72)" };
         return {
-          text: `${value > 0 ? "retrasa" : "adelanta"} ${abs.toFixed(2)} m`,
+          text: `${value > 0 ? t("cv.delay") : t("cv.advance")} ${abs.toFixed(2)} m`,
           color: value > 0 ? "rgba(125,183,255,.95)" : "rgba(255,180,84,.95)"
         };
       }
-      if (abs < 0.08) return { text: "altura ok", color: "rgba(255,255,255,.72)" };
+      if (abs < 0.08) return { text: t("cv.heightOkShort"), color: "rgba(255,255,255,.72)" };
       return {
-        text: `${value > 0 ? "baja" : "sube"} ${abs.toFixed(2)} m`,
+        text: `${value > 0 ? t("cv.lower") : t("cv.raise")} ${abs.toFixed(2)} m`,
         color: value > 0 ? "rgba(199,160,255,.95)" : "rgba(155,230,111,.95)"
       };
     }
@@ -2776,7 +3630,7 @@
         ctx.textAlign = "left";
         ctx.font = "500 10px system-ui";
         ctx.fillStyle = "rgba(255,255,255,.68)";
-        ctx.fillText("rojo = centro plomeo", x0 + 8, y0 + 30);
+        ctx.fillText(t("cv.redCentre"), x0 + 8, y0 + 30);
         ctx.fillStyle = leadInfo.color;
         ctx.fillText(leadInfo.text, x0 + 8, y0 + 44);
         ctx.fillStyle = heightInfo.color;
@@ -2807,7 +3661,7 @@
       ctx.font = "500 12px system-ui";
       ctx.fillStyle = "rgba(255,255,255,.9)";
       ctx.textAlign = "left";
-      ctx.fillText("correccion de disparo", x0 + 12, y0 + 18);
+      ctx.fillText(t("cv.corrTitle"), x0 + 12, y0 + 18);
       ctx.strokeStyle = "rgba(255,255,255,.18)";
       ctx.beginPath();
       ctx.moveTo(x0 + bw / 2, y0 + 28);
@@ -2815,8 +3669,8 @@
       ctx.stroke();
       const innerY = y0 + 30;
       const innerH = bh - 40;
-      drawCorrectionMini(x0 + 8, innerY, bw / 2 - 12, innerH, cueForShotSlot(1), "tiro 1");
-      drawCorrectionMini(x0 + bw / 2 + 4, innerY, bw / 2 - 12, innerH, cueForShotSlot(2), "tiro 2");
+      drawCorrectionMini(x0 + 8, innerY, bw / 2 - 12, innerH, cueForShotSlot(1), t("cv.shot1"));
+      drawCorrectionMini(x0 + bw / 2 + 4, innerY, bw / 2 - 12, innerH, cueForShotSlot(2), t("cv.shot2"));
       ctx.restore();
     }
 
@@ -2830,24 +3684,24 @@
       const check = verifyTarget(target);
       if (!check) return;
       const discipline = target.mode === "universal"
-        ? "Universal FITASC"
+        ? t("badge.universal")
         : target.mode === "olympic"
-          ? "Foso olimpico ISSF"
-          : target.robotStandard || "Robot popular";
+          ? t("badge.olympic")
+          : target.robotStandard || t("badge.robotPopular");
       const status = target.mode === "robot"
         ? target.robotNormative
-          ? check.ok ? "Dentro de limites" : "Fuera de limites"
-          : "Modelo no normativo"
-        : check.ok ? "Cumple tabla oficial" : "Revisar ajuste";
+          ? check.ok ? t("badge.inLimits") : t("badge.outLimits")
+          : t("badge.nonStandard")
+        : check.ok ? t("badge.matches") : t("badge.review");
       const statusClass = check.ok ? "ok" : "warn";
-      const windText = Math.abs(params.wind) > 0.01 ? " · validacion base sin viento" : "";
-      normBadge.innerHTML = `<span class="${statusClass}">${check.ok ? "✓" : "!"} ${status}</span> · ${discipline} · M${target.machineIndex + 1} · ${Math.round(target.angleDeg)}° · velocidad modelo ${check.speedKmh.toFixed(1)} km/h · h10 ${check.height10.toFixed(2)} m/${target.heightAt10.toFixed(2)} m · alcance ${check.landingDistance.toFixed(1)} m/${target.landingDistance.toFixed(1)} m · vuelo ${check.flightTime.toFixed(2)} s${windText}`;
+      const windText = Math.abs(params.wind) > 0.01 ? t("badge.noWind") : "";
+      normBadge.innerHTML = `<span class="${statusClass}">${check.ok ? "✓" : "!"} ${status}</span> · ${discipline} · M${target.machineIndex + 1} · ${Math.round(target.angleDeg)}° · ${t("badge.speed")} ${check.speedKmh.toFixed(1)} km/h · h10 ${check.height10.toFixed(2)} m/${target.heightAt10.toFixed(2)} m · ${t("badge.range")} ${check.landingDistance.toFixed(1)} m/${target.landingDistance.toFixed(1)} m · ${t("badge.flight")} ${check.flightTime.toFixed(2)} s${windText}`;
       normBadge.classList.add("show");
     }
 
     function drawHud() {
-      ui.state.textContent = sim.mode === "idle" ? "Esperando" : sim.mode === "reaction" ? "Retardo" : sim.mode === "tracking" ? "Seguimiento" : sim.mode === "falling" ? "Cayendo" : "Terminado";
-      ui.round.textContent = `${sim.roundIndex}/25 · ${sim.broken} rotos`;
+      ui.state.textContent = sim.mode === "idle" ? t("sim.state.idle") : sim.mode === "reaction" ? t("sim.state.reaction") : sim.mode === "tracking" ? t("sim.state.tracking") : sim.mode === "falling" ? t("sim.state.falling") : t("sim.state.ended");
+      ui.round.textContent = `${sim.roundIndex}/25 · ${sim.broken} ${t("sim.round.broken")}`;
       syncStationUi();
       ui.aim.textContent = `${((sim.gunYaw - sim.viewYaw) * 180 / Math.PI).toFixed(1)} / ${((sim.gunPitch - sim.viewPitch) * 180 / Math.PI).toFixed(1)} deg`;
       if (!sim.target) {
@@ -2880,7 +3734,7 @@
       ctx.fillStyle = "rgba(255,255,255,.92)";
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
-      ctx.fillText("leyenda", x0 + 14, y0 + 18);
+      ctx.fillText(t("cv.legend"), x0 + 14, y0 + 18);
 
       const textX = x0 + 54;
       const iconX = x0 + 28;
@@ -2894,10 +3748,10 @@
         y += 22;
       }
 
-      item("plato naranja: objetivo real", (x, yy) => {
+      item(t("cv.legend.clay"), (x, yy) => {
         drawClayDisc(x, yy, 8, 1);
       });
-      item("amarillo: punto/area ideal de adelanto", (x, yy) => {
+      item(t("cv.legend.lead"), (x, yy) => {
         ctx.strokeStyle = "rgba(255,212,81,.96)";
         ctx.fillStyle = "rgba(255,212,81,.18)";
         ctx.lineWidth = 2;
@@ -2906,7 +3760,7 @@
         ctx.fill();
         ctx.stroke();
       });
-      item("azul: patron de plomeo estimado", (x, yy) => {
+      item(t("cv.legend.pattern"), (x, yy) => {
         ctx.strokeStyle = "rgba(215,237,255,.76)";
         ctx.fillStyle = "rgba(215,237,255,.18)";
         ctx.lineWidth = 2;
@@ -2915,7 +3769,7 @@
         ctx.fill();
         ctx.stroke();
       });
-      item("rojo: punto de mira / donde disparas", (x, yy) => {
+      item(t("cv.legend.aim"), (x, yy) => {
         ctx.fillStyle = "#d90000";
         ctx.strokeStyle = "rgba(255,255,255,.86)";
         ctx.lineWidth = 1;
@@ -2924,7 +3778,7 @@
         ctx.fill();
         ctx.stroke();
       });
-      item("azul claro: centro fisico del disparo", (x, yy) => {
+      item(t("cv.legend.shotCentre"), (x, yy) => {
         ctx.fillStyle = "rgba(215,237,255,.92)";
         ctx.strokeStyle = "rgba(20,20,20,.55)";
         ctx.lineWidth = 1;
@@ -2933,7 +3787,7 @@
         ctx.fill();
         ctx.stroke();
       });
-      item("verde: impacto que rompe el plato", (x, yy) => {
+      item(t("cv.legend.hit"), (x, yy) => {
         ctx.fillStyle = "rgba(155,230,111,.96)";
         ctx.strokeStyle = "rgba(20,20,20,.65)";
         ctx.lineWidth = 1;
@@ -2942,7 +3796,7 @@
         ctx.fill();
         ctx.stroke();
       });
-      item("naranja discontinua: trayectoria del plato", (x, yy) => {
+      item(t("cv.legend.path"), (x, yy) => {
         ctx.strokeStyle = "rgba(255,100,0,.85)";
         ctx.lineWidth = 2;
         ctx.setLineDash([5, 5]);
@@ -2976,12 +3830,12 @@
 
         ctx.font = "600 12px system-ui";
         ctx.fillStyle = "rgba(255,255,255,.92)";
-        ctx.fillText("raton", mx - 10, y0 + 18);
+        ctx.fillText(t("cv.mouse"), mx - 10, y0 + 18);
         ctx.font = "500 11px system-ui";
         ctx.fillStyle = "rgba(255,255,255,.82)";
-        ctx.fillText("derecho: pedir plato", mx + 58, my - 16);
-        ctx.fillText("izquierdo: disparar", mx + 58, my + 6);
-        ctx.fillText("mover: apuntar", mx + 58, my + 28);
+        ctx.fillText(t("cv.mouse.right"), mx + 58, my - 16);
+        ctx.fillText(t("cv.mouse.left"), mx + 58, my + 6);
+        ctx.fillText(t("cv.mouse.move"), mx + 58, my + 28);
       }
       ctx.restore();
     }
@@ -3012,11 +3866,11 @@
       const current = ui.scheme.value;
       ui.scheme.innerHTML = "";
       const source = params.mode === "universal" ? FU_SCHEMES : params.mode === "olympic" ? ISSF_SCHEMES : ROBOT_SCHEMES;
-      const prefix = params.mode === "universal" ? "FITASC Universal" : params.mode === "olympic" ? "ISSF Olimpica" : "Robot";
+      const prefix = params.mode === "universal" ? t("scheme.prefix.universal") : params.mode === "olympic" ? t("scheme.prefix.olympic") : "Robot";
       Object.keys(source).forEach((key, index) => {
         const option = document.createElement("option");
         option.value = key;
-        option.textContent = params.mode === "robot" ? source[key].name : `${prefix} ${index + 1}`;
+        option.textContent = params.mode === "robot" ? t(`scheme.${key}`) : `${prefix} ${index + 1}`;
         ui.scheme.appendChild(option);
       });
       if (source[current]) ui.scheme.value = current;
@@ -3131,7 +3985,24 @@
     window.addEventListener("keyup", event => keys.delete(event.key));
     window.addEventListener("resize", resize);
 
+    /*
+      Al cambiar de idioma hay que rehacer lo que se escribió una sola vez: las
+      opciones del selector de esquema y el último resultado, que si no se
+      quedan en el idioma anterior. El resto de la interfaz se repinta sola en
+      el siguiente fotograma.
+    */
+    function relocalizeSimulator() {
+      const scheme = params.scheme;
+      populateSchemes();
+      if (ui.scheme.querySelector(`option[value="${scheme}"]`)) ui.scheme.value = scheme;
+      syncControls();
+      ui.result.textContent = "-";
+      updateNormBadge();
+    }
+
     // Boot.
+    applyLanguage(LANG);
+    setupLanguagePicker();
     resize();
     syncControls();
     requestAnimationFrame(loop);
@@ -3290,37 +4161,21 @@ const CuadernoPDF = (function () {
     7: ["salida", "muy-pronto", "pronto", "ventana", "limite", "tarde", "muy-tarde"]
   };
 
-  const MOMENT_LABEL = {
-    "salida": "Salida",
-    "muy-pronto": "Muy pronto",
-    "pronto": "Pronto",
-    "ventana": "Ventana buena",
-    "limite": "Al límite",
-    "tarde": "Vas tarde",
-    "muy-tarde": "Muy tarde"
-  };
-
-  const MOMENT_NOTE = {
-    "salida": "primer vistazo",
-    "muy-pronto": "tiro apresurado",
-    "pronto": "tiro rápido",
-    "ventana": "el tiro cómodo",
-    "limite": "último tiro útil",
-    "tarde": "ya no llega bien",
-    "muy-tarde": "límite del lance"
-  };
+  // Etiqueta y comentario de cada instante, en el idioma activo.
+  const momentLabel = key => t(`nbk.moment.${key}`);
+  const momentNote = key => t(`nbk.note.${key}`);
 
   // ---------------------------------------------------------------------------
   // Utilidades
   // ---------------------------------------------------------------------------
 
-  const num = (value, decimals = 1) => Number(value).toFixed(decimals).replace(".", ",");
+  const num = (value, decimals = 1) => Number(value).toFixed(decimals).replace(".", t("nbk.decimal"));
   const signed = (value, decimals = 0) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${num(Math.abs(value), decimals)}`;
   const sleep = () => new Promise(resolve => window.setTimeout(resolve, 0));
 
   function modeLabel() {
-    if (params.mode === "universal") return "Foso universal";
-    if (params.mode === "olympic") return "Foso olímpico";
+    if (params.mode === "universal") return t("nbk.mode.universal");
+    if (params.mode === "olympic") return t("nbk.mode.olympic");
     return "Robot";
   }
 
@@ -3336,12 +4191,12 @@ const CuadernoPDF = (function () {
   function paramsParts() {
     const rib = Number(ui.rib.value);
     return [
-      { text: `cartucho ${params.cartridge} m/s`, changed: params.cartridge !== PARAM_DEFAULTS.cartridge },
-      { text: `solista ${rib}% (${num(sim.ribGain, 2)}°)`, changed: rib !== PARAM_DEFAULTS.rib },
-      { text: `viento ${num(params.wind, 1)} m/s`, changed: Math.abs(params.wind - PARAM_DEFAULTS.wind) > 0.001 },
-      { text: `retardo ${num(params.reaction, 2)} s`, changed: Math.abs(params.reaction - PARAM_DEFAULTS.reaction) > 0.001 },
-      { text: `plomeo 1 ${spreadLabel(params.spread1)}`, changed: params.spread1 !== PARAM_DEFAULTS.spread1 },
-      { text: `guardia ${ui.guard.options[ui.guard.selectedIndex].textContent.toLowerCase()}`, changed: params.guard !== PARAM_DEFAULTS.guard }
+      { text: `${t("nbk.p.cartridge")} ${params.cartridge} m/s`, changed: params.cartridge !== PARAM_DEFAULTS.cartridge },
+      { text: `${t("nbk.p.rib")} ${rib}% (${num(sim.ribGain, 2)}°)`, changed: rib !== PARAM_DEFAULTS.rib },
+      { text: `${t("nbk.p.wind")} ${num(params.wind, 1)} m/s`, changed: Math.abs(params.wind - PARAM_DEFAULTS.wind) > 0.001 },
+      { text: `${t("nbk.p.delay")} ${num(params.reaction, 2)} s`, changed: Math.abs(params.reaction - PARAM_DEFAULTS.reaction) > 0.001 },
+      { text: `${t("nbk.p.pattern1")} ${spreadLabel(params.spread1)}`, changed: params.spread1 !== PARAM_DEFAULTS.spread1 },
+      { text: `${t("nbk.p.hold")} ${ui.guard.options[ui.guard.selectedIndex].textContent.toLowerCase()}`, changed: params.guard !== PARAM_DEFAULTS.guard }
     ];
   }
 
@@ -3775,7 +4630,7 @@ const CuadernoPDF = (function () {
     ctx.lineTo(wait.x, wait.y + 14);
     ctx.stroke();
     ctx.restore();
-    haloText("espera", wait.x, wait.y + 26, 13);
+    haloText(t("nbk.wait"), wait.x, wait.y + 26, 13);
 
     const placed = [{ x: wait.x, y: wait.y, w: 90, h: 46 }];
     const busy = [{ x: wait.x, y: wait.y, w: 90, h: 46 }];
@@ -3925,7 +4780,7 @@ const CuadernoPDF = (function () {
     }
     maxX = Math.max(maxX, Math.abs(eye.x) + 3);
 
-    planBox(p, x, y, w, h, "Vista cenital");
+    planBox(p, x, y, w, h, t("nbk.plan.title"));
     const proj = planProjector(x, y, w, h, maxX, maxZ);
     drawPlanCommon(p, proj, maxX, maxZ);
 
@@ -3987,7 +4842,7 @@ const CuadernoPDF = (function () {
       }
     });
 
-    planBox(p, x, y, w, h, "Vista cenital · todos los platos del esquema");
+    planBox(p, x, y, w, h, t("nbk.plan.all"));
     const proj = planProjector(x, y, w, h, maxX, maxZ);
     drawPlanCommon(p, proj, maxX, maxZ);
 
@@ -4061,9 +4916,9 @@ const CuadernoPDF = (function () {
   }
 
   function rangeState(distance) {
-    if (distance <= 38) return { color: "#2e7d32", label: "en distancia" };
-    if (distance <= USEFUL_RANGE_MAX) return { color: "#ef6c00", label: "al límite" };
-    return { color: "#9aa5ab", label: "fuera de alcance útil" };
+    if (distance <= 38) return { color: "#2e7d32", label: t("nbk.range.in") };
+    if (distance <= USEFUL_RANGE_MAX) return { color: "#ef6c00", label: t("nbk.range.limit") };
+    return { color: "#9aa5ab", label: t("nbk.range.out") };
   }
 
   function drawMomentStrip(p, moments, x, y, w, h) {
@@ -4100,19 +4955,19 @@ const CuadernoPDF = (function () {
       p.fillText(String(index + 1), bx + 26, y + 38.5);
       p.restore();
 
-      text(p, MOMENT_LABEL[moment.key], bx + 48, y + 22, { size: fs(17), weight: 700 });
-      text(p, `${num(moment.tau, 2)} s tras salir`, bx + 48, y + 44, { size: fs(13), color: INK_SOFT });
+      text(p, momentLabel(moment.key), bx + 48, y + 22, { size: fs(17), weight: 700 });
+      text(p, `${num(moment.tau, 2)} ${t("nbk.strip.after")}`, bx + 48, y + 44, { size: fs(13), color: INK_SOFT });
 
       text(p, `${num(moment.metrics.perceived * 100, 0)} cm`, bx + 16, y + 74, { size: fs(34), weight: 700, color: ACCENT });
-      text(p, `≈ ${num(moment.metrics.clays, 1)} platos`, bx + 16, y + 114, { size: fs(15), color: INK_SOFT });
+      text(p, `≈ ${num(moment.metrics.clays, 1)} ${t("nbk.strip.clays")}`, bx + 16, y + 114, { size: fs(15), color: INK_SOFT });
 
-      const lateralWord = moment.metrics.lateral >= 0 ? "dcha." : "izda.";
-      const verticalWord = moment.metrics.vertical >= 0 ? "arriba" : "abajo";
+      const lateralWord = moment.metrics.lateral >= 0 ? t("nbk.strip.right") : t("nbk.strip.left");
+      const verticalWord = moment.metrics.vertical >= 0 ? t("nbk.strip.up") : t("nbk.strip.down");
       text(p, `${num(Math.abs(moment.metrics.lateral) * 100, 0)} cm ${lateralWord}  ·  ${num(Math.abs(moment.metrics.vertical) * 100, 0)} cm ${verticalWord}`, bx + 16, y + 140, { size: fs(15), weight: 700 });
-      text(p, `${signed(moment.metrics.lateralDeg, 2)}° lateral · ${signed(moment.metrics.verticalDeg, 2)}° vertical`, bx + 16, y + 164, { size: fs(12), color: INK_SOFT });
+      text(p, `${signed(moment.metrics.lateralDeg, 2)}° ${t("nbk.strip.lateral")} · ${signed(moment.metrics.verticalDeg, 2)}° ${t("nbk.strip.vertical")}`, bx + 16, y + 164, { size: fs(12), color: INK_SOFT });
 
-      text(p, `plato a ${num(moment.metrics.distance, 0)} m · altura ${num(moment.clay.y, 1)} m · separación real ${num(moment.metrics.total, 1)} m`, bx + 16, y + 190, { size: fs(13), color: INK_SOFT });
-      text(p, `${MOMENT_NOTE[moment.key]} · ${state.label}`, bx + 16, y + 212, { size: fs(13), color: state.color, weight: 700 });
+      text(p, `${t("nbk.strip.clayAt")} ${num(moment.metrics.distance, 0)} m · ${t("nbk.strip.heightAt")} ${num(moment.clay.y, 1)} m · ${t("nbk.strip.realSep")} ${num(moment.metrics.total, 1)} m`, bx + 16, y + 190, { size: fs(13), color: INK_SOFT });
+      text(p, `${momentNote(moment.key)} · ${state.label}`, bx + 16, y + 212, { size: fs(13), color: state.color, weight: 700 });
     });
   }
 
@@ -4157,11 +5012,11 @@ const CuadernoPDF = (function () {
   function renderCardPage(card, target, moments, index, total, busy) {
     const { page, p } = newPage();
 
-    text(p, `Plato ${index + 1} de ${total}`, 40, 38, { size: 15, color: INK_SOFT, weight: 700 });
-    text(p, `Puesto ${card.station}  ·  Máquina ${card.machineIndex + 1}`, 40, 60, { size: 34, weight: 700 });
+    text(p, t("nbk.card.of").replace("{a}", index + 1).replace("{b}", total), 40, 38, { size: 15, color: INK_SOFT, weight: 700 });
+    text(p, `${t("nbk.card.station")} ${card.station}  ·  ${t("nbk.card.machine")} ${card.machineIndex + 1}`, 40, 60, { size: 34, weight: 700 });
     text(
       p,
-      `ángulo ${signed(card.angleDeg, 0)}°  ·  altura ${num(card.heightAt10, 1)} m a 10 m  ·  caída ${num(card.landingDistance, 0)} m  ·  ${num(target.speedKmh, 0)} km/h  ·  elevación ${num(target.elevDeg, 1)}°`,
+      `${t("nbk.card.angle")} ${signed(card.angleDeg, 0)}°  ·  ${t("nbk.card.height")} ${num(card.heightAt10, 1)} ${t("nbk.card.at10")}  ·  ${t("nbk.card.fall")} ${num(card.landingDistance, 0)} m  ·  ${num(target.speedKmh, 0)} km/h  ·  ${t("nbk.card.elev")} ${num(target.elevDeg, 1)}°`,
       40,
       108,
       { size: 16, color: INK_SOFT }
@@ -4171,16 +5026,16 @@ const CuadernoPDF = (function () {
     text(
       p,
       paramsChanged()
-        ? "AJUSTES PROPIOS · LOS ADELANTOS DE ESTA FICHA SOLO VALEN CON ESTA COMBINACIÓN"
-        : "LOS ADELANTOS DE ESTA FICHA SOLO VALEN CON ESTOS AJUSTES",
+        ? t("nbk.card.warnOwn")
+        : t("nbk.card.warnDefault"),
       PAGE_W - 40, 66,
       { size: 12, weight: 700, color: ACCENT, align: "right" }
     );
     drawParamsLine(p, PAGE_W - 40, 86, 13, "right");
     const turned = Math.abs(framing.yawDeg) > 0.05 || Math.abs(framing.pitchDeg) > 0.05
-      ? ` · vista girada ${signed(framing.yawDeg, 0)}° en horizontal y ${signed(framing.pitchDeg, 0)}° en vertical`
+      ? t("nbk.card.turned").replace("{h}", signed(framing.yawDeg, 0)).replace("{v}", signed(framing.pitchDeg, 0))
       : "";
-    text(p, `encuadre ${num(params.zoom, 2)}x sobre el campo base de ${VERTICAL_FOV_DEG}° vertical${turned}`, PAGE_W - 40, 108, { size: 12, color: INK_SOFT, align: "right" });
+    text(p, t("nbk.card.framing").replace("{z}", num(params.zoom, 2)).replace("{f}", VERTICAL_FOV_DEG) + turned, PAGE_W - 40, 108, { size: 12, color: INK_SOFT, align: "right" });
 
     p.drawImage(canvas, SCENE.x, SCENE.y, SCENE.w, SCENE.h);
     p.save();
@@ -4194,8 +5049,8 @@ const CuadernoPDF = (function () {
 
     drawMomentStrip(p, moments, 40, 965, PAGE_W - 80, 240);
 
-    text(p, "Plato · cuaderno de puntos de disparo · generado desde el simulador, no es un documento oficial", 40, PAGE_H - 26, { size: 12, color: INK_SOFT });
-    text(p, `${modeLabel()} ${schemeLabel()} · puesto ${card.station} · máquina ${card.machineIndex + 1}`, PAGE_W - 40, PAGE_H - 26, { size: 12, color: INK_SOFT, align: "right" });
+    text(p, t("nbk.card.foot"), 40, PAGE_H - 26, { size: 12, color: INK_SOFT });
+    text(p, `${modeLabel()} ${schemeLabel()} · ${t("nbk.card.station").toLowerCase()} ${card.station} · ${t("nbk.card.machine").toLowerCase()} ${card.machineIndex + 1}`, PAGE_W - 40, PAGE_H - 26, { size: 12, color: INK_SOFT, align: "right" });
 
     return page;
   }
@@ -4261,7 +5116,7 @@ const CuadernoPDF = (function () {
 
   function generatedOn() {
     try {
-      return new Date().toLocaleDateString("es-ES", { day: "2-digit", month: "long", year: "numeric" });
+      return new Date().toLocaleDateString(t("nbk.locale"), { day: "2-digit", month: "long", year: "numeric" });
     } catch (error) {
       return new Date().toISOString().slice(0, 10);
     }
@@ -4279,65 +5134,49 @@ const CuadernoPDF = (function () {
     p.fillRect(0, 0, PAGE_W, 12);
     p.restore();
 
-    text(p, "PLATO · SIMULADOR Y LIBRO DE TIRO AL PLATO", left, 78, { size: 17, weight: 700, color: ACCENT });
-    text(p, "Cuaderno de", left, 118, { size: 58, weight: 700 });
-    text(p, "puntos de disparo", left, 186, { size: 58, weight: 700 });
-    text(p, `${modeLabel()}  ·  ${schemeLabel()}  ·  ${entries.length} platos`, left, 272, { size: 25, color: INK_SOFT });
+    text(p, t("nbk.cover.1"), left, 78, { size: 17, weight: 700, color: ACCENT });
+    text(p, t("nbk.cover.2"), left, 118, { size: 58, weight: 700 });
+    text(p, t("nbk.cover.3"), left, 186, { size: 58, weight: 700 });
+    text(p, `${modeLabel()}  ·  ${schemeLabel()}  ·  ${entries.length} ${t("nbk.strip.targets")}`, left, 272, { size: 25, color: INK_SOFT });
 
     let y = 348;
-    y = heading(p, "Qué tienes en las manos", left, y);
-    y = paragraph(p, "Una tirada completa, plato a plato, tal y como la vería el tirador desde su puesto. " +
-      "Para cada plato se dibuja la trayectoria entera y se marcan cinco instantes sobre ella, " +
-      "repartidos por la ventana en la que todavía está a tiro, más uno ya tarde.", left, y, colW);
-    y = paragraph(p, "En cada instante se indica dónde está el plato y cuánto hay que adelantar para " +
-      "romperlo, medido como lo ve el ojo. Sirve para componer la tirada antes de ir al campo: " +
-      "qué disparas antes, cuánto adelantas y qué te ocurre si te retrasas.", left, y + 10, colW);
+    y = heading(p, t("nbk.cover.4"), left, y);
+    y = paragraph(p, t("nbk.cover.5"), left, y, colW);
+    y = paragraph(p, t("nbk.cover.6"), left, y + 10, colW);
 
-    y = heading(p, "Cómo se lee cada ficha", left, y + 26);
-    y = bullet(p, "El número grande es el adelanto que percibe el ojo, perpendicular a la línea de mirada. " +
-      "Debajo aparece también en anchos de plato y en grados.", left, y, colW);
-    y = bullet(p, "La separación real en tres dimensiones va en letra pequeña: incluye la profundidad, " +
-      "que el ojo no ve, y por eso es un número mucho mayor.", left, y, colW);
-    y = bullet(p, "Todas las fichas comparten escala, de modo que los adelantos son comparables de un " +
-      "plato a otro. La cabecera dice cuánto se ha girado la vista y con qué encuadre.", left, y, colW);
-    y = bullet(p, "El color del instante avisa de la distancia: en distancia, al límite o ya fuera de " +
-      "alcance útil.", left, y, colW);
+    y = heading(p, t("nbk.cover.7"), left, y + 26);
+    y = bullet(p, t("nbk.cover.8"), left, y, colW);
+    y = bullet(p, t("nbk.cover.9"), left, y, colW);
+    y = bullet(p, t("nbk.cover.10"), left, y, colW);
+    y = bullet(p, t("nbk.cover.11"), left, y, colW);
 
-    y = heading(p, "Qué no es", left, y + 26);
-    y = bullet(p, "No es una medida de campo: son cifras de un modelo pedagógico, con sus " +
-      "simplificaciones. La última página lo explica en detalle.", left, y, colW);
-    y = bullet(p, "No homologa una instalación ni certifica una trayectoria. En competición decide " +
-      "siempre el personal autorizado.", left, y, colW);
-    y = bullet(p, "No sustituye a un instructor, a las normas del campo ni a los requisitos legales.", left, y, colW);
+    y = heading(p, t("nbk.cover.12"), left, y + 26);
+    y = bullet(p, t("nbk.cover.13"), left, y, colW);
+    y = bullet(p, t("nbk.cover.14"), left, y, colW);
+    y = bullet(p, t("nbk.cover.15"), left, y, colW);
 
     let ry = 348;
-    ry = heading(p, "Generado con estos ajustes", rightX, ry);
+    ry = heading(p, t("nbk.cover.16"), rightX, ry);
     p.save();
     p.fillStyle = "#f4f7f9";
     p.fillRect(rightX, ry - 8, rightW, 104);
     p.restore();
     ry = paragraph(p, paramsLine().replace(/\s+·\s+/g, "   ·   "), rightX + 18, ry + 12, rightW - 36, { size: 16, color: INK });
     ry += 26;
-    ry = paragraph(p, "Todos los adelantos de este cuaderno valen únicamente para esa combinación. " +
-      "Con otro cartucho, otra solista, otro plomeo o con viento, las cifras cambian y este cuaderno " +
-      "deja de servir: hay que generar uno nuevo.", rightX, ry, rightW, { size: 16, weight: 600 });
-    ry = paragraph(p, "Se hace desde el simulador, cambiando lo que quieras y volviendo a pulsar " +
-      "«Generar cuaderno». En cada ficha, los ajustes que no son los de arranque aparecen resaltados en color.",
+    ry = paragraph(p, t("nbk.cover.18"), rightX, ry, rightW, { size: 16, weight: 600 });
+    ry = paragraph(p, t("nbk.cover.19"),
       rightX, ry + 8, rightW, { size: 16, color: INK_SOFT });
 
-    ry = heading(p, "El proyecto", rightX, ry + 26);
-    ry = paragraph(p, "Plato es un simulador y un libro gratuitos para aprender tiro al plato, escritos por " +
-      "Roberto Canales Mora. El libro explica la cancha, la seguridad, las modalidades y la geometría del " +
-      "adelantamiento; el simulador permite repetir un mismo plato cambiando una sola variable.", rightX, ry, rightW);
-    ry = paragraph(p, "Proyecto, contacto y repositorio en GitHub:", rightX, ry + 10, rightW, { size: 16, color: INK_SOFT });
-    text(p, "www.robertocanales.com/proyectos#plato", rightX, ry + 4, { size: 20, weight: 700, color: ACCENT });
-    text(p, "rcanalescoder.github.io/Plato", rightX, ry + 36, { size: 20, weight: 700, color: ACCENT });
+    ry = heading(p, t("nbk.cover.20"), rightX, ry + 26);
+    ry = paragraph(p, t("nbk.cover.21"), rightX, ry, rightW);
+    ry = paragraph(p, t("nbk.cover.22"), rightX, ry + 10, rightW, { size: 16, color: INK_SOFT });
+    text(p, t("nbk.cover.23"), rightX, ry + 4, { size: 20, weight: 700, color: ACCENT });
+    text(p, t("nbk.cover.24"), rightX, ry + 36, { size: 20, weight: 700, color: ACCENT });
 
-    ry = heading(p, "Qué hay en las páginas siguientes", rightX, ry + 88);
-    ry = bullet(p, "Un índice de la tirada: tabla con puesto, máquina, ángulo, altura, caída y adelanto " +
-      "de cada plato, y una vista cenital con todas las trayectorias juntas.", rightX, ry, rightW);
+    ry = heading(p, t("nbk.cover.25"), rightX, ry + 88);
+    ry = bullet(p, t("nbk.cover.26"), rightX, ry, rightW);
     ry = bullet(p, `Una ficha por plato, ${entries.length} en total, en el orden en que los verías durante la tirada.`, rightX, ry, rightW);
-    ry = bullet(p, "El aviso de uso y la licencia, al final. Si imprimes solo una parte, imprime también esa hoja.", rightX, ry, rightW);
+    ry = bullet(p, t("nbk.cover.27"), rightX, ry, rightW);
 
     p.save();
     p.strokeStyle = LINE;
@@ -4348,8 +5187,7 @@ const CuadernoPDF = (function () {
     p.stroke();
     p.restore();
 
-    paragraph(p, "Aviso: las cifras de este cuaderno son una estimación de un modelo pedagógico, no una " +
-      "medida de campo. Lee el aviso de uso y la licencia en la última página antes de llevarlo a la cancha.",
+    paragraph(p, t("nbk.cover.28"),
       left, PAGE_H - 98, PAGE_W - left * 2, { size: 16, weight: 600, color: INK });
     text(p, `Generado el ${generatedOn()} desde el simulador Plato  ·  Licencia MIT con atribución  ·  Documento no oficial`,
       left, PAGE_H - 40, { size: 14, color: INK_SOFT });
@@ -4369,58 +5207,37 @@ const CuadernoPDF = (function () {
     p.fillRect(0, 0, PAGE_W, 12);
     p.restore();
 
-    text(p, "Aviso de uso y licencia", left, 78, { size: 44, weight: 700 });
-    text(p, "Léelo antes de aplicar nada de este cuaderno en una cancha", left, 142, { size: 20, color: INK_SOFT });
+    text(p, t("nbk.close.1"), left, 78, { size: 44, weight: 700 });
+    text(p, t("nbk.close.2"), left, 142, { size: 20, color: INK_SOFT });
 
     let y = 214;
-    y = heading(p, "Esto es una estimación, no una medida", left, y);
-    y = paragraph(p, "Las trayectorias, los tiempos y los adelantos salen de un modelo simplificado que " +
-      "resuelve una parábola visual a partir de la altura y el alcance del plato, con gravedad reducida y " +
-      "una salida visual común. No mide una lanzadora real, no reproduce toda la aerodinámica del disco ni " +
-      "sustituye una tabla balística del cartucho que uses.", left, y, colW);
-    y = paragraph(p, "Las tablas de esquemas reproducen valores publicados por las federaciones, pero este " +
-      "documento no homologa ninguna instalación ni certifica ninguna trayectoria. En competición decide " +
-      "siempre el personal autorizado.", left, y + 10, colW);
+    y = heading(p, t("nbk.close.3"), left, y);
+    y = paragraph(p, t("nbk.close.4"), left, y, colW);
+    y = paragraph(p, t("nbk.close.5"), left, y + 10, colW);
 
-    y = heading(p, "La responsabilidad del tiro es tuya", left, y + 26);
-    y = paragraph(p, "Usa estas cifras como punto de partida para observar y comparar, nunca como una " +
-      "instrucción que seguir a ciegas. Comprueba tus propios números en el campo, con tu arma, tu cartucho " +
-      "y las condiciones del día, y corrige lo que haga falta.", left, y, colW);
-    y = paragraph(p, "Este material no sustituye la formación presencial, las normas del campo, la ayuda de " +
-      "un instructor o un armero, ni los requisitos legales vigentes. La seguridad y las decisiones de tiro " +
-      "son responsabilidad de quien dispara.", left, y + 10, colW);
+    y = heading(p, t("nbk.close.6"), left, y + 26);
+    y = paragraph(p, t("nbk.close.7"), left, y, colW);
+    y = paragraph(p, t("nbk.close.8"), left, y + 10, colW);
 
-    y = heading(p, "Antes de llevarlo a la cancha", left, y + 26);
-    y = bullet(p, "Comprueba que el esquema de la portada es de verdad el que se va a lanzar. " +
-      "Pregúntalo al responsable en lugar de suponerlo.", left, y, colW);
-    y = bullet(p, "Los adelantos dependen del cartucho y de la solista que pusiste al generar el " +
-      "cuaderno. Con otro material, las cifras cambian.", left, y, colW);
-    y = bullet(p, "Trata cada número como una hipótesis que vas a contrastar tirando, no como el " +
-      "resultado que deberías obtener.", left, y, colW);
+    y = heading(p, t("nbk.close.9"), left, y + 26);
+    y = bullet(p, t("nbk.close.10"), left, y, colW);
+    y = bullet(p, t("nbk.close.11"), left, y, colW);
+    y = bullet(p, t("nbk.close.12"), left, y, colW);
 
     let ry = 214;
-    ry = heading(p, "Licencia MIT con atribución", rightX, ry);
-    ry = paragraph(p, "Copyright (c) 2026 Roberto Canales Mora", rightX, ry, rightW, { size: 17, weight: 700 });
-    ry = paragraph(p, "Se concede permiso, libre de cargos, para usar, copiar, modificar, fusionar, publicar, " +
-      "distribuir, sublicenciar y vender copias de este software y su documentación, y para permitir lo mismo " +
-      "a quienes lo reciban, con una condición: conservar siempre la referencia al autor original, Roberto " +
-      "Canales Mora, junto con el enlace a www.robertocanales.com. Esa atribución forma parte del aviso de " +
-      "copyright que debe acompañar a todas las copias.", rightX, ry + 8, rightW, { size: 16 });
-    ry = paragraph(p, "EL SOFTWARE SE PROPORCIONA «TAL CUAL», SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O " +
-      "IMPLÍCITA. EN NINGÚN CASO EL AUTOR SERÁ RESPONSABLE DE NINGUNA RECLAMACIÓN, DAÑO U OTRA " +
-      "RESPONSABILIDAD DERIVADA DEL SOFTWARE O DE SU USO.", rightX, ry + 10, rightW, { size: 14, color: INK_SOFT });
+    ry = heading(p, t("nbk.close.13"), rightX, ry);
+    ry = paragraph(p, t("nbk.close.14"), rightX, ry, rightW, { size: 17, weight: 700 });
+    ry = paragraph(p, t("nbk.close.15"), rightX, ry + 8, rightW, { size: 16 });
+    ry = paragraph(p, t("nbk.close.16"), rightX, ry + 10, rightW, { size: 14, color: INK_SOFT });
 
-    ry = heading(p, "Dónde está todo", rightX, ry + 26);
-    ry = paragraph(p, "Libro completo, simulador y código fuente:", rightX, ry, rightW, { size: 16, color: INK_SOFT });
-    text(p, "www.robertocanales.com/proyectos#plato", rightX, ry + 4, { size: 20, weight: 700, color: ACCENT });
-    text(p, "rcanalescoder.github.io/Plato", rightX, ry + 36, { size: 20, weight: 700, color: ACCENT });
-    text(p, "rcanalesmora@gmail.com", rightX, ry + 68, { size: 17, color: INK_SOFT });
+    ry = heading(p, t("nbk.close.17"), rightX, ry + 26);
+    ry = paragraph(p, t("nbk.close.18"), rightX, ry, rightW, { size: 16, color: INK_SOFT });
+    text(p, t("nbk.close.19"), rightX, ry + 4, { size: 20, weight: 700, color: ACCENT });
+    text(p, t("nbk.close.20"), rightX, ry + 36, { size: 20, weight: 700, color: ACCENT });
+    text(p, t("nbk.close.21"), rightX, ry + 68, { size: 17, color: INK_SOFT });
 
-    ry = heading(p, "El proyecto está en beta", rightX, ry + 122);
-    ry = paragraph(p, "El libro y el simulador están pendientes de revisión y se comparten para que " +
-      "cualquiera pueda probarlos, detectar errores y ayudar a mejorarlos. Si encuentras algo que no " +
-      "cuadra con tu experiencia en cancha, con el reglamento que se te aplica o con las cifras que " +
-      "mides tú, escribe: esa clase de aviso es la que hace que el modelo mejore.", rightX, ry, rightW, { size: 16 });
+    ry = heading(p, t("nbk.close.22"), rightX, ry + 122);
+    ry = paragraph(p, t("nbk.close.23"), rightX, ry, rightW, { size: 16 });
 
     p.save();
     p.strokeStyle = LINE;
@@ -4431,7 +5248,7 @@ const CuadernoPDF = (function () {
     p.stroke();
     p.restore();
 
-    text(p, "Plato · simulador y libro de tiro al plato · Roberto Canales Mora · Licencia MIT con atribución",
+    text(p, t("nbk.close.24"),
       left, PAGE_H - 56, { size: 15, color: INK_SOFT });
     text(p, `Plato · cuaderno generado el ${generatedOn()}`, PAGE_W - left, PAGE_H - 56, { size: 15, color: INK_SOFT, align: "right" });
 
@@ -4441,15 +5258,15 @@ const CuadernoPDF = (function () {
   function renderIndexPage(entries) {
     const { page, p } = newPage();
 
-    text(p, "Cuaderno de puntos de disparo", 40, 44, { size: 38, weight: 700 });
-    text(p, `${modeLabel()}  ·  ${schemeLabel()}  ·  ${entries.length} platos`, 40, 94, { size: 20, color: INK_SOFT });
+    text(p, t("nbk.index.1"), 40, 44, { size: 38, weight: 700 });
+    text(p, `${modeLabel()}  ·  ${schemeLabel()}  ·  ${entries.length} ${t("nbk.strip.targets")}`, 40, 94, { size: 20, color: INK_SOFT });
     drawParamsLine(p, 40, 124, 14, "left");
 
     const tableX = 40;
     const tableY = 190;
     const colW = 600;
     const rowH = Math.min(33, Math.floor(820 / Math.max(1, entries.length)));
-    const headers = ["#", "puesto", "máq.", "ángulo", "alt. 10 m", "caída", "adelanto en la ventana buena"];
+    const headers = ["#", t("nbk.index.h.station"), t("nbk.index.h.machine"), t("nbk.index.h.angle"), t("nbk.index.h.h10"), t("nbk.index.h.fall"), t("nbk.index.h.lead")];
     const xs = [0, 34, 100, 152, 232, 320, 386];
 
     p.save();
@@ -4490,26 +5307,26 @@ const CuadernoPDF = (function () {
 
     text(
       p,
-      "El adelanto es el que ve el tirador: separación aparente entre plato y punto de mira, medida perpendicular a la línea de mirada.",
+      t("nbk.index.note1"),
       40,
       PAGE_H - 140,
       { size: 14, color: INK_SOFT }
     );
     text(
       p,
-      "La tabla usa el instante «subiendo», la ventana buena de tiro; cada ficha detalla los demás instantes.",
+      t("nbk.index.note2"),
       40,
       PAGE_H - 168,
       { size: 14, color: INK_SOFT }
     );
     text(
       p,
-      "Rojo: punto de espera del arma.  Naranja: plato.  Amarillo: dónde poner el punto de mira.  Elipse amarilla: plomeo estimado del primer tiro.",
+      t("nbk.index.note3"),
       40,
       PAGE_H - 112,
       { size: 14, color: INK_SOFT }
     );
-    text(p, "Plato · generado desde el simulador, no es un documento oficial", 40, PAGE_H - 26, { size: 12, color: INK_SOFT });
+    text(p, t("nbk.index.2"), 40, PAGE_H - 26, { size: 12, color: INK_SOFT });
 
     return page;
   }
@@ -4631,7 +5448,7 @@ const CuadernoPDF = (function () {
     const trigger = document.getElementById("cuadernoBtn");
     if (!trigger) return;
     trigger.disabled = active;
-    trigger.textContent = active ? "Generando cuaderno..." : "Generar cuaderno";
+    trigger.textContent = active ? t("nb.button.busy") : t("nb.button");
   }
 
   // ---------------------------------------------------------------------------
@@ -4651,7 +5468,7 @@ const CuadernoPDF = (function () {
 
       const analyses = [];
       for (let i = 0; i < cards.length; i += 1) {
-        setStatus(`Calculando adelantos ${i + 1} de ${cards.length}…`);
+        setStatus(t("nbk.st.computing").replace("{i}", i + 1).replace("{n}", cards.length));
         await sleep();
         analyses.push(analyseCard(cards[i], options));
       }
@@ -4660,7 +5477,7 @@ const CuadernoPDF = (function () {
       const entries = [];
 
       for (let i = 0; i < analyses.length; i += 1) {
-        setStatus(`Dibujando ficha ${i + 1} de ${analyses.length}…`);
+        setStatus(t("nbk.st.drawing").replace("{i}", i + 1).replace("{n}", analyses.length));
         await sleep();
         const analysis = analyses[i];
         const zoom = options.framing === "comun" ? commonZoom : analysis.zoom;
@@ -4674,7 +5491,7 @@ const CuadernoPDF = (function () {
         entries.push(analysis);
       }
 
-      setStatus("Componiendo portada, índice y cierre…");
+      setStatus(t("nbk.st.composing"));
       await sleep();
 
       /*
@@ -4693,7 +5510,7 @@ const CuadernoPDF = (function () {
       images.unshift(asPage(renderCoverPage(entries)));
 
       const blob = CuadernoPDF.build(images, PT_W, PT_H);
-      const name = `cuaderno-plato-${params.mode}-${ui.scheme.value}.pdf`;
+      const name = `${t("nbk.file")}-${LANG}-${params.mode}-${ui.scheme.value}.pdf`;
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -4702,9 +5519,9 @@ const CuadernoPDF = (function () {
       link.click();
       link.remove();
       window.setTimeout(() => URL.revokeObjectURL(url), 4000);
-      setStatus(`Listo: ${images.length} páginas · ${(blob.size / 1048576).toFixed(1)} MB · ${name}`);
+      setStatus(t("nbk.st.done").replace("{p}", images.length).replace("{mb}", (blob.size / 1048576).toFixed(1)).replace("{name}", name));
     } catch (error) {
-      setStatus(`Error: ${error.message}`);
+      setStatus(`${t("nbk.st.error")}: ${error.message}`);
       throw error;
     } finally {
       resumeSimulator();
