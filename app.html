@@ -687,7 +687,8 @@
       { code: "it", label: "Italiano" },
       { code: "pt", label: "Português" },
       { code: "ca", label: "Català" },
-      { code: "gl", label: "Galego" }
+      { code: "gl", label: "Galego" },
+      { code: "eu", label: "Euskara" }
     ];
 
     /*
@@ -3347,6 +3348,336 @@
         "nbk.index.2": "Plato · xerado desde o simulador, non é un documento oficial",
         "scheme.robot_abt": "ABT CPSA 2026",
         "scheme.robot_trap1": "Trap1 FITASC 2025"
+      },
+
+      eu: {
+        "html.title": "Aurrerapen laborategia - Plater tiroketa",
+        "lang.label": "Hizkuntza",
+        "lang.t": "Aplikazioaren hizkuntza. Aukera nabigatzaile honetan gordetzen da.",
+        "lang.caseless": "no",
+
+        "beta.tag": "Beta proiektua",
+        "beta.text": "Liburua eta simulagailua berrikusteke daude. Partekatzen dira edonork proba ditzan eta hobetzen lagun dezan. Euskarazko itzulpena makinak egina da eta jatorrizko hiztun batek berrikusi behar du.",
+
+        "aria.toolbar": "Kontrol nagusiak",
+        "aria.ribType": "Xafla mota",
+        "aria.scene": "Simulagailua tiratzailearen begitik",
+        "aria.controls": "Parametro fisikoak",
+        "aria.help": "Simulagailuaren laguntza",
+        "aria.license": "MIT lizentzia",
+
+        "btn.call": "Eskatu",
+        "btn.call.t": "Plater berri bat eskatzen du. Saguaren eskuineko botoiarekin ere eska daiteke.",
+        "btn.repeat": "Errepikatu",
+        "btn.repeat.t": "Aurreko platera berdin-berdin errepikatzen du postu beretik, seriean plater berri gisa kontatu gabe.",
+        "btn.fire": "Tiratu",
+        "btn.fire.t": "Uneko kartutxoa tiratzen du. Saguaren ezkerreko botoiarekin ere tira daiteke.",
+        "btn.reset": "Reset",
+        "btn.reset.t": "25 platereko seriea berrabiarazten du eta tiroak eta zati ikusgaiak garbitzen ditu.",
+        "btn.prevStation": "Postua -",
+        "btn.prevStation.t": "Aurreko postura itzultzen da.",
+        "btn.nextStation": "Postua +",
+        "btn.nextStation.t": "Hurrengo postura aurreratzen da.",
+        "btn.flat": "Laua",
+        "btn.flat.t": "Irabazirik gabeko xafla: puntua eta talka-gunea ia lerrokatuta ateratzen dira.",
+        "btn.high": "Altua",
+        "btn.high.t": "Irabaziduna xafla: tiroa puntuaren gainetik pixka bat ateratzen da.",
+
+        "stat.state": "Egoera",
+        "stat.state.t": "Simulagailuaren uneko fasea: itxaroten, jaurtiketa atzerapena, jarraipena, erortzen edo amaituta.",
+        "stat.round": "Seriea",
+        "stat.round.t": "Seriearen kontagailua: 25etik erabilitako platerak eta hautsitako platerak. Errepikapenek ez dute kontatzen.",
+        "stat.station": "Postua",
+        "stat.station.t": "Uneko tiro postua. Seriea 1etik 5era biratzen da.",
+        "stat.target": "Platera",
+        "stat.target.t": "Makina, angelua, 10 m-ko altuera eta uneko plateraren distantzia.",
+        "stat.lead": "Aurrerapena",
+        "stat.lead.t": "Plateraren eta gomendatutako aurrerapen puntu fisikoaren arteko gutxi gorabeherako distantzia.",
+        "stat.aim": "Punteria",
+        "stat.aim.t": "Puntuaren uneko angeluak tiratzailearen begiaren ardatzarekiko.",
+        "stat.result": "Emaitza",
+        "stat.result.t": "Azken tiroaren edo uneko plateraren emaitza.",
+
+        "sw.lead": "aurrerapen laguntza",
+        "sw.lead.t": "Platera harrapatzeko non apuntatu komeni den erakusten edo ezkutatzen du: puntu eta eremu horia.",
+        "sw.pattern": "sorta",
+        "sw.pattern.t": "Apuntatzen ari zaren tokiko perdigoi sorta urdin estimatua erakusten edo ezkutatzen du.",
+        "sw.path": "ibilbidea",
+        "sw.path.t": "Plateraren ibilbide laranja erakusten edo ezkutatzen du.",
+        "sw.ground": "lur zeharrargia / makinak ikusi",
+        "sw.ground.t": "Lur opakuaren eta lur zeharrargiaren artean aldatzen du, hobiaren azpiko makinak ikusteko.",
+        "sw.legend": "legenda",
+        "sw.legend.t": "Beheko eskuineko koloreen eta ikurren legenda erakusten edo ezkutatzen du.",
+
+        "scene.slowNote": "<strong>Kamera geldoa</strong> aktibatuta dago aztertzeko. Denbora errealean probatzeko, igo <strong>Kamera geldoa</strong> 1.00x-ra.",
+
+        "ctl.mode": "Diziplina",
+        "ctl.mode.t": "Aukeratu diziplina: Hobi unibertsalak bost makina erabiltzen ditu, Olinpikoak hamabost makina postuka multzokatuta, eta Robotek makina oszilatzaile bakarra, indarra, altuera eta irekiera erregulagarriekin.",
+        "mode.universal": "Hobi unibertsala",
+        "mode.olympic": "Hobi olinpikoa",
+        "mode.robot": "Robota",
+        "ctl.scheme": "Eskema",
+        "ctl.scheme.t": "Plater bakoitza zozketatzeko erabiliko den makina, angelu eta altueren eskema ofiziala edo simulatua hautatzen du.",
+        "ctl.station": "Postua",
+        "ctl.station.t": "Tiratzailearen hasierako edo uneko postua. Seriea 1, 2, 3, 4, 5 biratuz aurreratzen da.",
+        "ctl.guard": "Itxarotea",
+        "ctl.guard.t": "Platerra eskatu aurretik tiratzailea non apuntatzen hasten den zehazten du: erreferentzia platerean edo postuaren arabera zerbait altuago.",
+        "guard.neutral": "Neutroa",
+        "guard.high": "Altua postuka",
+        "ctl.zoom": "Zooma",
+        "ctl.zoom.t": "Eszena ikusmenez hurbiltzen du, hobirako benetako distantzia eta fisika aldatu gabe.",
+        "ctl.slow": "Kamera geldoa",
+        "ctl.slow.t": "Simulagailuaren denbora faktorea. 1.00x denbora erreala da; balio txikiagoek aurrerapena aztertzen laguntzen dute.",
+        "ctl.reaction": "Atzerapena",
+        "ctl.reaction.t": "Platera eskatzearen eta hobitik ateratzearen arteko atzerapen laburra. Lehiaketan jaurtiketak berehalakoa eman behar du; doikuntza honek deialdi eta jaurtitzaile sistemaren atzerapena simulatzen du.",
+        "ctl.cartridge": "Kartutxoa",
+        "ctl.cartridge.t": "Kartutxoaren abiadura nominala. Ereduak gero gutxi gorabeherako murrizketa eraginkorra aplikatzen du; ez du ordezkatzen benetako kartutxoaren taula balistiko neurtu bat.",
+        "ctl.spread1": "1. tiro sorta",
+        "ctl.spread1.t": "Lehen tiroaren perdigoi sortaren irekiera, aukeratutako chokearen baliokidea.",
+        "ctl.spread2": "2. tiro sorta",
+        "ctl.spread2.t": "Bigarren tiroaren perdigoi sortaren irekiera, normalean itxiagoa.",
+        "ctl.variance": "Sorta aldakuntza",
+        "ctl.variance.t": "Tiro batetik bestera aldakuntza errealista: mikrohutsuneak, deformazioa eta perdigoien arteko abiadura erlatiboa aldatzen ditu.",
+        "ctl.analysis": "Analisia",
+        "ctl.analysis.t": "Tiroaren edo hutsaren ondoren laguntzak eta zuzenketak ikusgai zenbat denbora irauten duten.",
+        "ctl.wind": "Haizea",
+        "ctl.wind.t": "Plateraren ibilbideari aplikatutako alboko haizea. Negatiboak alde batera bultzatzen du eta positiboak bestera.",
+        "ctl.rib": "Xafla irabazia",
+        "ctl.rib.t": "Xaflaren goratze balistikoa: tiroa puntuaren gainetik pasatzen da, xaflaren itxurazko zabalera aldatu gabe.",
+        "ctl.robotForce": "Robot indarra",
+        "ctl.robotForce.t": "Robot bakarrik: malguki estutzea edo askatzea simulatzen du. Plateraren abiadura eta irismena handitzen edo txikitzen ditu.",
+        "ctl.robotPitch": "Robot altuera",
+        "ctl.robotPitch.t": "Robot bakarrik: makinaren inklinazio bertikala aldatzen du. Balio altuek plater altuagoak ematen dituzte.",
+        "ctl.robotLateral": "Robot alboa",
+        "ctl.robotLateral.t": "Robot bakarrik: robotaren alboko irekiera biderkatzen du. Balio altuek plater gurutzatuagoak ematen dituzte.",
+
+        "hint.keys": "Geziak: punteria mugitu. Zuriunea: tiratu. Sartu: platera eskatu. Hodei horia puntua eraman behar den tokia da; urdina sortaren zentro probablea.",
+
+        "nb.button": "Koadernoa sortu",
+        "nb.button.busy": "Koadernoa sortzen...",
+        "nb.button.t": "Uneko eskemaren serie osoarekin PDF inprimagarri bat sortzen du. Plater bakoitzerako bere ibilbidea marrazten du bost une markatuta eta bakoitzean behar den aurrerapena. Orain dituzun doikuntzak erabiltzen ditu.",
+        "nb.idle": "Serie osoaren PDF koaderno inprimagarria, uneko doikuntzekin: fitxa bat plater bakoitzeko, bost unerekin eta beren aurrerapenarekin. Unibertsala 25 fitxa, Olinpikoa 15, Robota 25.",
+
+        "link.manual": "Liburua",
+        "link.tech": "Dokumentazio teknikoa",
+        "link.help": "Laguntza azkarra",
+        "link.license": "MIT lizentzia",
+
+        "scheme.prefix.universal": "FITASC Unibertsala",
+        "scheme.prefix.olympic": "ISSF Olinpikoa",
+        "scheme.robot_feria": "Feriako robot zirkularra (eredua)",
+        "scheme.robot_extremo": "Zelaiko robot muturrekoa (eredua)",
+        "scheme.robot_random": "Robot pseudoausazkoa (eredua)",
+
+        "sim.banner.pull": "PLATER",
+        "sim.banner.repeat": "ERREPIKATU",
+        "sim.state.idle": "Itxaroten",
+        "sim.state.reaction": "Atzerapena",
+        "sim.state.tracking": "Jarraipena",
+        "sim.state.falling": "Erortzen",
+        "sim.state.ended": "Amaituta",
+        "sim.round.broken": "hautsita",
+        "sim.hidden": "ezkutatuta",
+        "sim.ground": "lurra",
+        "sim.outOfWindow": "Leihotik kanpo",
+        "sim.repeat.outOfWindow": "Errepikapena: leihotik kanpo",
+        "sim.repeat": "Errepikapena",
+        "sim.hit": "Hautsita",
+        "sim.edge": "ertza",
+        "sim.centre": "erdia",
+        "sim.pellet": "perdigoia",
+        "sim.weak": "Ukitu ahula",
+        "sim.repeat.weak": "Errepikapena, ukitu ahula",
+        "sim.miss": "Hutsa",
+        "sim.repeat.miss": "Errepikapen hutsa",
+        "sim.missWait": "Hutsa: 2 tiro, erorketaren zain",
+        "sim.repeat.missWait": "Errepikapen hutsa: erorketaren zain",
+        "sim.lost": "Galduta: lurrera erori da",
+        "sim.missLost": "Hutsa / galduta: lurrera erori da",
+        "sim.repeat.lost": "Errepikapena galduta: lurrera erori da",
+        "sim.repeat.missLost": "Errepikapen hutsa / galduta: lurrera erori da",
+        "badge.universal": "FITASC Hobi unibertsala",
+        "badge.olympic": "ISSF Hobi olinpikoa",
+        "badge.robotPopular": "Zelaiko robota",
+        "badge.inLimits": "Mugen barruan",
+        "badge.outLimits": "Mugetatik kanpo",
+        "badge.nonStandard": "Arautu gabeko eredua",
+        "badge.matches": "Taula ofiziala betetzen du",
+        "badge.review": "Doikuntza berrikusi",
+        "badge.speed": "eredu abiadura",
+        "badge.range": "irismena",
+        "badge.flight": "hegaldia",
+        "badge.noWind": " · oinarrizko balidazioa haizerik gabe",
+        "cv.noTarget": "platerrik ez",
+        "cv.hint": "laranja: platera  horia: puntu ezin hobea",
+        "cv.leadOk": "aurrerapen zuzena",
+        "cv.ahead": "aurreratuegia",
+        "cv.behind": "atzeratuta",
+        "cv.lineOk": "lerro zuzena",
+        "cv.right": "eskuina",
+        "cv.left": "ezkerra",
+        "cv.heightOk": "altuera zuzena",
+        "cv.high": "altu",
+        "cv.low": "baxu",
+        "cv.missFalling": "hutsa: erortzen",
+        "cv.redCentre": "gorria = sortaren erdia",
+        "cv.corrTitle": "tiroaren zuzenketa",
+        "cv.shot1": "1. tiroa",
+        "cv.shot2": "2. tiroa",
+        "cv.leadOkShort": "aurrerapena ok",
+        "cv.delay": "atzeratu",
+        "cv.advance": "aurreratu",
+        "cv.heightOkShort": "altuera ok",
+        "cv.lower": "jaitsi",
+        "cv.raise": "igo",
+        "cv.legend": "legenda",
+        "cv.legend.clay": "plater laranja: benetako helburua",
+        "cv.legend.lead": "horia: aurrerapen puntu edo eremu ezin hobea",
+        "cv.legend.pattern": "urdina: sorta estimatua",
+        "cv.legend.aim": "gorria: puntua / non tiratzen duzun",
+        "cv.legend.shotCentre": "urdin argia: tiroaren erdi fisikoa",
+        "cv.legend.hit": "berdea: platera hausten duen talka",
+        "cv.legend.path": "laranja etena: plateraren ibilbidea",
+        "cv.mouse": "sagua",
+        "cv.mouse.right": "eskuina: eskatu",
+        "cv.mouse.left": "ezkerra: tiratu",
+        "cv.mouse.move": "mugitu: apuntatu",
+        "cv.wait": "itxaron",
+        "spread.open": "irekia",
+        "sim.shot": "tiroa",
+
+        "nbk.moment.salida": "Jaurtiketa",
+        "nbk.moment.muy-pronto": "Oso goiz",
+        "nbk.moment.pronto": "Goiz",
+        "nbk.moment.ventana": "Leiho ona",
+        "nbk.moment.limite": "Mugan",
+        "nbk.moment.tarde": "Berandu zabiltza",
+        "nbk.moment.muy-tarde": "Beranduegi",
+        "nbk.note.salida": "lehen begiratua",
+        "nbk.note.muy-pronto": "tiro presatua",
+        "nbk.note.pronto": "tiro azkarra",
+        "nbk.note.ventana": "tiro erosoa",
+        "nbk.note.limite": "azken tiro erabilgarria",
+        "nbk.note.tarde": "jada ez da ondo iristen",
+        "nbk.note.muy-tarde": "jaurtiketaren muga",
+        "nbk.range.in": "irismenean",
+        "nbk.range.limit": "mugan",
+        "nbk.range.out": "irismenetik kanpo",
+        "nbk.mode.universal": "Hobi unibertsala",
+        "nbk.mode.olympic": "Hobi olinpikoa",
+        "nbk.plan.title": "Goitiko bista",
+        "nbk.plan.all": "Goitiko bista · eskemako plater guztiak",
+        "nbk.plan.machine": "{n}. makina",
+        "nbk.plan.station": "{n}. postua",
+        "nbk.wait": "itxaron",
+        "nbk.card.of": "{b}(e)tik {a}. platera",
+        "nbk.card.station": "Postua",
+        "nbk.card.machine": "Makina",
+        "nbk.card.angle": "angelua",
+        "nbk.card.height": "altuera",
+        "nbk.card.at10": "m 10 m-ra",
+        "nbk.card.fall": "erorketa",
+        "nbk.card.elev": "goratzea",
+        "nbk.card.framing": "enkoadraketa {z}x, {f}° bertikaleko oinarri eremuaren gainean",
+        "nbk.card.turned": " · bista {h}° horizontalean eta {v}° bertikalean biratuta",
+        "nbk.card.warnOwn": "NORBERAREN DOIKUNTZAK · FITXA HONETAKO AURRERAPENAK KONBINAZIO HONEKIN BAKARRIK BALIO DUTE",
+        "nbk.card.warnDefault": "FITXA HONETAKO AURRERAPENAK DOIKUNTZA HAUEKIN BAKARRIK BALIO DUTE",
+        "nbk.card.foot": "Plato · tiro puntuen koadernoa · simulagailutik sortua, ez da dokumentu ofiziala",
+        "nbk.strip.after": "s jaurti ondoren",
+        "nbk.strip.clays": "plater",
+        "nbk.strip.right": "eskuin",
+        "nbk.strip.left": "ezker",
+        "nbk.strip.up": "gora",
+        "nbk.strip.down": "behera",
+        "nbk.strip.lateral": "alboko",
+        "nbk.strip.vertical": "bertikal",
+        "nbk.strip.clayAt": "platera",
+        "nbk.strip.heightAt": "altuera",
+        "nbk.strip.realSep": "3D tartea",
+        "nbk.strip.targets": "plater",
+        "nbk.index.h.station": "postua",
+        "nbk.index.h.machine": "mak.",
+        "nbk.index.h.angle": "angelua",
+        "nbk.index.h.h10": "alt. 10 m",
+        "nbk.index.h.fall": "erorketa",
+        "nbk.index.h.lead": "aurrerapena leiho onean",
+        "nbk.index.note1": "Aurrerapena tiratzaileak ikusten duena da: plateraren eta puntuaren arteko itxurazko tartea, begiradaren lerroarekiko perpendikularrean neurtua.",
+        "nbk.index.note2": "Taulak «leiho ona» unea erabiltzen du, tiro erosoa; fitxa bakoitzak gainerako uneak zehazten ditu.",
+        "nbk.index.note3": "Gorria: armaren itxarote puntua.  Laranja: platera.  Horia: puntua non jarri.  Elipse horia: lehen tiroaren sorta estimatua.",
+        "nbk.p.cartridge": "kartutxoa",
+        "nbk.p.rib": "xafla",
+        "nbk.p.wind": "haizea",
+        "nbk.p.delay": "atzerapena",
+        "nbk.p.pattern1": "1. sorta",
+        "nbk.p.hold": "itxarotea",
+        "nbk.st.computing": "Aurrerapenak kalkulatzen {i}/{n}…",
+        "nbk.st.drawing": "Fitxa marrazten {i}/{n}…",
+        "nbk.st.composing": "Azala, aurkibidea eta amaiera osatzen…",
+        "nbk.st.done": "Prest: {p} orrialde · {mb} MB · {name}",
+        "nbk.st.error": "Errorea",
+        "nbk.file": "plato-koadernoa",
+        "nbk.locale": "eu-ES",
+        "nbk.decimal": ",",
+        "nbk.wordBreak": "space",
+
+        "nbk.cover.1": "PLATO · PLATER TIROKETAREN SIMULAGAILUA ETA LIBURUA",
+        "nbk.cover.2": "Tiro puntuen",
+        "nbk.cover.3": "koadernoa",
+        "nbk.cover.4": "Zer duzun eskuartean",
+        "nbk.cover.5": "Serie oso bat, plater bat bestearen atzetik, tiratzaileak bere postutik ikusiko lukeen bezala. Plater bakoitzeko ibilbide osoa marrazten da, gainean bost une markatuta, platera oraindik tiro barruan dagoen leihoan banatuta, gehi jada berandu doan bat.",
+        "nbk.cover.6": "Une bakoitzean non dagoen platera eta hausteko zenbat aurreratu behar den adierazten da, begiak ikusten duen bezala neurtuta. Zelaira joan aurretik seriea prestatzeko balio du: zer tiratzen duzun lehenago, zenbat aurreratzen duzun eta berandu bazabiltza zer gertatzen zaizun.",
+        "nbk.cover.7": "Nola irakurtzen den fitxa bakoitza",
+        "nbk.cover.8": "Zenbaki handia begiak hautematen duen aurrerapena da, begiradaren lerroarekiko perpendikularra. Azpian plater zabaleretan eta gradutan ere agertzen da.",
+        "nbk.cover.9": "Hiru dimentsiotako benetako tartea letra txikian doa: sakonera barne hartzen du, begiak ikusten ez duena, eta horregatik askoz zenbaki handiagoa da.",
+        "nbk.cover.10": "Fitxa guztiek eskala bera dute, beraz aurrerapenak plater batetik bestera konpara daitezke. Goiburuak esaten du bista zenbat biratu den eta zein enkoadraketarekin.",
+        "nbk.cover.11": "Une bakoitzaren koloreak distantziaz ohartarazten du: irismenean, mugan edo jada irismenetik kanpo.",
+        "nbk.cover.12": "Zer ez den",
+        "nbk.cover.13": "Ez da zelaiko neurketa bat: eredu pedagogiko baten zifrak dira, bere sinplifikazioekin. Azken orrialdeak xehetasunez azaltzen du.",
+        "nbk.cover.14": "Ez du instalaziorik homologatzen ez ibilbiderik ziurtatzen. Lehiaketan beti baimendutako langileek erabakitzen dute.",
+        "nbk.cover.15": "Ez du ordezkatzen ez instruktore bat, ez zelaiaren araudia, ez legezko baldintzak.",
+        "nbk.cover.16": "Doikuntza hauekin sortua",
+        "nbk.cover.17": "Fitxa bat plater bakoitzeko, {n} guztira, seriean ikusiko zenituzkeen ordenan.",
+        "nbk.cover.18": "Koaderno honetako aurrerapen guztiek konbinazio horretarako bakarrik balio dute. Beste kartutxo batekin, beste xafla batekin, beste sorta batekin edo haizearekin, zifrak aldatu egiten dira eta koaderno honek ez du balio: berri bat sortu behar da.",
+        "nbk.cover.19": "Simulagailutik egiten da, nahi duzuna aldatuz eta «Koadernoa sortu» berriro sakatuz. Fitxa bakoitzean, abioko doikuntzak ez direnak kolorez nabarmenduta agertzen dira.",
+        "nbk.cover.20": "Proiektua",
+        "nbk.cover.21": "Plato plater tiroketa ikasteko simulagailu eta liburu doakoak dira, Roberto Canales Morak idatziak. Liburuak zelaia, segurtasuna, diziplinak eta aurrerapenaren geometria azaltzen ditu; simulagailuak plater bera errepikatzeko aukera ematen du aldagai bakarra aldatuz.",
+        "nbk.cover.22": "Proiektua, harremana eta biltegia GitHuben:",
+        "nbk.cover.23": "www.robertocanales.com/proyectos#plato",
+        "nbk.cover.24": "rcanalescoder.github.io/Plato",
+        "nbk.cover.25": "Zer dagoen hurrengo orrialdeetan",
+        "nbk.cover.26": "Seriearen aurkibidea: taula bat postua, makina, angelua, altuera, erorketa eta plater bakoitzaren aurrerapenarekin, eta goitiko bista bat ibilbide guztiekin batera.",
+        "nbk.cover.27": "Erabilera oharra eta lizentzia, amaieran. Zati bat baino inprimatzen ez baduzu, inprimatu orri hori ere.",
+        "nbk.cover.28": "Oharra: koaderno honetako zifrak eredu pedagogiko baten estimazioa dira, ez zelaiko neurketa bat. Irakurri erabilera oharra eta lizentzia azken orrialdean zelaira eraman aurretik.",
+        "nbk.cover.29": "{date} sortua Plato simulagailutik  ·  MIT lizentzia aitortzarekin  ·  Ez da dokumentu ofiziala",
+        "nbk.close.1": "Erabilera oharra eta lizentzia",
+        "nbk.close.2": "Irakurri koaderno honetako ezer zelai batean aplikatu aurretik",
+        "nbk.close.3": "Hau estimazio bat da, ez neurketa bat",
+        "nbk.close.4": "Ibilbideak, denborak eta aurrerapenak eredu sinplifikatu batetik datoz, plateraren altueratik eta irismenetik parabola bisual bat ebazten duena, grabitate murriztuarekin eta jaurtiketa bisual komun batekin. Ez du benetako jaurtitzailerik neurtzen, ez du diskoaren aerodinamika osoa erreproduzitzen eta ez du ordezkatzen erabiltzen duzun kartutxoaren taula balistikoa.",
+        "nbk.close.5": "Eskemen taulek federazioek argitaratutako balioak erreproduzitzen dituzte, baina dokumentu honek ez du instalaziorik homologatzen ez ibilbiderik ziurtatzen. Lehiaketan beti baimendutako langileek erabakitzen dute.",
+        "nbk.close.6": "Tiroaren erantzukizuna zurea da",
+        "nbk.close.7": "Erabili zifra hauek behatzeko eta konparatzeko abiapuntu gisa, inoiz ez itsu-itsuan jarraitu beharreko agindu gisa. Egiaztatu zure zenbakiak zelaian, zure armarekin, zure kartutxoarekin eta eguneko baldintzekin, eta zuzendu behar dena.",
+        "nbk.close.8": "Material honek ez du ordezkatzen aurrez aurreko prestakuntza, zelaiaren araudia, instruktore edo armagin baten laguntza, ezta indarrean dauden legezko baldintzak ere. Segurtasuna eta tiro erabakiak tiratzen duenaren erantzukizuna dira.",
+        "nbk.close.9": "Zelaira eraman aurretik",
+        "nbk.close.10": "Egiaztatu azaleko eskema benetan jaurtiko dena dela. Galdetu arduradunari, suposatu beharrean.",
+        "nbk.close.11": "Aurrerapenak koadernoa sortzean jarri zenituen kartutxoaren eta xaflaren araberakoak dira. Beste material batekin, zifrak aldatu egiten dira.",
+        "nbk.close.12": "Hartu zenbaki bakoitza tiratuz egiaztatuko duzun hipotesi gisa, ez lortu beharko zenukeen emaitza gisa.",
+        "nbk.close.13": "MIT lizentzia aitortzarekin",
+        "nbk.close.14": "Copyright (c) 2026 Roberto Canales Mora",
+        "nbk.close.15": "Baimena ematen da, doan, software hau eta bere dokumentazioa erabiltzeko, kopiatzeko, aldatzeko, batzeko, argitaratzeko, banatzeko, azpilizentziatzeko eta saltzeko, eta jasotzen dutenei gauza bera baimentzeko, baldintza batekin: beti gorde behar da jatorrizko egilearen aipamena, Roberto Canales Mora, www.robertocanales.com esteka barne. Aitortza hori kopia guztiekin joan behar den copyright oharraren parte da.",
+        "nbk.close.16": "SOFTWAREA «DAGOEN BEZALA» EMATEN DA, INOLAKO BERMERIK GABE, ESPRESUKI EDO INPLIZITUKI. INOLAZ ERE EZ DA EGILEA ERANTZULE IZANGO SOFTWARETIK EDO HAREN ERABILERATIK ERATORRITAKO ERREKLAMAZIO, KALTE EDO BESTELAKO ERANTZUKIZUNENGATIK.",
+        "nbk.close.17": "Non dagoen dena",
+        "nbk.close.18": "Liburu osoa, simulagailua eta iturburu kodea:",
+        "nbk.close.19": "www.robertocanales.com/proyectos#plato",
+        "nbk.close.20": "rcanalescoder.github.io/Plato",
+        "nbk.close.21": "rcanalesmora@gmail.com",
+        "nbk.close.22": "Proiektua betan dago",
+        "nbk.close.23": "Liburua eta simulagailua berrikusteke daude eta partekatzen dira edonork proba ditzan, akatsak aurki ditzan eta hobetzen lagun dezan. Zelaian duzun esperientziarekin, zuri aplikatzen zaizun araudiarekin edo zuk neurtzen dituzun zifrekin bat ez datorren zerbait aurkitzen baduzu, idatzi: horrelako oharrek hobetzen dute eredua.",
+        "nbk.close.24": "Plato · plater tiroketaren simulagailua eta liburua · Roberto Canales Mora · MIT lizentzia aitortzarekin",
+        "nbk.close.25": "Plato · koadernoa {date} sortua",
+        "nbk.index.1": "Tiro puntuen koadernoa",
+        "nbk.index.2": "Plato · simulagailutik sortua, ez da dokumentu ofiziala",
+        "scheme.robot_abt": "ABT CPSA 2026",
+        "scheme.robot_trap1": "Trap1 FITASC 2025"
       }
     };
 
@@ -4062,6 +4393,91 @@
       <p>O aviso de copyright anterior e este aviso de permiso incluiranse en todas as copias ou partes substanciais do software.</p>
       <p>O SOFTWARE PROPORCIÓNASE "TAL CAL", SEN GARANTÍA DE NINGÚN TIPO, EXPRESA OU IMPLÍCITA, INCLUÍNDO PERO NON LIMITÁNDOSE A GARANTÍAS DE COMERCIABILIDADE, IDONEIDADE PARA UN PROPÓSITO PARTICULAR E NON INFRACCIÓN. EN NINGÚN CASO OS AUTORES OU TITULARES DO COPYRIGHT SERÁN RESPONSABLES DE NINGUNHA RECLAMACIÓN, DANO OU OUTRA RESPONSABILIDADE, XA SEXA NUNHA ACCIÓN CONTRACTUAL, EXTRACONTRACTUAL OU DOUTRO TIPO, QUE XURDA DO SOFTWARE OU DO SEU USO.</p>
       <p><a href="#">Pechar</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Proxecto Plato</a></p>`;
+
+    /*
+      El euskera es la traducción con menos confianza de todo el proyecto: está
+      hecha a máquina y no la ha revisado un hablante nativo. En vez de
+      esconderlo, se dice en el aviso de beta y aquí arriba del todo, para que
+      quien la lea sepa qué tiene delante y pueda corregirla.
+    */
+    I18N.eu["help.body"] = `
+      <h2>Simulagailuaren laguntza</h2>
+      <p><strong>Oharra:</strong> euskarazko itzulpen hau makinak egina da eta jatorrizko hiztun batek berrikusi behar du. Zerbait gaizki ikusten baduzu, idatzi rcanalesmora@gmail.com helbidera.</p>
+      <p>Laborategi honek plater tiroketa erakusten du tiratzailearen begitik. Ideia nagusia plateraren hegaldia irakurtzen ikastea da, eta ulertzea puntua non eraman behar den perdigoi hodeiak platera harrapa dezan.</p>
+
+      <h3>Diziplinak</h3>
+      <ul>
+        <li><strong>Hobi unibertsala:</strong> bost makina hobiaren barruan. Erdiko erreferentzia plater laranjak jaurtiketaren erreferentzia ematen du.</li>
+        <li><strong>Hobi olinpikoa:</strong> hamabost makina postuka multzokatuta. Erreferentzia plater aktiboa tiratzen den postuarekin lerrokatzen da.</li>
+        <li><strong>Robota:</strong> makina oszilatzaile bakarra. ABT CPSA eta Trap1 FITASC arauzko profil bereiziak ditu, eta arautu gabeko zelaiko ereduak ere bai.</li>
+        <li><strong>Postua:</strong> diziplina guztietan, Robota barne, tiratzailea 1etik 5era biratzen da 25 platereko serie batean. Platera errepikatzeak ez du kontatzen eta ez du postua aldatzen.</li>
+      </ul>
+
+      <h3>Abiadura eta ibilbidea</h3>
+      <ul>
+        <li>Platera hobiaren ahotik ateratzen da eskemak zehaztutako abiadura, alboko angelu eta altuerarekin.</li>
+        <li><strong>Robot</strong> moduan, ABTk eta Trap1ek angelu eta altuera jarraituak sortzen dituzte beren muga ofizialen barruan. Feriako ereduek sekuentzia zirkularrak, pseudoausazkoak edo muturrekoak erabiltzen dituzte. <strong>Robot indarra</strong>, <strong>Robot altuera</strong> eta <strong>Robot alboa</strong> aukerek arautik nahita ateratzeko aukera ematen dute, konparatzeko.</li>
+        <li>Marra laranja etenak aurreikusitako ibilbidea erakusten du. <strong>Ibilbidea</strong> desaktibatzen baduzu, makinaren eta jaurtiketaren arteko gida ere ezkutatzen da.</li>
+        <li>Lurraren azpian ez da ezer marrazten: platera erortzen denean, laguntzak ez ditu ezinezko puntuak proposatzen.</li>
+      </ul>
+
+      <h3>Kartutxoa eta sorta</h3>
+      <ul>
+        <li>Kartutxoak abiadura nominal bat zehazten du. Platok % 78 erabiltzen du hasierako abiadura eraginkor gisa, eta arrastatze esponentzial sinplifikatu bat: adierazitako hurbilketa bat da, ez lote jakin baten kurba kalibratua.</li>
+        <li>Tiro aurretik, sorta urdina konoaren inguratzaile estimatua da. Tiro ondoren, izoztutako hodei urdina eta panela fisikoki ebaluatutako 306 ibilbide beretatik datoz.</li>
+        <li>Kontaktuak ISSF plateraren erradio fisikoa erabiltzen du, 55 mm. Ukitu batek ez du beti hausten: perdigoia 0,55 J baino gutxiagorekin iristen bada eredu hurbildu honetan, <strong>ukitu ahula</strong> gisa markatzen da. Atalase hori ez dago kalibratuta benetako plater edo kartutxo bat ziurtatzeko.</li>
+        <li><strong>1. tiro sorta</strong> eta <strong>2. tiro sorta</strong> aukerek sorta ireki edo ixteko balio dute, choke desberdinek egingo luketen bezala.</li>
+        <li><strong>Sorta aldakuntza</strong> aukerak hutsuneak, multzoak eta perdigoien arteko abiadura desberdintasun txikiak sartzen ditu. Horrela sortak 3D hodei sinplifikatu baten moduan jokatzen du, eta ez zirkulu perfektu baten moduan.</li>
+      </ul>
+
+      <h3>Aurrerapena</h3>
+      <ul>
+        <li>Platerak aurrera jarraitzen du perdigoiak bidean doazen bitartean. Horregatik ez da normalean platerari zuzenean apuntatzen, pixka bat aurrerago baizik.</li>
+        <li>Eremu horia aurrerapen laguntza da: puntu gorria non eraman komeni den hodeiak platera harrapatzeko.</li>
+        <li><strong>Aurrerapen laguntza</strong> ezkutatzen baduzu, fisika kalkulatzen jarraitzen du, baina arrasto horia ez da erakusten.</li>
+      </ul>
+
+      <h3>Pantailako elementuak</h3>
+      <ul>
+        <li><strong>Plater laranja:</strong> benetako helburua.</li>
+        <li><strong>Puntu gorria:</strong> puntua; non tiratzen duzun.</li>
+        <li><strong>Eremu horia:</strong> aurrerapen puntu edo eremu ezin hobea.</li>
+        <li><strong>Eremu urdina:</strong> tiro aurretik inguratzaile estimatua; tiro ondoren ebaluatutako hodei fisikoa.</li>
+        <li><strong>Puntu urdin argia:</strong> tiroaren erdi fisikoa.</li>
+        <li><strong>Puntu berdea:</strong> platera hausten duen talka.</li>
+        <li><strong>S erreferentzia platera:</strong> plateraren jaurtiketaren erreferentzia bisuala.</li>
+        <li><strong>Zuzenketa leihoak:</strong> tiroa altu, baxu, aurreratuegi, atzeratuta edo lerrotik kanpo geratu den laburbiltzen dute.</li>
+      </ul>
+
+      <h3>Nola erabili</h3>
+      <ul>
+        <li>Hasi <strong>Kamera geldoa</strong> baxuarekin, plateraren, aurrerapenaren eta sortaren arteko erlazioa ikusteko.</li>
+        <li>Igo zooma erreferentzia platera edo platera txikiegi ikusten badituzu zure pantailan.</li>
+        <li>Proba ezazu lehenik laguntza horia aktibatuta; gero ezkutatu, buruko estimazioa lantzeko.</li>
+        <li>Erabili <strong>Errepikatu</strong> jaurtiketa zail bat lantzeko, seriea aurreratu gabe.</li>
+      </ul>
+
+      <h3>Koaderno inprimagarria</h3>
+      <ul>
+        <li><strong>Koadernoa sortu</strong> aukerak, parametro panelaren amaieran, A4 horizontaleko PDF bat sortzen du eskema aktiboaren serie osoarekin: 25 fitxa Unibertsalean eta Robotean, 15 Olinpikoan.</li>
+        <li>Fitxa bakoitzak plater baten ibilbidea marrazten du, gainean bost une markatuta. Lau platera oraindik tiro barruan dagoen leihoan erortzen dira eta bosgarrena kanpoan geratzen da, berandutzeak zer kostatzen duen ikusteko.</li>
+        <li>Une bakoitzean non dagoen platera eta zenbat aurreratu behar den adierazten da, zentimetrotan, plater zabaleretan eta gradutan.</li>
+        <li>Koadernoa <strong>une horretan dituzun doikuntzekin</strong> ateratzen da. Fitxa bakoitzaren goiburuan inprimatuta doaz, abiokoak ez direnak kolorez nabarmenduta: beste xafla batekin edo haizearekin zifrek ez dute balio eta berri bat sortu behar da.</li>
+        <li>Minutu bat baino gutxiago behar du eta bakarrik deskargatzen da. Dokumentua azaltzen duen azal batekin hasten da eta erabilera oharrarekin eta lizentziarekin amaitzen.</li>
+        <li>Koadernoa hautatuta duzun hizkuntzan sortzen da.</li>
+      </ul>
+
+      <p><a href="#">Itxi</a> · <a href="index.html" target="_blank" rel="noopener">Liburu osoa (gaztelaniaz)</a> · <a href="index.html#ingenieria" target="_blank" rel="noopener">Dokumentazio teknikoa (gaztelaniaz)</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Plato proiektua</a></p>`;
+
+    I18N.eu["license.body"] = `
+      <h2>MIT lizentzia</h2>
+      <p>Copyright (c) 2026 Roberto Canales Mora</p>
+      <p>Jatorrizko proiektua: <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">https://robertocanales.com/proyectos#plato</a></p>
+      <p>Honen bidez baimena ematen zaio, doan, software honen eta hari lotutako dokumentazio fitxategien kopia bat lortzen duen edonori, softwarea mugarik gabe erabiltzeko, mugarik gabe barne hartuta erabiltzeko, kopiatzeko, aldatzeko, batzeko, argitaratzeko, banatzeko, azpilizentziatzeko eta/edo kopiak saltzeko eskubideak, eta softwarea ematen zaien pertsonei gauza bera egiten uzteko, baldintza hauekin:</p>
+      <p>Proiektu honen bertsio eratorriak erabiltzean, kopiatzean, aldatzean, banatzean edo argitaratzean, beti gorde behar da jatorrizko egilearen aipamena, <strong>Roberto Canales Mora</strong>, <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a> estekarekin batera. Aitortza hori software osoarekin edo zati garrantzitsuekin joan behar den copyright eta baimen oharraren parte da.</p>
+      <p>Goiko copyright oharra eta baimen ohar hau software osoaren edo zati garrantzitsuen kopia guztietan sartuko dira.</p>
+      <p>SOFTWAREA "DAGOEN BEZALA" EMATEN DA, INOLAKO BERMERIK GABE, ESPRESUKI EDO INPLIZITUKI, MERKATURATZEKO EGOKITASUNAREN, HELBURU JAKIN BATERAKO EGOKITASUNAREN ETA EZ URRATZEAREN BERMEAK BARNE BAINA HORIETARA MUGATU GABE. INOLAZ ERE EZ DIRA EGILEAK EDO COPYRIGHT TITULARRAK ERANTZULE IZANGO ERREKLAMAZIO, KALTE EDO BESTELAKO ERANTZUKIZUNENGATIK, KONTRATU EKINTZA BATEAN, KONTRATUZ KANPOKOAN EDO BESTELAKOAN, SOFTWARETIK EDO HAREN ERABILERATIK ERATORRIA.</p>
+      <p><a href="#">Itxi</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Plato proiektua</a></p>`;
   </script>
 
   <script>
