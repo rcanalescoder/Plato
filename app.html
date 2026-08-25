@@ -650,12 +650,35 @@
       puesto -> station, tirada -> round, guardia -> hold, encare -> aim,
       cuaderno -> notebook. Foso universal es "Universal Trench" y foso
       olímpico es "Olympic Trap", que son los nombres oficiales FITASC e ISSF.
+
+      Terminología acordada (ES -> FR), la que usan de verdad los tiradores
+      franceses y no la traducción literal: plato -> plateau, adelanto ->
+      avance, plomeo -> gerbe, perdigón -> plomb, solista -> bande (de visée),
+      señuelo -> plateau témoin, puesto -> poste, tirada -> série, guardia ->
+      attente, cuaderno -> carnet, cancha -> terrain. Foso universal es "Fosse
+      universelle" y foso olímpico "Fosse olympique". El grito de salida sigue
+      siendo PULL, que es lo que se grita en un campo francés.
+
+      El francés lleva espacio fino antes de « : ; ! ? » y dentro de las
+      comillas. Aquí va como espacio duro (U+00A0) para que el troceado de
+      líneas del cuaderno no deje la puntuación huérfana al principio de línea.
     */
 
     const LANGS = [
       { code: "es", label: "Español" },
-      { code: "en", label: "English" }
+      { code: "en", label: "English" },
+      { code: "fr", label: "Français" }
     ];
+
+    /*
+      El libro sólo existe en los idiomas de esta lista. El simulador va por
+      delante: traducirlo cuesta 3.200 palabras y el libro 108.000, así que
+      habrá idiomas con simulador y sin libro durante mucho tiempo. La lista es
+      explícita y no una convención de rutas porque adivinar "fr/index.html"
+      produce un 404 silencioso en cuanto se añade un idioma nuevo.
+    */
+    const BOOK_LANGS = { es: "index.html", en: "en/index.html" };
+    const BOOK_FALLBACK = "en/index.html";
 
     const I18N = {
       es: {
@@ -1302,6 +1325,329 @@
         "nbk.index.2": "Plato · generated from the simulator, not an official document",
         "scheme.robot_abt": "ABT CPSA 2026",
         "scheme.robot_trap1": "FITASC Trap1 2025"
+      },
+
+      fr: {
+        "html.title": "Laboratoire d'avance - Tir aux plateaux",
+        "lang.label": "Langue",
+        "lang.t": "Langue de l'interface. Votre choix est mémorisé dans ce navigateur.",
+
+        "beta.tag": "Projet en bêta",
+        "beta.text": "Le livre et le simulateur sont encore en cours de relecture. Ils sont partagés pour que chacun puisse les essayer et aider à les améliorer.",
+
+        "aria.toolbar": "Commandes principales",
+        "aria.ribType": "Type de bande",
+        "aria.scene": "Simulateur vu de l'œil du tireur",
+        "aria.controls": "Paramètres physiques",
+        "aria.help": "Aide du simulateur",
+        "aria.license": "Licence MIT",
+
+        "btn.call": "Demander",
+        "btn.call.t": "Demande un nouveau plateau. Vous pouvez aussi le demander avec le bouton droit de la souris.",
+        "btn.repeat": "Répéter",
+        "btn.repeat.t": "Répète exactement le plateau précédent depuis le même poste, sans compter comme un nouveau plateau de la série.",
+        "btn.fire": "Tirer",
+        "btn.fire.t": "Tire la cartouche en cours. Vous pouvez aussi tirer avec le bouton gauche de la souris.",
+        "btn.reset": "Reset",
+        "btn.reset.t": "Relance la série de 25 plateaux et efface les tirs et les fragments visibles.",
+        "btn.prevStation": "Poste -",
+        "btn.prevStation.t": "Recule au poste précédent.",
+        "btn.nextStation": "Poste +",
+        "btn.nextStation.t": "Avance au poste suivant.",
+        "btn.flat": "Plate",
+        "btn.flat.t": "Bande sans gain : le point de visée et le centre d'impact sortent pratiquement alignés.",
+        "btn.high": "Haute",
+        "btn.high.t": "Bande avec gain : l'impact part un peu au-dessus du point de visée.",
+
+        "stat.state": "État",
+        "stat.state.t": "Phase actuelle du simulateur : attente, retard de lancement, suivi, chute ou terminé.",
+        "stat.round": "Série",
+        "stat.round.t": "Compteur de la série : plateaux consommés sur 25 et plateaux cassés. Les répétitions ne comptent pas.",
+        "stat.station": "Poste",
+        "stat.station.t": "Poste de tir actuel. La série tourne sur les postes 1 à 5.",
+        "stat.target": "Plateau",
+        "stat.target.t": "Machine, angle, hauteur à 10 m et distance du plateau en cours.",
+        "stat.lead": "Avance",
+        "stat.lead.t": "Distance approximative entre le plateau et le point d'avance physique recommandé.",
+        "stat.aim": "Visée",
+        "stat.aim.t": "Angles actuels du point de visée par rapport à l'axe de l'œil du tireur.",
+        "stat.result": "Résultat",
+        "stat.result.t": "Résultat du dernier tir ou du plateau en cours.",
+
+        "sw.lead": "aide avance",
+        "sw.lead.t": "Affiche ou masque le point et la zone jaune où il faut viser pour intercepter le plateau.",
+        "sw.pattern": "gerbe",
+        "sw.pattern.t": "Affiche ou masque la gerbe bleue estimée à l'endroit où vous visez.",
+        "sw.path": "trajectoire",
+        "sw.path.t": "Affiche ou masque la trajectoire orange du plateau.",
+        "sw.ground": "sol translucide / voir machines",
+        "sw.ground.t": "Bascule entre sol opaque et sol translucide, pour voir les machines sous la fosse.",
+        "sw.legend": "légende",
+        "sw.legend.t": "Affiche ou masque la légende des couleurs et des symboles en bas à droite.",
+
+        "scene.slowNote": "<strong>Ralenti</strong> activé pour analyser. Pour essayer en temps réel, remontez le <strong>Ralenti</strong> à 1.00x.",
+
+        "ctl.mode": "Discipline",
+        "ctl.mode.t": "Choisissez la discipline : l'Universelle utilise cinq machines ; l'Olympique quinze machines groupées par poste ; le Robot une seule machine oscillante à force, hauteur et ouverture réglables.",
+        "mode.universal": "Fosse universelle",
+        "mode.olympic": "Fosse olympique",
+        "mode.robot": "Robot",
+        "ctl.scheme": "Schéma",
+        "ctl.scheme.t": "Sélectionne le schéma officiel ou simulé de machines, d'angles et de hauteurs utilisé pour tirer au sort chaque plateau.",
+        "ctl.station": "Poste",
+        "ctl.station.t": "Poste de départ ou poste actuel du tireur. La série avance en tournant 1, 2, 3, 4, 5.",
+        "ctl.guard": "Attente",
+        "ctl.guard.t": "Définit où le tireur commence à viser avant de demander le plateau : sur le plateau témoin, ou un peu haut selon le poste.",
+        "guard.neutral": "Neutre",
+        "guard.high": "Haute par poste",
+        "ctl.zoom": "Zoom visuel",
+        "ctl.zoom.t": "Rapproche visuellement la scène sans changer la distance réelle à la fosse ni la physique.",
+        "ctl.slow": "Ralenti",
+        "ctl.slow.t": "Facteur temporel du simulateur. 1.00x correspond au temps réel ; les valeurs plus faibles aident à analyser l'avance.",
+        "ctl.reaction": "Retard lancement",
+        "ctl.reaction.t": "Court retard entre la demande du plateau et sa sortie de la fosse. En compétition, le lancement doit paraître immédiat ; ce réglage simule le retard du système d'appel et de la machine.",
+        "ctl.cartridge": "Cartouche",
+        "ctl.cartridge.t": "Vitesse nominale de la cartouche. Le modèle applique ensuite une réduction effective approximative ; il ne remplace pas une table balistique mesurée de la cartouche réelle.",
+        "ctl.spread1": "Gerbe tir 1",
+        "ctl.spread1.t": "Ouverture de la gerbe de plombs pour le premier tir, équivalente au choke choisi.",
+        "ctl.spread2": "Gerbe tir 2",
+        "ctl.spread2.t": "Ouverture de la gerbe de plombs pour le second tir, normalement plus serrée.",
+        "ctl.variance": "Variation gerbe",
+        "ctl.variance.t": "Variation réaliste entre les tirs : modifie les micro-trous, la déformation et la vitesse relative des plombs.",
+        "ctl.analysis": "Analyse",
+        "ctl.analysis.t": "Durée pendant laquelle les aides et les corrections restent visibles après le tir ou le manqué.",
+        "ctl.wind": "Vent",
+        "ctl.wind.t": "Vent latéral appliqué à la trajectoire du plateau. Négatif pousse d'un côté, positif de l'autre.",
+        "ctl.rib": "Gain de bande",
+        "ctl.rib.t": "Élévation balistique de la bande de visée : le tir passe au-dessus du point de visée, sans changer la largeur apparente de la bande.",
+        "ctl.robotForce": "Robot force",
+        "ctl.robotForce.t": "Robot uniquement : simule le serrage ou le desserrage du ressort. Augmente ou réduit la vitesse et la portée du plateau.",
+        "ctl.robotPitch": "Robot hauteur",
+        "ctl.robotPitch.t": "Robot uniquement : change l'inclinaison verticale de la machine. Les valeurs élevées donnent des plateaux plus hauts.",
+        "ctl.robotLateral": "Robot latéral",
+        "ctl.robotLateral.t": "Robot uniquement : multiplie l'ouverture latérale du robot. Les valeurs élevées donnent des plateaux plus croisés.",
+
+        "hint.keys": "Flèches : déplacer la visée. Espace : tirer. Entrée : demander le plateau. Le nuage jaune indique où amener le point de visée ; le bleu est le centre probable de la gerbe.",
+
+        "nb.button": "Générer le carnet",
+        "nb.button.busy": "Génération du carnet...",
+        "nb.button.t": "Génère un PDF imprimable avec toute la série du schéma actuel. Pour chaque plateau, il dessine sa trajectoire avec cinq instants marqués et l'avance à prendre à chacun d'eux. Il utilise les réglages que vous avez en ce moment.",
+        "nb.idle": "Carnet PDF imprimable de la série complète, avec les réglages actuels : une fiche par plateau avec cinq instants et leur avance. Universelle 25 fiches, Olympique 15, Robot 25.",
+
+        "link.manual": "Livre",
+        "link.tech": "Documentation technique",
+        "link.help": "Aide rapide",
+        "link.license": "Licence MIT",
+
+        "scheme.prefix.universal": "FITASC Universelle",
+        "scheme.prefix.olympic": "ISSF Olympique",
+        "scheme.robot_feria": "Robot forain circulaire (modèle)",
+        "scheme.robot_extremo": "Robot local extrême (modèle)",
+        "scheme.robot_random": "Robot pseudo-aléatoire (modèle)",
+
+        "sim.banner.pull": "PULL",
+        "sim.banner.repeat": "RÉPÉTER",
+        "sim.state.idle": "Attente",
+        "sim.state.reaction": "Retard",
+        "sim.state.tracking": "Suivi",
+        "sim.state.falling": "Chute",
+        "sim.state.ended": "Terminé",
+        "sim.round.broken": "cassés",
+        "sim.hidden": "caché",
+        "sim.ground": "sol",
+        "sim.outOfWindow": "Hors fenêtre",
+        "sim.repeat.outOfWindow": "Répétition : hors fenêtre",
+        "sim.repeat": "Répétition",
+        "sim.hit": "Cassé",
+        "sim.edge": "bord",
+        "sim.centre": "centre",
+        "sim.pellet": "plomb",
+        "sim.weak": "Touche faible",
+        "sim.repeat.weak": "Répétition touche faible",
+        "sim.miss": "Manqué",
+        "sim.repeat.miss": "Répétition manquée",
+        "sim.missWait": "Manqué : 2 tirs, attente de la chute",
+        "sim.repeat.missWait": "Répétition manquée : attente de la chute",
+        "sim.lost": "Perdu : tombé au sol",
+        "sim.missLost": "Manqué / perdu : tombé au sol",
+        "sim.repeat.lost": "Répétition perdue : tombée au sol",
+        "sim.repeat.missLost": "Répétition manquée / perdue : tombée au sol",
+        "badge.universal": "Fosse universelle FITASC",
+        "badge.olympic": "Fosse olympique ISSF",
+        "badge.robotPopular": "Robot populaire",
+        "badge.inLimits": "Dans les limites",
+        "badge.outLimits": "Hors limites",
+        "badge.nonStandard": "Modèle non réglementaire",
+        "badge.matches": "Conforme à la table officielle",
+        "badge.review": "Vérifier le réglage",
+        "badge.speed": "vitesse modèle",
+        "badge.range": "portée",
+        "badge.flight": "vol",
+        "badge.noWind": " · validation de base sans vent",
+        "cv.noTarget": "pas de plateau",
+        "cv.hint": "orange : plateau  jaune : point idéal",
+        "cv.leadOk": "avance correcte",
+        "cv.ahead": "trop en avance",
+        "cv.behind": "en retard",
+        "cv.lineOk": "ligne correcte",
+        "cv.right": "droite",
+        "cv.left": "gauche",
+        "cv.heightOk": "hauteur correcte",
+        "cv.high": "haut",
+        "cv.low": "bas",
+        "cv.missFalling": "manqué : en chute",
+        "cv.redCentre": "rouge = centre de gerbe",
+        "cv.corrTitle": "correction de tir",
+        "cv.shot1": "tir 1",
+        "cv.shot2": "tir 2",
+        "cv.leadOkShort": "avance ok",
+        "cv.delay": "retarder de",
+        "cv.advance": "avancer de",
+        "cv.heightOkShort": "hauteur ok",
+        "cv.lower": "baisser de",
+        "cv.raise": "monter de",
+        "cv.legend": "légende",
+        "cv.legend.clay": "plateau orange : la cible réelle",
+        "cv.legend.lead": "jaune : point ou zone d'avance idéale",
+        "cv.legend.pattern": "bleu : gerbe estimée",
+        "cv.legend.aim": "rouge : point de visée / où vous tirez",
+        "cv.legend.shotCentre": "bleu clair : centre physique du tir",
+        "cv.legend.hit": "vert : impact qui casse le plateau",
+        "cv.legend.path": "orange pointillé : trajectoire du plateau",
+        "cv.mouse": "souris",
+        "cv.mouse.right": "droit : demander",
+        "cv.mouse.left": "gauche : tirer",
+        "cv.mouse.move": "bouger : viser",
+        "cv.wait": "attente",
+        "spread.open": "ouvert",
+        "sim.shot": "tir",
+
+        "nbk.moment.salida": "Lancement",
+        "nbk.moment.muy-pronto": "Très tôt",
+        "nbk.moment.pronto": "Tôt",
+        "nbk.moment.ventana": "Bonne fenêtre",
+        "nbk.moment.limite": "À la limite",
+        "nbk.moment.tarde": "En retard",
+        "nbk.moment.muy-tarde": "Bien trop tard",
+        "nbk.note.salida": "premier coup d'œil",
+        "nbk.note.muy-pronto": "tir précipité",
+        "nbk.note.pronto": "tir rapide",
+        "nbk.note.ventana": "le tir confortable",
+        "nbk.note.limite": "dernier tir utile",
+        "nbk.note.tarde": "ne porte déjà plus bien",
+        "nbk.note.muy-tarde": "limite du lancer",
+        "nbk.range.in": "à portée",
+        "nbk.range.limit": "à la limite",
+        "nbk.range.out": "hors de portée utile",
+        "nbk.mode.universal": "Fosse universelle",
+        "nbk.mode.olympic": "Fosse olympique",
+        "nbk.plan.title": "Vue de dessus",
+        "nbk.plan.all": "Vue de dessus · tous les plateaux du schéma",
+        "nbk.wait": "attente",
+        "nbk.card.of": "Plateau {a} sur {b}",
+        "nbk.card.station": "Poste",
+        "nbk.card.machine": "Machine",
+        "nbk.card.angle": "angle",
+        "nbk.card.height": "hauteur",
+        "nbk.card.at10": "m à 10 m",
+        "nbk.card.fall": "chute",
+        "nbk.card.elev": "élévation",
+        "nbk.card.framing": "cadrage {z}x sur le champ de base de {f}° vertical",
+        "nbk.card.turned": " · vue tournée de {h}° à l'horizontale et de {v}° à la verticale",
+        "nbk.card.warnOwn": "RÉGLAGES PERSONNELS · LES AVANCES DE CETTE FICHE NE VALENT QU'AVEC CETTE COMBINAISON",
+        "nbk.card.warnDefault": "LES AVANCES DE CETTE FICHE NE VALENT QU'AVEC CES RÉGLAGES",
+        "nbk.card.foot": "Plato · carnet de points de tir · généré depuis le simulateur, ce n'est pas un document officiel",
+        "nbk.strip.after": "s après le lancement",
+        "nbk.strip.clays": "plateaux",
+        "nbk.strip.right": "droite",
+        "nbk.strip.left": "gauche",
+        "nbk.strip.up": "haut",
+        "nbk.strip.down": "bas",
+        "nbk.strip.lateral": "latéral",
+        "nbk.strip.vertical": "vertical",
+        "nbk.strip.clayAt": "plateau à",
+        "nbk.strip.heightAt": "hauteur",
+        "nbk.strip.realSep": "séparation réelle",
+        "nbk.strip.targets": "plateaux",
+        "nbk.index.h.station": "poste",
+        "nbk.index.h.machine": "mach.",
+        "nbk.index.h.angle": "angle",
+        "nbk.index.h.h10": "h. 10 m",
+        "nbk.index.h.fall": "chute",
+        "nbk.index.h.lead": "avance dans la bonne fenêtre",
+        "nbk.index.note1": "L'avance est celle que voit le tireur : la séparation apparente entre le plateau et le point de visée, mesurée perpendiculairement à la ligne de regard.",
+        "nbk.index.note2": "Le tableau utilise l'instant « bonne fenêtre », le tir confortable ; chaque fiche détaille les autres instants.",
+        "nbk.index.note3": "Rouge : point d'attente de l'arme.  Orange : le plateau.  Jaune : où placer le point de visée.  Ellipse jaune : gerbe estimée du premier tir.",
+        "nbk.p.cartridge": "cartouche",
+        "nbk.p.rib": "bande",
+        "nbk.p.wind": "vent",
+        "nbk.p.delay": "retard",
+        "nbk.p.pattern1": "gerbe 1",
+        "nbk.p.hold": "attente",
+        "nbk.st.computing": "Calcul des avances {i} sur {n}…",
+        "nbk.st.drawing": "Dessin de la fiche {i} sur {n}…",
+        "nbk.st.composing": "Composition de la couverture, de l'index et de la page de fin…",
+        "nbk.st.done": "Terminé : {p} pages · {mb} Mo · {name}",
+        "nbk.st.error": "Erreur",
+        "nbk.file": "carnet-plato",
+        "nbk.locale": "fr-FR",
+        "nbk.decimal": ",",
+
+        "nbk.cover.1": "PLATO · SIMULATEUR ET LIVRE DE TIR AUX PLATEAUX",
+        "nbk.cover.2": "Carnet de",
+        "nbk.cover.3": "points de tir",
+        "nbk.cover.4": "Ce que vous avez entre les mains",
+        "nbk.cover.5": "Une série complète, plateau par plateau, telle que le tireur la verrait depuis son poste. Pour chaque plateau, toute la trajectoire est dessinée, avec cinq instants marqués dessus, répartis sur la fenêtre où le plateau est encore à portée, plus un déjà tardif.",
+        "nbk.cover.6": "À chaque instant, il indique où se trouve le plateau et quelle avance il faut prendre pour le casser, mesurée telle que l'œil la voit. Cela sert à composer la série avant d'aller sur le terrain : ce que vous tirez en premier, quelle avance vous prenez et ce qui vous arrive si vous êtes en retard.",
+        "nbk.cover.7": "Comment lire chaque fiche",
+        "nbk.cover.8": "Le grand chiffre est l'avance perçue par l'œil, perpendiculaire à la ligne de regard. Dessous, elle apparaît aussi en largeurs de plateau et en degrés.",
+        "nbk.cover.9": "La séparation réelle en trois dimensions est en petits caractères : elle inclut la profondeur, que l'œil ne voit pas, et c'est pour cela qu'elle donne un nombre bien plus grand.",
+        "nbk.cover.10": "Toutes les fiches partagent la même échelle, de sorte que les avances sont comparables d'un plateau à l'autre. L'en-tête indique de combien la vue a été tournée et avec quel cadrage.",
+        "nbk.cover.11": "La couleur de chaque instant renseigne sur la distance : à portée, à la limite, ou déjà hors de portée utile.",
+        "nbk.cover.12": "Ce que ce n'est pas",
+        "nbk.cover.13": "Ce n'est pas une mesure de terrain : ce sont des chiffres issus d'un modèle pédagogique, avec ses simplifications. La dernière page l'explique en détail.",
+        "nbk.cover.14": "Cela n'homologue pas une installation et ne certifie aucune trajectoire. En compétition, ce sont toujours les personnes habilitées qui décident.",
+        "nbk.cover.15": "Cela ne remplace pas un moniteur, le règlement du terrain ni les obligations légales.",
+        "nbk.cover.16": "Généré avec ces réglages",
+        "nbk.cover.18": "Toutes les avances de ce carnet ne valent que pour cette combinaison. Avec une autre cartouche, une autre bande, une autre gerbe ou avec du vent, les chiffres changent et ce carnet ne sert plus : il faut en générer un nouveau.",
+        "nbk.cover.19": "Cela se fait depuis le simulateur, en changeant ce que vous voulez et en appuyant à nouveau sur « Générer le carnet ». Sur chaque fiche, les réglages qui ne sont pas ceux de départ apparaissent surlignés en couleur.",
+        "nbk.cover.20": "Le projet",
+        "nbk.cover.21": "Plato est un simulateur et un livre gratuits pour apprendre le tir aux plateaux, écrits par Roberto Canales Mora. Le livre explique le terrain, la sécurité, les disciplines et la géométrie de l'avance ; le simulateur permet de répéter un même plateau en changeant une seule variable.",
+        "nbk.cover.22": "Projet, contact et dépôt sur GitHub :",
+        "nbk.cover.23": "www.robertocanales.com/proyectos#plato",
+        "nbk.cover.24": "rcanalescoder.github.io/Plato",
+        "nbk.cover.25": "Ce que contiennent les pages suivantes",
+        "nbk.cover.26": "Un index de la série : un tableau avec le poste, la machine, l'angle, la hauteur, la chute et l'avance de chaque plateau, et une vue de dessus avec toutes les trajectoires réunies.",
+        "nbk.cover.27": "L'avertissement d'usage et la licence, à la fin. Si vous n'imprimez qu'une partie, imprimez aussi cette feuille.",
+        "nbk.cover.28": "Avertissement : les chiffres de ce carnet sont une estimation issue d'un modèle pédagogique, pas une mesure de terrain. Lisez l'avertissement d'usage et la licence en dernière page avant de l'emporter sur le terrain.",
+        "nbk.close.1": "Avertissement d'usage et licence",
+        "nbk.close.2": "À lire avant d'appliquer quoi que ce soit de ce carnet sur un terrain",
+        "nbk.close.3": "Ceci est une estimation, pas une mesure",
+        "nbk.close.4": "Les trajectoires, les temps et les avances proviennent d'un modèle simplifié qui résout une parabole visuelle à partir de la hauteur et de la portée du plateau, avec une gravité réduite et un lancement visuel commun. Il ne mesure pas une machine réelle, il ne reproduit pas toute l'aérodynamique du disque et il ne remplace pas une table balistique de la cartouche que vous utilisez.",
+        "nbk.close.5": "Les tables des schémas reproduisent des valeurs publiées par les fédérations, mais ce document n'homologue aucune installation et ne certifie aucune trajectoire. En compétition, ce sont toujours les personnes habilitées qui décident.",
+        "nbk.close.6": "La responsabilité du tir est la vôtre",
+        "nbk.close.7": "Utilisez ces chiffres comme point de départ pour observer et comparer, jamais comme une consigne à suivre aveuglément. Vérifiez vos propres nombres sur le terrain, avec votre arme, votre cartouche et les conditions du jour, et corrigez ce qu'il faut.",
+        "nbk.close.8": "Ce matériel ne remplace pas une formation en présentiel, le règlement du terrain, l'aide d'un moniteur ou d'un armurier, ni les obligations légales en vigueur. La sécurité et les décisions de tir relèvent de la responsabilité de celui qui tire.",
+        "nbk.close.9": "Avant de l'emporter sur le terrain",
+        "nbk.close.10": "Vérifiez que le schéma de la couverture est bien celui qui va être lancé. Demandez-le au responsable au lieu de le supposer.",
+        "nbk.close.11": "Les avances dépendent de la cartouche et de la bande que vous avez réglées en générant le carnet. Avec un autre matériel, les chiffres changent.",
+        "nbk.close.12": "Traitez chaque nombre comme une hypothèse que vous allez vérifier en tirant, pas comme le résultat que vous devriez obtenir.",
+        "nbk.close.13": "Licence MIT avec attribution",
+        "nbk.close.14": "Copyright (c) 2026 Roberto Canales Mora",
+        "nbk.close.15": "L'autorisation est accordée, à titre gratuit, d'utiliser, copier, modifier, fusionner, publier, distribuer, sous-licencier et vendre des copies de ce logiciel et de sa documentation, et de permettre la même chose à ceux qui le reçoivent, à une condition : toujours conserver la référence à l'auteur original, Roberto Canales Mora, ainsi que le lien vers www.robertocanales.com. Cette attribution fait partie de l'avis de copyright qui doit accompagner toutes les copies.",
+        "nbk.close.16": "LE LOGICIEL EST FOURNI « EN L'ÉTAT », SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE. EN AUCUN CAS L'AUTEUR NE POURRA ÊTRE TENU RESPONSABLE D'UNE RÉCLAMATION, D'UN DOMMAGE OU D'UNE AUTRE RESPONSABILITÉ DÉCOULANT DU LOGICIEL OU DE SON UTILISATION.",
+        "nbk.close.17": "Où trouver l'ensemble",
+        "nbk.close.18": "Livre complet, simulateur et code source :",
+        "nbk.close.19": "www.robertocanales.com/proyectos#plato",
+        "nbk.close.20": "rcanalescoder.github.io/Plato",
+        "nbk.close.21": "rcanalesmora@gmail.com",
+        "nbk.close.22": "Le projet est en bêta",
+        "nbk.close.23": "Le livre et le simulateur sont en cours de relecture et sont partagés pour que chacun puisse les essayer, y trouver des erreurs et aider à les améliorer. Si vous trouvez quelque chose qui ne correspond pas à votre expérience sur le terrain, au règlement qui vous est applicable ou aux chiffres que vous mesurez vous-même, écrivez : ce genre de signalement est ce qui fait progresser le modèle.",
+        "nbk.close.24": "Plato · simulateur et livre de tir aux plateaux · Roberto Canales Mora · Licence MIT avec attribution",
+        "nbk.index.1": "Carnet de points de tir",
+        "nbk.index.2": "Plato · généré depuis le simulateur, ce n'est pas un document officiel",
+        "scheme.robot_abt": "ABT CPSA 2026",
+        "scheme.robot_trap1": "Trap1 FITASC 2025"
       }
     };
 
@@ -1341,8 +1687,8 @@
       document.querySelectorAll("[data-i18n-title]").forEach(node => { node.title = t(node.dataset.i18nTitle); });
       document.querySelectorAll("[data-i18n-aria]").forEach(node => { node.setAttribute("aria-label", t(node.dataset.i18nAria)); });
 
-      // El libro tiene un fichero por idioma, así que los enlaces cambian de destino.
-      const book = LANG === "es" ? "index.html" : `${LANG}/index.html`;
+      // El libro no existe en todos los idiomas del simulador: el que falte cae al inglés.
+      const book = BOOK_LANGS[LANG] || BOOK_FALLBACK;
       const manual = document.getElementById("manualLink");
       const tech = document.getElementById("techLink");
       if (manual) manual.href = book;
@@ -1528,6 +1874,89 @@
       <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
       <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
       <p><a href="#">Close</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Plato project</a></p>`;
+
+    /*
+      El libro todavía no existe en francés, así que los enlaces de este bloque
+      apuntan al libro inglés y lo dicen abiertamente. Cuando exista el francés,
+      basta con cambiarlos aquí y añadir "fr" a BOOK_LANGS.
+    */
+    I18N.fr["help.body"] = `
+      <h2>Aide du simulateur</h2>
+      <p>Ce laboratoire montre le tir aux plateaux depuis l'œil du tireur. L'idée principale est d'apprendre à lire le vol du plateau et à comprendre où amener le point de visée pour que le nuage de plombs l'intercepte.</p>
+
+      <h3>Disciplines</h3>
+      <ul>
+        <li><strong>Universelle :</strong> cinq machines dans la fosse. Le plateau témoin orange central donne la référence de lancement.</li>
+        <li><strong>Olympique :</strong> quinze machines groupées par poste. Le plateau témoin actif s'aligne avec le poste depuis lequel on tire.</li>
+        <li><strong>Robot :</strong> une seule machine oscillante. Elle comprend des profils réglementaires séparés pour l'ABT CPSA et le Trap1 FITASC, en plus de modèles populaires non réglementaires.</li>
+        <li><strong>Poste :</strong> dans toutes les disciplines, Robot compris, le tireur tourne sur les postes 1 à 5 pendant une série de 25 plateaux. Répéter un plateau ne compte pas et ne change pas de poste.</li>
+      </ul>
+
+      <h3>Vitesse et trajectoire</h3>
+      <ul>
+        <li>Le plateau sort de la bouche de la fosse avec une vitesse, un angle latéral et une hauteur définis par le schéma.</li>
+        <li>En <strong>Robot</strong>, l'ABT et le Trap1 génèrent des angles et des hauteurs continus dans leurs limites officielles. Les modèles forains utilisent des séquences circulaires, pseudo-aléatoires ou extrêmes. <strong>Robot force</strong>, <strong>Robot hauteur</strong> et <strong>Robot latéral</strong> permettent de sortir délibérément de la norme pour comparer.</li>
+        <li>La ligne orange en pointillé montre sa trajectoire prévue. Si vous désactivez <strong>trajectoire</strong>, le guide entre la machine et le lancement disparaît aussi.</li>
+        <li>La trajectoire n'est pas tracée sous le sol : quand le plateau tombe, l'aide cesse de proposer des points impossibles.</li>
+      </ul>
+
+      <h3>Cartouche et gerbe</h3>
+      <ul>
+        <li>La cartouche définit une vitesse nominale. Plato en utilise 78 % comme vitesse effective initiale, avec une traînée exponentielle simplifiée : c'est une approximation déclarée, pas une courbe calibrée sur un lot précis.</li>
+        <li>Avant le tir, la gerbe bleue est l'enveloppe estimée du cône. Après le tir, le nuage bleu figé et le panneau proviennent des mêmes 306 trajectoires évaluées physiquement.</li>
+        <li>Le contact utilise le rayon physique du plateau ISSF, 55 mm. Une touche ne casse pas toujours : si le plomb arrive avec moins de 0,55 J dans ce modèle approximatif, elle est signalée comme <strong>touche faible</strong>. Ce seuil n'est pas calibré pour certifier un plateau ou une cartouche réels.</li>
+        <li><strong>Gerbe tir 1</strong> et <strong>Gerbe tir 2</strong> permettent d'ouvrir ou de resserrer la gerbe, comme le feraient des chokes différents.</li>
+        <li><strong>Variation gerbe</strong> introduit des trous, des groupements et de petites différences de vitesse entre les plombs. La gerbe se comporte ainsi comme un nuage 3D simplifié, et non comme un cercle parfait.</li>
+      </ul>
+
+      <h3>Avance</h3>
+      <ul>
+        <li>Le plateau continue d'avancer pendant que les plombs voyagent. C'est pour cela qu'on ne vise normalement pas exactement le plateau, mais un peu devant.</li>
+        <li>La zone jaune est l'aide à l'avance : là où il faut amener le point rouge pour que le nuage atteigne le plateau.</li>
+        <li>Si vous masquez l'<strong>aide avance</strong>, la physique continue d'être calculée, mais la piste jaune n'est plus affichée.</li>
+      </ul>
+
+      <h3>Éléments à l'écran</h3>
+      <ul>
+        <li><strong>Plateau orange :</strong> la cible réelle.</li>
+        <li><strong>Point rouge :</strong> le point de visée ; là où vous tirez.</li>
+        <li><strong>Zone jaune :</strong> point ou zone d'avance idéale.</li>
+        <li><strong>Zone bleue :</strong> enveloppe estimée avant le tir ; nuage physique évalué après le tir.</li>
+        <li><strong>Point bleu clair :</strong> centre physique du tir.</li>
+        <li><strong>Point vert :</strong> impact qui casse le plateau.</li>
+        <li><strong>Plateau témoin S :</strong> repère visuel du lancement du plateau.</li>
+        <li><strong>Fenêtres de correction :</strong> résumé indiquant si le tir est parti haut, bas, trop en avance, en retard ou hors ligne.</li>
+      </ul>
+
+      <h3>Comment s'en servir</h3>
+      <ul>
+        <li>Commencez avec un <strong>Ralenti</strong> bas pour voir la relation entre plateau, avance et gerbe.</li>
+        <li>Montez le zoom visuel si le plateau témoin ou le plateau vous paraissent trop petits à l'écran.</li>
+        <li>Essayez d'abord avec l'aide jaune activée ; masquez-la ensuite pour entraîner votre estimation mentale.</li>
+        <li>Utilisez <strong>Répéter</strong> pour travailler un lancement difficile sans faire avancer la série.</li>
+      </ul>
+
+      <h3>Carnet imprimable</h3>
+      <ul>
+        <li><strong>Générer le carnet</strong>, en bas du panneau de paramètres, produit un PDF A4 paysage avec toute la série du schéma actif : 25 fiches en Universelle et en Robot, 15 en Olympique.</li>
+        <li>Chaque fiche dessine la trajectoire d'un plateau avec cinq instants marqués dessus. Quatre tombent dans la fenêtre où le plateau est encore à portée et le cinquième reste dehors, pour voir ce que coûte le retard.</li>
+        <li>À chaque instant, il indique où se trouve le plateau et quelle avance il faut prendre, en centimètres, en largeurs de plateau et en degrés.</li>
+        <li>Le carnet sort avec <strong>les réglages que vous avez à ce moment-là</strong>. Ils sont imprimés dans l'en-tête de chaque fiche, ceux qui ne sont pas ceux de départ étant surlignés en couleur : avec une autre bande ou avec du vent, les chiffres ne valent plus et il faut en générer un nouveau.</li>
+        <li>Cela prend un peu moins d'une minute et le fichier se télécharge tout seul. Il s'ouvre sur une couverture qui explique le document et se ferme sur l'avertissement d'usage et la licence.</li>
+        <li>Le carnet est généré dans la langue que vous avez sélectionnée.</li>
+      </ul>
+
+      <p><a href="#">Fermer</a> · <a href="en/index.html" target="_blank" rel="noopener">Livre complet (en anglais)</a> · <a href="en/index.html#ingenieria" target="_blank" rel="noopener">Documentation technique (en anglais)</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Projet Plato</a></p>`;
+
+    I18N.fr["license.body"] = `
+      <h2>Licence MIT</h2>
+      <p>Copyright (c) 2026 Roberto Canales Mora</p>
+      <p>Projet d'origine : <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">https://robertocanales.com/proyectos#plato</a></p>
+      <p>L'autorisation est accordée par la présente, à titre gratuit, à toute personne obtenant une copie de ce logiciel et des fichiers de documentation associés, d'utiliser le logiciel sans restriction, y compris sans limitation les droits d'utiliser, copier, modifier, fusionner, publier, distribuer, sous-licencier et/ou vendre des copies du logiciel, et d'autoriser les personnes à qui le logiciel est fourni à faire de même, sous réserve des conditions suivantes :</p>
+      <p>En utilisant, copiant, modifiant, distribuant ou publiant des versions dérivées de ce projet, la référence à l'auteur original, <strong>Roberto Canales Mora</strong>, doit toujours être conservée, ainsi que le lien vers <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a>. Cette attribution fait partie de l'avis de copyright et d'autorisation qui doit accompagner toutes les copies ou parties substantielles du logiciel.</p>
+      <p>L'avis de copyright ci-dessus et le présent avis d'autorisation seront inclus dans toutes les copies ou parties substantielles du logiciel.</p>
+      <p>LE LOGICIEL EST FOURNI « EN L'ÉTAT », SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS MAIS SANS S'Y LIMITER LES GARANTIES DE QUALITÉ MARCHANDE, D'ADÉQUATION À UN USAGE PARTICULIER ET D'ABSENCE DE CONTREFAÇON. EN AUCUN CAS LES AUTEURS OU LES TITULAIRES DU COPYRIGHT NE POURRONT ÊTRE TENUS RESPONSABLES D'UNE RÉCLAMATION, D'UN DOMMAGE OU D'UNE AUTRE RESPONSABILITÉ, QUE CE SOIT DANS LE CADRE D'UNE ACTION CONTRACTUELLE, DÉLICTUELLE OU AUTRE, DÉCOULANT DU LOGICIEL, DE SON UTILISATION OU D'AUTRES OPÉRATIONS SUR LE LOGICIEL.</p>
+      <p><a href="#">Fermer</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Projet Plato</a></p>`;
   </script>
 
   <script>
@@ -3833,9 +4262,12 @@
         ctx.fillText(t("cv.mouse"), mx - 10, y0 + 18);
         ctx.font = "500 11px system-ui";
         ctx.fillStyle = "rgba(255,255,255,.82)";
-        ctx.fillText(t("cv.mouse.right"), mx + 58, my - 16);
-        ctx.fillText(t("cv.mouse.left"), mx + 58, my + 6);
-        ctx.fillText(t("cv.mouse.move"), mx + 58, my + 28);
+        // Con maxWidth, un idioma de rótulos largos se comprime dentro del
+        // panel en vez de derramarse fuera del canvas.
+        const mouseTextMax = x0 + panelW - 14 - (mx + 58);
+        ctx.fillText(t("cv.mouse.right"), mx + 58, my - 16, mouseTextMax);
+        ctx.fillText(t("cv.mouse.left"), mx + 58, my + 6, mouseTextMax);
+        ctx.fillText(t("cv.mouse.move"), mx + 58, my + 28, mouseTextMax);
       }
       ctx.restore();
     }
