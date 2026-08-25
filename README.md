@@ -1,5 +1,7 @@
 # Plato
 
+*Read this in [English](README.en.md).*
+
 Simulador 3D en HTML para estudiar el tiro al plato desde la perspectiva real del ojo del tirador. El objetivo no es inventar un juego abstracto, sino construir un laboratorio visual de física aplicada: salida del plato, velocidad, ángulo, respuesta humana, adelanto, dispersión del cartucho y corrección tras el primer y segundo tiro.
 
 Construido por **Roberto Canales Mora**: [robertocanales.com/proyectos#plato](https://robertocanales.com/proyectos#plato). Licencia: [MIT](#14-licencia).
