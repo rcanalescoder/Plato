@@ -682,7 +682,8 @@
     const LANGS = [
       { code: "es", label: "Español" },
       { code: "en", label: "English" },
-      { code: "fr", label: "Français" }
+      { code: "fr", label: "Français" },
+      { code: "de", label: "Deutsch" }
     ];
 
     /*
@@ -1684,6 +1685,336 @@
         "nbk.index.2": "Plato · généré depuis le simulateur, ce n'est pas un document officiel",
         "scheme.robot_abt": "ABT CPSA 2026",
         "scheme.robot_trap1": "Trap1 FITASC 2025"
+      },
+
+      de: {
+        "html.title": "Vorhalte-Labor - Wurfscheibenschießen",
+        "lang.label": "Sprache",
+        "lang.t": "Sprache der Oberfläche. Die Wahl wird in diesem Browser gemerkt.",
+        "lang.caseless": "no",
+
+        "beta.tag": "Projekt in Beta",
+        "beta.text": "Buch und Simulator werden noch überarbeitet. Sie werden geteilt, damit jeder sie ausprobieren und beim Verbessern helfen kann.",
+
+        "aria.toolbar": "Hauptbedienung",
+        "aria.ribType": "Art der Schiene",
+        "aria.scene": "Simulator aus dem Auge des Schützen",
+        "aria.controls": "Physikalische Parameter",
+        "aria.help": "Hilfe zum Simulator",
+        "aria.license": "MIT-Lizenz",
+
+        "btn.call": "Rufen",
+        "btn.call.t": "Ruft eine neue Wurfscheibe. Geht auch mit der rechten Maustaste.",
+        "btn.repeat": "Wiederholen",
+        "btn.repeat.t": "Wiederholt genau die vorige Wurfscheibe vom selben Stand, ohne als neue Scheibe der Serie zu zählen.",
+        "btn.fire": "Schuss",
+        "btn.fire.t": "Feuert die aktuelle Patrone ab. Geht auch mit der linken Maustaste.",
+        "btn.reset": "Reset",
+        "btn.reset.t": "Startet die Serie von 25 Scheiben neu und löscht Schüsse und sichtbare Splitter.",
+        "btn.prevStation": "Stand -",
+        "btn.prevStation.t": "Geht zum vorigen Stand zurück.",
+        "btn.nextStation": "Stand +",
+        "btn.nextStation.t": "Geht zum nächsten Stand weiter.",
+        "btn.flat": "Flach",
+        "btn.flat.t": "Schiene ohne Überhöhung: Zielpunkt und Treffermitte liegen praktisch übereinander.",
+        "btn.high": "Hoch",
+        "btn.high.t": "Schiene mit Überhöhung: der Schuss sitzt etwas über dem Zielpunkt.",
+
+        "stat.state": "Status",
+        "stat.state.t": "Aktuelle Phase des Simulators: Warten, Abzugsverzögerung, Verfolgen, Fallen oder Ende.",
+        "stat.round": "Serie",
+        "stat.round.t": "Zähler der Serie: verbrauchte Scheiben von 25 und getroffene Scheiben. Wiederholungen zählen nicht.",
+        "stat.station": "Stand",
+        "stat.station.t": "Aktueller Schießstand. Die Serie läuft über die Stände 1 bis 5.",
+        "stat.target": "Scheibe",
+        "stat.target.t": "Maschine, Winkel, Höhe auf 10 m und Entfernung der aktuellen Scheibe.",
+        "stat.lead": "Vorhalt",
+        "stat.lead.t": "Ungefährer Abstand zwischen Scheibe und empfohlenem physischem Vorhaltepunkt.",
+        "stat.aim": "Visier",
+        "stat.aim.t": "Aktuelle Winkel des Zielpunkts zur Augenachse des Schützen.",
+        "stat.result": "Ergebnis",
+        "stat.result.t": "Ergebnis des letzten Schusses oder der aktuellen Scheibe.",
+
+        "sw.lead": "Vorhaltehilfe",
+        "sw.lead.t": "Zeigt oder verbirgt den gelben Punkt und Bereich, wohin man zielen sollte, um die Scheibe zu treffen.",
+        "sw.pattern": "Garbe",
+        "sw.pattern.t": "Zeigt oder verbirgt die geschätzte blaue Schrotgarbe dort, wo Sie zielen.",
+        "sw.path": "Flugbahn",
+        "sw.path.t": "Zeigt oder verbirgt die orange Flugbahn der Scheibe.",
+        "sw.ground": "durchsichtiger Boden / Maschinen sehen",
+        "sw.ground.t": "Schaltet zwischen undurchsichtigem und durchsichtigem Boden um, damit man die Maschinen im Graben sieht.",
+        "sw.legend": "Legende",
+        "sw.legend.t": "Zeigt oder verbirgt die Legende der Farben und Zeichen unten rechts.",
+
+        "scene.slowNote": "<strong>Zeitlupe</strong> ist an, damit Sie analysieren können. Für Echtzeit die <strong>Zeitlupe</strong> auf 1.00x stellen.",
+
+        "ctl.mode": "Disziplin",
+        "ctl.mode.t": "Wählen Sie die Disziplin: Universal Trap nutzt fünf Maschinen, Olympia-Trap fünfzehn nach Ständen gruppierte Maschinen, Robot eine einzelne schwenkende Maschine mit einstellbarer Kraft, Höhe und Seitenstreuung.",
+        "mode.universal": "Universal Trap",
+        "mode.olympic": "Olympia-Trap",
+        "mode.robot": "Robot",
+        "ctl.scheme": "Schema",
+        "ctl.scheme.t": "Wählt das offizielle oder simulierte Schema aus Maschinen, Winkeln und Höhen, mit dem jede Scheibe ausgelost wird.",
+        "ctl.station": "Stand",
+        "ctl.station.t": "Anfangs- oder aktueller Stand des Schützen. Die Serie läuft der Reihe nach über 1, 2, 3, 4, 5.",
+        "ctl.guard": "Haltepunkt",
+        "ctl.guard.t": "Legt fest, wohin der Schütze vor dem Rufen zielt: auf die Markierscheibe oder je nach Stand etwas höher.",
+        "guard.neutral": "Neutral",
+        "guard.high": "Hoch nach Stand",
+        "ctl.zoom": "Zoom",
+        "ctl.zoom.t": "Holt die Szene optisch näher, ohne die echte Entfernung zum Graben oder die Physik zu ändern.",
+        "ctl.slow": "Zeitlupe",
+        "ctl.slow.t": "Zeitfaktor des Simulators. 1.00x ist Echtzeit; kleinere Werte helfen beim Analysieren des Vorhalts.",
+        "ctl.reaction": "Verzögerung",
+        "ctl.reaction.t": "Kurze Verzögerung zwischen Ruf und Abwurf aus dem Graben. Im Wettkampf muss der Abwurf sofort wirken; diese Einstellung bildet die Verzögerung von Rufanlage und Wurfmaschine nach.",
+        "ctl.cartridge": "Patrone",
+        "ctl.cartridge.t": "Nenngeschwindigkeit der Patrone. Das Modell rechnet danach eine ungefähre wirksame Minderung ein; es ersetzt keine gemessene ballistische Tabelle der echten Patrone.",
+        "ctl.spread1": "Garbe Schuss 1",
+        "ctl.spread1.t": "Streuung der Schrotgarbe beim ersten Schuss, entspricht der gewählten Würgebohrung.",
+        "ctl.spread2": "Garbe Schuss 2",
+        "ctl.spread2.t": "Streuung der Schrotgarbe beim zweiten Schuss, normalerweise enger.",
+        "ctl.variance": "Streuung",
+        "ctl.variance.t": "Realistische Schwankung von Schuss zu Schuss: verändert Lücken, Verformung und Geschwindigkeit der einzelnen Schrote.",
+        "ctl.analysis": "Analyse",
+        "ctl.analysis.t": "Wie lange Hilfen und Korrekturen nach dem Schuss oder dem Fehler sichtbar bleiben.",
+        "ctl.wind": "Wind",
+        "ctl.wind.t": "Seitenwind auf die Flugbahn der Scheibe. Negativ drückt zur einen Seite, positiv zur anderen.",
+        "ctl.rib": "Überhöhung",
+        "ctl.rib.t": "Ballistische Überhöhung der Laufschiene: der Schuss sitzt über dem Zielpunkt, ohne dass die Schiene optisch breiter wird.",
+        "ctl.robotForce": "Robot Kraft",
+        "ctl.robotForce.t": "Nur Robot: bildet das Spannen oder Lösen der Feder nach. Erhöht oder senkt Geschwindigkeit und Weite der Scheibe.",
+        "ctl.robotPitch": "Robot Höhe",
+        "ctl.robotPitch.t": "Nur Robot: ändert die senkrechte Neigung der Maschine. Hohe Werte geben höhere Scheiben.",
+        "ctl.robotLateral": "Robot Seite",
+        "ctl.robotLateral.t": "Nur Robot: verstärkt die seitliche Streuung des Robots. Hohe Werte geben schrägere Scheiben.",
+
+        "hint.keys": "Pfeiltasten: Visier bewegen. Leertaste: Schuss. Enter: Scheibe rufen. Die gelbe Wolke zeigt, wohin der Zielpunkt gehört; die blaue ist die wahrscheinliche Mitte der Garbe.",
+
+        "nb.button": "Heft erzeugen",
+        "nb.button.busy": "Heft wird erzeugt...",
+        "nb.button.t": "Erzeugt ein druckbares PDF mit der ganzen Serie des aktuellen Schemas. Für jede Scheibe zeichnet es die Flugbahn mit fünf markierten Zeitpunkten und dem Vorhalt, den man dort braucht. Es nimmt die Einstellungen, die Sie gerade gesetzt haben.",
+        "nb.idle": "Druckbares PDF-Heft der ganzen Serie mit den aktuellen Einstellungen: ein Blatt je Scheibe mit fünf Zeitpunkten und ihrem Vorhalt. Universal 25 Blätter, Olympia 15, Robot 25.",
+
+        "link.manual": "Buch",
+        "link.tech": "Technische Dokumentation",
+        "link.help": "Kurzhilfe",
+        "link.license": "MIT-Lizenz",
+
+        "scheme.prefix.universal": "FITASC Universal",
+        "scheme.prefix.olympic": "ISSF Olympia",
+        "scheme.robot_feria": "Kreisender Jahrmarkt-Robot (Modell)",
+        "scheme.robot_extremo": "Extremer Vereins-Robot (Modell)",
+        "scheme.robot_random": "Pseudozufälliger Robot (Modell)",
+
+        "sim.banner.pull": "ZUG",
+        "sim.banner.repeat": "NOCHMAL",
+        "sim.state.idle": "Warten",
+        "sim.state.reaction": "Verzögerung",
+        "sim.state.tracking": "Verfolgen",
+        "sim.state.falling": "Fallen",
+        "sim.state.ended": "Ende",
+        "sim.round.broken": "getroffen",
+        "sim.hidden": "verborgen",
+        "sim.ground": "Boden",
+        "sim.outOfWindow": "Außerhalb des Fensters",
+        "sim.repeat.outOfWindow": "Wiederholung: außerhalb des Fensters",
+        "sim.repeat": "Wiederholung",
+        "sim.hit": "Treffer",
+        "sim.edge": "Rand",
+        "sim.centre": "Mitte",
+        "sim.pellet": "Schrot",
+        "sim.weak": "Schwacher Treffer",
+        "sim.repeat.weak": "Wiederholung, schwacher Treffer",
+        "sim.miss": "Fehler",
+        "sim.repeat.miss": "Wiederholung Fehler",
+        "sim.missWait": "Fehler: 2 Schüsse, warte auf den Fall",
+        "sim.repeat.missWait": "Wiederholung verfehlt: warte auf den Fall",
+        "sim.lost": "Verloren: auf dem Boden",
+        "sim.missLost": "Fehler / verloren: auf dem Boden",
+        "sim.repeat.lost": "Wiederholung verloren: auf dem Boden",
+        "sim.repeat.missLost": "Wiederholung verfehlt / verloren: auf dem Boden",
+        "badge.universal": "FITASC Universal Trap",
+        "badge.olympic": "ISSF Olympia-Trap",
+        "badge.robotPopular": "Vereins-Robot",
+        "badge.inLimits": "Innerhalb der Grenzen",
+        "badge.outLimits": "Außerhalb der Grenzen",
+        "badge.nonStandard": "Nicht regelkonformes Modell",
+        "badge.matches": "Entspricht der offiziellen Tabelle",
+        "badge.review": "Einstellung prüfen",
+        "badge.speed": "Modellgeschwindigkeit",
+        "badge.range": "Weite",
+        "badge.flight": "Flug",
+        "badge.noWind": " · Grundprüfung ohne Wind",
+        "cv.noTarget": "keine Scheibe",
+        "cv.hint": "orange: Scheibe  gelb: idealer Punkt",
+        "cv.leadOk": "Vorhalt stimmt",
+        "cv.ahead": "zu weit vor",
+        "cv.behind": "zu weit hinten",
+        "cv.lineOk": "Linie stimmt",
+        "cv.right": "rechts",
+        "cv.left": "links",
+        "cv.heightOk": "Höhe stimmt",
+        "cv.high": "zu hoch",
+        "cv.low": "zu tief",
+        "cv.missFalling": "Fehler: im Fallen",
+        "cv.redCentre": "rot = Mitte der Garbe",
+        "cv.corrTitle": "Schusskorrektur",
+        "cv.shot1": "Schuss 1",
+        "cv.shot2": "Schuss 2",
+        "cv.leadOkShort": "Vorhalt ok",
+        "cv.delay": "später um",
+        "cv.advance": "vorhalten um",
+        "cv.heightOkShort": "Höhe ok",
+        "cv.lower": "tiefer um",
+        "cv.raise": "höher um",
+        "cv.legend": "Legende",
+        "cv.legend.clay": "orange Scheibe: das echte Ziel",
+        "cv.legend.lead": "gelb: idealer Vorhaltepunkt",
+        "cv.legend.pattern": "blau: geschätzte Schrotgarbe",
+        "cv.legend.aim": "rot: Zielpunkt / wohin Sie schießen",
+        "cv.legend.shotCentre": "hellblau: physische Mitte des Schusses",
+        "cv.legend.hit": "grün: Treffer, der die Scheibe bricht",
+        "cv.legend.path": "orange gestrichelt: Flugbahn der Scheibe",
+        "cv.mouse": "Maus",
+        "cv.mouse.right": "rechts: rufen",
+        "cv.mouse.left": "links: Schuss",
+        "cv.mouse.move": "bewegen: zielen",
+        "cv.wait": "Halt",
+        "spread.open": "offen",
+        "sim.shot": "Schuss",
+
+        "nbk.moment.salida": "Abwurf",
+        "nbk.moment.muy-pronto": "Sehr früh",
+        "nbk.moment.pronto": "Früh",
+        "nbk.moment.ventana": "Gutes Fenster",
+        "nbk.moment.limite": "An der Grenze",
+        "nbk.moment.tarde": "Zu spät",
+        "nbk.moment.muy-tarde": "Viel zu spät",
+        "nbk.note.salida": "erster Blick",
+        "nbk.note.muy-pronto": "hastiger Schuss",
+        "nbk.note.pronto": "schneller Schuss",
+        "nbk.note.ventana": "der bequeme Schuss",
+        "nbk.note.limite": "letzter brauchbarer Schuss",
+        "nbk.note.tarde": "trägt schon nicht mehr gut",
+        "nbk.note.muy-tarde": "Rand des Wurfs",
+        "nbk.range.in": "in Reichweite",
+        "nbk.range.limit": "an der Grenze",
+        "nbk.range.out": "außer Reichweite",
+        "nbk.mode.universal": "Universal Trap",
+        "nbk.mode.olympic": "Olympia-Trap",
+        "nbk.plan.title": "Draufsicht",
+        "nbk.plan.all": "Draufsicht · alle Scheiben des Schemas",
+        "nbk.plan.machine": "Maschine {n}",
+        "nbk.plan.station": "Stand {n}",
+        "nbk.wait": "Halt",
+        "nbk.card.of": "Scheibe {a} von {b}",
+        "nbk.card.station": "Stand",
+        "nbk.card.machine": "Maschine",
+        "nbk.card.angle": "Winkel",
+        "nbk.card.height": "Höhe",
+        "nbk.card.at10": "m auf 10 m",
+        "nbk.card.fall": "Aufschlag",
+        "nbk.card.elev": "Steigung",
+        "nbk.card.framing": "Ausschnitt {z}x über dem Grundfeld von {f}° senkrecht",
+        "nbk.card.turned": " · Ansicht um {h}° waagerecht und {v}° senkrecht gedreht",
+        "nbk.card.warnOwn": "EIGENE EINSTELLUNGEN · DIE VORHALTE DIESES BLATTS GELTEN NUR MIT DIESER KOMBINATION",
+        "nbk.card.warnDefault": "DIE VORHALTE DIESES BLATTS GELTEN NUR MIT DIESEN EINSTELLUNGEN",
+        "nbk.card.foot": "Plato · Heft der Schusspunkte · aus dem Simulator erzeugt, kein amtliches Dokument",
+        "nbk.strip.after": "s nach dem Abwurf",
+        "nbk.strip.clays": "Scheiben",
+        "nbk.strip.right": "rechts",
+        "nbk.strip.left": "links",
+        "nbk.strip.up": "hoch",
+        "nbk.strip.down": "tief",
+        "nbk.strip.lateral": "seitlich",
+        "nbk.strip.vertical": "senkrecht",
+        "nbk.strip.clayAt": "Scheibe auf",
+        "nbk.strip.heightAt": "Höhe",
+        "nbk.strip.realSep": "echter Abstand",
+        "nbk.strip.targets": "Scheiben",
+        "nbk.index.h.station": "Stand",
+        "nbk.index.h.machine": "Masch.",
+        "nbk.index.h.angle": "Winkel",
+        "nbk.index.h.h10": "H. 10 m",
+        "nbk.index.h.fall": "Aufschlag",
+        "nbk.index.h.lead": "Vorhalt im guten Fenster",
+        "nbk.index.note1": "Der Vorhalt ist der, den der Schütze sieht: der scheinbare Abstand zwischen Scheibe und Zielpunkt, senkrecht zur Blickrichtung gemessen.",
+        "nbk.index.note2": "Die Tabelle nimmt den Zeitpunkt «gutes Fenster», den bequemen Schuss; jedes Blatt zeigt die übrigen Zeitpunkte.",
+        "nbk.index.note3": "Rot: Haltepunkt der Waffe.  Orange: die Scheibe.  Gelb: wohin der Zielpunkt gehört.  Gelbe Ellipse: geschätzte Garbe des ersten Schusses.",
+        "nbk.p.cartridge": "Patrone",
+        "nbk.p.rib": "Schiene",
+        "nbk.p.wind": "Wind",
+        "nbk.p.delay": "Verzögerung",
+        "nbk.p.pattern1": "Garbe 1",
+        "nbk.p.hold": "Haltepunkt",
+        "nbk.st.computing": "Vorhalte werden berechnet, {i} von {n}…",
+        "nbk.st.drawing": "Blatt {i} von {n} wird gezeichnet…",
+        "nbk.st.composing": "Titel, Übersicht und Schlussseite werden gesetzt…",
+        "nbk.st.done": "Fertig: {p} Seiten · {mb} MB · {name}",
+        "nbk.st.error": "Fehler",
+        "nbk.file": "plato-heft",
+        "nbk.locale": "de-DE",
+        "nbk.decimal": ",",
+        "nbk.wordBreak": "space",
+
+        "nbk.cover.1": "PLATO · SIMULATOR UND BUCH ZUM WURFSCHEIBENSCHIESSEN",
+        "nbk.cover.2": "Heft der",
+        "nbk.cover.3": "Schusspunkte",
+        "nbk.cover.4": "Was Sie in den Händen halten",
+        "nbk.cover.5": "Eine ganze Serie, Scheibe für Scheibe, genau so, wie der Schütze sie von seinem Stand aus sähe. Für jede Scheibe wird die komplette Flugbahn gezeichnet und darauf fünf Zeitpunkte markiert, verteilt über das Fenster, in dem die Scheibe noch erreichbar ist, plus einer, der schon zu spät ist.",
+        "nbk.cover.6": "Zu jedem Zeitpunkt steht dort, wo die Scheibe ist und wie viel Vorhalt sie braucht, so gemessen, wie das Auge es sieht. Das dient dazu, die Serie vor dem Platz zu planen: was Sie zuerst schießen, wie viel Sie vorhalten und was passiert, wenn Sie zu spät sind.",
+        "nbk.cover.7": "Wie man ein Blatt liest",
+        "nbk.cover.8": "Die große Zahl ist der Vorhalt, wie das Auge ihn wahrnimmt, senkrecht zur Blickrichtung. Darunter steht er auch in Scheibenbreiten und in Grad.",
+        "nbk.cover.9": "Der echte dreidimensionale Abstand steht klein: er enthält die Tiefe, die das Auge nicht sieht, und ist deshalb eine viel größere Zahl.",
+        "nbk.cover.10": "Alle Blätter haben denselben Maßstab, also sind die Vorhalte von Scheibe zu Scheibe vergleichbar. Der Kopf sagt, wie weit die Ansicht gedreht wurde und mit welchem Ausschnitt.",
+        "nbk.cover.11": "Die Farbe jedes Zeitpunkts warnt vor der Entfernung: in Reichweite, an der Grenze oder schon außer Reichweite.",
+        "nbk.cover.12": "Was es nicht ist",
+        "nbk.cover.13": "Es ist keine Messung auf dem Platz: das sind Zahlen aus einem Lehrmodell mit seinen Vereinfachungen. Die letzte Seite erklärt das im Einzelnen.",
+        "nbk.cover.14": "Es lässt keine Anlage zu und bescheinigt keine Flugbahn. Im Wettkampf entscheiden immer die zuständigen Personen.",
+        "nbk.cover.15": "Es ersetzt weder einen Trainer noch die Platzordnung noch die gesetzlichen Vorgaben.",
+        "nbk.cover.16": "Mit diesen Einstellungen erzeugt",
+        "nbk.cover.17": "Ein Blatt je Scheibe, {n} insgesamt, in der Reihenfolge, in der Sie sie in der Serie sähen.",
+        "nbk.cover.18": "Alle Vorhalte in diesem Heft gelten nur für diese Kombination. Mit anderer Patrone, anderer Schiene, anderer Garbe oder mit Wind ändern sich die Zahlen und das Heft taugt nicht mehr: dann muss ein neues her.",
+        "nbk.cover.19": "Das geht im Simulator: ändern, was Sie wollen, und wieder auf «Heft erzeugen» drücken. Auf jedem Blatt sind die Einstellungen farbig hervorgehoben, die nicht die Ausgangswerte sind.",
+        "nbk.cover.20": "Das Projekt",
+        "nbk.cover.21": "Plato ist ein kostenloser Simulator und ein kostenloses Buch zum Erlernen des Wurfscheibenschießens, geschrieben von Roberto Canales Mora. Das Buch erklärt den Platz, die Sicherheit, die Disziplinen und die Geometrie des Vorhalts; der Simulator lässt dieselbe Scheibe wiederholen und dabei eine einzige Größe ändern.",
+        "nbk.cover.22": "Projekt, Kontakt und Quellcode auf GitHub:",
+        "nbk.cover.23": "www.robertocanales.com/proyectos#plato",
+        "nbk.cover.24": "rcanalescoder.github.io/Plato",
+        "nbk.cover.25": "Was auf den nächsten Seiten steht",
+        "nbk.cover.26": "Eine Übersicht der Serie: eine Tabelle mit Stand, Maschine, Winkel, Höhe, Aufschlag und Vorhalt jeder Scheibe, und eine Draufsicht mit allen Flugbahnen zusammen.",
+        "nbk.cover.27": "Der Nutzungshinweis und die Lizenz am Ende. Wenn Sie nur einen Teil drucken, drucken Sie das Blatt mit.",
+        "nbk.cover.28": "Hinweis: die Zahlen in diesem Heft sind eine Schätzung aus einem Lehrmodell, keine Messung auf dem Platz. Lesen Sie Nutzungshinweis und Lizenz auf der letzten Seite, bevor Sie es mit auf den Platz nehmen.",
+        "nbk.cover.29": "Erzeugt am {date} mit dem Simulator Plato  ·  MIT-Lizenz mit Namensnennung  ·  Kein amtliches Dokument",
+        "nbk.close.1": "Nutzungshinweis und Lizenz",
+        "nbk.close.2": "Lesen, bevor Sie irgendetwas aus diesem Heft auf einem Platz anwenden",
+        "nbk.close.3": "Das ist eine Schätzung, keine Messung",
+        "nbk.close.4": "Flugbahnen, Zeiten und Vorhalte stammen aus einem vereinfachten Modell, das aus Höhe und Weite der Scheibe eine sichtbare Wurfparabel löst, mit verringerter Schwerkraft und einem gemeinsamen sichtbaren Abwurf. Es misst keine echte Wurfmaschine, es bildet nicht die ganze Aerodynamik der Scheibe ab und es ersetzt keine ballistische Tabelle der Patrone, die Sie schießen.",
+        "nbk.close.5": "Die Schematabellen geben von den Verbänden veröffentlichte Werte wieder, aber dieses Dokument lässt keine Anlage zu und bescheinigt keine Flugbahn. Im Wettkampf entscheiden immer die zuständigen Personen.",
+        "nbk.close.6": "Die Verantwortung für den Schuss liegt bei Ihnen",
+        "nbk.close.7": "Nehmen Sie diese Zahlen als Ausgangspunkt zum Beobachten und Vergleichen, nie als Anweisung, der man blind folgt. Prüfen Sie Ihre eigenen Werte auf dem Platz, mit Ihrer Waffe, Ihrer Patrone und den Bedingungen des Tages, und korrigieren Sie, was nötig ist.",
+        "nbk.close.8": "Dieses Material ersetzt weder eine Ausbildung vor Ort noch die Platzordnung, die Hilfe eines Trainers oder Büchsenmachers oder die geltenden gesetzlichen Vorgaben. Sicherheit und Schussentscheidungen liegen bei dem, der abdrückt.",
+        "nbk.close.9": "Bevor Sie es mit auf den Platz nehmen",
+        "nbk.close.10": "Prüfen Sie, ob das Schema auf dem Titel wirklich das ist, das geworfen wird. Fragen Sie die Aufsicht, statt es anzunehmen.",
+        "nbk.close.11": "Die Vorhalte hängen von Patrone und Schiene ab, die Sie beim Erzeugen des Hefts eingestellt hatten. Mit anderem Material ändern sich die Zahlen.",
+        "nbk.close.12": "Behandeln Sie jede Zahl als Annahme, die Sie schießend überprüfen, nicht als Ergebnis, das herauskommen müsste.",
+        "nbk.close.13": "MIT-Lizenz mit Namensnennung",
+        "nbk.close.14": "Copyright (c) 2026 Roberto Canales Mora",
+        "nbk.close.15": "Hiermit wird unentgeltlich die Erlaubnis erteilt, diese Software und ihre Dokumentation zu nutzen, zu kopieren, zu ändern, zusammenzuführen, zu veröffentlichen, zu verbreiten, unterzulizenzieren und zu verkaufen, und denen, die sie erhalten, dasselbe zu gestatten, unter einer Bedingung: der Hinweis auf den ursprünglichen Autor, Roberto Canales Mora, ist zusammen mit dem Link auf www.robertocanales.com immer zu erhalten. Diese Namensnennung ist Teil des Urheberrechtshinweises, der allen Kopien beiliegen muss.",
+        "nbk.close.16": "DIE SOFTWARE WIRD «WIE BESEHEN» BEREITGESTELLT, OHNE JEDE AUSDRÜCKLICHE ODER STILLSCHWEIGENDE GEWÄHRLEISTUNG. IN KEINEM FALL HAFTET DER AUTOR FÜR ANSPRÜCHE, SCHÄDEN ODER SONSTIGE VERPFLICHTUNGEN AUS DER SOFTWARE ODER IHRER NUTZUNG.",
+        "nbk.close.17": "Wo alles zu finden ist",
+        "nbk.close.18": "Vollständiges Buch, Simulator und Quellcode:",
+        "nbk.close.19": "www.robertocanales.com/proyectos#plato",
+        "nbk.close.20": "rcanalescoder.github.io/Plato",
+        "nbk.close.21": "rcanalesmora@gmail.com",
+        "nbk.close.22": "Das Projekt ist in Beta",
+        "nbk.close.23": "Buch und Simulator werden noch überarbeitet und werden geteilt, damit jeder sie ausprobieren, Fehler finden und beim Verbessern helfen kann. Wenn Sie etwas finden, das nicht zu Ihrer Erfahrung auf dem Platz, zu der für Sie geltenden Regel oder zu Ihren eigenen Messungen passt, schreiben Sie: genau solche Hinweise machen das Modell besser.",
+        "nbk.close.24": "Plato · Simulator und Buch zum Wurfscheibenschießen · Roberto Canales Mora · MIT-Lizenz mit Namensnennung",
+        "nbk.close.25": "Plato · Heft erzeugt am {date}",
+        "nbk.index.1": "Heft der Schusspunkte",
+        "nbk.index.2": "Plato · aus dem Simulator erzeugt, kein amtliches Dokument",
+        "scheme.robot_abt": "ABT CPSA 2026",
+        "scheme.robot_trap1": "Trap1 FITASC 2025"
       }
     };
 
@@ -2008,6 +2339,84 @@
       <p>L'avis de copyright ci-dessus et le présent avis d'autorisation seront inclus dans toutes les copies ou parties substantielles du logiciel.</p>
       <p>LE LOGICIEL EST FOURNI « EN L'ÉTAT », SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS MAIS SANS S'Y LIMITER LES GARANTIES DE QUALITÉ MARCHANDE, D'ADÉQUATION À UN USAGE PARTICULIER ET D'ABSENCE DE CONTREFAÇON. EN AUCUN CAS LES AUTEURS OU LES TITULAIRES DU COPYRIGHT NE POURRONT ÊTRE TENUS RESPONSABLES D'UNE RÉCLAMATION, D'UN DOMMAGE OU D'UNE AUTRE RESPONSABILITÉ, QUE CE SOIT DANS LE CADRE D'UNE ACTION CONTRACTUELLE, DÉLICTUELLE OU AUTRE, DÉCOULANT DU LOGICIEL, DE SON UTILISATION OU D'AUTRES OPÉRATIONS SUR LE LOGICIEL.</p>
       <p><a href="#">Fermer</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Projet Plato</a></p>`;
+
+    I18N.de["help.body"] = `
+      <h2>Hilfe zum Simulator</h2>
+      <p>Dieses Labor zeigt das Wurfscheibenschießen aus dem Auge des Schützen. Der Kern ist, den Flug der Scheibe lesen zu lernen und zu verstehen, wohin der Zielpunkt gehört, damit die Schrotwolke sie trifft.</p>
+
+      <h3>Disziplinen</h3>
+      <ul>
+        <li><strong>Universal Trap:</strong> fünf Maschinen im Graben. Die orange Markierscheibe in der Mitte gibt die Abwurfreferenz.</li>
+        <li><strong>Olympia-Trap:</strong> fünfzehn nach Ständen gruppierte Maschinen. Die aktive Markierscheibe richtet sich nach dem Stand, von dem geschossen wird.</li>
+        <li><strong>Robot:</strong> eine einzige schwenkende Maschine. Mit eigenen regelkonformen Profilen für ABT CPSA und Trap1 FITASC, dazu verbreitete Modelle ohne Regelbindung.</li>
+        <li><strong>Stand:</strong> in allen Disziplinen, auch bei Robot, wechselt der Schütze in einer Serie von 25 Scheiben über die Stände 1 bis 5. Eine Wiederholung zählt nicht und wechselt den Stand nicht.</li>
+      </ul>
+
+      <h3>Geschwindigkeit und Flugbahn</h3>
+      <ul>
+        <li>Die Scheibe verlässt den Graben mit Geschwindigkeit, Seitenwinkel und Höhe nach dem Schema.</li>
+        <li>Bei <strong>Robot</strong> erzeugen ABT und Trap1 stufenlose Winkel und Höhen innerhalb ihrer offiziellen Grenzen. Die Jahrmarktmodelle nutzen kreisende, pseudozufällige oder extreme Folgen. <strong>Robot Kraft</strong>, <strong>Robot Höhe</strong> und <strong>Robot Seite</strong> erlauben es, absichtlich aus der Norm zu gehen, um zu vergleichen.</li>
+        <li>Die orange gestrichelte Linie zeigt die erwartete Flugbahn. Wenn Sie <strong>Flugbahn</strong> abschalten, verschwindet auch die Hilfslinie zwischen Maschine und Abwurf.</li>
+        <li>Unter dem Boden wird nichts gezeichnet: sobald die Scheibe fällt, schlägt die Hilfe keine unmöglichen Punkte mehr vor.</li>
+      </ul>
+
+      <h3>Patrone und Garbe</h3>
+      <ul>
+        <li>Die Patrone gibt eine Nenngeschwindigkeit vor. Plato nimmt davon 78 % als wirksame Anfangsgeschwindigkeit und einen vereinfachten exponentiellen Luftwiderstand: eine offen erklärte Näherung, keine geeichte Kurve einer bestimmten Charge.</li>
+        <li>Vor dem Schuss ist die blaue Garbe die geschätzte Hülle des Kegels. Nach dem Schuss stammen die eingefrorene blaue Wolke und die Anzeige aus denselben 306 Bahnen, die physikalisch gerechnet wurden.</li>
+        <li>Der Kontakt rechnet mit dem echten Radius der ISSF-Scheibe, 55 mm. Eine Berührung bricht nicht immer: kommt das Schrot in diesem Näherungsmodell mit weniger als 0,55 J an, gilt es als <strong>schwacher Treffer</strong>. Diese Schwelle ist nicht geeicht, um eine echte Scheibe oder Patrone zu bescheinigen.</li>
+        <li><strong>Garbe Schuss 1</strong> und <strong>Garbe Schuss 2</strong> öffnen oder schließen die Garbe, wie es verschiedene Würgebohrungen täten.</li>
+        <li><strong>Streuung</strong> bringt Lücken, Ballungen und kleine Geschwindigkeitsunterschiede zwischen den Schroten ins Spiel. So verhält sich die Garbe wie eine vereinfachte 3D-Wolke und nicht wie ein perfekter Kreis.</li>
+      </ul>
+
+      <h3>Vorhalt</h3>
+      <ul>
+        <li>Die Scheibe fliegt weiter, während das Schrot unterwegs ist. Deshalb zielt man normalerweise nicht genau auf die Scheibe, sondern ein Stück davor.</li>
+        <li>Der gelbe Bereich ist die Vorhaltehilfe: dorthin gehört der rote Punkt, damit die Wolke die Scheibe erreicht.</li>
+        <li>Wenn Sie die <strong>Vorhaltehilfe</strong> ausblenden, wird die Physik weiter gerechnet, nur die gelbe Spur ist nicht mehr zu sehen.</li>
+      </ul>
+
+      <h3>Was auf dem Bildschirm zu sehen ist</h3>
+      <ul>
+        <li><strong>Orange Scheibe:</strong> das echte Ziel.</li>
+        <li><strong>Roter Punkt:</strong> der Zielpunkt; wohin Sie schießen.</li>
+        <li><strong>Gelber Bereich:</strong> idealer Vorhaltepunkt oder -bereich.</li>
+        <li><strong>Blauer Bereich:</strong> geschätzte Hülle vor dem Schuss; gerechnete Wolke nach dem Schuss.</li>
+        <li><strong>Hellblauer Punkt:</strong> physische Mitte des Schusses.</li>
+        <li><strong>Grüner Punkt:</strong> Treffer, der die Scheibe bricht.</li>
+        <li><strong>Markierscheibe S:</strong> sichtbarer Bezug für den Abwurf.</li>
+        <li><strong>Korrekturfenster:</strong> Zusammenfassung, ob der Schuss zu hoch, zu tief, zu weit vor, zu weit hinten oder aus der Linie war.</li>
+      </ul>
+
+      <h3>Wie man damit arbeitet</h3>
+      <ul>
+        <li>Fangen Sie mit niedriger <strong>Zeitlupe</strong> an, um das Verhältnis von Scheibe, Vorhalt und Garbe zu sehen.</li>
+        <li>Erhöhen Sie den Zoom, wenn Markierscheibe oder Scheibe auf Ihrem Bildschirm zu klein wirken.</li>
+        <li>Üben Sie erst mit eingeschalteter gelber Hilfe; blenden Sie sie dann aus, um die Schätzung im Kopf zu trainieren.</li>
+        <li>Mit <strong>Wiederholen</strong> üben Sie einen schwierigen Abwurf, ohne die Serie weiterlaufen zu lassen.</li>
+      </ul>
+
+      <h3>Druckbares Heft</h3>
+      <ul>
+        <li><strong>Heft erzeugen</strong>, unten im Parameterfeld, macht ein PDF im A4-Querformat mit der ganzen Serie des aktiven Schemas: 25 Blätter bei Universal und Robot, 15 bei Olympia.</li>
+        <li>Jedes Blatt zeichnet die Flugbahn einer Scheibe mit fünf markierten Zeitpunkten. Vier liegen in dem Fenster, in dem die Scheibe noch erreichbar ist, der fünfte fällt heraus, damit man sieht, was Zuspätkommen kostet.</li>
+        <li>Zu jedem Zeitpunkt steht, wo die Scheibe ist und wie viel Vorhalt sie braucht, in Zentimetern, in Scheibenbreiten und in Grad.</li>
+        <li>Das Heft entsteht mit <strong>den Einstellungen, die Sie gerade gesetzt haben</strong>. Sie stehen im Kopf jedes Blatts, farbig hervorgehoben, wenn sie nicht die Ausgangswerte sind: mit anderer Schiene oder mit Wind gelten die Zahlen nicht mehr und Sie brauchen ein neues Heft.</li>
+        <li>Es dauert knapp eine Minute und lädt von allein herunter. Es beginnt mit einem Titelblatt, das das Dokument einordnet, und endet mit Nutzungshinweis und Lizenz.</li>
+        <li>Das Heft entsteht in der Sprache, die Sie eingestellt haben.</li>
+      </ul>
+
+      <p><a href="#">Schließen</a> · <a href="en/index.html" target="_blank" rel="noopener">Vollständiges Buch (auf Englisch)</a> · <a href="en/index.html#ingenieria" target="_blank" rel="noopener">Technische Dokumentation (auf Englisch)</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Projekt Plato</a></p>`;
+
+    I18N.de["license.body"] = `
+      <h2>MIT-Lizenz</h2>
+      <p>Copyright (c) 2026 Roberto Canales Mora</p>
+      <p>Ursprüngliches Projekt: <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">https://robertocanales.com/proyectos#plato</a></p>
+      <p>Hiermit wird jeder Person, die eine Kopie dieser Software und der zugehörigen Dokumentation erhält, unentgeltlich die Erlaubnis erteilt, uneingeschränkt mit der Software zu verfahren, einschließlich und ohne Beschränkung der Rechte, sie zu nutzen, zu kopieren, zu ändern, zusammenzuführen, zu veröffentlichen, zu verbreiten, unterzulizenzieren und/oder Kopien davon zu verkaufen, und Personen, denen die Software überlassen wird, dasselbe zu gestatten, unter folgenden Bedingungen:</p>
+      <p>Beim Nutzen, Kopieren, Ändern, Verbreiten oder Veröffentlichen abgeleiteter Fassungen dieses Projekts ist der Hinweis auf den ursprünglichen Autor, <strong>Roberto Canales Mora</strong>, zusammen mit dem Link auf <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a> immer zu erhalten. Diese Namensnennung ist Teil des Urheberrechts- und Erlaubnishinweises, der allen Kopien oder wesentlichen Teilen der Software beiliegen muss.</p>
+      <p>Der obige Urheberrechtshinweis und dieser Erlaubnishinweis sind in allen Kopien oder wesentlichen Teilen der Software beizufügen.</p>
+      <p>DIE SOFTWARE WIRD "WIE BESEHEN" BEREITGESTELLT, OHNE JEDE AUSDRÜCKLICHE ODER STILLSCHWEIGENDE GEWÄHRLEISTUNG, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF DIE GEWÄHRLEISTUNG DER MARKTGÄNGIGKEIT, DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK UND DER NICHTVERLETZUNG VON RECHTEN. IN KEINEM FALL HAFTEN DIE AUTOREN ODER RECHTEINHABER FÜR ANSPRÜCHE, SCHÄDEN ODER SONSTIGE VERPFLICHTUNGEN, OB AUS VERTRAG, UNERLAUBTER HANDLUNG ODER ANDERWEITIG, DIE AUS DER SOFTWARE ODER IHRER NUTZUNG ENTSTEHEN.</p>
+      <p><a href="#">Schließen</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Projekt Plato</a></p>`;
   </script>
 
   <script>
@@ -5604,22 +6013,22 @@ const CuadernoPDF = (function () {
     return cursor;
   }
 
-  function heading(p, value, x, y) {
-    text(p, value, x, y, { size: 21, weight: 700, color: ACCENT });
+  function heading(p, value, x, y, s = 1) {
+    text(p, value, x, y, { size: Math.round(21 * s), weight: 700, color: ACCENT });
     p.save();
     p.strokeStyle = LINE;
     p.lineWidth = 1;
     p.beginPath();
-    p.moveTo(x, y + 32);
-    p.lineTo(x + 60, y + 32);
+    p.moveTo(x, y + 32 * s);
+    p.lineTo(x + 60, y + 32 * s);
     p.stroke();
     p.restore();
-    return y + 52;
+    return y + Math.round(52 * s);
   }
 
-  function bullet(p, value, x, y, maxWidth) {
-    text(p, "·", x, y, { size: 17, weight: 700, color: ACCENT });
-    return paragraph(p, value, x + 18, y, maxWidth - 18) + 6;
+  function bullet(p, value, x, y, maxWidth, s = 1) {
+    text(p, "·", x, y, { size: Math.round(17 * s), weight: 700, color: ACCENT });
+    return paragraph(p, value, x + 18, y, maxWidth - 18, { size: Math.round(17 * s) }) + Math.round(6 * s);
   }
 
   function generatedOn() {
@@ -5630,8 +6039,19 @@ const CuadernoPDF = (function () {
     }
   }
 
-  function renderCoverPage(entries) {
+  /*
+    La portada se compone a una escala tipográfica y devuelve por dónde acabó,
+    para que quien la llama pueda repetirla más pequeña si se ha salido.
+
+    Hace falta porque el texto de la portada no cabe igual en todas las
+    lenguas: el alemán es un 20 % más largo que el español y se salía por
+    abajo. Recortar diez traducciones contra un margen de un píxel habría sido
+    pelearse con el síntoma; que la página se ajuste sola vale para cualquier
+    idioma que venga después, incluido el que no hemos escrito todavía.
+  */
+  function renderCoverPage(entries, s = 1) {
     const { page, p } = newPage();
+    const S = value => Math.round(value * s);
     const left = 92;
     const colW = 740;
     const rightX = 900;
@@ -5648,43 +6068,43 @@ const CuadernoPDF = (function () {
     text(p, `${modeLabel()}  ·  ${schemeLabel()}  ·  ${entries.length} ${t("nbk.strip.targets")}`, left, 272, { size: 25, color: INK_SOFT });
 
     let y = 348;
-    y = heading(p, t("nbk.cover.4"), left, y);
-    y = paragraph(p, t("nbk.cover.5"), left, y, colW);
-    y = paragraph(p, t("nbk.cover.6"), left, y + 10, colW);
+    y = heading(p, t("nbk.cover.4"), left, y, s);
+    y = paragraph(p, t("nbk.cover.5"), left, y, colW, { size: S(17) });
+    y = paragraph(p, t("nbk.cover.6"), left, y + S(10), colW, { size: S(17) });
 
-    y = heading(p, t("nbk.cover.7"), left, y + 26);
-    y = bullet(p, t("nbk.cover.8"), left, y, colW);
-    y = bullet(p, t("nbk.cover.9"), left, y, colW);
-    y = bullet(p, t("nbk.cover.10"), left, y, colW);
-    y = bullet(p, t("nbk.cover.11"), left, y, colW);
+    y = heading(p, t("nbk.cover.7"), left, y + S(26), s);
+    y = bullet(p, t("nbk.cover.8"), left, y, colW, s);
+    y = bullet(p, t("nbk.cover.9"), left, y, colW, s);
+    y = bullet(p, t("nbk.cover.10"), left, y, colW, s);
+    y = bullet(p, t("nbk.cover.11"), left, y, colW, s);
 
-    y = heading(p, t("nbk.cover.12"), left, y + 26);
-    y = bullet(p, t("nbk.cover.13"), left, y, colW);
-    y = bullet(p, t("nbk.cover.14"), left, y, colW);
-    y = bullet(p, t("nbk.cover.15"), left, y, colW);
+    y = heading(p, t("nbk.cover.12"), left, y + S(26), s);
+    y = bullet(p, t("nbk.cover.13"), left, y, colW, s);
+    y = bullet(p, t("nbk.cover.14"), left, y, colW, s);
+    y = bullet(p, t("nbk.cover.15"), left, y, colW, s);
 
     let ry = 348;
-    ry = heading(p, t("nbk.cover.16"), rightX, ry);
+    ry = heading(p, t("nbk.cover.16"), rightX, ry, s);
     p.save();
     p.fillStyle = "#f4f7f9";
     p.fillRect(rightX, ry - 8, rightW, 104);
     p.restore();
-    ry = paragraph(p, paramsLine().replace(/\s+·\s+/g, "   ·   "), rightX + 18, ry + 12, rightW - 36, { size: 16, color: INK });
-    ry += 26;
-    ry = paragraph(p, t("nbk.cover.18"), rightX, ry, rightW, { size: 16, weight: 600 });
+    ry = paragraph(p, paramsLine().replace(/\s+·\s+/g, "   ·   "), rightX + 18, ry + 12, rightW - 36, { size: S(16), color: INK });
+    ry += S(26);
+    ry = paragraph(p, t("nbk.cover.18"), rightX, ry, rightW, { size: S(16), weight: 600 });
     ry = paragraph(p, t("nbk.cover.19"),
-      rightX, ry + 8, rightW, { size: 16, color: INK_SOFT });
+      rightX, ry + S(8), rightW, { size: S(16), color: INK_SOFT });
 
-    ry = heading(p, t("nbk.cover.20"), rightX, ry + 26);
-    ry = paragraph(p, t("nbk.cover.21"), rightX, ry, rightW);
-    ry = paragraph(p, t("nbk.cover.22"), rightX, ry + 10, rightW, { size: 16, color: INK_SOFT });
-    text(p, t("nbk.cover.23"), rightX, ry + 4, { size: 20, weight: 700, color: ACCENT });
-    text(p, t("nbk.cover.24"), rightX, ry + 36, { size: 20, weight: 700, color: ACCENT });
+    ry = heading(p, t("nbk.cover.20"), rightX, ry + S(26), s);
+    ry = paragraph(p, t("nbk.cover.21"), rightX, ry, rightW, { size: S(17) });
+    ry = paragraph(p, t("nbk.cover.22"), rightX, ry + S(10), rightW, { size: S(16), color: INK_SOFT });
+    text(p, t("nbk.cover.23"), rightX, ry + S(4), { size: S(20), weight: 700, color: ACCENT });
+    text(p, t("nbk.cover.24"), rightX, ry + S(36), { size: S(20), weight: 700, color: ACCENT });
 
-    ry = heading(p, t("nbk.cover.25"), rightX, ry + 88);
-    ry = bullet(p, t("nbk.cover.26"), rightX, ry, rightW);
-    ry = bullet(p, t("nbk.cover.17").replace("{n}", entries.length), rightX, ry, rightW);
-    ry = bullet(p, t("nbk.cover.27"), rightX, ry, rightW);
+    ry = heading(p, t("nbk.cover.25"), rightX, ry + S(88), s);
+    ry = bullet(p, t("nbk.cover.26"), rightX, ry, rightW, s);
+    ry = bullet(p, t("nbk.cover.17").replace("{n}", entries.length), rightX, ry, rightW, s);
+    ry = bullet(p, t("nbk.cover.27"), rightX, ry, rightW, s);
 
     p.save();
     p.strokeStyle = LINE;
@@ -5700,11 +6120,28 @@ const CuadernoPDF = (function () {
     text(p, t("nbk.cover.29").replace("{date}", generatedOn()),
       left, PAGE_H - 40, { size: 14, color: INK_SOFT });
 
-    return page;
+    return { page, fondo: Math.max(y, ry) };
   }
 
-  function renderClosingPage() {
+  /*
+    Compone una página probando escalas de mayor a menor y se queda con la
+    primera que cabe. Componer de más cuesta un canvas de texto, nada al lado de
+    las veinticinco fichas con su escena 3D, y evita tener que adivinar de
+    antemano cuánto ocupa cada idioma.
+  */
+  function componerAjustada(pintar, tope) {
+    let ultimo = null;
+    for (const s of [1, 0.94, 0.88, 0.82]) {
+      ultimo = pintar(s);
+      if (ultimo.fondo <= tope) return ultimo.page;
+    }
+    return ultimo.page;
+  }
+
+  // Misma idea que la portada: se compone a una escala y dice por dónde acabó.
+  function renderClosingPage(s = 1) {
     const { page, p } = newPage();
+    const S = value => Math.round(value * s);
     const left = 92;
     const colW = 740;
     const rightX = 900;
@@ -5719,33 +6156,33 @@ const CuadernoPDF = (function () {
     text(p, t("nbk.close.2"), left, 142, { size: 20, color: INK_SOFT });
 
     let y = 214;
-    y = heading(p, t("nbk.close.3"), left, y);
-    y = paragraph(p, t("nbk.close.4"), left, y, colW);
-    y = paragraph(p, t("nbk.close.5"), left, y + 10, colW);
+    y = heading(p, t("nbk.close.3"), left, y, s);
+    y = paragraph(p, t("nbk.close.4"), left, y, colW, { size: S(17) });
+    y = paragraph(p, t("nbk.close.5"), left, y + S(10), colW, { size: S(17) });
 
-    y = heading(p, t("nbk.close.6"), left, y + 26);
-    y = paragraph(p, t("nbk.close.7"), left, y, colW);
-    y = paragraph(p, t("nbk.close.8"), left, y + 10, colW);
+    y = heading(p, t("nbk.close.6"), left, y + S(26), s);
+    y = paragraph(p, t("nbk.close.7"), left, y, colW, { size: S(17) });
+    y = paragraph(p, t("nbk.close.8"), left, y + S(10), colW, { size: S(17) });
 
-    y = heading(p, t("nbk.close.9"), left, y + 26);
-    y = bullet(p, t("nbk.close.10"), left, y, colW);
-    y = bullet(p, t("nbk.close.11"), left, y, colW);
-    y = bullet(p, t("nbk.close.12"), left, y, colW);
+    y = heading(p, t("nbk.close.9"), left, y + S(26), s);
+    y = bullet(p, t("nbk.close.10"), left, y, colW, s);
+    y = bullet(p, t("nbk.close.11"), left, y, colW, s);
+    y = bullet(p, t("nbk.close.12"), left, y, colW, s);
 
     let ry = 214;
-    ry = heading(p, t("nbk.close.13"), rightX, ry);
-    ry = paragraph(p, t("nbk.close.14"), rightX, ry, rightW, { size: 17, weight: 700 });
-    ry = paragraph(p, t("nbk.close.15"), rightX, ry + 8, rightW, { size: 16 });
-    ry = paragraph(p, t("nbk.close.16"), rightX, ry + 10, rightW, { size: 14, color: INK_SOFT, weight: caseless() ? 600 : 400 });
+    ry = heading(p, t("nbk.close.13"), rightX, ry, s);
+    ry = paragraph(p, t("nbk.close.14"), rightX, ry, rightW, { size: S(17), weight: 700 });
+    ry = paragraph(p, t("nbk.close.15"), rightX, ry + S(8), rightW, { size: S(16) });
+    ry = paragraph(p, t("nbk.close.16"), rightX, ry + S(10), rightW, { size: S(14), color: INK_SOFT, weight: caseless() ? 600 : 400 });
 
-    ry = heading(p, t("nbk.close.17"), rightX, ry + 26);
-    ry = paragraph(p, t("nbk.close.18"), rightX, ry, rightW, { size: 16, color: INK_SOFT });
-    text(p, t("nbk.close.19"), rightX, ry + 4, { size: 20, weight: 700, color: ACCENT });
-    text(p, t("nbk.close.20"), rightX, ry + 36, { size: 20, weight: 700, color: ACCENT });
-    text(p, t("nbk.close.21"), rightX, ry + 68, { size: 17, color: INK_SOFT });
+    ry = heading(p, t("nbk.close.17"), rightX, ry + S(26), s);
+    ry = paragraph(p, t("nbk.close.18"), rightX, ry, rightW, { size: S(16), color: INK_SOFT });
+    text(p, t("nbk.close.19"), rightX, ry + S(4), { size: S(20), weight: 700, color: ACCENT });
+    text(p, t("nbk.close.20"), rightX, ry + S(36), { size: S(20), weight: 700, color: ACCENT });
+    text(p, t("nbk.close.21"), rightX, ry + S(68), { size: S(17), color: INK_SOFT });
 
-    ry = heading(p, t("nbk.close.22"), rightX, ry + 122);
-    ry = paragraph(p, t("nbk.close.23"), rightX, ry, rightW, { size: 16 });
+    ry = heading(p, t("nbk.close.22"), rightX, ry + S(122), s);
+    ry = paragraph(p, t("nbk.close.23"), rightX, ry, rightW, { size: S(16) });
 
     p.save();
     p.strokeStyle = LINE;
@@ -5760,7 +6197,7 @@ const CuadernoPDF = (function () {
       left, PAGE_H - 56, { size: 15, color: INK_SOFT });
     text(p, t("nbk.close.25").replace("{date}", generatedOn()), PAGE_W - left, PAGE_H - 56, { size: 15, color: INK_SOFT, align: "right" });
 
-    return page;
+    return { page, fondo: Math.max(y, ry) };
   }
 
   function renderIndexPage(entries) {
@@ -6016,9 +6453,9 @@ const CuadernoPDF = (function () {
         h: PAGE_H
       });
 
-      images.push(asPage(renderClosingPage()));
+      images.push(asPage(componerAjustada(s => renderClosingPage(s), PAGE_H - 76)));
       images.unshift(asPage(renderIndexPage(entries)));
-      images.unshift(asPage(renderCoverPage(entries)));
+      images.unshift(asPage(componerAjustada(s => renderCoverPage(entries, s), PAGE_H - 118)));
 
       const blob = CuadernoPDF.build(images, PT_W, PT_H);
       const name = `${t("nbk.file")}-${LANG}-${params.mode}-${ui.scheme.value}.pdf`;
