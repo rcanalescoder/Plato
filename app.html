@@ -29,7 +29,7 @@
       --good: #9be66f;
       --bad: #ff6b68;
       --rib: #07090a;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Hiragino Sans", "Microsoft YaHei", "Malgun Gothic", "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
     }
 
     * {
@@ -64,6 +64,21 @@
       margin-right: 6px;
       color: #ffb55f;
       text-transform: uppercase;
+    }
+
+    /*
+      En chino, japonés y coreano no hay caja: poner un rótulo en MAYÚSCULAS no
+      lo destaca, sólo estorba al espaciado. En esas lenguas el énfasis lo lleva
+      el peso y el tamaño, que es lo que hace la tipografía CJK de verdad.
+    */
+    html[data-caseless="yes"] .project-beta strong,
+    html[data-caseless="yes"] .banner {
+      letter-spacing: normal;
+      text-transform: none;
+    }
+
+    html[data-caseless="yes"] .banner {
+      font-size: 1.15em;
     }
 
     .project-beta a {
@@ -685,6 +700,7 @@
         "html.title": "Laboratorio de Adelanto - Tiro al Plato",
         "lang.label": "Idioma",
         "lang.t": "Idioma de la aplicación. La elección se recuerda en este navegador.",
+        "lang.caseless": "no",
 
         "beta.tag": "Proyecto en beta",
         "beta.text": "El libro y el simulador están pendientes de revisión. Se comparten para que cualquiera pueda ayudar a mejorarlos.",
@@ -948,6 +964,7 @@
         "nbk.file": "cuaderno-plato",
         "nbk.locale": "es-ES",
         "nbk.decimal": ",",
+        "nbk.wordBreak": "space",
 
         "nbk.cover.1": "PLATO · SIMULADOR Y LIBRO DE TIRO AL PLATO",
         "nbk.cover.2": "Cuaderno de",
@@ -1013,6 +1030,7 @@
         "html.title": "Lead Trainer - Clay Target Shooting",
         "lang.label": "Language",
         "lang.t": "Interface language. Your choice is remembered in this browser.",
+        "lang.caseless": "no",
 
         "beta.tag": "Beta project",
         "beta.text": "The book and the simulator are still under review. They are shared so that anyone can try them out and help improve them.",
@@ -1276,6 +1294,7 @@
         "nbk.file": "plato-notebook",
         "nbk.locale": "en-GB",
         "nbk.decimal": ".",
+        "nbk.wordBreak": "space",
 
         "nbk.cover.1": "PLATO · CLAY TARGET SIMULATOR AND BOOK",
         "nbk.cover.2": "Shot point",
@@ -1341,6 +1360,7 @@
         "html.title": "Laboratoire d'avance - Tir aux plateaux",
         "lang.label": "Langue",
         "lang.t": "Langue de l'interface. Votre choix est mémorisé dans ce navigateur.",
+        "lang.caseless": "no",
 
         "beta.tag": "Projet en bêta",
         "beta.text": "Le livre et le simulateur sont encore en cours de relecture. Ils sont partagés pour que chacun puisse les essayer et aider à les améliorer.",
@@ -1604,6 +1624,7 @@
         "nbk.file": "carnet-plato",
         "nbk.locale": "fr-FR",
         "nbk.decimal": ",",
+        "nbk.wordBreak": "space",
 
         "nbk.cover.1": "PLATO · SIMULATEUR ET LIVRE DE TIR AUX PLATEAUX",
         "nbk.cover.2": "Carnet de",
@@ -1690,11 +1711,26 @@
       return key;
     }
 
+    /*
+      Una sola pila tipográfica para el CSS y para los dos canvas. Lleva
+      respaldo CJK explícito porque system-ui no siempre trae ideogramas: sin
+      esto el cuaderno chino saldría lleno de cuadraditos, y como cada página
+      del PDF es un JPEG del canvas, el fallo quedaría cocido en la imagen.
+    */
+    const FONT_STACK = 'system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Hiragino Sans", "Microsoft YaHei", "Malgun Gothic", "Noto Sans CJK SC", "Noto Sans SC", sans-serif';
+
+    // Separador decimal del idioma activo: la coma o el punto según la lengua.
+    const num = (value, decimals = 1) => Number(value).toFixed(decimals).replace(".", t("nbk.decimal"));
+
+    // Lenguas sin distinción de caja: el énfasis va con peso y tamaño.
+    const caseless = () => t("lang.caseless") === "yes";
+
     function applyLanguage(lang) {
       LANG = I18N[lang] ? lang : "es";
       try { localStorage.setItem("plato.lang", LANG); } catch (error) { /* modo privado */ }
 
       document.documentElement.lang = LANG;
+      document.documentElement.dataset.caseless = caseless() ? "yes" : "no";
       document.title = t("html.title");
 
       document.querySelectorAll("[data-i18n]").forEach(node => { node.textContent = t(node.dataset.i18n); });
@@ -3309,9 +3345,9 @@
       sim.bursts.push({ age: 0, p: impact, hit });
       const edgeHit = hit && shotCenter.distance > radius * 0.65;
       ui.result.textContent = hit
-        ? `${sim.repeatingTarget ? t("sim.repeat") : t("sim.hit")} ${edgeHit ? t("sim.edge") : t("sim.centre")}: ${t("sim.pellet")} ${hitInfo.pellet + 1}/${dirs.length} · ${hitInfo.energy.toFixed(2)} J`
+        ? `${sim.repeatingTarget ? t("sim.repeat") : t("sim.hit")} ${edgeHit ? t("sim.edge") : t("sim.centre")}: ${t("sim.pellet")} ${hitInfo.pellet + 1}/${dirs.length} · ${num(hitInfo.energy, 2)} J`
         : weakContact
-        ? `${sim.repeatingTarget ? t("sim.repeat.weak") : t("sim.weak")} ${nearest.energy.toFixed(2)} J`
+        ? `${sim.repeatingTarget ? t("sim.repeat.weak") : t("sim.weak")} ${num(nearest.energy, 2)} J`
         : `${sim.repeatingTarget ? t("sim.repeat.miss") : t("sim.miss")} ${t("sim.shot")} ${sim.shotCount}/2`;
       ui.result.style.color = hit ? "var(--good)" : "var(--bad)";
       if (hit) {
@@ -3397,7 +3433,7 @@
       const p = projectPoint(point);
       if (p.x < -80 || p.x > canvas.clientWidth + 80 || p.y < -80 || p.y > canvas.clientHeight + 80) return;
       ctx.save();
-      ctx.font = `500 ${size}px system-ui, sans-serif`;
+      ctx.font = `500 ${size}px ${FONT_STACK}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.lineWidth = 4;
@@ -3657,7 +3693,7 @@
       drawTargetPath(Math.min(sim.t + 0.65, 3.4));
       drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
       ctx.fillStyle = "rgba(255,255,255,.9)";
-      ctx.font = "700 12px system-ui";
+      ctx.font = `700 12px ${FONT_STACK}`;
       ctx.textAlign = "center";
       ctx.fillText(t("cv.missFalling"), targetScreen.x, targetScreen.y - 20);
       ui.lead.textContent = "-";
@@ -3731,8 +3767,8 @@
       drawClayDisc(targetScreen.x, targetScreen.y, clamp(targetScreen.scale * 0.2, 5, 17));
 
       const leadM = Math.hypot(recommended.intercept.x - p.x, recommended.intercept.y - p.y, recommended.intercept.z - p.z);
-      ui.lead.textContent = ui.showLead.checked ? (leadAboveGround ? `${leadM.toFixed(1)} m` : t("sim.ground")) : t("sim.hidden");
-      ui.target.textContent = `M${sim.target.machineIndex + 1} · ${Math.round(sim.target.angleDeg)} deg · ${sim.target.heightAt10.toFixed(1)} m/10m · ${Math.round(sim.target.landingDistance)} m`;
+      ui.lead.textContent = ui.showLead.checked ? (leadAboveGround ? `${num(leadM, 1)} m` : t("sim.ground")) : t("sim.hidden");
+      ui.target.textContent = `M${sim.target.machineIndex + 1} · ${Math.round(sim.target.angleDeg)} deg · ${num(sim.target.heightAt10, 1)} m/10m · ${Math.round(sim.target.landingDistance)} m`;
     }
 
     // Keeps the last shot cues visible briefly after break/fail so the user can
@@ -3800,7 +3836,7 @@
         ctx.stroke();
 
         ctx.fillStyle = "rgba(255,255,255,.9)";
-        ctx.font = "500 11px system-ui";
+        ctx.font = `500 11px ${FONT_STACK}`;
         ctx.textAlign = "center";
         ctx.fillText(String(cue.shot), aimScreen.x, aimScreen.y - 10);
         drawClayDisc(targetScreen.x, targetScreen.y, 8, 0.76);
@@ -3933,7 +3969,7 @@
 
     function drawCorrectionLegend(x, y, cue, metrics, verticalOnly = false) {
       ctx.save();
-      ctx.font = "500 12px system-ui";
+      ctx.font = `500 12px ${FONT_STACK}`;
       ctx.textAlign = "left";
       ctx.fillStyle = "rgba(255,255,255,.86)";
       if (!cue) {
@@ -3946,9 +3982,9 @@
         ctx.restore();
         return;
       }
-      const leadText = Math.abs(metrics.lead) < 0.12 ? t("cv.leadOk") : `${metrics.lead > 0 ? t("cv.ahead") : t("cv.behind")} ${Math.abs(metrics.lead).toFixed(1)} m`;
-      const lateralText = Math.abs(metrics.lateral) < 0.12 ? t("cv.lineOk") : `${metrics.lateral > 0 ? t("cv.right") : t("cv.left")} ${Math.abs(metrics.lateral).toFixed(1)} m`;
-      const verticalText = Math.abs(metrics.vertical) < 0.08 ? t("cv.heightOk") : `${metrics.vertical > 0 ? t("cv.high") : t("cv.low")} ${Math.abs(metrics.vertical).toFixed(1)} m`;
+      const leadText = Math.abs(metrics.lead) < 0.12 ? t("cv.leadOk") : `${metrics.lead > 0 ? t("cv.ahead") : t("cv.behind")} ${num(Math.abs(metrics.lead), 1)} m`;
+      const lateralText = Math.abs(metrics.lateral) < 0.12 ? t("cv.lineOk") : `${metrics.lateral > 0 ? t("cv.right") : t("cv.left")} ${num(Math.abs(metrics.lateral), 1)} m`;
+      const verticalText = Math.abs(metrics.vertical) < 0.08 ? t("cv.heightOk") : `${metrics.vertical > 0 ? t("cv.high") : t("cv.low")} ${num(Math.abs(metrics.vertical), 1)} m`;
       ctx.fillText(verticalOnly ? verticalText : `${leadText} · ${lateralText}`, x, y);
       ctx.restore();
     }
@@ -3968,13 +4004,13 @@
       if (axis === "lead") {
         if (abs < 0.12) return { text: t("cv.leadOkShort"), color: "rgba(255,255,255,.72)" };
         return {
-          text: `${value > 0 ? t("cv.delay") : t("cv.advance")} ${abs.toFixed(2)} m`,
+          text: `${value > 0 ? t("cv.delay") : t("cv.advance")} ${num(abs, 2)} m`,
           color: value > 0 ? "rgba(125,183,255,.95)" : "rgba(255,180,84,.95)"
         };
       }
       if (abs < 0.08) return { text: t("cv.heightOkShort"), color: "rgba(255,255,255,.72)" };
       return {
-        text: `${value > 0 ? t("cv.lower") : t("cv.raise")} ${abs.toFixed(2)} m`,
+        text: `${value > 0 ? t("cv.lower") : t("cv.raise")} ${num(abs, 2)} m`,
         color: value > 0 ? "rgba(199,160,255,.95)" : "rgba(155,230,111,.95)"
       };
     }
@@ -3988,7 +4024,7 @@
       ctx.clip();
       ctx.fillStyle = "rgba(255,255,255,.055)";
       ctx.fillRect(x0, y0, bw, bh);
-      ctx.font = "500 11px system-ui";
+      ctx.font = `500 11px ${FONT_STACK}`;
       ctx.fillStyle = "rgba(255,255,255,.86)";
       ctx.textAlign = "left";
       ctx.fillText(label, x0 + 8, y0 + 14);
@@ -4072,7 +4108,7 @@
         const leadInfo = correctionLabel(shotU, "lead");
         const heightInfo = correctionLabel(shotV, "height");
         ctx.textAlign = "left";
-        ctx.font = "500 10px system-ui";
+        ctx.font = `500 10px ${FONT_STACK}`;
         ctx.fillStyle = "rgba(255,255,255,.68)";
         ctx.fillText(t("cv.redCentre"), x0 + 8, y0 + 30);
         ctx.fillStyle = leadInfo.color;
@@ -4102,7 +4138,7 @@
       ctx.roundRect(x0, y0, bw, bh, 8);
       ctx.fill();
       ctx.stroke();
-      ctx.font = "500 12px system-ui";
+      ctx.font = `500 12px ${FONT_STACK}`;
       ctx.fillStyle = "rgba(255,255,255,.9)";
       ctx.textAlign = "left";
       ctx.fillText(t("cv.corrTitle"), x0 + 12, y0 + 18);
@@ -4139,7 +4175,7 @@
         : check.ok ? t("badge.matches") : t("badge.review");
       const statusClass = check.ok ? "ok" : "warn";
       const windText = Math.abs(params.wind) > 0.01 ? t("badge.noWind") : "";
-      normBadge.innerHTML = `<span class="${statusClass}">${check.ok ? "✓" : "!"} ${status}</span> · ${discipline} · M${target.machineIndex + 1} · ${Math.round(target.angleDeg)}° · ${t("badge.speed")} ${check.speedKmh.toFixed(1)} km/h · h10 ${check.height10.toFixed(2)} m/${target.heightAt10.toFixed(2)} m · ${t("badge.range")} ${check.landingDistance.toFixed(1)} m/${target.landingDistance.toFixed(1)} m · ${t("badge.flight")} ${check.flightTime.toFixed(2)} s${windText}`;
+      normBadge.innerHTML = `<span class="${statusClass}">${check.ok ? "✓" : "!"} ${status}</span> · ${discipline} · M${target.machineIndex + 1} · ${Math.round(target.angleDeg)}° · ${t("badge.speed")} ${num(check.speedKmh, 1)} km/h · h10 ${num(check.height10, 2)} m/${num(target.heightAt10, 2)} m · ${t("badge.range")} ${num(check.landingDistance, 1)} m/${num(target.landingDistance, 1)} m · ${t("badge.flight")} ${num(check.flightTime, 2)} s${windText}`;
       normBadge.classList.add("show");
     }
 
@@ -4147,7 +4183,7 @@
       ui.state.textContent = sim.mode === "idle" ? t("sim.state.idle") : sim.mode === "reaction" ? t("sim.state.reaction") : sim.mode === "tracking" ? t("sim.state.tracking") : sim.mode === "falling" ? t("sim.state.falling") : t("sim.state.ended");
       ui.round.textContent = `${sim.roundIndex}/25 · ${sim.broken} ${t("sim.round.broken")}`;
       syncStationUi();
-      ui.aim.textContent = `${((sim.gunYaw - sim.viewYaw) * 180 / Math.PI).toFixed(1)} / ${((sim.gunPitch - sim.viewPitch) * 180 / Math.PI).toFixed(1)} deg`;
+      ui.aim.textContent = `${num((sim.gunYaw - sim.viewYaw) * 180 / Math.PI, 1)} / ${num((sim.gunPitch - sim.viewPitch) * 180 / Math.PI, 1)} deg`;
       if (!sim.target) {
         ui.target.textContent = "-";
         ui.lead.textContent = "-";
@@ -4174,7 +4210,7 @@
       ctx.fill();
       ctx.stroke();
 
-      ctx.font = "600 12px system-ui";
+      ctx.font = `600 12px ${FONT_STACK}`;
       ctx.fillStyle = "rgba(255,255,255,.92)";
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
@@ -4186,7 +4222,7 @@
       let y = y0 + 42;
       function item(text, drawIcon) {
         drawIcon(iconX, y);
-        ctx.font = "500 11px system-ui";
+        ctx.font = `500 11px ${FONT_STACK}`;
         ctx.fillStyle = "rgba(255,255,255,.84)";
         ctx.fillText(text, textX, y, legendRight - textX);
         y += 22;
@@ -4272,10 +4308,10 @@
         ctx.arc(mx + 23, my + 9, 3, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.font = "600 12px system-ui";
+        ctx.font = `600 12px ${FONT_STACK}`;
         ctx.fillStyle = "rgba(255,255,255,.92)";
         ctx.fillText(t("cv.mouse"), mx - 10, y0 + 18);
-        ctx.font = "500 11px system-ui";
+        ctx.font = `500 11px ${FONT_STACK}`;
         ctx.fillStyle = "rgba(255,255,255,.82)";
         // Con maxWidth, un idioma de rótulos largos se comprime dentro del
         // panel en vez de derramarse fuera del canvas.
@@ -4350,19 +4386,19 @@
       }
       updateEye();
       sim.ribGain = Number(ui.rib.value) / 100 * MAX_RIB_GAIN_DEG;
-      ui.slowValue.textContent = `${params.slow.toFixed(2)}x`;
+      ui.slowValue.textContent = `${num(params.slow, 2)}x`;
       ui.slowNote.style.display = params.slow >= 0.995 ? "none" : "block";
-      ui.reactionValue.textContent = `${params.reaction.toFixed(2)} s`;
+      ui.reactionValue.textContent = `${num(params.reaction, 2)} s`;
       ui.cartridgeValue.textContent = `${params.cartridge} m/s`;
       ui.spread1Value.textContent = spreadLabel(params.spread1);
       ui.spread2Value.textContent = spreadLabel(params.spread2);
       ui.pelletVarianceValue.textContent = `${Math.round(params.pelletVariance)}%`;
-      ui.analysisValue.textContent = `${params.analysis.toFixed(1)} s`;
-      ui.windValue.textContent = `${params.wind.toFixed(1)} m/s`;
-      ui.zoomValue.textContent = `${params.zoom.toFixed(2)}x`;
-      ui.ribValue.textContent = `${Math.round(Number(ui.rib.value))}% / ${sim.ribGain.toFixed(2)} deg`;
+      ui.analysisValue.textContent = `${num(params.analysis, 1)} s`;
+      ui.windValue.textContent = `${num(params.wind, 1)} m/s`;
+      ui.zoomValue.textContent = `${num(params.zoom, 2)}x`;
+      ui.ribValue.textContent = `${Math.round(Number(ui.rib.value))}% / ${num(sim.ribGain, 2)} deg`;
       ui.robotForceValue.textContent = `${Math.round(params.robotForce)}%`;
-      ui.robotPitchValue.textContent = `${params.robotPitch > 0 ? "+" : ""}${params.robotPitch.toFixed(0)}°`;
+      ui.robotPitchValue.textContent = `${params.robotPitch > 0 ? "+" : ""}${num(params.robotPitch, 0)}°`;
       ui.robotLateralValue.textContent = `${Math.round(params.robotLateral)}%`;
       syncStationUi();
       ui.flat.setAttribute("aria-pressed", Number(ui.rib.value) < 20 ? "true" : "false");
@@ -4616,7 +4652,6 @@ const CuadernoPDF = (function () {
   // Utilidades
   // ---------------------------------------------------------------------------
 
-  const num = (value, decimals = 1) => Number(value).toFixed(decimals).replace(".", t("nbk.decimal"));
   const signed = (value, decimals = 0) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${num(Math.abs(value), decimals)}`;
   const sleep = () => new Promise(resolve => window.setTimeout(resolve, 0));
 
@@ -4669,21 +4704,21 @@ const CuadernoPDF = (function () {
     p.textAlign = "left";
     p.textBaseline = "top";
     const widthOf = part => {
-      p.font = `${part.changed ? 700 : 400} ${size}px system-ui`;
+      p.font = `${part.changed ? 700 : 400} ${size}px ${FONT_STACK}`;
       return p.measureText(part.text).width;
     };
-    p.font = `400 ${size}px system-ui`;
+    p.font = `400 ${size}px ${FONT_STACK}`;
     const sepWidth = p.measureText(sep).width;
     const total = parts.reduce((sum, part) => sum + widthOf(part), 0) + sepWidth * (parts.length - 1);
     let cursor = align === "right" ? x - total : x;
     parts.forEach((part, i) => {
       if (i) {
-        p.font = `400 ${size}px system-ui`;
+        p.font = `400 ${size}px ${FONT_STACK}`;
         p.fillStyle = INK_SOFT;
         p.fillText(sep, cursor, y);
         cursor += sepWidth;
       }
-      p.font = `${part.changed ? 700 : 400} ${size}px system-ui`;
+      p.font = `${part.changed ? 700 : 400} ${size}px ${FONT_STACK}`;
       p.fillStyle = part.changed ? ACCENT : INK_SOFT;
       p.fillText(part.text, cursor, y);
       cursor += p.measureText(part.text).width;
@@ -4990,7 +5025,7 @@ const CuadernoPDF = (function () {
 
   function haloText(text, x, y, size = 14, align = "center") {
     ctx.save();
-    ctx.font = `700 ${size}px system-ui`;
+    ctx.font = `700 ${size}px ${FONT_STACK}`;
     ctx.textAlign = align;
     ctx.textBaseline = "middle";
     ctx.lineWidth = 4;
@@ -5045,13 +5080,13 @@ const CuadernoPDF = (function () {
     ctx.arc(x + r + 2, box.y, r - 5, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#0e1316";
-    ctx.font = "700 15px system-ui";
+    ctx.font = `700 15px ${FONT_STACK}`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(String(index), x + r + 2, box.y + 0.5);
 
     ctx.fillStyle = "#ffffff";
-    ctx.font = "700 15px system-ui";
+    ctx.font = `700 15px ${FONT_STACK}`;
     ctx.textAlign = "left";
     ctx.fillText(`${seconds} s`, x + r * 2 + 6, box.y + 0.5);
     ctx.restore();
@@ -5154,7 +5189,7 @@ const CuadernoPDF = (function () {
     p.fill();
     p.stroke();
     p.fillStyle = INK_SOFT;
-    p.font = "700 16px system-ui";
+    p.font = `700 16px ${FONT_STACK}`;
     p.textAlign = "left";
     p.textBaseline = "top";
     p.fillText(title, x + 14, y + 11);
@@ -5181,7 +5216,7 @@ const CuadernoPDF = (function () {
     p.save();
     p.strokeStyle = "rgba(18,24,28,.14)";
     p.lineWidth = 1;
-    p.font = "600 11px system-ui";
+    p.font = `600 11px ${FONT_STACK}`;
     p.fillStyle = INK_SOFT;
     p.textAlign = "left";
     p.textBaseline = "bottom";
@@ -5267,7 +5302,7 @@ const CuadernoPDF = (function () {
       p.arc(s.x, s.y, 8.5, 0, Math.PI * 2);
       p.fill();
       p.fillStyle = "#ffffff";
-      p.font = "700 11px system-ui";
+      p.font = `700 11px ${FONT_STACK}`;
       p.textAlign = "center";
       p.textBaseline = "middle";
       p.fillText(String(index + 1), s.x, s.y + 0.5);
@@ -5324,7 +5359,7 @@ const CuadernoPDF = (function () {
     });
     p.globalAlpha = 1;
 
-    p.font = "600 12px system-ui";
+    p.font = `600 12px ${FONT_STACK}`;
     p.textAlign = "left";
     p.textBaseline = "middle";
     colors.forEach((color, index) => {
@@ -5359,7 +5394,7 @@ const CuadernoPDF = (function () {
   */
   function text(p, value, x, y, options = {}) {
     p.save();
-    p.font = `${options.weight || 600} ${options.size || 16}px system-ui`;
+    p.font = `${options.weight || 600} ${options.size || 16}px ${FONT_STACK}`;
     p.fillStyle = options.color || INK;
     p.textAlign = options.align || "left";
     p.textBaseline = options.baseline || "top";
@@ -5402,7 +5437,7 @@ const CuadernoPDF = (function () {
       p.arc(bx + 26, y + 38, 14, 0, Math.PI * 2);
       p.fill();
       p.fillStyle = "#fff";
-      p.font = `700 ${fs(16)}px system-ui`;
+      p.font = `700 ${fs(16)}px ${FONT_STACK}`;
       p.textAlign = "center";
       p.textBaseline = "middle";
       p.fillText(String(index + 1), bx + 26, y + 38.5);
@@ -5482,7 +5517,7 @@ const CuadernoPDF = (function () {
         ? t("nbk.card.warnOwn")
         : t("nbk.card.warnDefault"),
       PAGE_W - 40, 66,
-      { size: 12, weight: 700, color: ACCENT, align: "right" }
+      { size: caseless() ? 14 : 12, weight: 700, color: ACCENT, align: "right" }
     );
     drawParamsLine(p, PAGE_W - 40, 86, 13, "right");
     const turned = Math.abs(framing.yawDeg) > 0.05 || Math.abs(framing.pitchDeg) > 0.05
@@ -5520,20 +5555,40 @@ const CuadernoPDF = (function () {
     encuentre suelto tiene que poder juzgarlo sin más contexto que el papel.
   */
 
+  /*
+    El chino y el japonés no separan palabras con espacios. Si se troceara por
+    espacios, un párrafo entero sería un único token: no habría dónde partir y
+    el texto se saldría de la columna, que es justo lo que pasaba antes.
+
+    En esas lenguas se parte por carácter, que es como parte de verdad la
+    escritura CJK. Lo único que hay que respetar es que ciertos signos no
+    pueden abrir línea (kinsoku shori): una coma o un cierre de comilla
+    huérfanos al principio de renglón se leen fatal.
+  */
+  const CJK_NO_INICIAL = "、。，．：；！？）］｝」』〉》〕・ー々‐–—%,.:;!?)]}»";
+  const CJK_NO_FINAL = "（［｛「『〈《〔«([{";
+
+  function trocear(value) {
+    if (t("nbk.wordBreak") !== "char") return { units: value.split(" "), join: " " };
+    return { units: Array.from(value), join: "" };
+  }
+
   // Escribe un párrafo ajustado a un ancho y devuelve la y siguiente.
   function paragraph(p, value, x, y, maxWidth, options = {}) {
     const size = options.size || 17;
     const lineHeight = options.lineHeight || Math.round(size * 1.6);
     p.save();
-    p.font = `${options.weight || 400} ${size}px system-ui`;
+    p.font = `${options.weight || 400} ${size}px ${FONT_STACK}`;
     p.fillStyle = options.color || INK;
     p.textAlign = "left";
     p.textBaseline = "top";
     let line = "";
     let cursor = y;
-    value.split(" ").forEach(word => {
-      const attempt = line ? `${line} ${word}` : word;
-      if (p.measureText(attempt).width > maxWidth && line) {
+    const { units, join } = trocear(value);
+    units.forEach(word => {
+      const attempt = line ? `${line}${join}${word}` : word;
+      const pegado = join === "" && (CJK_NO_INICIAL.includes(word) || CJK_NO_FINAL.includes(line.slice(-1)));
+      if (!pegado && p.measureText(attempt).width > maxWidth && line) {
         p.fillText(line, x, cursor);
         cursor += lineHeight;
         line = word;
@@ -5681,7 +5736,7 @@ const CuadernoPDF = (function () {
     ry = heading(p, t("nbk.close.13"), rightX, ry);
     ry = paragraph(p, t("nbk.close.14"), rightX, ry, rightW, { size: 17, weight: 700 });
     ry = paragraph(p, t("nbk.close.15"), rightX, ry + 8, rightW, { size: 16 });
-    ry = paragraph(p, t("nbk.close.16"), rightX, ry + 10, rightW, { size: 14, color: INK_SOFT });
+    ry = paragraph(p, t("nbk.close.16"), rightX, ry + 10, rightW, { size: 14, color: INK_SOFT, weight: caseless() ? 600 : 400 });
 
     ry = heading(p, t("nbk.close.17"), rightX, ry + 26);
     ry = paragraph(p, t("nbk.close.18"), rightX, ry, rightW, { size: 16, color: INK_SOFT });
