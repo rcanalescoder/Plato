@@ -52,13 +52,20 @@ for (const item of cola.items) {
   if (item.copy_status !== "ready") { informe.sin_spec.push(item.id); continue; }
 
   if (estado) {
-    if (estado.status === "delivered_with_issue") informe.con_incidencia.push(item.id);
-    else if (estado.status === "blocked") informe.elegibles.push(item.id);   // bloqueado: se puede reintentar
+    // Un rechazo del gate manda sobre el state.json que dejó Codex: si la cola
+    // dice changes_requested, hay que rehacerlo, y su entrega anterior no
+    // puede seguir bloqueándolo. Sin esta regla, un artefacto rechazado queda
+    // invisible para todos: el gate ya opinó y Codex no lo ve como suyo.
+    if (item.status === "changes_requested") informe.elegibles.push(item.id);
+    else if (estado.status === "delivered_with_issue") informe.con_incidencia.push(item.id);
+    else if (estado.status === "blocked") informe.elegibles.push(item.id);
     else informe.esperando_gate.push(item.id);
     continue;
   }
 
   if (reclamado) {
+    // El claim de un intento anterior no reserva el reintento.
+    if (item.status === "changes_requested") { informe.elegibles.push(item.id); continue; }
     const edadMin = (Date.now() - fs.statSync(path.join(dir, "claim")).mtimeMs) / 60000;
     if (edadMin > 45) informe.reservas_caducadas.push({ id: item.id, minutos: Math.round(edadMin) });
     else informe.reclamados.push(item.id);
