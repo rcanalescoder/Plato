@@ -688,7 +688,8 @@
       { code: "pt", label: "Português" },
       { code: "ca", label: "Català" },
       { code: "gl", label: "Galego" },
-      { code: "eu", label: "Euskara" }
+      { code: "eu", label: "Euskara" },
+      { code: "zh", label: "中文" }
     ];
 
     /*
@@ -3678,6 +3679,336 @@
         "nbk.index.2": "Plato · simulagailutik sortua, ez da dokumentu ofiziala",
         "scheme.robot_abt": "ABT CPSA 2026",
         "scheme.robot_trap1": "Trap1 FITASC 2025"
+      },
+
+      zh: {
+        "html.title": "提前量实验室 - 飞碟射击",
+        "lang.label": "语言",
+        "lang.t": "界面语言。你的选择会记在这个浏览器里。",
+        "lang.caseless": "yes",
+
+        "beta.tag": "测试版项目",
+        "beta.text": "这本书和这个模拟器都还在校订中。公开出来是为了让任何人都能试用，并帮忙改进。",
+
+        "aria.toolbar": "主要控制",
+        "aria.ribType": "瞄准带类型",
+        "aria.scene": "从射手眼睛看到的模拟器",
+        "aria.controls": "物理参数",
+        "aria.help": "模拟器帮助",
+        "aria.license": "MIT 许可证",
+
+        "btn.call": "要靶",
+        "btn.call.t": "呼叫一个新飞碟。也可以用鼠标右键呼叫。",
+        "btn.repeat": "重复",
+        "btn.repeat.t": "从同一靶位重复上一个飞碟，不计入本轮的新靶。",
+        "btn.fire": "射击",
+        "btn.fire.t": "打出当前这发子弹。也可以用鼠标左键射击。",
+        "btn.reset": "重置",
+        "btn.reset.t": "重新开始 25 靶的一轮，并清除弹着和可见碎片。",
+        "btn.prevStation": "靶位 -",
+        "btn.prevStation.t": "退回上一个靶位。",
+        "btn.nextStation": "靶位 +",
+        "btn.nextStation.t": "前进到下一个靶位。",
+        "btn.flat": "平直",
+        "btn.flat.t": "无抬高的瞄准带：瞄准点和弹着中心基本重合。",
+        "btn.high": "抬高",
+        "btn.high.t": "有抬高的瞄准带：弹着略高于瞄准点。",
+
+        "stat.state": "状态",
+        "stat.state.t": "模拟器当前阶段：等待、出靶延迟、跟踪、下落或结束。",
+        "stat.round": "本轮",
+        "stat.round.t": "本轮计数：25 靶中已用的靶数和击碎数。重复不计。",
+        "stat.station": "靶位",
+        "stat.station.t": "当前射击靶位。一轮依次轮转 1 到 5 号靶位。",
+        "stat.target": "飞碟",
+        "stat.target.t": "当前飞碟的抛靶机、角度、10 米处高度和距离。",
+        "stat.lead": "提前量",
+        "stat.lead.t": "飞碟与建议的实际提前点之间的大致距离。",
+        "stat.aim": "瞄准",
+        "stat.aim.t": "瞄准点相对射手视线轴的当前角度。",
+        "stat.result": "结果",
+        "stat.result.t": "上一发或当前飞碟的结果。",
+
+        "sw.lead": "提前量辅助",
+        "sw.lead.t": "显示或隐藏黄色的点和区域，也就是为了拦住飞碟该往哪里瞄。",
+        "sw.pattern": "弹丸散布",
+        "sw.pattern.t": "显示或隐藏你瞄准处的蓝色估算弹丸散布。",
+        "sw.path": "轨迹",
+        "sw.path.t": "显示或隐藏飞碟的橙色轨迹。",
+        "sw.ground": "半透明地面 / 看抛靶机",
+        "sw.ground.t": "在不透明地面和半透明地面之间切换，以便看到壕沟下的抛靶机。",
+        "sw.legend": "图例",
+        "sw.legend.t": "显示或隐藏右下角的颜色与符号图例。",
+
+        "scene.slowNote": "<strong>慢动作</strong>已开启，便于分析。想试真实速度，把<strong>慢动作</strong>调到 1.00x。",
+
+        "ctl.mode": "项目",
+        "ctl.mode.t": "选择项目：通用多向用五台抛靶机；奥林匹克多向用十五台按靶位分组的抛靶机；机器人用一台可调力度、高度和左右幅度的摆动抛靶机。",
+        "mode.universal": "通用多向",
+        "mode.olympic": "奥林匹克多向",
+        "mode.robot": "机器人",
+        "ctl.scheme": "方案",
+        "ctl.scheme.t": "选择用来抽取每个飞碟的官方或模拟方案，包含抛靶机、角度和高度。",
+        "ctl.station": "靶位",
+        "ctl.station.t": "射手的起始或当前靶位。一轮按 1、2、3、4、5 轮转推进。",
+        "ctl.guard": "待发点",
+        "ctl.guard.t": "设定射手在要靶前把枪指向哪里：指向标示碟，或按靶位略微抬高。",
+        "guard.neutral": "中性",
+        "guard.high": "按靶位抬高",
+        "ctl.zoom": "视觉缩放",
+        "ctl.zoom.t": "只在视觉上拉近场景，不改变到壕沟的真实距离，也不改变物理。",
+        "ctl.slow": "慢动作",
+        "ctl.slow.t": "模拟器的时间系数。1.00x 是真实速度；数值越小越便于分析提前量。",
+        "ctl.reaction": "出靶延迟",
+        "ctl.reaction.t": "从要靶到飞碟离开壕沟之间的短暂延迟。比赛中出靶必须感觉是即时的；这个设置模拟呼叫系统和抛靶机的延迟。",
+        "ctl.cartridge": "子弹",
+        "ctl.cartridge.t": "子弹的标称初速。模型随后会施加一个近似的有效衰减；它不能代替真实子弹实测的弹道表。",
+        "ctl.spread1": "第一发散布",
+        "ctl.spread1.t": "第一发弹丸散布的张开程度，相当于所选的收缩口。",
+        "ctl.spread2": "第二发散布",
+        "ctl.spread2.t": "第二发弹丸散布的张开程度，通常更收拢。",
+        "ctl.variance": "散布变化",
+        "ctl.variance.t": "发与发之间的真实差异：改变微小空隙、变形和弹丸之间的相对速度。",
+        "ctl.analysis": "分析时长",
+        "ctl.analysis.t": "开枪或失靶之后，各种辅助和修正保持可见的时间。",
+        "ctl.wind": "风",
+        "ctl.wind.t": "作用在飞碟轨迹上的侧风。负值往一边推，正值往另一边。",
+        "ctl.rib": "瞄准带抬高",
+        "ctl.rib.t": "瞄准带的弹道抬高：让弹着落在瞄准点上方，而瞄准带看起来的宽度不变。",
+        "ctl.robotForce": "机器人力度",
+        "ctl.robotForce.t": "仅限机器人：模拟拧紧或放松弹簧。提高或降低飞碟的速度和射程。",
+        "ctl.robotPitch": "机器人高度",
+        "ctl.robotPitch.t": "仅限机器人：改变抛靶机的垂直倾角。数值越高，飞碟越高。",
+        "ctl.robotLateral": "机器人左右",
+        "ctl.robotLateral.t": "仅限机器人：放大机器人的左右幅度。数值越高，飞碟越横。",
+
+        "hint.keys": "方向键：移动瞄准。空格：射击。回车：要靶。黄色的云是瞄准点该去的地方；蓝色的是弹丸散布的可能中心。",
+
+        "nb.button": "生成手册",
+        "nb.button.busy": "正在生成手册…",
+        "nb.button.t": "生成一份可打印的 PDF，包含当前方案的整轮飞碟。每个飞碟都画出轨迹，并在上面标出五个时刻以及每个时刻需要的提前量。使用你此刻的设置。",
+        "nb.idle": "整轮的可打印 PDF 手册，采用当前设置：每个飞碟一页，含五个时刻及其提前量。通用 25 页，奥林匹克 15 页，机器人 25 页。",
+
+        "link.manual": "书",
+        "link.tech": "技术文档",
+        "link.help": "快速帮助",
+        "link.license": "MIT 许可证",
+
+        "scheme.prefix.universal": "FITASC 通用",
+        "scheme.prefix.olympic": "ISSF 奥林匹克",
+        "scheme.robot_feria": "游乐场环形机器人（模型）",
+        "scheme.robot_extremo": "民间极端机器人（模型）",
+        "scheme.robot_random": "伪随机机器人（模型）",
+
+        "sim.banner.pull": "放",
+        "sim.banner.repeat": "重复",
+        "sim.state.idle": "等待",
+        "sim.state.reaction": "延迟",
+        "sim.state.tracking": "跟踪",
+        "sim.state.falling": "下落",
+        "sim.state.ended": "结束",
+        "sim.round.broken": "击碎",
+        "sim.hidden": "已隐藏",
+        "sim.ground": "地面",
+        "sim.outOfWindow": "超出窗口",
+        "sim.repeat.outOfWindow": "重复：超出窗口",
+        "sim.repeat": "重复",
+        "sim.hit": "击碎",
+        "sim.edge": "边缘",
+        "sim.centre": "中心",
+        "sim.pellet": "弹丸",
+        "sim.weak": "轻擦",
+        "sim.repeat.weak": "重复，轻擦",
+        "sim.miss": "失靶",
+        "sim.repeat.miss": "重复失靶",
+        "sim.missWait": "失靶：两发都打了，等它落地",
+        "sim.repeat.missWait": "重复失靶：等它落地",
+        "sim.lost": "丢失：已落地",
+        "sim.missLost": "失靶／丢失：已落地",
+        "sim.repeat.lost": "重复丢失：已落地",
+        "sim.repeat.missLost": "重复失靶／丢失：已落地",
+        "badge.universal": "FITASC 通用多向",
+        "badge.olympic": "ISSF 奥林匹克多向",
+        "badge.robotPopular": "民间机器人",
+        "badge.inLimits": "在范围内",
+        "badge.outLimits": "超出范围",
+        "badge.nonStandard": "非规范模型",
+        "badge.matches": "符合官方表格",
+        "badge.review": "请检查设置",
+        "badge.speed": "模型速度",
+        "badge.range": "射程",
+        "badge.flight": "飞行",
+        "badge.noWind": " · 无风基准校验",
+        "cv.noTarget": "无飞碟",
+        "cv.hint": "橙色：飞碟  黄色：理想点",
+        "cv.leadOk": "提前量正确",
+        "cv.ahead": "提前过多",
+        "cv.behind": "落后",
+        "cv.lineOk": "线路正确",
+        "cv.right": "右",
+        "cv.left": "左",
+        "cv.heightOk": "高度正确",
+        "cv.high": "偏高",
+        "cv.low": "偏低",
+        "cv.missFalling": "失靶：正在下落",
+        "cv.redCentre": "红色 = 散布中心",
+        "cv.corrTitle": "射击修正",
+        "cv.shot1": "第一发",
+        "cv.shot2": "第二发",
+        "cv.leadOkShort": "提前量正确",
+        "cv.delay": "延后",
+        "cv.advance": "提前",
+        "cv.heightOkShort": "高度正确",
+        "cv.lower": "下调",
+        "cv.raise": "上调",
+        "cv.legend": "图例",
+        "cv.legend.clay": "橙色飞碟：真正的目标",
+        "cv.legend.lead": "黄色：理想的提前点或区域",
+        "cv.legend.pattern": "蓝色：估算的弹丸散布",
+        "cv.legend.aim": "红色：瞄准点／你打的地方",
+        "cv.legend.shotCentre": "浅蓝：这一发的实际中心",
+        "cv.legend.hit": "绿色：击碎飞碟的弹着",
+        "cv.legend.path": "橙色虚线：飞碟的轨迹",
+        "cv.mouse": "鼠标",
+        "cv.mouse.right": "右键：要靶",
+        "cv.mouse.left": "左键：射击",
+        "cv.mouse.move": "移动：瞄准",
+        "cv.wait": "待发",
+        "spread.open": "张开",
+        "sim.shot": "第",
+
+        "nbk.moment.salida": "出靶",
+        "nbk.moment.muy-pronto": "非常早",
+        "nbk.moment.pronto": "偏早",
+        "nbk.moment.ventana": "最佳窗口",
+        "nbk.moment.limite": "已到极限",
+        "nbk.moment.tarde": "已经晚了",
+        "nbk.moment.muy-tarde": "太晚了",
+        "nbk.note.salida": "第一眼",
+        "nbk.note.muy-pronto": "仓促的一发",
+        "nbk.note.pronto": "快速的一发",
+        "nbk.note.ventana": "最舒服的一发",
+        "nbk.note.limite": "最后可用的一发",
+        "nbk.note.tarde": "已经打不好了",
+        "nbk.note.muy-tarde": "这一抛的尽头",
+        "nbk.range.in": "在射程内",
+        "nbk.range.limit": "已到极限",
+        "nbk.range.out": "超出有效射程",
+        "nbk.mode.universal": "通用多向",
+        "nbk.mode.olympic": "奥林匹克多向",
+        "nbk.plan.title": "俯视图",
+        "nbk.plan.all": "俯视图 · 本方案的全部飞碟",
+        "nbk.plan.machine": "{n} 号抛靶机",
+        "nbk.plan.station": "{n} 号靶位",
+        "nbk.wait": "待发",
+        "nbk.card.of": "第 {a} 个飞碟，共 {b} 个",
+        "nbk.card.station": "靶位",
+        "nbk.card.machine": "抛靶机",
+        "nbk.card.angle": "角度",
+        "nbk.card.height": "高度",
+        "nbk.card.at10": "米（10 米处）",
+        "nbk.card.fall": "落点",
+        "nbk.card.elev": "仰角",
+        "nbk.card.framing": "取景 {z}x，基准视场 {f}° 垂直",
+        "nbk.card.turned": " · 视角水平转 {h}°，垂直转 {v}°",
+        "nbk.card.warnOwn": "自定设置 · 本页的提前量只在这一组合下成立",
+        "nbk.card.warnDefault": "本页的提前量只在这些设置下成立",
+        "nbk.card.foot": "Plato · 射击点手册 · 由模拟器生成，并非官方文件",
+        "nbk.strip.after": "秒（出靶后）",
+        "nbk.strip.clays": "个碟宽",
+        "nbk.strip.right": "右",
+        "nbk.strip.left": "左",
+        "nbk.strip.up": "上",
+        "nbk.strip.down": "下",
+        "nbk.strip.lateral": "水平",
+        "nbk.strip.vertical": "垂直",
+        "nbk.strip.clayAt": "飞碟距",
+        "nbk.strip.heightAt": "高度",
+        "nbk.strip.realSep": "三维间距",
+        "nbk.strip.targets": "个飞碟",
+        "nbk.index.h.station": "靶位",
+        "nbk.index.h.machine": "机号",
+        "nbk.index.h.angle": "角度",
+        "nbk.index.h.h10": "10 米高",
+        "nbk.index.h.fall": "落点",
+        "nbk.index.h.lead": "最佳窗口的提前量",
+        "nbk.index.note1": "提前量是射手看到的量：飞碟与瞄准点之间的视觉间距，沿垂直于视线的方向测量。",
+        "nbk.index.note2": "表格采用「最佳窗口」这个时刻，也就是最舒服的一发；各页会列出其余时刻。",
+        "nbk.index.note3": "红色：持枪待发点。橙色：飞碟。黄色：瞄准点该放的位置。黄色椭圆：第一发的估算散布。",
+        "nbk.p.cartridge": "子弹",
+        "nbk.p.rib": "瞄准带",
+        "nbk.p.wind": "风",
+        "nbk.p.delay": "延迟",
+        "nbk.p.pattern1": "散布 1",
+        "nbk.p.hold": "待发点",
+        "nbk.st.computing": "正在计算提前量 {i}/{n}…",
+        "nbk.st.drawing": "正在绘制第 {i} 页，共 {n} 页…",
+        "nbk.st.composing": "正在排封面、目录和结尾页…",
+        "nbk.st.done": "完成：{p} 页 · {mb} MB · {name}",
+        "nbk.st.error": "错误",
+        "nbk.file": "plato-shouce",
+        "nbk.locale": "zh-CN",
+        "nbk.decimal": ".",
+        "nbk.wordBreak": "char",
+
+        "nbk.cover.1": "PLATO · 飞碟射击模拟器与书",
+        "nbk.cover.2": "射击点",
+        "nbk.cover.3": "手册",
+        "nbk.cover.4": "你手上拿的是什么",
+        "nbk.cover.5": "完整的一轮，一个飞碟接一个飞碟，正是射手站在自己靶位上会看到的样子。每个飞碟都画出整条轨迹，并在上面标出五个时刻，分布在飞碟仍在射程内的那段窗口里，另加一个已经太晚的时刻。",
+        "nbk.cover.6": "每个时刻都写明飞碟在哪里、要打碎它需要多少提前量，按眼睛看到的样子度量。它的用处是在去场地之前先把这一轮想清楚：先打哪个、提前多少、如果慢了会怎样。",
+        "nbk.cover.7": "每一页怎么读",
+        "nbk.cover.8": "大字是眼睛感知到的提前量，垂直于视线方向。下面还给出碟宽数和角度。",
+        "nbk.cover.9": "三维的真实间距用小字标出：它包含眼睛看不到的纵深，所以数值大得多。",
+        "nbk.cover.10": "所有页面共用同一比例，因此不同飞碟之间的提前量可以直接比较。页眉写明视角转了多少、用了什么取景。",
+        "nbk.cover.11": "每个时刻的颜色提示距离：在射程内、已到极限，或者已经超出有效射程。",
+        "nbk.cover.12": "它不是什么",
+        "nbk.cover.13": "它不是场地实测：这些是教学模型算出的数字，带着它自己的简化。最后一页有详细说明。",
+        "nbk.cover.14": "它不认证任何场地，也不认证任何轨迹。比赛中永远由有资格的人员决定。",
+        "nbk.cover.15": "它不能代替教练、场地规则或法律规定。",
+        "nbk.cover.16": "用这些设置生成",
+        "nbk.cover.17": "每个飞碟一页，共 {n} 页，顺序就是你在这一轮里会遇到的顺序。",
+        "nbk.cover.18": "这本手册里的所有提前量只对这一组合成立。换子弹、换瞄准带、换散布或者刮风，数字就会变，这本手册也就不管用了：得重新生成一本。",
+        "nbk.cover.19": "在模拟器里做：改你想改的，再按一次「生成手册」。每一页上，凡是与初始值不同的设置都会用颜色标出。",
+        "nbk.cover.20": "这个项目",
+        "nbk.cover.21": "Plato 是一套免费的飞碟射击模拟器和书，由 Roberto Canales Mora 编写。书里讲场地、安全、各个项目和提前量的几何；模拟器让你只改一个变量，反复打同一个飞碟。",
+        "nbk.cover.22": "项目、联系方式和源码仓库在 GitHub：",
+        "nbk.cover.23": "www.robertocanales.com/proyectos#plato",
+        "nbk.cover.24": "rcanalescoder.github.io/Plato",
+        "nbk.cover.25": "后面几页有什么",
+        "nbk.cover.26": "本轮的目录：一张表，列出每个飞碟的靶位、抛靶机、角度、高度、落点和提前量，还有一张把所有轨迹放在一起的俯视图。",
+        "nbk.cover.27": "使用须知和许可证在最后。如果你只打印其中一部分，请把那一页也打上。",
+        "nbk.cover.28": "须知：这本手册里的数字是教学模型的估算，不是场地实测。带去场地之前，请先读最后一页的使用须知和许可证。",
+        "nbk.cover.29": "{date} 由 Plato 模拟器生成  ·  MIT 许可证，需署名  ·  并非官方文件",
+        "nbk.close.1": "使用须知与许可证",
+        "nbk.close.2": "把这本手册里的任何内容用到场地上之前，请先读这一页",
+        "nbk.close.3": "这是估算，不是实测",
+        "nbk.close.4": "轨迹、时间和提前量来自一个简化模型，它根据飞碟的高度和射程解出一条视觉抛物线，重力被削弱，出靶点统一。它没有测量任何真实抛靶机，没有还原碟片的全部空气动力学，也不能代替你所用子弹的弹道表。",
+        "nbk.close.5": "各方案的表格复现了各联合会公布的数值，但本文件不认证任何场地，也不认证任何轨迹。比赛中永远由有资格的人员决定。",
+        "nbk.close.6": "开枪的责任在你",
+        "nbk.close.7": "把这些数字当作观察和比较的起点，绝不要当成闭着眼睛照做的指令。带上你自己的枪、你自己的子弹，在当天的条件下到场地上核对你自己的数字，该改就改。",
+        "nbk.close.8": "本材料不能代替面对面的训练、场地规则、教练或枪械师的帮助，也不能代替现行法律规定。安全和射击决定由扣扳机的人负责。",
+        "nbk.close.9": "带去场地之前",
+        "nbk.close.10": "确认封面上的方案确实就是要抛的方案。去问负责人，不要想当然。",
+        "nbk.close.11": "提前量取决于你生成手册时设的子弹和瞄准带。换了器材，数字就会变。",
+        "nbk.close.12": "把每一个数字当作要用实弹去检验的假设，而不是你应该得到的结果。",
+        "nbk.close.13": "MIT 许可证，需署名",
+        "nbk.close.14": "Copyright (c) 2026 Roberto Canales Mora",
+        "nbk.close.15": "特此免费授予使用、复制、修改、合并、发布、分发、再许可和销售本软件及其文档副本的权利，并允许获得本软件的人同样如此，唯一条件是：必须始终保留对原作者 Roberto Canales Mora 的署名，以及指向 www.robertocanales.com 的链接。该署名属于必须随所有副本一同提供的版权声明的一部分。",
+        "nbk.close.16": "本软件按「原样」提供，不附带任何明示或默示的担保。在任何情况下，作者都不对因本软件或其使用而产生的任何索赔、损害或其他责任负责。",
+        "nbk.close.17": "东西都在哪里",
+        "nbk.close.18": "完整的书、模拟器和源代码：",
+        "nbk.close.19": "www.robertocanales.com/proyectos#plato",
+        "nbk.close.20": "rcanalescoder.github.io/Plato",
+        "nbk.close.21": "rcanalesmora@gmail.com",
+        "nbk.close.22": "项目处于测试阶段",
+        "nbk.close.23": "书和模拟器都还在校订中，公开出来是为了让任何人都能试用、找出错误并帮忙改进。如果你发现有什么和你在场地上的经验不符、和适用于你的规则不符，或者和你自己测出的数字不符，请写信来：正是这类反馈让模型变好。",
+        "nbk.close.24": "Plato · 飞碟射击模拟器与书 · Roberto Canales Mora · MIT 许可证，需署名",
+        "nbk.close.25": "Plato · 手册生成于 {date}",
+        "nbk.index.1": "射击点手册",
+        "nbk.index.2": "Plato · 由模拟器生成，并非官方文件",
+        "scheme.robot_abt": "ABT CPSA 2026",
+        "scheme.robot_trap1": "Trap1 FITASC 2025"
       }
     };
 
@@ -4478,6 +4809,84 @@
       <p>Goiko copyright oharra eta baimen ohar hau software osoaren edo zati garrantzitsuen kopia guztietan sartuko dira.</p>
       <p>SOFTWAREA "DAGOEN BEZALA" EMATEN DA, INOLAKO BERMERIK GABE, ESPRESUKI EDO INPLIZITUKI, MERKATURATZEKO EGOKITASUNAREN, HELBURU JAKIN BATERAKO EGOKITASUNAREN ETA EZ URRATZEAREN BERMEAK BARNE BAINA HORIETARA MUGATU GABE. INOLAZ ERE EZ DIRA EGILEAK EDO COPYRIGHT TITULARRAK ERANTZULE IZANGO ERREKLAMAZIO, KALTE EDO BESTELAKO ERANTZUKIZUNENGATIK, KONTRATU EKINTZA BATEAN, KONTRATUZ KANPOKOAN EDO BESTELAKOAN, SOFTWARETIK EDO HAREN ERABILERATIK ERATORRIA.</p>
       <p><a href="#">Itxi</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Plato proiektua</a></p>`;
+
+    I18N.zh["help.body"] = `
+      <h2>模拟器帮助</h2>
+      <p>这个实验室从射手的眼睛来看飞碟射击。核心是学会读飞碟的飞行，并理解瞄准点该放在哪里，才能让弹丸云拦住它。</p>
+
+      <h3>项目</h3>
+      <ul>
+        <li><strong>通用多向：</strong>壕沟里有五台抛靶机。中间那个橙色的标示碟给出出靶参照。</li>
+        <li><strong>奥林匹克多向：</strong>十五台抛靶机按靶位分组。当前的标示碟与你所在的靶位对齐。</li>
+        <li><strong>机器人：</strong>只有一台摆动的抛靶机。内置 ABT CPSA 和 Trap1 FITASC 两套各自的规范参数，另外还有一些不符合规范的民间模型。</li>
+        <li><strong>靶位：</strong>在所有项目里（包括机器人），射手在 25 靶的一轮中依次轮转 1 到 5 号靶位。重复一个飞碟既不计数，也不换靶位。</li>
+      </ul>
+
+      <h3>速度与轨迹</h3>
+      <ul>
+        <li>飞碟以方案规定的速度、水平角度和高度从壕沟口飞出。</li>
+        <li>在<strong>机器人</strong>模式下，ABT 和 Trap1 会在各自的官方范围内生成连续的角度和高度。游乐场模型使用环形、伪随机或极端序列。<strong>机器人力度</strong>、<strong>机器人高度</strong>和<strong>机器人左右</strong>可以故意超出规范，用来做对比。</li>
+        <li>橙色虚线是预计轨迹。关掉<strong>轨迹</strong>后，抛靶机与出靶点之间的引导线也会一并隐藏。</li>
+        <li>地面以下不画任何东西：飞碟落下之后，辅助就不再给出不可能的点。</li>
+      </ul>
+
+      <h3>子弹与散布</h3>
+      <ul>
+        <li>子弹给出一个标称初速。Plato 取其中 78 % 作为有效初速，并用一个简化的指数衰减：这是明说在先的近似，不是某一批次的标定曲线。</li>
+        <li>开枪之前，蓝色散布是弹锥的估算包络。开枪之后，冻结的蓝色云和面板都来自同样经过物理计算的 306 条弹道。</li>
+        <li>碰撞判定采用 ISSF 飞碟的真实半径 55 毫米。擦到并不一定碎：在这个近似模型里，如果弹丸到达时不足 0.55 焦，就记为<strong>轻擦</strong>。这个阈值并未标定，不能用来认证真实的飞碟或子弹。</li>
+        <li><strong>第一发散布</strong>和<strong>第二发散布</strong>可以把散布张开或收拢，就像换了不同的收缩口。</li>
+        <li><strong>散布变化</strong>会引入空隙、聚团和弹丸之间的小幅速度差。这样散布的行为更像一团简化的三维云，而不是一个完美的圆。</li>
+      </ul>
+
+      <h3>提前量</h3>
+      <ul>
+        <li>弹丸在飞的时候，飞碟还在往前走。所以通常不是正对飞碟瞄，而是往前一点。</li>
+        <li>黄色区域就是提前量辅助：红点该放到那里，弹丸云才能追上飞碟。</li>
+        <li>关掉<strong>提前量辅助</strong>后，物理照常计算，只是不再显示那条黄色提示。</li>
+      </ul>
+
+      <h3>屏幕上的元素</h3>
+      <ul>
+        <li><strong>橙色飞碟：</strong>真正的目标。</li>
+        <li><strong>红点：</strong>瞄准点，也就是你打的地方。</li>
+        <li><strong>黄色区域：</strong>理想的提前点或区域。</li>
+        <li><strong>蓝色区域：</strong>开枪前是估算包络；开枪后是经过计算的弹丸云。</li>
+        <li><strong>浅蓝点：</strong>这一发的实际中心。</li>
+        <li><strong>绿点：</strong>击碎飞碟的弹着。</li>
+        <li><strong>标示碟 S：</strong>飞碟出靶的视觉参照。</li>
+        <li><strong>修正窗口：</strong>总结这一发是偏高、偏低、提前过多、落后还是偏离线路。</li>
+      </ul>
+
+      <h3>怎么用</h3>
+      <ul>
+        <li>先把<strong>慢动作</strong>调低，看清飞碟、提前量和散布三者的关系。</li>
+        <li>如果标示碟或飞碟在你的屏幕上太小，就把视觉缩放调大。</li>
+        <li>先开着黄色辅助练；熟了以后关掉它，练自己心里的估计。</li>
+        <li>用<strong>重复</strong>反复练一个难出的靶，而不推进这一轮。</li>
+      </ul>
+
+      <h3>可打印手册</h3>
+      <ul>
+        <li>参数面板最下面的<strong>生成手册</strong>会做出一份 A4 横向 PDF，包含当前方案的整轮飞碟：通用和机器人各 25 页，奥林匹克 15 页。</li>
+        <li>每一页画出一个飞碟的轨迹，上面标着五个时刻。其中四个落在飞碟仍在射程内的窗口里，第五个落在窗口之外，用来看清慢一步要付出什么代价。</li>
+        <li>每个时刻都写明飞碟在哪里、需要多少提前量，单位是厘米、碟宽和角度。</li>
+        <li>手册用的是<strong>你当时的设置</strong>。它们印在每一页的页眉上，凡是与初始值不同的都用颜色标出：换了瞄准带或者刮起风，这些数字就不再成立，得重新生成一本。</li>
+        <li>生成大约要不到一分钟，会自动下载。开头是一页说明文档的封面，结尾是使用须知和许可证。</li>
+        <li>手册会用你当前选定的语言生成。</li>
+      </ul>
+
+      <p><a href="#">关闭</a> · <a href="en/index.html" target="_blank" rel="noopener">完整的书（英文）</a> · <a href="en/index.html#ingenieria" target="_blank" rel="noopener">技术文档（英文）</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Plato 项目</a></p>`;
+
+    I18N.zh["license.body"] = `
+      <h2>MIT 许可证</h2>
+      <p>Copyright (c) 2026 Roberto Canales Mora</p>
+      <p>原始项目：<a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">https://robertocanales.com/proyectos#plato</a></p>
+      <p>特此免费授予任何取得本软件及相关文档副本的人不受限制地处置本软件的权利，包括但不限于使用、复制、修改、合并、发布、分发、再许可和／或销售本软件副本的权利，并允许获得本软件的人同样如此，但须符合以下条件：</p>
+      <p>在使用、复制、修改、分发或发布本项目的衍生版本时，必须始终保留对原作者 <strong>Roberto Canales Mora</strong> 的署名，以及指向 <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">www.robertocanales.com</a> 的链接。该署名属于必须随所有副本或实质性部分一同提供的版权与许可声明的一部分。</p>
+      <p>上述版权声明和本许可声明应包含在本软件的所有副本或实质性部分中。</p>
+      <p>本软件按「原样」提供，不附带任何明示或默示的担保，包括但不限于对适销性、特定用途适用性和不侵权的担保。在任何情况下，作者或版权持有人都不对任何索赔、损害或其他责任负责，无论是合同之诉、侵权之诉还是其他诉由，也无论是否因本软件或其使用而产生。</p>
+      <p><a href="#">关闭</a> · <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">Plato 项目</a></p>`;
   </script>
 
   <script>
