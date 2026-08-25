@@ -26,14 +26,15 @@ function carpeta(item) {
       if (fs.existsSync(d)) return d;
     }
   }
-  for (const cand of [item.id, item.id.split("-").slice(0, 2).join("-")]) {
-    const d = path.join(raiz, "exchange", cand);
-    if (fs.existsSync(d)) return d;
-  }
-  return null;
+  // NUNCA derivar la carpeta del prefijo: 05-08 existe cuatro veces y siete
+  // prefijos aparecen a la vez en subapartados/ y en extras/. Derivarlo mezcla
+  // artefactos distintos, que es como se marcaron seis como aceptados leyendo
+  // el review.md de otro.
+  const exacta = path.join(raiz, "exchange", item.id);
+  return fs.existsSync(exacta) ? exacta : null;
 }
 
-const cuenta = { aceptados: 0, cambios: 0, sin_review: 0, ilegible: 0, ya_estaba: 0 };
+const cuenta = { aceptados: 0, cambios: 0, sin_review: 0, ilegible: 0, ya_estaba: 0, reservas_retiradas: 0 };
 const cambiados = [];
 
 for (const item of cola.items) {
@@ -55,6 +56,22 @@ for (const item of cola.items) {
   item.status = nuevo;
   acepta ? cuenta.aceptados++ : cuenta.cambios++;
 
+  /*
+    Al rechazar hay que retirar la reserva del intento anterior, o el artefacto
+    queda elegible pero imposible de reclamar: mkdir falla porque claim/ existe,
+    y ninguna sesión de Codex puede borrar la reserva de otra. La reserva se
+    archiva, no se borra: es la prueba de quién hizo cada intento.
+  */
+  if (cambia) {
+    const claim = path.join(dir, "claim");
+    if (fs.existsSync(claim)) {
+      let n = 1;
+      while (fs.existsSync(path.join(dir, `claim-intento-${n}`))) n++;
+      fs.renameSync(claim, path.join(dir, `claim-intento-${n}`));
+      cuenta.reservas_retiradas++;
+    }
+  }
+
   // Una entrega aceptada tiene spec por definición: la marca de copy_status
   // se quedaba atrás y dejaba artefactos invisibles para todo el mundo.
   if (acepta && item.copy_status !== "ready") item.copy_status = "ready";
@@ -73,6 +90,7 @@ console.log(`cambios solicitados      : ${cuenta.cambios}`);
 console.log(`ya estaban al día        : ${cuenta.ya_estaba}`);
 console.log(`sin review.md todavía    : ${cuenta.sin_review}`);
 console.log(`review.md sin veredicto  : ${cuenta.ilegible}`);
+console.log(`reservas retiradas       : ${cuenta.reservas_retiradas}`);
 if (cambiados.length && cambiados.length <= 40) {
   console.log();
   cambiados.forEach(c => console.log("  " + c));

@@ -29,11 +29,12 @@ function carpeta(item) {
   for (const campo of ["spec", "state", "claim", "review", "out"]) {
     if (item[campo]) return path.join(raiz, path.dirname(item[campo]).replace(/\/(out|claim)$/, ""));
   }
-  for (const cand of [item.id, item.id.split("-").slice(0, 2).join("-")]) {
-    const d = path.join(raiz, "exchange", cand);
-    if (fs.existsSync(d)) return d;
-  }
-  return null;
+  // NUNCA derivar la carpeta del prefijo: 05-08 existe cuatro veces y siete
+  // prefijos aparecen a la vez en subapartados/ y en extras/. Derivarlo mezcla
+  // artefactos distintos, que es como se marcaron seis como aceptados leyendo
+  // el review.md de otro.
+  const exacta = path.join(raiz, "exchange", item.id);
+  return fs.existsSync(exacta) ? exacta : null;
 }
 
 const existe = p => p && fs.existsSync(p);
