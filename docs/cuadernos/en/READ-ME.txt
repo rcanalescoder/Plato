@@ -1,0 +1,39 @@
+Shot point notebooks · Plato
+=============================
+
+Three printable notebooks, one per discipline. Each opens with a cover that
+explains the document, follows with an index of the round (a table of every clay
+and a plan view), then one sheet per clay, and closes with the notice of use and
+the licence.
+
+Each sheet draws the scene from the shooter's eye, with the full trajectory and
+five moments marked on it. Four of them fall inside the window in which the clay
+is still within reach (release, early, good window, at the limit); the fifth is
+deliberately outside, to show what being late costs. At each moment the sheet
+tells you where the clay is and how much lead you need, in centimetres, in clay
+widths and in degrees.
+
+  plato-notebook-universal-fu1.pdf   Universal Trench, FITASC Universal 1, 25 sheets, 28 pages
+  plato-notebook-olympic-issf1.pdf   Olympic Trap, ISSF Olympic 1, 15 sheets, 18 pages
+  plato-notebook-robot-abt.pdf       Robot, ABT CPSA 2026, 25 sheets, 28 pages
+
+All three were generated with the same settings (cartridge 400 m/s, flat rib, no
+wind, 0.03 s delay, pattern 1 3/4 and neutral hold) so that leads are comparable
+between disciplines.
+
+IMPORTANT: the leads are valid ONLY for the settings the notebook was generated
+with. They are printed in the header of every sheet, and any that are not the
+simulator's start-up values appear highlighted in colour.
+
+You can generate your own notebook, with your own settings, from the simulator:
+the "Generate notebook" button in the parameters panel.
+
+  Simulator and book: https://rcanalescoder.github.io/Plato/en/
+  Project:            https://robertocanales.com/proyectos#plato
+
+These figures are an estimate from a teaching model, not a field measurement.
+They do not certify any installation or trajectory. This material does not
+replace in-person training, the rules of the ground, or the help of an
+instructor. The last page of each notebook carries the full notice and licence.
+
+Roberto Canales Mora · MIT licence with attribution

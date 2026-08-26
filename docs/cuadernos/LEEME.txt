@@ -1,0 +1,41 @@
+Cuadernos de puntos de disparo · Plato
+=======================================
+
+Tres cuadernos imprimibles, uno por modalidad. Cada uno se abre con una portada
+que explica el documento, sigue con un indice de la tirada (tabla de todos los
+platos y vista cenital), despues una ficha por plato, y cierra con el aviso de
+uso y la licencia.
+
+En cada ficha se dibuja la escena desde el ojo del tirador con la trayectoria
+completa y cinco instantes marcados sobre ella. Cuatro caen dentro de la
+ventana en la que el plato todavia esta a tiro (salida, pronto, ventana buena
+y al limite) y el quinto queda a proposito fuera, para ver lo que cuesta
+retrasarse. En cada instante se indica donde esta el plato y cuanto hay que
+adelantar, en centimetros, en anchos de plato y en grados.
+
+IMPORTANTE: los adelantos valen SOLO para los ajustes con los que se genero el
+cuaderno. Van impresos en la cabecera de cada ficha, y los que no son los de
+arranque del simulador aparecen resaltados en color.
+
+  cuaderno-puntos-de-disparo-universal-fu1.pdf   Foso universal, FITASC Universal 1, 25 fichas, 28 paginas
+  cuaderno-puntos-de-disparo-olimpico-issf1.pdf  Foso olimpico, ISSF Olimpica 1, 15 fichas, 18 paginas
+  cuaderno-puntos-de-disparo-robot-abt.pdf       Robot, ABT CPSA 2026, 25 fichas, 28 paginas
+
+Los tres se generaron con los mismos ajustes (cartucho 400 m/s, solista plana,
+sin viento, retardo 0,03 s, plomeo 1 3/4 y guardia neutra) para que los
+adelantos sean comparables entre modalidades.
+
+Puedes generar tu propio cuaderno, con tus ajustes, desde el simulador:
+boton "Generar cuaderno" en el panel de parametros.
+
+  Simulador y libro: https://rcanalescoder.github.io/Plato/
+  Proyecto:          https://robertocanales.com/proyectos#plato
+
+AVISO: las cifras son una estimacion de un modelo pedagogico, no una medida de
+campo. No homologan ninguna instalacion ni certifican ninguna trayectoria.
+Comprueba tus propios numeros en el campo. Este material no sustituye la
+formacion presencial, las normas del campo, la ayuda de un instructor o armero
+ni los requisitos legales vigentes. La ultima pagina de cada cuaderno recoge el
+aviso completo y la licencia.
+
+Roberto Canales Mora · Licencia MIT con atribucion
