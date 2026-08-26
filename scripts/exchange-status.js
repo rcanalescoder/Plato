@@ -53,12 +53,30 @@ for (const item of cola.items) {
   if (item.copy_status !== "ready") { informe.sin_spec.push(item.id); continue; }
 
   if (estado) {
-    // Un rechazo del gate manda sobre el state.json que dejó Codex: si la cola
-    // dice changes_requested, hay que rehacerlo, y su entrega anterior no
-    // puede seguir bloqueándolo. Sin esta regla, un artefacto rechazado queda
-    // invisible para todos: el gate ya opinó y Codex no lo ve como suyo.
-    if (item.status === "changes_requested") informe.elegibles.push(item.id);
-    else if (estado.status === "delivered_with_issue") informe.con_incidencia.push(item.id);
+    /*
+      Cuando la cola dice changes_requested hay dos situaciones muy distintas, y
+      confundirlas deja trabajo invisible durante horas:
+
+      · el rechazo es la última palabra -> hay que rehacerlo: es elegible;
+      · Codex ya ha vuelto a entregar después del rechazo -> le toca al gate.
+
+      Lo dice quién escribió más tarde. review.md sólo lo escribe Claude y
+      state.json sólo lo escribe Codex, así que comparar sus fechas dice de
+      quién es el turno sin necesidad de ningún campo extra.
+
+      La primera versión de esta regla no miraba la fecha y mandaba a elegibles
+      cualquier changes_requested. Resultado: Codex regeneró veintinueve
+      láminas y el informe siguió diciendo "0 esperando el gate" durante cinco
+      horas.
+    */
+    if (item.status === "changes_requested") {
+      const rev = path.join(dir, "review.md");
+      const st = path.join(dir, "state.json");
+      const reentregado = existe(rev) &&
+        fs.statSync(st).mtimeMs > fs.statSync(rev).mtimeMs;
+      if (!reentregado) { informe.elegibles.push(item.id); continue; }
+    }
+    if (estado.status === "delivered_with_issue") informe.con_incidencia.push(item.id);
     else if (estado.status === "blocked") informe.elegibles.push(item.id);
     else informe.esperando_gate.push(item.id);
     continue;
