@@ -113,12 +113,35 @@ for (const [key, expected] of Object.entries(EXPECTED_ROBOT_LIMITS)) {
   assert.strictEqual(actual.rows, undefined, `${key}: no debe fingir una tabla discreta oficial`);
 }
 
+/*
+  Los presets populares tienen que avisar de que no son reglamentarios, y ese
+  aviso lo lee gente en trece idiomas.
+
+  Antes se comprobaba aquí que `standard` contuviera la cadena castellana «no
+  normativo». Eso es justo lo que había que quitar: era texto fijo en español
+  que salía igual en chino y en ruso. Ahora `standard` es null, la interfaz cae
+  a la clave traducida, y lo que se verifica es el mecanismo -- que el preset
+  no se declare normativo y que no traiga texto propio que puentee la
+  traducción -- más que exista el aviso en todos los idiomas.
+*/
 for (const key of ["robot_feria", "robot_extremo", "robot_random"]) {
   const scheme = ROBOT_SCHEMES[key];
   assert(scheme, `Falta el modelo ${key}`);
   assert.strictEqual(scheme.normative, false, `${key}: un preset popular no puede declararse normativo`);
-  assert.match(scheme.name, /modelo/i, `${key}: la UI debe identificarlo como modelo`);
-  assert.match(scheme.standard, /no normativo/i, `${key}: falta advertencia de conformidad`);
+  assert.strictEqual(scheme.standard, null,
+    `${key}: standard debe ser null para que el aviso salga traducido, no en castellano fijo`);
+}
+
+// Los idiomas los declara la propia aplicación: si mañana se añade uno, esta
+// comprobación exige su aviso sin que haya que tocar nada aquí.
+const LANGS = (html.match(/const LANGS = \[([\s\S]*?)\]/) || [, ""])[1]
+  .match(/code:\s*"([a-z-]+)"/g) || [];
+assert(LANGS.length >= 2, "no se han podido leer los idiomas de app.html");
+
+for (const clave of ["badge.nonStandard", "badge.robotPopular"]) {
+  const idiomas = html.match(new RegExp(`"${clave.replace(".", "\\.")}"\\s*:`, "g")) || [];
+  assert(idiomas.length >= LANGS.length,
+    `${clave}: falta en algún idioma (${idiomas.length} de ${LANGS.length})`);
 }
 
 assert(!/then tuned|ajustad[ao]s? para/i.test(html), "Las tablas oficiales no pueden describirse como ajustadas para entrenamiento");
