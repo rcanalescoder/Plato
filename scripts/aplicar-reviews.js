@@ -56,22 +56,6 @@ for (const item of cola.items) {
   item.status = nuevo;
   acepta ? cuenta.aceptados++ : cuenta.cambios++;
 
-  /*
-    Al rechazar hay que retirar la reserva del intento anterior, o el artefacto
-    queda elegible pero imposible de reclamar: mkdir falla porque claim/ existe,
-    y ninguna sesión de Codex puede borrar la reserva de otra. La reserva se
-    archiva, no se borra: es la prueba de quién hizo cada intento.
-  */
-  if (cambia) {
-    const claim = path.join(dir, "claim");
-    if (fs.existsSync(claim)) {
-      let n = 1;
-      while (fs.existsSync(path.join(dir, `claim-intento-${n}`))) n++;
-      fs.renameSync(claim, path.join(dir, `claim-intento-${n}`));
-      cuenta.reservas_retiradas++;
-    }
-  }
-
   // Una entrega aceptada tiene spec por definición: la marca de copy_status
   // se quedaba atrás y dejaba artefactos invisibles para todo el mundo.
   if (acepta && item.copy_status !== "ready") item.copy_status = "ready";
@@ -83,6 +67,31 @@ for (const item of cola.items) {
       try { item.out = JSON.parse(fs.readFileSync(st, "utf8")).out || item.out; } catch {}
     }
   }
+}
+
+/*
+  Invariante: un artefacto rechazado NO puede conservar una reserva viva.
+
+  Si la conserva, queda elegible pero imposible de reclamar: el mkdir de Codex
+  falla porque claim/ existe, y el protocolo le prohíbe borrar la reserva de
+  otra sesión. Antes esto se hacía sólo al cambiar el estado, así que bastaba
+  con que el rechazo se hubiera aplicado en otra pasada para que la reserva se
+  quedara viva; dieciséis artefactos se atascaron así. Ahora se comprueba
+  siempre y sobre toda la cola, que es lo que hace de esto un invariante y no
+  un efecto secundario.
+
+  La reserva se archiva, no se borra: es la prueba de quién hizo cada intento.
+*/
+for (const item of cola.items) {
+  if (item.status !== "changes_requested") continue;
+  const dir = carpeta(item);
+  if (!dir) continue;
+  const claim = path.join(dir, "claim");
+  if (!fs.existsSync(claim)) continue;
+  let n = 1;
+  while (fs.existsSync(path.join(dir, `claim-intento-${n}`))) n++;
+  if (!seco) fs.renameSync(claim, path.join(dir, `claim-intento-${n}`));
+  cuenta.reservas_retiradas++;
 }
 
 console.log(`aceptados marcados ahora : ${cuenta.aceptados}`);
@@ -97,6 +106,9 @@ if (cambiados.length && cambiados.length <= 40) {
 }
 
 if (seco) { console.log("\n--dry-run: no se ha escrito queue.json."); process.exit(0); }
-if (cuenta.aceptados + cuenta.cambios === 0) { console.log("\nNada que cambiar."); process.exit(0); }
+if (cuenta.aceptados + cuenta.cambios === 0) {
+  console.log(cuenta.reservas_retiradas ? "\nSin veredictos nuevos; sólo se han retirado reservas." : "\nNada que cambiar.");
+  process.exit(0);
+}
 fs.writeFileSync(rutaCola, JSON.stringify(cola, null, 2) + "\n");
 console.log("\nqueue.json actualizado.");
