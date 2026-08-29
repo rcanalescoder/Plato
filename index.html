@@ -249,7 +249,29 @@
 <a class="sub-link" href="#s16-13"><span>16.13</span>Control de versiones del manual</a>
 <a class="sub-link" href="#s16-14"><span>16.14</span>Changelog de documentación</a>
 <a class="sub-link" href="#s16-15"><span>16.15</span>Créditos</a></div></details>
-<details class="nav-chapter"><summary><a href="#conclusiones-finales"><span>17</span>Conclusiones útiles del manual</a></summary><div></div></details></aside>
+<details class="nav-chapter"><summary><a href="#mente"><span>17</span>La cabeza del tirador</a></summary><div><a class="sub-link" href="#s17-01"><span>17.1</span>Un deporte que se juega por dentro</a>
+<a class="sub-link" href="#s17-02"><span>17.2</span>Tirar delante de otros</a>
+<a class="sub-link" href="#s17-03"><span>17.3</span>La activación</a>
+<a class="sub-link" href="#s17-04"><span>17.4</span>La respiración como herramienta</a>
+<a class="sub-link" href="#s17-05"><span>17.5</span>La rutina previa al plato</a>
+<a class="sub-link" href="#s17-06"><span>17.6</span>Ojos quietos, mente quieta</a>
+<a class="sub-link" href="#s17-07"><span>17.7</span>El bloqueo</a>
+<a class="sub-link" href="#s17-08"><span>17.8</span>El diálogo interno</a>
+<a class="sub-link" href="#s17-09"><span>17.9</span>El plato fallado se queda atrás</a>
+<a class="sub-link" href="#s17-10"><span>17.10</span>Ensayo mental y autoimagen</a>
+<a class="sub-link" href="#s17-11"><span>17.11</span>Escuelas y ayuda profesional</a></div></details>
+<details class="nav-chapter"><summary><a href="#preparacion-integral"><span>18</span>El cuerpo, la jornada y las modalidades</a></summary><div><a class="sub-link" href="#s18-01"><span>18.1</span>Los pies definen el recorrido</a>
+<a class="sub-link" href="#s18-02"><span>18.2</span>Equilibrio sin rigidez</a>
+<a class="sub-link" href="#s18-03"><span>18.3</span>El cuerpo también se entrena</a>
+<a class="sub-link" href="#s18-04"><span>18.4</span>Calentar y recuperar</a>
+<a class="sub-link" href="#s18-05"><span>18.5</span>La víspera y la maleta</a>
+<a class="sub-link" href="#s18-06"><span>18.6</span>El día de competición</a>
+<a class="sub-link" href="#s18-07"><span>18.7</span>Luz, fondo y contraste</a>
+<a class="sub-link" href="#s18-08"><span>18.8</span>Viento, calor, frío y lluvia</a>
+<a class="sub-link" href="#s18-09"><span>18.9</span>Skeet: dos casas y ocho puestos</a>
+<a class="sub-link" href="#s18-10"><span>18.10</span>Sporting: leer antes de mover</a>
+<a class="sub-link" href="#s18-11"><span>18.11</span>Compak: variedad en un marco compacto</a></div></details>
+<details class="nav-chapter"><summary><a href="#conclusiones-finales"><span>19</span>Conclusiones útiles del manual</a></summary><div></div></details></aside>
   <main id="contenido">
 <section class="chapter book-chapter" id="fundamento">
   <p class="chapter-kicker">Capítulo 01</p>
@@ -2246,7 +2268,7 @@
     <p>Los dos scripts realizan comprobaciones internas. <code>verify-schemes.js</code> puede encontrar datos mal copiados, información incorrecta o ecuaciones que no coinciden con las tablas reglamentarias independientes. <code>verify-ballistics.js</code> puede detectar si un cambio rompe las reglas físicas definidas en el código. Superar estas pruebas no demuestra que los coeficientes reproduzcan una cancha real. Tampoco comprueba por sí solo toda la interacción de la pantalla, todos los navegadores, el diseño adaptable o la accesibilidad.</p>
     <p>La validación externa requeriría datos medidos fuera del propio programa: trayectorias con cámaras calibradas, cronografía bajo protocolo, patrones de papel y discrepancias registradas por versión. La literatura del DLR ofrece un ejemplo de estimación 3D del vuelo y comparación con impacto observado. Reglamentos ISSF y FITASC aportan restricciones, no validan todos los coeficientes. Ninguna batería de software convertiría por sí sola Plato en homologador.</p>
     <aside class="field-note"><strong>Registro mínimo.</strong> Al informar un fallo, anota navegador, modalidad, esquema, puesto, controles visibles, captura, resultado esperado y resultado observado. La interfaz no expone ni exige una semilla: para repetir el blanco usa «Repetir plato»; la reproducción exacta de una nube solo es posible si un diagnóstico técnico conserva su semilla interna.</aside>
-    <aside class="technical-note"><strong>Resultado comprobado.</strong> <code>verify-schemes.js</code> y <code>verify-ballistics.js</code> terminan con código cero sobre la copia revisada. Esto significa que no han encontrado fallos en las comprobaciones programadas. Son revisiones que se pueden repetir sobre el modelo interno, no pruebas experimentales externas. <code>scripts/verify-manual.js</code> solo valida el libro integrado que se va a publicar. Comprueba sus 204 subapartados, las fuentes, los cierres editoriales, los resúmenes y las imágenes PNG. Debe ejecutarse de nuevo después de cualquier cambio de texto o imagen.</aside>
+    <aside class="technical-note"><strong>Resultado comprobado.</strong> <code>verify-schemes.js</code> y <code>verify-ballistics.js</code> terminan con código cero sobre la copia revisada. Esto significa que no han encontrado fallos en las comprobaciones programadas. Son revisiones que se pueden repetir sobre el modelo interno, no pruebas experimentales externas. <code>scripts/verify-manual.js</code> solo valida el libro integrado que se va a publicar. Comprueba sus 226 subapartados, las fuentes, los cierres editoriales, los resúmenes y las imágenes PNG. Debe ejecutarse de nuevo después de cualquier cambio de texto o imagen.</aside>
 </article>
 
   <article class="book-section" id="s09-16" data-section="9.16">
@@ -4003,7 +4025,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <p><code>solveClayLaunch()</code> construye una parábola en el espacio. La curva debe cumplir la altura a 10 m y la distancia de caída. Para ello utiliza una gravedad reducida a <code>9.81 × 0.42</code>. <code>targetAt()</code> añade una desviación lateral sencilla para el viento. El disparo usa el 78 % del valor indicado por el control del cartucho. También utiliza 306 direcciones de perdigón, una pérdida exponencial de velocidad con la distancia y un mínimo interno de <code>0.55 J</code>. <code>CLAY_RADIUS_M</code> vale <code>0.055 m</code>, que es la mitad del diámetro nominal ISSF de 110 mm. El plato se aproxima mediante una esfera porque el modelo no simula su orientación.</p>
     <p>La puntería recomendada repite el cálculo del tiempo de viaje y ajusta los ángulos horizontal y vertical, llamados <em>yaw</em> y <em>pitch</em>. Para hacerlo utiliza la misma física central que emplea el diagnóstico. <strong>Repetir plato</strong> copia la última salida sin aumentar el contador ni cambiar de puesto. Una tirada normal llega a 25 objetivos y rota entre cinco puestos. <strong>Cámara lenta</strong> reduce la velocidad de evolución de la simulación. Las ayudas visuales conservan el tiempo real para que puedan leerse con comodidad.</p>
     <p><code>pelletHitTarget()</code> no comprueba el impacto solo en los instantes muestreados. En cada intervalo, <code>closestPointOnRelativeSegment()</code> calcula la menor distancia continua entre el movimiento del perdigón y el del plato. Después calcula el instante del posible contacto y evalúa allí la distancia y la energía. Así evita perder un cruce que ocurra entre dos pasos de tiempo, dentro de la aproximación lineal de cada tramo. Aun así, el contacto se calcula con una esfera que envuelve al plato. No se simulan la orientación, el borde y la fractura real del disco.</p>
-    <p><code>scripts/verify-schemes.js</code>, con SHA-256 <code>a1e2e667…350946</code>, compara fila por fila 200 registros con datos reglamentarios independientes. Son 50 registros de Universal FITASC y 150 de Olímpico ISSF. <code>scripts/verify-ballistics.js</code>, con SHA-256 <code>2d76d179…42d1fc</code>, prueba el centro, el borde y el exterior. También revisa la energía y el alcance, los chokes, la semilla, la cámara lenta, la ganancia de solista y la guía amarilla. Por último, comprueba la relación entre los tiros 1 y 2. <code>scripts/verify-manual.js</code>, con SHA-256 <code>71d962f3…c699b8</code>, comprueba las 204 unidades, sus imágenes y los resúmenes. Estas pruebas siempre producen el mismo resultado para la misma entrada y comprueban la implementación y la edición. No son una validación experimental de la balística, la máquina, el cartucho o la rotura real.</p>
+    <p><code>scripts/verify-schemes.js</code>, con SHA-256 <code>a1e2e667…350946</code>, compara fila por fila 200 registros con datos reglamentarios independientes. Son 50 registros de Universal FITASC y 150 de Olímpico ISSF. <code>scripts/verify-ballistics.js</code>, con SHA-256 <code>2d76d179…42d1fc</code>, prueba el centro, el borde y el exterior. También revisa la energía y el alcance, los chokes, la semilla, la cámara lenta, la ganancia de solista y la guía amarilla. Por último, comprueba la relación entre los tiros 1 y 2. <code>scripts/verify-manual.js</code> comprueba las 226 unidades, sus imágenes y los resúmenes; su huella debe calcularse sobre la edición que finalmente se publique. Estas pruebas siempre producen el mismo resultado para la misma entrada y comprueban la implementación y la edición. No son una validación experimental de la balística, la máquina, el cartucho o la rotura real.</p>
     <aside class="field-note"><strong>Caso reproducible.</strong> Selecciona Universal, <code>fu1</code>, puesto 3, viento 0 y <code>1.00x</code>; registra las tres huellas y los controles antes de comparar. «Lo probé ayer» no basta si la tabla, el navegador o el código pudieron cambiar.</aside>
     <aside class="technical-note"><strong>Regla de fuente.</strong> Los comentarios explican intención; la expresión ejecutada determina comportamiento; la prueba verifica una propiedad concreta. Si los tres discrepan, se abre una incidencia y no se elige el texto más cómodo.</aside>
 </article>
@@ -4146,7 +4168,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
         <tr><td>Estado documental</td><td>Capítulo revisado el 02/08/2026</td><td>HTML validado e imágenes inspeccionadas</td></tr>
         <tr><td>Revisión publicada</td><td><code>14a8bf6fafa29b3b26699e8c930f78d18d0d0e5c</code></td><td>Contiene todos los archivos auditados</td></tr>
         <tr><td>Simulador revisado</td><td>SHA-256 <code>d1af33c6…686858</code></td><td>Controles y fórmulas de <code>app.html</code></td></tr>
-        <tr><td>Pruebas automatizadas</td><td>SHA-256 <code>a1e2e667…350946</code>, <code>2d76d179…42d1fc</code> y <code>71d962f3…c699b8</code></td><td>Esquemas, balística determinista y auditoría editorial</td></tr>
+        <tr><td>Pruebas automatizadas</td><td>SHA-256 <code>a1e2e667…350946</code>, <code>2d76d179…42d1fc</code> y <code>899bc256…775baf</code></td><td>Esquemas, balística determinista y auditoría editorial</td></tr>
         <tr><td>Fuentes deportivas</td><td>ISSF Second Print 07/2026; FITASC 01/01/2025</td><td>Edición y vigencia visibles</td></tr>
         <tr><td>Activos</td><td>204 PNG, uno por cada subapartado</td><td>Rutas, dimensiones y hashes únicos</td></tr>
         <tr><td>Pendientes de cierre</td><td>Ninguno tras la auditoría editorial y funcional</td><td>Las mejoras futuras se registrarán como nuevas incidencias</td></tr>
@@ -4173,6 +4195,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <p>Cada entrada incluye la fecha real de publicación, la versión o el commit, la categoría, el elemento afectado, el efecto para el lector, la fuente o incidencia y la prueba. Las categorías útiles son <strong>Añadido</strong>, <strong>Cambiado</strong>, <strong>Corregido</strong>, <strong>Retirado</strong>, <strong>Fuentes</strong>, <strong>Licencia</strong> e <strong>Imágenes</strong>. Una frase como «Mejoras varias» no explica el efecto y no permite valorarlo.</p>
     <p>Una función nueva debe explicar el control y el lugar donde aparece. Un parámetro modificado debe indicar el valor anterior, el nuevo, la unidad y el motivo. Una fórmula corregida debe incluir el caso que fallaba y la prueba que ahora supera. Un cambio normativo debe identificar el organismo, la edición, el artículo y los apartados afectados. Si se actualiza una captura o una infografía, hay que explicar si cambió la interfaz, la prueba utilizada o solo la composición visual. Un cambio de licencia debe reproducir con precisión el archivo canónico y recibir revisión jurídica cuando sea necesario.</p>
     <p>El registro de esta producción describe la integración terminada como una edición documentada, sin inventar un número de release: «02/08/2026. Libro completo incorporado en 17 capítulos y 204 unidades. Incluye fuentes visibles, glosario, FAQ, control documental y un PNG propio por subapartado. Se han revisado la estructura HTML, la navegación y las referencias. Los esquemas, la balística interna y el libro se han comprobado mediante <code>scripts/verify-schemes.js</code>, <code>scripts/verify-ballistics.js</code> y <code>scripts/verify-manual.js</code>. La revisión técnica está fijada en el commit <code>14a8bf6…</code>». Esta entrada informa de un trabajo comprobado y de las pruebas realizadas. No equivale a una homologación externa del modelo físico.</p>
+    <p>La copia de trabajo del 29/08/2026 añade los capítulos 17 y 18 sobre psicología aplicada, preparación integral y nuevas modalidades; renumera las conclusiones como capítulo 19 y amplía el manual a 226 unidades. Incorpora veintidós pares de infografías generativas localizadas, referencias científicas y reglamentarias específicas y comprobación de paridad castellano–inglés. Esta entrada seguirá siendo «copia de trabajo» hasta que un commit identifique exactamente los archivos publicados.</p>
     <p>Cuando exista una política de versiones, la sección <em>Unreleased</em>, o «sin publicar», reunirá los cambios hasta la siguiente publicación. Al cerrar la edición, se sustituirá por una fecha y una versión y se enlazará la comparación. El changelog no copia todos los commits, no atribuye autoría por intuición y no oculta correcciones incómodas. Mostrar una rectificación aumenta la confianza porque permite saber qué información quedó anticuada.</p>
     <p>Las fechas proceden del acto de publicación o del commit, nunca del momento en que alguien recuerda haber hecho el cambio.</p>
     <aside class="field-note"><strong>Ejemplo de entrada.</strong> «Corregido: la FAQ de cámara lenta aclara que <code>1.00x</code> es tiempo normal. Afecta 16.10. Evidencia: <code>loop()</code> multiplica <code>realDt</code> por <code>params.slow</code>. Prueba: comparación de duración a 0.50x y 1.00x».</aside>
@@ -4190,7 +4213,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     </figure>
     <p><strong>Autor original, concepto y proyecto.</strong> Plato fue construido por <strong>Roberto Canales Mora</strong>. El aviso canónico identifica «Copyright (c) 2026 Roberto Canales Mora» y la URL original <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">https://robertocanales.com/proyectos#plato</a>. La edición pública del libro y el simulador se consulta en <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">https://rcanalescoder.github.io/Plato/</a>.</p>
     <p><strong>Orientación y material narrativo.</strong> Las preguntas educativas, los ejemplos para principiantes y las observaciones sobre La Bastida proceden de la experiencia personal del autor. También tienen ese origen la repetición de platos, la frustración inicial, la palabra «trillos» y parte del vocabulario de cancha. Cuando no son reglas ni mediciones, el manual los presenta en recuadros propios. La edición de esos recuerdos no los convierte en datos universales.</p>
-    <p><strong>Producción asistida.</strong> La investigación, la redacción organizada y las quince infografías generativas del capítulo 16 se realizaron con OpenAI Codex siguiendo las instrucciones editoriales del proyecto. Cada imagen es una composición original creada para su apartado. No copia las figuras de los artículos o reglamentos enlazados. Las afirmaciones se comprueban con las fuentes visibles y con el código, no con la supuesta autoridad de la herramienta.</p>
+    <p><strong>Producción asistida.</strong> La investigación, la redacción organizada y las quince infografías generativas del capítulo 16, junto con los once pares bilingües del capítulo 17 y los once pares bilingües del capítulo 18, se realizaron con OpenAI Codex siguiendo las instrucciones editoriales del proyecto. Cada imagen es una composición raster original creada para su apartado, con fondo blanco y una versión localizada por idioma. No copia las figuras de los artículos o reglamentos enlazados. Las afirmaciones se comprueban con las fuentes visibles y con el código, no con la supuesta autoridad de la herramienta.</p>
     <p><strong>Tecnologías.</strong> El simulador usa HTML, CSS, JavaScript y Canvas 2D; el libro usa HTML, CSS, JavaScript y PNG. Git y GitHub mantienen historial y publicación; GitHub Pages sirve el sitio estático. Las entidades ISSF, FITASC, BOE, Guardia Civil, autores académicos y fabricantes citados son fuentes, no patrocinadores ni revisores de Plato.</p>
     <p><strong>Colaboradores y revisión.</strong> El 2 de agosto de 2026 no constaba en el material revisado una lista comprobable de revisores técnicos, profesores, clubes o colaboradores que hubieran aprobado este capítulo. Por eso no se atribuye la validación a La Bastida, a una federación o a las personas citadas en los estudios. Cuando alguien revise una edición, se registrarán su nombre, función, alcance, fecha y versión. La palabra «revisor» no significará que esa persona aprueba todo el proyecto.</p>
     <p><strong>Contrato editorial implementado.</strong> La edición revisada tiene una portada reconocible, un subtítulo explicativo y una captura real del simulador en la cabecera. También incluye un aviso de seguridad y otro sobre su finalidad educativa. Ofrece un índice general, búsqueda de texto, botones para abrir <code>app.html</code> y navegación lateral por capítulos y apartados. Los capítulos pueden desplegarse y la sección activa aparece resaltada. Cada apartado termina con referencias. Además, existe una calculadora de costes y un diseño que se adapta mediante CSS al ordenador, la tableta y el móvil. La hoja de estilos incluye una versión para imprimir desde el navegador. Todas estas funciones pueden comprobarse en los archivos publicados. No se presentan como trabajo futuro ni como aportaciones externas.</p>
@@ -4213,8 +4236,355 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     </ul>
   </div>
 </section>
-<section class="chapter book-chapter final-conclusions" id="conclusiones-finales">
+<section class="chapter book-chapter" id="mente">
   <p class="chapter-kicker">Capítulo 17</p>
+  <h2>La cabeza del tirador</h2>
+  <p class="opening">Hasta aquí hemos ordenado la seguridad, la cancha, el arma, los fallos y la geometría. Falta la pieza que decide si todo eso aparece cuando importa: la cabeza. El tiro al plato es un deporte de gesto cerrado. Nadie te defiende, nadie te empuja y nadie decide por ti cuándo empezar. El plato sale cuando tú lo pides. Esa libertad es también su dificultad: entre plato y plato hay tiempo para pensar, y no todo pensamiento ayuda.</p>
+  <p class="opening">Este capítulo reúne lo que la psicología del deporte ha comprobado en disciplinas de precisión y lo traduce a la cancha. No sustituye a un profesor ni a un psicólogo deportivo. Da nombres a cosas que ya has sentido, ofrece herramientas sencillas y separa lo que tiene evidencia de lo que solo es tradición. Se apoya en los capítulos 6, 7 y 12, y usa su misma regla: cada intento, una pregunta clara.</p>
+
+  <article class="book-section" id="s17-01" data-section="17.1">
+    <span class="section-number">17.1</span>
+    <h3>Un deporte que se juega por dentro</h3>
+  <p class="section-bridge">El capítulo 7 ordenó el aprendizaje del gesto. Este capítulo ordena a la persona que lo ejecuta.</p>
+    <p class="section-lead">En los deportes de oposición, el rival aprieta desde fuera. En el tiro, el que aprieta va contigo: es tu propio sistema nervioso.</p>
+    <p>En psicología motora, el tiro se describe como una habilidad cerrada y autoiniciada. Cerrada no significa invariable: cambian la luz, el viento, la trayectoria, la fatiga y el entorno. Significa que la acción se realiza dentro de límites relativamente previsibles. Autoiniciada significa que nada ocurre hasta que tú dices «plato». No hay un balón que llegue de repente. Esa estructura deja tiempo para preparar la acción y también para que aparezcan dudas.</p>
+    <p>Por eso los tiradores de élite dedican tiempo a entrenar la mente. Un estudio cualitativo con ocho tiradores olímpicos de rifle y pistola destacó la preparación psicológica, la ansiedad competitiva, el apoyo profesional y el papel del entrenador. Es una muestra pequeña y no estudió tiro al plato, pero ayuda a formular preguntas útiles. La confianza, la activación y la atención se pueden practicar y registrar, igual que el encare del capítulo 6.</p>
+    <p>Este capítulo no pide creer nada. Pide probar, registrar en el cuaderno y comparar. Es el mismo método de una variable del capítulo 12, aplicado a lo que pasa entre tus orejas.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-01-un-deporte-que-se-juega-por-dentro.png" width="1254" height="1254" alt="Comparación entre deportes de oposición con rival externo y el tiro al plato, donde la variación principal es interna: activación, atención y confianza">
+      <figcaption>El arma y la cancha no cambian de un día a otro. Cambia el sistema nervioso que aprieta el gatillo.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-02" data-section="17.2">
+    <span class="section-number">17.2</span>
+    <h3>Tirar delante de otros</h3>
+  <p class="section-bridge">Si casi toda la variación viene de dentro, conviene empezar por la fuente de presión más frecuente del principiante: los demás.</p>
+    <p class="section-lead">En una escuadra todos oyen tus resultados. Sentirse observado tiene nombre, es normal y se gestiona.</p>
+    <p>La psicología lo llama miedo a la evaluación negativa: la expectativa de que otras personas juzguen mal lo que haces. En un experimento con jugadores de baloncesto experimentados, quienes puntuaban alto en ese temor aumentaron más su ansiedad y rindieron peor al subir la presión. No fue un estudio de foso y no demuestra que le ocurra a todos los principiantes. Sí confirma que sentirse evaluado puede ocupar recursos que la tarea necesita.</p>
+    <p>Tres acciones ayudan sin fingir que el pensamiento no existe. Primera: reconocer «estoy imaginando un juicio» y tratarlo como un pensamiento, no como un resultado. Segunda: volver a un objetivo de proceso bajo tu control y compararte contigo mismo, serie contra serie, como enseñó el capítulo 7. Tercera: aplicar la convivencia del capítulo 4, donde nadie comenta el tiro de otra persona sin permiso.</p>
+    <aside class="technical-note"><strong>Límite de la evidencia.</strong> El miedo a la evaluación negativa se ha estudiado en otros deportes y ante público. Aplicarlo a una escuadra de foso es una traducción razonada, no una medición directa realizada en principiantes de plato.</aside>
+    <aside class="field-note"><strong>Ejercicio concreto.</strong> En tu próxima tirada, anota antes de empezar un objetivo de proceso que no dependa del resultado. Por ejemplo, repetir la rutina completa en los veinticinco platos. Al terminar, puntúa solo eso. La serie deja de ser un examen delante de público.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-02-tirar-delante-de-otros.png" width="1254" height="1254" alt="Escuadra de cinco tiradores donde cada uno atiende a su propio puesto, con la comparación útil señalada hacia el cuaderno propio y no hacia los compañeros">
+      <figcaption>Cada tirador mira su plato. La comparación útil apunta a tu serie anterior, no al puesto de al lado.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-03" data-section="17.3">
+    <span class="section-number">17.3</span>
+    <h3>La activación: tu punto de funcionamiento</h3>
+  <p class="section-bridge">Quitar presión social no significa quedarse plano. Hace falta un punto medio de tensión, y es personal.</p>
+    <p class="section-lead">Activación es el nivel de alerta del cuerpo. Dormido no se rompe un plato. Acelerado, tampoco.</p>
+    <p>Cada tirador puede reconocer una franja donde funciona mejor. Con poca activación pueden llegar despistes: se pide plato sin estar colocado o la mirada llega tarde. Con demasiada pueden aparecer prisa, hombros elevados, respiración corta y anticipación del retroceso. Son ejemplos, no un diagnóstico. Conviene registrar qué señales preceden a tus mejores ejecuciones y cuáles acompañan a la pérdida de rutina.</p>
+    <p>El trabajo no consiste siempre en bajar pulsaciones. Consiste en reconocer lo que hay, dejar de pelear con cada sensación y devolver la atención a una acción controlable: postura, mirada, respiración o palabra clave. Los enfoques basados en aceptación han reducido ansiedad competitiva en estudios pequeños con deportistas, y existe trabajo preliminar específico en tiradores. Todavía no permiten declarar una secuencia universal.</p>
+    <aside class="technical-note"><strong>Lectura técnica.</strong> La U invertida es una imagen pedagógica, no una ley que prediga el resultado individual. El modelo de zonas individuales es más prudente: una misma activación puede facilitar a una persona y perjudicar a otra, según la tarea y el momento.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-03-la-activacion.png" width="1254" height="1254" alt="Curva en U invertida entre activación y rendimiento con la zona óptima personal marcada y señales de exceso y de defecto a cada lado">
+      <figcaption>Ni dormido ni acelerado: cada tirador rinde en una franja propia y aprende a reconocer sus señales de salida.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-04" data-section="17.4">
+    <span class="section-number">17.4</span>
+    <h3>La respiración como herramienta</h3>
+  <p class="section-bridge">Para mover la activación hacia tu zona hace falta una palanca. La más barata y mejor estudiada es la respiración.</p>
+    <p class="section-lead">La respiración es una vía sencilla para influir en la activación. No es un botón de apagado y no funciona igual para todo el mundo.</p>
+    <p>Muchos protocolos de respiración lenta trabajan cerca de seis ciclos por minuto, pero la frecuencia de resonancia varía entre personas. Un estudio pequeño con deportistas encontró mejoras psicomotoras tras entrenamiento con biofeedback de variabilidad cardiaca, y otro programa exploratorio con cinco tiradores júnior observó cambios de confianza y respuesta autonómica. Son señales prometedoras, no una garantía de más aciertos por respirar a un número fijo.</p>
+    <p>Como punto de partida práctico, entre series se pueden probar dos o tres minutos de ritmo cómodo, sin mareo y con la salida del aire algo más larga. En el puesto basta una respiración completa integrada en la rutina. Si altera el tiempo, crea tensión o distrae, se ajusta con el entrenador. El capítulo 12 ya usaba la pausa entre intentos en el simulador; aquí se convierte en una variable que puedes comparar.</p>
+    <aside class="field-note"><strong>Ejercicio concreto.</strong> En el simulador, haz una tanda de diez platos con una respiración completa antes de cada petición y otra tanda sin ella. Anota aciertos y sensación de prisa. Estás entrenando la rutina, no la suerte.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-04-la-respiracion-como-herramienta.png" width="1254" height="1254" alt="Pauta de respiración lenta de unos seis ciclos por minuto con exhalación alargada, aplicada entre series y como respiración única antes de pedir plato">
+      <figcaption>Dos dosis: pauta lenta entre series y una sola respiración completa antes de pedir el plato.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-05" data-section="17.5">
+    <span class="section-number">17.5</span>
+    <h3>La rutina previa al plato</h3>
+  <p class="section-bridge">La respiración necesita un sitio fijo donde vivir. Ese sitio es la rutina previa, la herramienta con más evidencia de todo el capítulo.</p>
+    <p class="section-lead">Una rutina previa es una secuencia corta e idéntica de gestos que precede a cada plato. Hace que todos los platos empiecen igual.</p>
+    <p>Las revisiones y un metaanálisis reciente incluyen las rutinas previas entre las intervenciones que pueden proteger el rendimiento bajo presión, especialmente en habilidades cerradas. Los estudios agrupan tareas y diseños diferentes, así que no prueban una receta única para foso. La explicación plausible es doble: la secuencia orienta la atención hacia tareas concretas y reduce variaciones innecesarias antes de empezar.</p>
+    <p>Una rutina de foso puede ser así: colocar los pies, montar y comprobar el encare, llevar los ojos a la zona de mirada del capítulo 8, soltar el aire, usar una palabra clave y pedir. Debe ser breve, compatible con el reglamento y con el ritmo de la escuadra. El contenido exacto se prueba con el profesor; lo importante es que cada paso tenga una función y pueda repetirse sin prisa.</p>
+    <aside class="field-note"><strong>Ejercicio concreto.</strong> Escribe tu rutina en el cuaderno, paso a paso. En el simulador, ejecútala completa antes de cada petición durante una tanda entera. El botón de repetición permite ensayarla sobre el mismo vuelo hasta que salga sola.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-05-la-rutina-previa-al-plato.png" width="1254" height="1254" alt="Secuencia de rutina previa en cinco pasos: pies, encare, mirada al punto de espera, respiración y petición del plato, repetida idéntica en cada plato">
+      <figcaption>Pies, encare, mirada, respiración, petición. El orden exacto es tuyo; la repetición idéntica es la herramienta.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-06" data-section="17.6">
+    <span class="section-number">17.6</span>
+    <h3>Ojos quietos, mente quieta</h3>
+  <p class="section-bridge">Dentro de la rutina hay un paso que la ciencia ha medido con precisión: dónde y cuánto tiempo se posan los ojos antes de pedir.</p>
+    <p class="section-lead">Los investigadores llaman quiet eye a la última fijación de la mirada antes de que empiece el movimiento. En escopeta está medido: los mejores miran antes y durante más tiempo.</p>
+    <p>En un estudio con 48 tiradores de trap, skeet y doble trap, el grupo de élite mostró un inicio más temprano y una mayor duración relativa de la mirada final. El patrón también distinguió intentos acertados y fallidos. Otro ensayo con veinte tiradores internacionales de skeet entrenó una rutina visual y encontró mejoras en medidas de mirada y rendimiento. Las cifras pertenecen a esos grupos y no fijan una duración que todos deban copiar.</p>
+    <p>Esto conecta dos ideas que el libro ya te dio. El capítulo 6 avisó de no mirar el cañón, y el capítulo 8 definió la zona de mirada donde el plato se ve nítido. El quiet eye es la base científica de ambas: los ojos se aquietan en esa zona, y la mente se aquieta con ellos. Si la mirada salta, la cabeza suele estar saltando también.</p>
+    <p>El entrenamiento es simple de enunciar: no pidas plato hasta que la mirada esté posada y quieta en tu zona. La rutina anterior te da el momento exacto para comprobarlo.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-06-ojos-quietos.png" width="1254" height="1254" alt="Comparación de la fijación visual previa a la petición entre tiradores expertos y en desarrollo, centrada en la zona de mirada del foso">
+      <figcaption>La última fijación antes de pedir: cuanto más estable, más estable el cañón que viene después.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-07" data-section="17.7">
+    <span class="section-number">17.7</span>
+    <h3>El bloqueo: dos maneras de perder una serie</h3>
+  <p class="section-bridge">Rutina y mirada protegen el gesto. Conviene saber de qué lo protegen: del bloqueo, que tiene dos mecanismos distintos.</p>
+    <p class="section-lead">Bloquearse es rendir por debajo de tu nivel real justo cuando más importa. La investigación distingue dos vías, con antídotos diferentes.</p>
+    <p>La primera vía es la distracción. La inquietud desvía recursos mentales del plato hacia estímulos sin valor para ejecutar: el marcador, los compañeros o un juicio que todavía no ha ocurrido. La segunda vía es el autofoco: bajo presión, uno vigila conscientemente un gesto que ya era automático, y al vigilarlo lo desmonta. Es el reverso del camino Shu-Ha-Ri del capítulo 7: la presión te devuelve a controlar lo que ya sabías hacer sin pensar.</p>
+    <p>Las herramientas con respaldo son las de este capítulo. La rutina previa orienta la atención hacia lo útil. El foco externo, en el plato y no en el codo, reduce la tentación de desmontar un gesto aprendido. También puede utilizarse presión gradual: una serie observada, un objetivo de proceso anunciado o una simulación de competición. Se introduce de forma voluntaria, segura y progresiva, idealmente con un entrenador, y nunca como castigo.</p>
+    <aside class="technical-note"><strong>Lectura técnica.</strong> El exceso de instrucciones del capítulo 6 es autofoco inducido desde fuera. Un solo objetivo por serie limita las dos vías a la vez.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-07-el-bloqueo.png" width="1254" height="1254" alt="Dos mecanismos del bloqueo bajo presión, distracción y autofoco, con sus antídotos: rutina previa, foco externo en el plato y aclimatación gradual a la presión">
+      <figcaption>Distracción y autofoco fallan por caminos opuestos. La rutina y el foco en el plato cierran los dos.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-08" data-section="17.8">
+    <span class="section-number">17.8</span>
+    <h3>El diálogo interno y la palabra clave</h3>
+  <p class="section-bridge">Parte del ruido que alimenta el bloqueo no viene de fuera. Viene de la voz con la que te hablas en el puesto.</p>
+    <p class="section-lead">El diálogo interno no se puede apagar, pero se puede dirigir. La diferencia está entre narrar y ordenar.</p>
+    <p>Narrar es contar la serie mientras ocurre: «llevo dieciocho de veinte, si rompo estos dos…». Esa cuenta convierte cada plato en un examen y es la receta clásica del fallo diecinueve. Ordenar es otra cosa: una instrucción breve, elegida antes, que apunta al proceso. «Suave». «Plato». «Delante». Una palabra, siempre la misma, dicha por dentro justo antes de pedir.</p>
+    <p>Una palabra breve puede reducir el espacio que ocupa la narración y devolver el foco a una señal elegida. No actúa por magia y no debe añadir una corrección técnica nueva. Elige una que tu profesor entienda, pruébala en entrenamiento y mantenla durante la serie para no cambiar dos variables a la vez.</p>
+    <p>El marcador se consulta cuando lo exijan el reglamento o la organización. Fuera de esos momentos, contar consecuencias durante cada turno rara vez ayuda: el único resultado sobre el que aún puedes actuar es el plato siguiente.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-08-el-dialogo-interno.png" width="1254" height="1254" alt="Contraste entre narrar el marcador durante la serie y usar una palabra clave breve de proceso antes de cada petición de plato">
+      <figcaption>Narrar el marcador examina; la palabra clave ordena. El canal verbal solo puede llevar una de las dos.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-09" data-section="17.9">
+    <span class="section-number">17.9</span>
+    <h3>El plato fallado se queda atrás</h3>
+  <p class="section-bridge">Aunque todo lo anterior funcione, fallarás platos. Lo que hagas en los diez segundos siguientes decide cuántos más caen detrás.</p>
+    <p class="section-lead">Un fallo aislado cuesta un punto. Un fallo arrastrado cuesta la serie. La diferencia es la rutina de cierre.</p>
+    <p>Un fallo puede atraer la atención hacia lo que ya no se puede cambiar. Si aparece frustración, el siguiente plato puede comenzar con más prisa y menos rutina. Muchos entrenadores utilizan un cierre breve para marcar la frontera. Algunos lo llaman «ducha mental». Es una metáfora de entrenador, no un mecanismo clínico demostrado.</p>
+    <p>La forma concreta es libre y la función es fija. Abrir el arma, expulsar el cartucho y, con ese gesto físico, dar el plato por terminado. Una respiración larga. Y la rutina previa de siempre, idéntica, como si la serie empezara ahora. El capítulo 4 ya te dio la pieza reglamentaria: el arma abierta marca el final de cada intento. Aquí se convierte también en frontera mental.</p>
+    <aside class="field-note"><strong>Ejercicio concreto.</strong> En el simulador, provoca fallos: sube la dificultad con el robot hasta fallar a menudo. Practica el cierre completo tras cada fallo antes de pedir el siguiente. Estás entrenando la frontera, no el porcentaje.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-09-el-plato-fallado-se-queda-atras.png" width="1254" height="1254" alt="Rutina de cierre tras un fallo: abrir el arma, expulsar el cartucho, respiración larga y rutina previa de nuevo, evitando que un fallo arrastre a los siguientes platos">
+      <figcaption>El arma abierta termina el plato en el reglamento y en la cabeza. El siguiente empieza de cero.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-10" data-section="17.10">
+    <span class="section-number">17.10</span>
+    <h3>Ensayo mental y autoimagen</h3>
+  <p class="section-bridge">Cerrar bien los fallos protege la serie de hoy. Lo que guardas en la memoria protege las series que vienen.</p>
+    <p class="section-lead">El ensayo mental consiste en repetir el gesto por dentro. Funciona mejor cuando se siente, no solo cuando se ve.</p>
+    <p>La imaginería motora se ha estudiado en muchos deportes y puede complementar la práctica, aunque sus efectos dependen de la tarea, la experiencia y la calidad del ensayo. La escuela de Lanny Bassham propone ensayar el disparo bueno y registrar aciertos de proceso para trabajar la autoimagen. Esa formulación pertenece a un sistema de entrenador; no demuestra que la autoimagen determine por sí sola el resultado.</p>
+    <p>El cuaderno del capítulo 12 encaja aquí con una regla equilibrada: registra una ejecución que salió bien, la señal de proceso que la acompañó y, si hubo un fallo relevante, un dato neutro para analizarlo después. No se oculta el error ni se rumia durante la serie. Se separan dos tareas: construir una referencia útil y corregir una variable en frío.</p>
+    <p>El simulador es un banco de ensayo sin coste y sin público: sirve para ver trayectorias reales y ponerles sensación encima. El capítulo 13 sigue mandando: la presión de la cancha no se simula, se gestiona con lo aprendido aquí.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-10-ensayo-mental-y-autoimagen.png" width="1254" height="1254" alt="Ciclo entre ensayo mental del disparo bueno con su sensación, registro escrito de aciertos de proceso y autoimagen del tirador que se iguala con lo repetido">
+      <figcaption>Lo que repites se graba: el ensayo del disparo bueno y el registro de aciertos alimentan la autoimagen.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-11" data-section="17.11">
+    <span class="section-number">17.11</span>
+    <h3>Escuelas, sistemas y ayuda profesional</h3>
+  <p class="section-bridge">Estas herramientas aparecen empaquetadas en sistemas comerciales con nombre propio. Conviene situarlos con la jerarquía de confianza del capítulo 16.</p>
+    <p class="section-lead">Hay literatura de entrenadores valiosa y con enfoques distintos. No toda tiene el mismo respaldo científico, y eso también hay que decirlo.</p>
+    <p>El Mental Management de Bassham gira sobre la autoimagen y el ensayo del acierto. El modelo 4R que Paul Hughes propone desde la terapia de aceptación y compromiso no persigue borrar la activación: enseña a dejarla estar y devolver el foco a una acción controlable. La escuela alemana de Reinkemeier y Bühlmann trabaja la autorregulación del cuerpo con planes estructurados. Anthony Matarese resume su enfoque en dos reglas: primero la técnica, después la mente, y en el puesto un foco tan intenso en el plato que no quepa otra cosa.</p>
+    <p>Otros enfoques piden más cautela. Los sistemas basados en programación neurolingüística prometen mucho con evidencia científica débil. El neurofeedback con electroencefalograma es prometedor pero caro, y sus resultados publicados son todavía dispares. La regla del capítulo 16 sirve intacta: investigación revisada primero, experiencia de entrenadores después, publicidad al final.</p>
+    <p>Y un límite honesto: si la ansiedad en la cancha te acompaña también fuera de ella, la herramienta adecuada no es un libro de tiro. Un psicólogo deportivo colegiado, o un profesional de salud mental, es la mejor inversión posible en tu deporte.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/17-11-escuelas-y-ayuda-profesional.png" width="1254" height="1254" alt="Mapa de escuelas de preparación mental del tiro ordenadas por nivel de respaldo: investigación revisada, literatura de entrenadores y sistemas comerciales, con la ayuda profesional como recurso aparte">
+      <figcaption>Los sistemas con nombre se ordenan con la misma jerarquía que las demás fuentes del libro.</figcaption>
+    </figure>
+  </article>
+
+  <div class="chapter-summary">
+    <h3>Qué hemos aprendido</h3>
+    <ul>
+      <li>En un deporte autoiniciado, activación, atención y confianza añaden variación a la que ya producen el entorno, la técnica y el material.</li>
+      <li>El miedo a ser evaluado puede aumentar la ansiedad; reconocerlo y volver a un objetivo de proceso evita convertirlo en una orden.</li>
+      <li>La respiración lenta y la rutina previa son herramientas prometedoras, con dosis y secuencias que deben ajustarse a cada tirador.</li>
+      <li>El bloqueo tiene dos vías, distracción y autofoco, y ambas se cierran con rutina, foco externo y aclimatación.</li>
+      <li>El fallo termina al abrir el arma; lo que se ensaya y se registra es el disparo bueno.</li>
+    </ul>
+    <p class="expert-note"><strong>Lectura experta.</strong> Las afirmaciones siguen la jerarquía del capítulo 16. Quiet eye dispone de estudios específicos en escopeta. Rutinas, presión gradual, respiración y aceptación combinan evidencia deportiva general con muestras pequeñas o tareas distintas. Los sistemas comerciales se citan como literatura de entrenadores, no como prueba científica.</p>
+  </div>
+</section>
+
+<section class="chapter book-chapter" id="preparacion-integral">
+  <p class="chapter-kicker">Capítulo 18</p>
+  <h2>El cuerpo, la jornada y las modalidades</h2>
+  <p class="opening">La cabeza del capítulo 17 no trabaja sola. Necesita unos pies que dejen girar, un cuerpo capaz de repetir el gesto, una jornada organizada y una lectura honesta del entorno. También necesita reconocer que Skeet, Sporting y Compak no son variaciones decorativas del foso: cambian el espacio, la posición de espera, la información disponible y la manera de preparar el movimiento.</p>
+  <p class="opening">Este capítulo reúne esos cabos que antes aparecían dispersos. No ofrece una postura universal ni un plan físico de talla única. Tampoco convierte el parte meteorológico en una tabla de adelantamientos. Ordena decisiones observables y señala cuándo debe intervenir un instructor, un preparador físico o un profesional sanitario. El método sigue siendo el mismo: seguridad, una variable y contraste en cancha.</p>
+
+  <article class="book-section" id="s18-01" data-section="18.1">
+    <span class="section-number">18.1</span>
+    <h3>Los pies definen el recorrido</h3>
+    <p class="section-bridge">El capítulo 8 explicó el punto de encuentro. Antes de mover el arma, los pies deben dejar espacio para llegar hasta él sin perder equilibrio.</p>
+    <p class="section-lead">La postura no empieza en los hombros. Empieza orientando la base hacia la zona donde se pretende terminar el movimiento.</p>
+    <p>Colocarse solo hacia la salida puede dejar al cuerpo sin recorrido al final. Colocarse únicamente hacia un extremo puede volver incómoda la trayectoria contraria. En foso, la base busca un compromiso que permita responder a varias direcciones. En Skeet y Sporting la orientación puede prepararse para una línea conocida o presentada. En todos los casos, los dos pies permanecen dentro del puesto y la boca del arma dentro de la zona autorizada.</p>
+    <p>No existe un ángulo universal. La lateralidad, la movilidad de tobillo y cadera, la anchura del puesto, la modalidad y el punto de rotura cambian la solución. El manual de CPSA muestra modelos útiles, pero también reconoce posturas distintas. Son referencias para que un instructor observe una función: que el tirador alcance el final sin levantar el talón, retorcer la rodilla ni corregir con un paso.</p>
+    <aside class="field-note"><strong>Prueba supervisada.</strong> Con el arma comprobada, descargada y bajo dirección del instructor, adopta la posición para una trayectoria central. Recorre lentamente una salida izquierda, una central y una derecha sin apretar el disparador. Si una exige perder la base, cambia solo la orientación de los pies y repite.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-01-los-pies-definen-el-recorrido.png" width="1254" height="1254" alt="Vista superior de tres colocaciones de pies y sus arcos de movimiento, con una zona útil que permite alcanzar el punto de rotura sin levantar el talón ni salir del puesto">
+      <figcaption>Los pies no apuntan al plato: reservan el recorrido que el cuerpo necesitará para acompañarlo.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-02" data-section="18.2">
+    <span class="section-number">18.2</span>
+    <h3>Equilibrio sin rigidez</h3>
+    <p class="section-bridge">Una buena orientación abre el recorrido. El paso siguiente es conservar una base estable sin convertir el cuerpo en una estatua.</p>
+    <p class="section-lead">Estable significa poder mover arma y tronco como una unidad. Rígido significa gastar tensión antes de que salga el plato.</p>
+    <p>El peso se reparte de forma que el tirador pueda girar, montar y absorber el retroceso sin dar un paso. Las rodillas no necesitan bloquearse y los hombros no necesitan elevarse. La cabeza llega a la culata porque arma y cuerpo encajan, no porque el cuello persiga la banda. Si el contacto obliga a inclinarse, apretar la cara o cargar siempre un lado, hay que separar postura, movilidad y ajuste de culata antes de repetir más cartuchos.</p>
+    <p>Un estudio exploratorio con diecinueve tiradores de Trap y Skeet encontró asociaciones entre rendimiento, simetría de movilidad de hombros, fuerza de prensión, flexibilidad y equilibrio. El tamaño de la muestra impide convertir esas relaciones en una receta causal. No significa que una cifra de fuerza produzca una puntuación. Sí respalda una pregunta práctica: ¿la solución elegida permite repetir el gesto cómodamente a ambos lados?</p>
+    <aside class="technical-note"><strong>Dos problemas diferentes.</strong> Una base que se desplaza durante el movimiento es un problema técnico observable. Dolor, pérdida marcada de movilidad o debilidad persistente requieren valoración profesional; no se corrigen forzando una postura de manual.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-02-equilibrio-sin-rigidez.png" width="1254" height="1254" alt="Comparación entre postura inestable, postura rígida y equilibrio móvil, con la presión de los pies, rodillas, pelvis, hombros y cabeza alineados para girar sin tensión">
+      <figcaption>La estabilidad útil conserva contacto y recorrido; la rigidez solo añade tensión que después habrá que vencer.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-03" data-section="18.3">
+    <span class="section-number">18.3</span>
+    <h3>El cuerpo también se entrena</h3>
+    <p class="section-bridge">Si la postura debe repetirse durante varias series, la técnica necesita una base física que aguante sin deformarla.</p>
+    <p class="section-lead">La preparación física del tirador no busca parecerse a otro deporte. Busca conservar movilidad, equilibrio y control cuando llega la fatiga.</p>
+    <p>Las cualidades útiles son generales: capacidad para caminar y mantenerse atento durante la jornada, fuerza suficiente para manejar el arma sin agarrotarse, control del tronco, equilibrio y movilidad de hombros, caderas y tobillos. Un programa puede combinar trabajo aeróbico, fuerza global, equilibrio y movilidad. La dosis depende de la edad, la experiencia, la salud, la carga de tiro y el calendario. Por eso debe diseñarla una persona cualificada cuando se pretende entrenar de forma sistemática.</p>
+    <p>La evidencia específica de plato sigue siendo limitada. Una revisión de 2018 encontró solo tres trabajos centrados directamente en Trap o Skeet. El estudio de 2021 con diecinueve tiradores observó asociaciones, no demostró que mejorar una prueba concreta elevara automáticamente el resultado. Una revisión narrativa de 2026 reunió estudios heterogéneos de varias disciplinas de tiro. El mensaje responsable no es «haz este circuito y romperás más». Es que la preparación física merece planificarse y evaluarse con medidas funcionales y con transferencia real al gesto.</p>
+    <aside class="field-note"><strong>Registro mínimo.</strong> Junto a la puntuación, anota al final de cada serie estabilidad del encare, sensación de peso del arma, movilidad y dolor. Si el resultado cae al mismo tiempo que se deforma el gesto, el dato sirve para ajustar carga y descanso con el entrenador.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-03-el-cuerpo-tambien-se-entrena.png" width="1254" height="1254" alt="Rueda de preparación física para tiro al plato con capacidad aeróbica, fuerza global, control del tronco, equilibrio y movilidad conectados a una postura repetible">
+      <figcaption>La preparación física no sustituye la técnica: evita que la técnica desaparezca cuando la jornada se alarga.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-04" data-section="18.4">
+    <span class="section-number">18.4</span>
+    <h3>Calentar y recuperar</h3>
+    <p class="section-bridge">La condición física se construye durante semanas. Antes de una serie hace falta una transición más corta entre estar parado y ejecutar el gesto.</p>
+    <p class="section-lead">Calentar no es cansarse ni estrenar ejercicios. Es llegar al primer plato con temperatura, movilidad, mirada y rutina ya disponibles.</p>
+    <p>Una secuencia prudente empieza sin arma: movimiento general cómodo, articulaciones que esa persona necesita movilizar y giros controlados. Después puede añadir equilibrio, gesto de tronco y encares descargados bajo supervisión. Los disparos de prueba o platos de entrenamiento solo se realizan donde estén autorizados y en el orden del árbitro. Un metaanálisis general encontró mejoras de rendimiento después de calentamientos adecuados, pero no estudió una receta específica para plato. Por eso el contenido debe probarse en entrenamiento y mantenerse breve.</p>
+    <p>Entre series, recuperar no significa quedarse inmóvil hasta enfriarse ni entrenar a escondidas. Conviene abrigarse o buscar sombra según el entorno, beber y comer de acuerdo con el plan habitual, y repetir unos movimientos suaves si la espera es larga. Masajes, frío, suplementos o aparatos no deben presentarse como soluciones automáticas. Sueño, alimentación, hidratación y gestión de carga siguen siendo la base, adaptada por profesionales cuando haya necesidades clínicas o de alto rendimiento.</p>
+    <aside class="field-note"><strong>Rutina de diez minutos.</strong> Diseña con tu preparador una secuencia que puedas repetir. Registra cuándo termina y cómo llegas al primer puesto. Si te deja fatigado, mareado o altera el encare, no está cumpliendo su función.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-04-calentar-y-recuperar.png" width="1254" height="1254" alt="Secuencia de calentamiento progresivo desde movimiento general y movilidad hasta encare supervisado, seguida por una recuperación entre series con sombra, abrigo, agua y movimientos suaves">
+      <figcaption>Antes de tirar, activar sin fatigar; entre series, conservar el estado sin improvisar una sesión nueva.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-05" data-section="18.5">
+    <span class="section-number">18.5</span>
+    <h3>La víspera y la maleta</h3>
+    <p class="section-bridge">Una rutina física sirve poco si la mañana empieza buscando documentación, protección o cartuchos que debían estar preparados.</p>
+    <p class="section-lead">La competición comienza la víspera: confirmar el programa y quitar decisiones pequeñas del día siguiente.</p>
+    <p>La lista parte de la convocatoria oficial. Horario, modalidad, campo, acceso, acreditación, licencias, control de equipo, entrenamiento permitido y munición pueden cambiar según la prueba. Después se prepara el material: arma transportada y custodiada conforme a la ley, documentación, cartuchos admitidos, protección ocular y auditiva, chaleco, calzado, ropa por capas, agua, comida conocida y medios básicos para protegerse del sol o la lluvia. Nada de esa lista autoriza a manipular el arma fuera de las zonas previstas.</p>
+    <p>La víspera no es buen momento para cambiar la culata, estrenar filtro, probar un suplemento o duplicar el entrenamiento. La revisión de sueño en deportistas recomienda individualizar y cuidar hábitos, no perseguir una noche perfecta como condición para competir. Preparar una hora razonable, reducir interrupciones y conservar una rutina conocida es más útil que convertir el sueño en otro examen.</p>
+    <p>Quien compita bajo control antidopaje debe comprobar medicamentos y suplementos mediante los canales oficiales. La lista WADA cambia y la responsabilidad no desaparece porque un producto se venda libremente. Si existe duda, se consulta antes con personal médico y antidopaje competente.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-05-la-vispera-y-la-maleta.png" width="1254" height="1254" alt="Lista visual de la víspera con programa oficial, documentación, arma transportada legalmente, munición reglamentaria, protecciones, ropa, agua, comida y descanso habitual">
+      <figcaption>Preparar no es controlar el resultado. Es evitar que una ausencia administrativa o material ocupe la atención que necesita el plato.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-06" data-section="18.6">
+    <span class="section-number">18.6</span>
+    <h3>El día de competición</h3>
+    <p class="section-bridge">Con la maleta cerrada, la jornada se ordena alrededor de horarios reales y no de la ansiedad por empezar.</p>
+    <p class="section-lead">Llegar con margen permite observar, presentarse y calentar. Llegar demasiado pronto no obliga a pasar horas vigilando marcadores.</p>
+    <p>Al entrar se confirma el horario y se buscan posibles adelantos, retrasos o cambios de cancha. También se localizan secretaría, control de equipo, zona segura, campo asignado y lugar de espera. Las reglas FITASC de Compak responsabilizan al tirador de presentarse con antelación, confirmar su presencia y mantenerse informado de cambios. La convocatoria concreta manda también en las demás modalidades.</p>
+    <p>El calentamiento se coloca para terminar cerca de la serie, sin carreras ni disparos no autorizados. Antes del primer puesto basta revisar un objetivo de proceso y ejecutar la rutina del capítulo 17. Entre series se atiende a necesidades sencillas: protección frente al tiempo, comida y bebida ya conocidas, movimiento suave y descanso mental. El cuaderno recibe uno o dos datos; no una autopsia técnica de cada fallo.</p>
+    <p>Después de tirar se verifica la puntuación mediante el procedimiento de la organización, se registra cualquier incidencia y se guarda el material de forma segura. Si hay desempate, control o nueva serie, se consulta el horario en lugar de suponerlo. La jornada termina revisando qué funcionó en organización, cuerpo, entorno y proceso. Esa revisión prepara la siguiente competición mejor que una explicación construida solo a partir del resultado.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-06-el-dia-de-competicion.png" width="1254" height="1254" alt="Línea temporal del día de competición desde llegada y confirmación hasta calentamiento, serie, recuperación, verificación de puntuación y cierre seguro">
+      <figcaption>La jornada tiene una secuencia propia: confirmar, preparar, ejecutar, recuperar y cerrar; el marcador no dirige todos los pasos.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-07" data-section="18.7">
+    <span class="section-number">18.7</span>
+    <h3>Luz, fondo y contraste</h3>
+    <p class="section-bridge">La organización libera atención. Esa atención puede dirigirse ahora a algo que el simulador simplifica: contra qué fondo aparece realmente el plato.</p>
+    <p class="section-lead">El mismo plato puede verse nítido contra el cielo y desaparecer un instante al cruzar árboles, sombra o terreno.</p>
+    <p>Antes de tirar conviene observar las presentaciones autorizadas y dividir la trayectoria en tres zonas: aparición, lectura y rotura. En cada una se pregunta si cambia el fondo, si hay reflejo, si el plato entra en sombra y dónde se reconoce con mayor claridad su dirección. La zona de mirada del capítulo 8 no es un punto pintado para siempre. Se ajusta con el entrenador para que la vista espere en un lugar donde pueda detectar movimiento sin fijarse en el cañón.</p>
+    <p>FITASC exige que el color de los blancos destaque del entorno en Sporting y Compak. Esa obligación del organizador no elimina todas las diferencias de contraste. Las gafas y filtros pueden modificar comodidad y percepción, pero no existe un color universal para cada cielo. Deben cumplir la norma, conservar protección y probarse antes. Problemas visuales, cefalea o dificultad persistente para localizar el blanco requieren una evaluación profesional, no comprar filtros sucesivos.</p>
+    <aside class="field-note"><strong>Mapa de contraste.</strong> Sin arma y desde la zona permitida, dibuja la trayectoria presentada con tres colores: fácil de ver, transición y difícil. Decide con el instructor dónde esperar y dónde romper. No cambies a la vez postura, gafas y técnica.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-07-luz-fondo-y-contraste.png" width="1254" height="1254" alt="Trayectoria de un plato que cruza cielo, árboles y sombra, dividida en zonas de aparición, lectura y rotura con diferentes niveles de contraste visual">
+      <figcaption>Leer el fondo antes de pedir permite colocar la mirada; no convierte el color de una lente en una receta universal.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-08" data-section="18.8">
+    <span class="section-number">18.8</span>
+    <h3>Viento, calor, frío y lluvia</h3>
+    <p class="section-bridge">El contraste cambia lo que se ve. El tiempo también puede cambiar el vuelo, el cuerpo, la ropa y la superficie del puesto.</p>
+    <p class="section-lead">No existe una tabla «viento igual a tantos centímetros». Primero se observa el plato real; después se decide si hace falta cambiar algo.</p>
+    <p>El viento no actúa igual en toda la trayectoria. Importan dirección, rachas, abrigo de árboles o fosos, altura y tipo de blanco. El modelo de Plato usa un viento lateral uniforme y lo declara como simplificación. En cancha se observan varias presentaciones, se escucha al árbitro y se mantiene la técnica mientras no aparezca un patrón claro. Perseguir cada racha con una corrección distinta puede añadir más variación que el propio viento.</p>
+    <p>El calor, el frío y la lluvia afectan también al tirador. La ropa por capas debe permitir el encare; guantes o tejidos mojados no deben comprometer el agarre ni el manejo seguro. Se busca sombra o abrigo cuando corresponda, se bebe según un plan habitual y se conserva el calentamiento durante esperas largas. Mareo, confusión, escalofríos intensos, dolor o pérdida de control son razones para parar y avisar. El libro no diagnostica estrés térmico.</p>
+    <p>La organización y el árbitro deciden interrupciones, blancos irregulares y reanudaciones. Un competidor no corrige una máquina ni entra en la zona de vuelo. Adaptarse al tiempo significa conservar seguridad y proceso dentro de esas decisiones, no sustituirlas.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-08-viento-calor-frio-y-lluvia.png" width="1254" height="1254" alt="Matriz de adaptación a viento, calor, frío y lluvia que separa efectos sobre el plato, el cuerpo, la ropa, el puesto y las decisiones del árbitro">
+      <figcaption>El entorno se lee en dos capas: qué hace al plato y qué te hace a ti. La autoridad del campo decide cuándo se puede continuar.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-09" data-section="18.9">
+    <span class="section-number">18.9</span>
+    <h3>Skeet: dos casas y ocho puestos</h3>
+    <p class="section-bridge">Después de aprender a leer cuerpo y entorno, ya se puede entrar en modalidades que el simulador nombra pero no reproduce.</p>
+    <p class="section-lead">Skeet no es un foso que lanza de lado. Su geometría conocida cambia la postura, el encare y la secuencia completa.</p>
+    <p>La cancha ISSF tiene una casa alta, una casa baja y ocho puestos. Los platos cruzan cerca de un punto común, pero la imagen cambia mucho al recorrer el arco. En los primeros puestos domina una salida desde la casa alta; en los últimos, la baja. El puesto 4 enfrenta cruces más laterales y el 8 concentra dos tiros próximos a las casas. La regla vigente define qué individual o doble corresponde a cada puesto: no debe memorizarse a partir de una ilustración antigua.</p>
+    <p>En Skeet olímpico se parte de una posición de preparado reglada y el plato aparece después de un retardo variable. Eso hace que el montaje forme parte del gesto, no sea un trámite previo. Los pies se orientan hacia la zona de rotura, la mirada espera fuera de la casa y el arma recorre una línea que debe quedar disponible antes de pedir. Cada puesto necesita su mapa, no un adelanto único.</p>
+    <aside class="technical-note"><strong>Límite de Plato.</strong> El simulador no contiene las dos casas, los ocho puestos, la secuencia ni el retardo de Skeet. Puede enseñar intercepción y continuidad, pero no debe usarse para afirmar que ensaya esta modalidad.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-09-skeet-dos-casas-ocho-puestos.png" width="1254" height="1254" alt="Plano didáctico de una cancha de Skeet con casa alta, casa baja, ocho puestos en arco, punto de cruce y cambios de lectura a lo largo del recorrido">
+      <figcaption>Dos trayectorias conocidas producen ocho problemas visuales distintos; cada puesto necesita su propia preparación.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-10" data-section="18.10">
+    <span class="section-number">18.10</span>
+    <h3>Sporting: leer antes de mover</h3>
+    <p class="section-bridge">Skeet repite una geometría reglada. Sporting plantea la operación contraria: leer una presentación nueva antes de construir la respuesta.</p>
+    <p class="section-lead">En Sporting, el primer trabajo no es calcular adelanto. Es reconocer qué plato se está viendo y qué parte de la trayectoria ofrece una rotura segura.</p>
+    <p>El reglamento FITASC describe recorridos que usan el terreno y blancos artificiales variados. Puede haber entradas, salidas, cruces, oblicuos, alturas diferentes, blancos parcialmente ocultos y formatos especiales como conejo o battue. El menú del puesto identifica máquinas y orden; la presentación autorizada permite ver las trayectorias. Esa información se convierte en un plan breve antes de cargar.</p>
+    <p>La lectura puede seguir cinco preguntas: ¿dónde aparece?, ¿cuándo se reconoce su línea?, ¿dónde hay espacio y contraste para romperlo?, ¿qué recorrido necesita el cuerpo?, ¿dónde debe esperar la mirada? Solo después se eligen punto de espera, zona de mirada y método de movimiento. En la modalidad FITASC, la posición preparada mantiene la culata bajo la marca reglamentaria hasta que aparece el blanco. Otras variantes de sporting pueden usar reglas distintas, de modo que la convocatoria y el árbitro mandan.</p>
+    <p>Los dobles añaden orden y transición. Resolver el primero no debe dejar el cuerpo sin recorrido ni el arma fuera de una dirección segura para el segundo. Se entrenan primero las trayectorias individuales y después la relación entre ambas. Copiar una distancia visual de otro tirador sin compartir postura, método y punto de rotura confunde el resultado con la causa.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-10-sporting-leer-antes-de-mover.png" width="1254" height="1254" alt="Puesto de Sporting con varias trayectorias y una tarjeta de cinco preguntas sobre aparición, lectura, rotura, recorrido corporal y zona de mirada">
+      <figcaption>La variedad se ordena con una lectura constante: aparición, línea, rotura, cuerpo y mirada.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-11" data-section="18.11">
+    <span class="section-number">18.11</span>
+    <h3>Compak: variedad en un marco compacto</h3>
+    <p class="section-bridge">Sporting cambia de puesto y de paisaje. Compak conserva la variedad, pero la organiza delante de una línea compacta de tiro.</p>
+    <p class="section-lead">Compacto no significa pequeño ni fácil. Significa que trayectorias distintas se presentan dentro de una instalación delimitada y repetible.</p>
+    <p>El reglamento FITASC consultado define cinco puestos alineados, seis máquinas y una zona rectangular de sobrevuelo. Incluye tres familias obligatorias —cruce de izquierda a derecha, cruce de derecha a izquierda y alejamiento— junto con trayectorias libres. Puede utilizar blancos estándar o especiales y combina individuales, dobles al tiro y dobles simultáneos. Los limitadores de ángulo forman parte de la seguridad del puesto.</p>
+    <p>Para aprender, el menú se convierte en un mapa. Primero se identifica la letra de la máquina y la familia de vuelo. Después se marca aparición, zona de lectura y rotura. En un doble al tiro, el disparo al primero desencadena el segundo; en un simultáneo, ambos salen a la llamada. La planificación cambia, pero la regla de seguridad no: cada transición debe permanecer dentro del ángulo autorizado y no se sacrifica el control por perseguir el segundo blanco.</p>
+    <p>Compak comparte variedad con Sporting y una línea de cinco puestos con otras modalidades, pero no es una mezcla sin reglamento. Sus procedimientos, munición, posición, orden y decisiones arbitrales pertenecen a su edición FITASC. Plato no lo simula. El manual lo incorpora para que el principiante sepa qué preguntas hacer antes de trasladar una idea de foso a una disciplina diferente.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="docs/manual-libro/assets/images/infografias/subapartados/18-11-compak-variedad-en-un-marco-compacto.png" width="1254" height="1254" alt="Plano de Compak Sporting con cinco puestos, seis máquinas, zona rectangular de vuelo, cruces obligatorios, alejamiento y ejemplos de doble al tiro y simultáneo">
+      <figcaption>Cinco puestos y un marco común no reducen la variedad: la hacen visible, numerada y reglada.</figcaption>
+    </figure>
+  </article>
+
+  <div class="chapter-summary">
+    <h3>Qué hemos aprendido</h3>
+    <ul>
+      <li>Los pies reservan el recorrido y el equilibrio permite usarlo sin rigidez.</li>
+      <li>La preparación física sostiene la técnica, pero la evidencia específica de plato todavía es limitada.</li>
+      <li>La competición se organiza desde la víspera y se ejecuta como una secuencia, no como una vigilancia continua del marcador.</li>
+      <li>Luz y meteorología se observan en el plato real; no producen correcciones universales.</li>
+      <li>Skeet, Sporting y Compak cambian geometría, posición preparada, información y planificación.</li>
+    </ul>
+    <p class="expert-note"><strong>Lectura experta.</strong> Las modalidades se describen con las reglas ISSF 2026 y FITASC vigentes consultadas. La preparación física combina investigación específica escasa con evidencia deportiva general, siempre declarando el límite. Las pautas ambientales son de observación y gestión del riesgo, no una tabla balística ni una prescripción médica.</p>
+  </div>
+</section>
+
+<section class="chapter book-chapter final-conclusions" id="conclusiones-finales">
+  <p class="chapter-kicker">Capítulo 19</p>
   <h2>Conclusiones útiles del manual</h2>
   <p class="opening"><strong>Este manual no convierte a nadie en tirador, pero ofrece una forma ordenada de observar.</strong> Separar el tiro en partes ayuda a comprenderlo; volver a unirlas permite practicar con sentido. La seguridad está siempre por encima del resultado.</p>
   <p class="opening">El recorrido ha unido acceso responsable, cancha, arma, cartucho, errores, geometría, física y modalidades. La física explica el deporte, pero no sustituye el aprendizaje corporal ni la experiencia real.</p>
@@ -4272,11 +4642,13 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
   <ol class="bibliography-list">
     <li><a href="https://doi.org/10.1016/S1440-2440(99)80180-7" target="_blank" rel="noopener">Abernethy y Neal, características visuales de tiradores de plato</a></li>
     <li><a href="https://doi.org/10.5220/0005674602950302" target="_blank" rel="noopener">Andert, Freudenthal y Levedag: estimación aerodinámica y cinemática del vuelo de platos</a></li>
+    <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10298221/" target="_blank" rel="noopener">Ansiedad deportiva, miedo a la evaluación negativa y afrontamiento como predictores en deportistas</a></li>
     <li><a href="https://rcanalescoder.github.io/Plato/app.html" target="_blank" rel="noopener">Aplicación publicada de Plato</a></li>
     <li><a href="https://apps.apple.com/es/app/licencia-de-armas-espa%C3%B1a/id1191207654" target="_blank" rel="noopener">App Store: ficha de Licencia de Armas España</a></li>
     <li><a href="https://rcanalescoder.github.io/Plato/app.html#ayuda" target="_blank" rel="noopener">Ayuda integrada del simulador Plato</a></li>
     <li><a href="https://almazan.es/tiro-al-plato-feria-venalmazan-2026/" target="_blank" rel="noopener">Ayuntamiento de Almazán: inscripciones de la tirada Venalmazán 2026</a></li>
     <li><a href="https://basc.org.uk/firearms/shotgun-safety/" target="_blank" rel="noopener">BASC: comprobación de descarga y normas básicas de seguridad con escopetas</a></li>
+    <li><a href="https://books.google.com/books/about/With_Winning_in_Mind.html?id=pIuSMAEACAAJ" target="_blank" rel="noopener">Bassham: With Winning in Mind, el sistema Mental Management</a></li>
     <li><a href="https://benelli.it/en/benelli-sport/clay-shooting" target="_blank" rel="noopener">Benelli Sport: superpuestas y semiautomáticas para platos</a></li>
     <li><a href="https://benelli.it/en/firearms/sporting/over-e-under-shotguns" target="_blank" rel="noopener">Benelli: criterios de diseño para Sporting</a></li>
     <li><a href="https://www.beretta.com/content/dam/beretta-usa/user-manuals/Beretta%20USA%20A300%20User%20Manual_UQAN3953_rev%200%20%28Web%29.pdf" target="_blank" rel="noopener">Beretta A300: manual oficial y advertencia ante fallo de disparo</a></li>
@@ -4290,7 +4662,10 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://dam.beretta.com/content/dam/beretta/manuals/shotgun/semiauto/2026/EN%20SEMIAUTO%20FEB%202026%20A4.cleaned.pdf" target="_blank" rel="noopener">Beretta: manual de escopetas semiautomáticas, 2026</a></li>
     <li><a href="https://www.beretta.com/content/dam/beretta/manuals/shotgun/sovrapposti/2022/EN_-_Sovrapposti_A4.pdf" target="_blank" rel="noopener">Beretta: manual de escopetas superpuestas</a></li>
     <li><a href="https://dam.beretta.com/content/dam/beretta/manuals/shotgun/sovrapposti/2025/EN%20-%20Sovrapposti.pdf" target="_blank" rel="noopener">Beretta: manual oficial 2025 de escopetas superpuestas</a></li>
+    <li><a href="https://ebpj.e-iph.co.uk/index.php/EBProceedings/article/view/6101" target="_blank" rel="noopener">Biofeedback de variabilidad cardíaca en tiradores: efecto sobre puntuación y nivel de estrés</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12583207/" target="_blank" rel="noopener">Biofeedback en deportistas: revisión sistemática y metaanálisis de salud mental y rendimiento</a></li>
     <li><a href="https://www.bipm.org/en/publications/si-brochure" target="_blank" rel="noopener">BIPM: Sistema Internacional de Unidades, edición actualizada en 2026</a></li>
+    <li><a href="https://www.tandfonline.com/doi/full/10.1080/1750984X.2017.1374432" target="_blank" rel="noopener">Bloqueo bajo presión: el papel de la distracción y el autofoco, revisión</a></li>
     <li><a href="https://www.boe.es/buscar/act.php?id=BOE-A-2022-24430" target="_blank" rel="noopener">BOE, Ley 39/2022, de 30 de diciembre, del Deporte</a></li>
     <li><a href="https://boe.es/buscar/act.php?id=BOE-A-2022-24430" target="_blank" rel="noopener">BOE: Ley 39/2022, de 30 de diciembre, del Deporte</a></li>
     <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-386" target="_blank" rel="noopener">BOE: medidas de seguridad para almacenamiento de armas durante el transporte</a></li>
@@ -4320,6 +4695,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://github.com/rcanalescoder/Plato/tree/main/docs/screenshots" target="_blank" rel="noopener">Capturas originales de la aplicación en el repositorio Plato</a></li>
     <li><a href="https://doi.org/10.1249/MSS.0b013e3182035de6" target="_blank" rel="noopener">Causer et al.: entrenamiento de quiet eye en una tarea de tiro de escopeta</a></li>
     <li><a href="https://doi.org/10.1249/MSS.0b013e3181d1b059" target="_blank" rel="noopener">Causer y colaboradores, mirada y movimiento del arma en tiro de escopeta</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/20139787/" target="_blank" rel="noopener">Causer, Bennett, Holmes, Janelle y Williams: quiet eye y movimiento del arma en tiro de escopeta de élite</a></li>
     <li><a href="https://doi.org/10.1080/02701367.2002.10609040" target="_blank" rel="noopener">Chiviacowsky y Wulf (2002): experimento original sobre realimentación autocontrolada</a></li>
     <li><a href="https://choosealicense.com/licenses/mit/" target="_blank" rel="noopener">Choose a License: permisos, condición y limitaciones resumidos para MIT</a></li>
     <li><a href="https://github.com/rcanalescoder/Plato/blob/14a8bf6fafa29b3b26699e8c930f78d18d0d0e5c/app.html" target="_blank" rel="noopener">Código fuente de Plato: función repeatTarget() y variación sembrada del plomeo</a></li>
@@ -4341,10 +4717,13 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://www.scitepress.org/PublishedPapers/2016/56746/56746.pdf" target="_blank" rel="noopener">DLR y TU Braunschweig: modelo aerodinámico y estimación de vuelo de platos</a></li>
     <li><a href="https://docs.github.com/en/pages" target="_blank" rel="noopener">Documentación oficial de GitHub Pages</a></li>
     <li><a href="https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-math.random" target="_blank" rel="noopener">ECMAScript: especificación normativa de Math.random()</a></li>
+    <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9928995/" target="_blank" rel="noopener">Entrenamiento en habilidades psicológicas y respuesta autonómica al estrés en tiradores júnior de élite</a></li>
+    <li><a href="https://portalinvestigacion.um.es/documentos/63c0b3363df4c204fbb01f18" target="_blank" rel="noopener">Entrenamiento psicológico en tiro olímpico: estudio de un caso, Universidad de Murcia</a></li>
     <li><a href="https://doi.org/10.1037/0033-295X.100.3.363" target="_blank" rel="noopener">Ericsson, Krampe y Tesch-Römer: estudio original sobre práctica deliberada</a></li>
     <li><a href="https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2026.1783032/full" target="_blank" rel="noopener">Estudio 2026 de búsqueda visual en tiradores de Skeet simulada</a></li>
     <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4339240/" target="_blank" rel="noopener">Estudio prospectivo sobre práctica repetida y feedback experto</a></li>
     <li><a href="https://eur-lex.europa.eu/eli/reg/2016/425/oj?locale=es" target="_blank" rel="noopener">EUR-Lex: Reglamento (UE) 2016/425 sobre equipos de protección individual</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8123879/" target="_blank" rel="noopener">Factores psicológicos determinantes en el tiro olímpico según tiradores de élite</a></li>
     <li><a href="https://farcaza.es/wp-content/uploads/2026/02/DIRECTRICES-COMPAK-2026.pdf" target="_blank" rel="noopener">Federación Aragonesa de Caza: directrices y precios de liga Compak 2026</a></li>
     <li><a href="https://ftoav.es/archivos/553" target="_blank" rel="noopener">Federación de Tiro Olímpico de Castilla y León: licencia federativa 2026</a></li>
     <li><a href="https://www.fedetiroclm.es/hazte-federado/" target="_blank" rel="noopener">Federación de Tiro Olímpico de Castilla-La Mancha: licencia de plato y vigencia anual</a></li>
@@ -4383,8 +4762,10 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://web.guardiacivil.es/es/tramites/autorizaciones-de-armas-y-explosivos/controldearmas/pruebas_licenciasarmas/Programa_prueba_teorica_D__E_y_AEM/index.html" target="_blank" rel="noopener">Guardia Civil: programa oficial, cuestionarios y respuestas de la prueba teórica</a></li>
     <li><a href="https://web.guardiacivil.es/es/tramites/autorizaciones-de-armas-y-explosivos/controldearmas/pruebas_licenciasarmas/licenciasDEAEM/index.html" target="_blank" rel="noopener">Guardia Civil: pruebas para licencias D, E y AEM</a></li>
     <li><a href="https://web.guardiacivil.es/es/tramites/autorizaciones-de-armas-y-explosivos/Solicitud-o-renovacion-de-la-licencia-de-armas-tipo-E-armas-de-tiro-deportivo-y-escopetas-de-caza/" target="_blank" rel="noopener">Guardia Civil: solicitud o renovación de la licencia de armas E</a></li>
+    <li><a href="https://sportshootingpsychologist.com/the-programme" target="_blank" rel="noopener">Hughes, The Shooting Mindset: método 4R sobre terapia de aceptación y compromiso</a></li>
     <li><a href="https://doi.org/10.1177/0018720817700537" target="_blank" rel="noopener">Human Factors: variabilidad del rendimiento en función de la dinámica de retroceso</a></li>
     <li><a href="https://doi.org/10.1016/j.ijimpeng.2007.03.007" target="_blank" rel="noopener">International Journal of Impact Engineering: medición del retroceso percibido en armas deportivas</a></li>
+    <li><a href="https://www.tandfonline.com/doi/full/10.1080/1750984X.2017.1408134" target="_blank" rel="noopener">Intervenciones contra el bloqueo en el deporte: revisión sistemática</a></li>
     <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9928522/" target="_blank" rel="noopener">Irving e Ivry: práctica bloqueada y aleatoria en adaptación sensoriomotora</a></li>
     <li><a href="https://issf-academy.com/news/first-shotgun-course-for-athletes-to-begin-in-september/" target="_blank" rel="noopener">ISSF Academy (2026): curso oficial de técnica, equipamiento y protocolos para tiradores de escopeta</a></li>
     <li><a href="https://www.issf-sports.org/news/5093" target="_blank" rel="noopener">ISSF Academy: curso 2026 de escopeta para deportistas noveles e intermedios</a></li>
@@ -4411,6 +4792,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://www.laporte.biz/en/produit/tahlb-12c-abt-trap-one/" target="_blank" rel="noopener">Laporte: especificaciones TAHLB 12C ABT/Trap One</a></li>
     <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4395711/" target="_blank" rel="noopener">Lee y Genovese: comparación experimental de práctica distribuida y masiva</a></li>
     <li><a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2023.1164117/full" target="_blank" rel="noopener">Ma, Ren y Li: revisión sistemática de simulación virtual y entrenamiento de decisiones deportivas</a></li>
+    <li><a href="https://claytargetinstruction.com/articles/simplifying-your-mental-game/" target="_blank" rel="noopener">Matarese, Clay Target Instruction: simplificar el juego mental</a></li>
     <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener">MDN: API Canvas utilizada para el renderizado en el navegador</a></li>
     <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame" target="_blank" rel="noopener">MDN: contrato temporal y comportamiento de requestAnimationFrame</a></li>
     <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe" target="_blank" rel="noopener">MDN: integración, accesibilidad y seguridad de iframe</a></li>
@@ -4419,6 +4801,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11505547/" target="_blank" rel="noopener">Metaanálisis sobre entrenamiento perceptivo-cognitivo y transferencia deportiva</a></li>
     <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6736297/" target="_blank" rel="noopener">Michalski et al.: transferencia de entrenamiento virtual a tenis de mesa real</a></li>
     <li><a href="https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2019.02159/full" target="_blank" rel="noopener">Michalski, Szpak y Loetscher: revisión sistemática sobre transferencia deportiva desde entornos virtuales</a></li>
+    <li><a href="https://www.amazon.es/Psicolog%C3%ADa-Deportiva-tiro-plato-claves/dp/8419614343" target="_blank" rel="noopener">Montero Linares: Psicología deportiva y tiro al plato, claves del éxito</a></li>
     <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13205071/" target="_blank" rel="noopener">Mrotek y colaboradores, revisión de mecanismos de intercepción visomotora</a></li>
     <li><a href="https://swehb.nasa.gov/spaces/SWEHBVD/pages/102695452/SWE-070%2B-%2BModels%2BSimulations%2BTools" target="_blank" rel="noopener">NASA Software Engineering Handbook: propósito, límites, verificación y acreditación de modelos</a></li>
     <li><a href="https://www.cdc.gov/niosh/noise/prevent/ppe.html" target="_blank" rel="noopener">NIOSH: elección, ajuste y doble protección auditiva</a></li>
@@ -4434,6 +4817,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://consultas2.oepm.es/InvenesWeb/detalle?referencia=P201630270" target="_blank" rel="noopener">OEPM Invenes: patente española ES 2 582 980 A1 de culata regulable</a></li>
     <li><a href="https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=2288115&amp;parentDocumentId=2288114&amp;skipCopyright=true&amp;skipWatermark=true" target="_blank" rel="noopener">Olympic World Library, estudio histórico sobre las pruebas con pichones vivos de París 1900</a></li>
     <li><a href="https://opensource.org/license/mit" target="_blank" rel="noopener">Open Source Initiative: texto y condición de la licencia MIT</a></li>
+    <li><a href="https://books.google.com/books/about/Mind_Vs_Target.html?id=6AIUmAEACAAJ" target="_blank" rel="noopener">Palmer: Mind vs Target, seis pasos para el juego mental del plato</a></li>
     <li><a href="https://patents.google.com/patent/US256227A/en" target="_blank" rel="noopener">Patente US256227A de George Ligowsky, 11 de abril de 1882</a></li>
     <li><a href="https://github.com/rcanalescoder/Plato/commits/main/" target="_blank" rel="noopener">Plato: historial de commits para identificar una revisión</a></li>
     <li><a href="https://github.com/rcanalescoder/Plato/blob/14a8bf6fafa29b3b26699e8c930f78d18d0d0e5c/LICENSE" target="_blank" rel="noopener">Plato: licencia MIT y aviso original de Roberto Canales Mora</a></li>
@@ -4445,6 +4829,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://promatic.co.uk/products/signature-double-abt" target="_blank" rel="noopener">Promatic: máquina ABT con oscilación, elevación y ajuste de apertura</a></li>
     <li><a href="https://www.purdey.com/pages/our-bespoke-models-the-sidelock-side-by-side" target="_blank" rel="noopener">Purdey: fabricación actual de paralelas</a></li>
     <li><a href="https://docs.python.org/3/library/http.server.html" target="_blank" rel="noopener">Python: uso por línea de órdenes y límites de http.server</a></li>
+    <li><a href="https://www.heinzlive.com/" target="_blank" rel="noopener">Reinkemeier y Bühlmann: la psique del disparo y la autorregulación del tirador</a></li>
     <li><a href="https://github.com/rcanalescoder/Plato" target="_blank" rel="noopener">Repositorio Plato, función «Repetir plato» y alcance declarado</a></li>
     <li><a href="https://github.com/rcanalescoder/Plato/tree/main/docs" target="_blank" rel="noopener">Repositorio Plato: documentación e imágenes incluidas en docs/</a></li>
     <li><a href="https://github.com/rcanalescoder/Plato/issues" target="_blank" rel="noopener">Repositorio Plato: registro público de Issues</a></li>
@@ -4481,6 +4866,25 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://doi.org/10.1080/00222899809601335" target="_blank" rel="noopener">Wulf y colaboradores, frecuencia de feedback en aprendizaje motor complejo</a></li>
     <li><a href="https://doi.org/10.1080/00222899809601334" target="_blank" rel="noopener">Wulf, Höß y Prinz: efectos de instrucciones con foco interno y externo</a></li>
     <li><a href="https://doi.org/10.1177/00315125251359760" target="_blank" rel="noopener">Yazgan y colaboradores: revisión sistemática sobre imaginería motora y observación de acciones en deporte</a></li>
+    <li><a href="https://doi.org/10.1016/j.psychsport.2011.07.007" target="_blank" rel="noopener">Mesagno y colaboradores: miedo a la evaluación negativa y bloqueo bajo presión</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/41951087/" target="_blank" rel="noopener">Metaanálisis de intervenciones para proteger el rendimiento deportivo bajo presión</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/42271117/" target="_blank" rel="noopener">Exercise and Sports Science Australia: posicionamiento sobre rendimiento bajo presión</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3307964/" target="_blank" rel="noopener">Biofeedback de variabilidad cardiaca y rendimiento psicomotor en deportistas</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/29997757/" target="_blank" rel="noopener">Ensayo aleatorizado del enfoque mindfulness-aceptación-compromiso en deportistas</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12838017/" target="_blank" rel="noopener">Desarrollo y validación preliminar de entrenamiento de aceptación y compromiso para tiradores</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/23211179/" target="_blank" rel="noopener">Revisión sistemática sobre programación neurolingüística y resultados de salud</a></li>
+    <li><a href="https://es.scribd.com/doc/7228209/Iniciacion-Tiro-Al-Plato" target="_blank" rel="noopener">Piñero Herrera: <em>Iniciación al tiro al plato</em>, consultado solo para el mapa comparativo de temas</a></li>
+    <li><a href="https://tienda.solotiro.com/es/libros-de-tiro-al-plato/359-libro-manual-practico-de-tiro-al-plato-jose-manuel-alonso-diaz-.html" target="_blank" rel="noopener">Solo Tiro: ficha bibliográfica comercial del <em>Manual práctico de tiro al plato</em> de José Manuel Alonso Díaz; no se usó como acceso al contenido</a></li>
+    <li><a href="https://doi.org/10.14198/jhse.2018.133.06" target="_blank" rel="noopener">Peljha, Michaelides y Collins: revisión de la preparación física en tiro al plato; solo tres estudios específicos localizados</a></li>
+    <li><a href="https://doi.org/10.7752/jpes.2021.s6444" target="_blank" rel="noopener">Peljha y colaboradores: estudio exploratorio de fuerza, movilidad, equilibrio y rendimiento en diecinueve tiradores de Trap y Skeet</a></li>
+    <li><a href="https://doi.org/10.1016/j.orthtr.2026.05.001" target="_blank" rel="noopener">Revisión narrativa de 2026 sobre condición física y control del tronco en disciplinas de tiro; estudios heterogéneos y sin receta universal</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6926526/" target="_blank" rel="noopener">Percepción del entrenamiento físico entre tiradores olímpicos; evidencia descriptiva y de varias disciplinas</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/19996770/" target="_blank" rel="noopener">Fradkin, Zazryn y Smoliga: revisión con metaanálisis sobre calentamiento y rendimiento; transferencia deportiva general</a></li>
+    <li><a href="https://doi.org/10.1136/bjsports-2020-102025" target="_blank" rel="noopener">Consenso de expertos sobre sueño en deportistas: evaluación e intervención individualizadas</a></li>
+    <li><a href="https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=159658&amp;parentDocumentId=44461&amp;skipCopyright=true&amp;skipWatermark=true" target="_blank" rel="noopener">Comité Olímpico Internacional: guía práctica de alimentación e hidratación para deportistas; principios generales, no prescripción individual</a></li>
+    <li><a href="https://www.wada-ama.org/sites/default/files/2025-09/2026list_en_final_clean_september_2025.pdf" target="_blank" rel="noopener">Agencia Mundial Antidopaje: Lista de Prohibiciones 2026</a></li>
+    <li><a href="https://api.fitasc.com/media/2025-rglt-cs-eng-6825ccbed2a18275696578.pdf" target="_blank" rel="noopener">FITASC: reglamento Compak Sporting 2025, cinco puestos, máquinas, trayectorias, dobles y seguridad</a></li>
+    <li><a href="https://api.fitasc.com/media/20260203-rglt-pc-eng-69c6aa08dfdfc995043715.pdf" target="_blank" rel="noopener">FITASC: reglamento Sporting consultado en 2026, recorridos, presentaciones, posición preparada y dobles</a></li>
   </ol>
 </section>
 </main>

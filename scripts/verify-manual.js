@@ -22,7 +22,7 @@ const articles = [...html.matchAll(
   /<article class="book-section"[^>]*id="([^"]+)"[^>]*data-section="(\d+\.\d+)"[^>]*>([\s\S]*?)<\/article>/g,
 )];
 
-if (articles.length !== 204) fail(`Se encontraron ${articles.length}/204 subapartados.`);
+if (articles.length !== 226) fail(`Se encontraron ${articles.length}/226 subapartados.`);
 
 const sectionNumbers = [];
 for (const article of articles) {
@@ -91,7 +91,7 @@ if (!bibliographyMatch) {
 const imageRefs = [...html.matchAll(
   /<img[^>]+src="([^"]*\/subapartados\/[^"]+\.png)"[^>]*>/g,
 )].map((match) => match[1]);
-if (imageRefs.length !== 204) fail(`El libro referencia ${imageRefs.length}/204 PNG de subapartado.`);
+if (imageRefs.length !== 226) fail(`El libro referencia ${imageRefs.length}/226 PNG de subapartado.`);
 if (new Set(imageRefs).size !== imageRefs.length) fail("Hay rutas PNG reutilizadas.");
 
 const hashes = new Map();
@@ -115,7 +115,7 @@ for (const ref of imageRefs) {
 }
 
 const chapterSummaries = [...html.matchAll(/class="chapter-summary"/g)].length;
-if (chapterSummaries < 16) fail(`Solo hay ${chapterSummaries}/16 resúmenes de capítulo.`);
+if (chapterSummaries < 19) fail(`Solo hay ${chapterSummaries}/19 resúmenes de capítulo.`);
 if (/\.svg(?:["')\s]|$)/i.test(html)) fail("El libro referencia un SVG.");
 
 const personalNotes = [...html.matchAll(/<aside class="personal-note">([\s\S]*?)<\/aside>/g)];

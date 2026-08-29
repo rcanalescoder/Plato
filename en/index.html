@@ -249,7 +249,29 @@
 <a class="sub-link" href="#s16-13"><span>16.13</span>Manual version control</a>
 <a class="sub-link" href="#s16-14"><span>16.14</span>Documentation changelog</a>
 <a class="sub-link" href="#s16-15"><span>16.15</span>Credits</a></div></details>
-<details class="nav-chapter"><summary><a href="#conclusiones-finales"><span>17</span>Useful conclusions from the book</a></summary><div></div></details></aside>
+<details class="nav-chapter"><summary><a href="#mente"><span>17</span>The shooter's mind</a></summary><div><a class="sub-link" href="#s17-01"><span>17.1</span>A sport played from within</a>
+<a class="sub-link" href="#s17-02"><span>17.2</span>Shooting in front of others</a>
+<a class="sub-link" href="#s17-03"><span>17.3</span>Arousal</a>
+<a class="sub-link" href="#s17-04"><span>17.4</span>Breathing as a tool</a>
+<a class="sub-link" href="#s17-05"><span>17.5</span>The pre-shot routine</a>
+<a class="sub-link" href="#s17-06"><span>17.6</span>Steady eyes, steady mind</a>
+<a class="sub-link" href="#s17-07"><span>17.7</span>Choking under pressure</a>
+<a class="sub-link" href="#s17-08"><span>17.8</span>Self-talk</a>
+<a class="sub-link" href="#s17-09"><span>17.9</span>Leave the missed target behind</a>
+<a class="sub-link" href="#s17-10"><span>17.10</span>Mental rehearsal and self-image</a>
+<a class="sub-link" href="#s17-11"><span>17.11</span>Approaches and professional help</a></div></details>
+<details class="nav-chapter"><summary><a href="#preparacion-integral"><span>18</span>Body, competition day and disciplines</a></summary><div><a class="sub-link" href="#s18-01"><span>18.1</span>Feet define the available movement</a>
+<a class="sub-link" href="#s18-02"><span>18.2</span>Balance without rigidity</a>
+<a class="sub-link" href="#s18-03"><span>18.3</span>The body trains too</a>
+<a class="sub-link" href="#s18-04"><span>18.4</span>Warm up and recover</a>
+<a class="sub-link" href="#s18-05"><span>18.5</span>The evening before and the kit bag</a>
+<a class="sub-link" href="#s18-06"><span>18.6</span>Competition day</a>
+<a class="sub-link" href="#s18-07"><span>18.7</span>Light, background and contrast</a>
+<a class="sub-link" href="#s18-08"><span>18.8</span>Wind, heat, cold and rain</a>
+<a class="sub-link" href="#s18-09"><span>18.9</span>Skeet: two houses and eight stations</a>
+<a class="sub-link" href="#s18-10"><span>18.10</span>Sporting: read before moving</a>
+<a class="sub-link" href="#s18-11"><span>18.11</span>Compak: variety in a compact frame</a></div></details>
+<details class="nav-chapter"><summary><a href="#conclusiones-finales"><span>19</span>Useful conclusions from the book</a></summary><div></div></details></aside>
   <main id="contenido">
 <section class="chapter book-chapter" id="fundamento">
   <p class="chapter-kicker">Chapter 01</p>
@@ -2246,7 +2268,7 @@
     <p>Both scripts carry out internal checks. <code>verify-schemes.js</code> can find badly copied data, incorrect information, or equations that don't match the independent regulatory tables. <code>verify-ballistics.js</code> can detect whether a change breaks the physical rules defined in the code. Passing these tests doesn't prove the coefficients reproduce a real shooting ground. Nor does it, on its own, check every screen interaction, every browser, responsive design, or accessibility.</p>
     <p>External validation would need data measured outside the program itself: trajectories captured with calibrated cameras, chronography under protocol, paper patterns, and discrepancies logged by version. The DLR literature offers an example of 3D flight estimation compared against observed impact. ISSF and FITASC regulations provide constraints; they don't validate every coefficient. No software test suite would, on its own, turn Plato into a certifying body.</p>
     <aside class="field-note"><strong>Minimum record.</strong> When reporting a bug, note the browser, mode, scheme, station, visible controls, screenshot, expected result and observed result. The interface doesn't expose or require a seed: to repeat the clay use “Repeat target”; exact reproduction of a pellet cloud is only possible if a technical diagnostic keeps its internal seed.</aside>
-    <aside class="technical-note"><strong>Checked result.</strong> <code>verify-schemes.js</code> and <code>verify-ballistics.js</code> finish with exit code zero on the reviewed copy. This means they haven't found any faults in the scripted checks. These are checks that can be repeated on the internal model, not external experimental tests. <code>scripts/verify-manual.js</code> only validates the integrated book that is about to be published. It checks its 204 subsections, the sources, the editorial closures, the summaries and the PNG images. It must be run again after any change to text or images.</aside>
+    <aside class="technical-note"><strong>Checked result.</strong> <code>verify-schemes.js</code> and <code>verify-ballistics.js</code> finish with exit code zero on the reviewed copy. This means they haven't found any faults in the scripted checks. These are checks that can be repeated on the internal model, not external experimental tests. <code>scripts/verify-manual.js</code> only validates the integrated book that is about to be published. It checks its 226 subsections, the sources, the editorial closures, the summaries and the PNG images. It must be run again after any change to text or images.</aside>
 </article>
 
   <article class="book-section" id="s09-16" data-section="9.16">
@@ -4003,7 +4025,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <p><code>solveClayLaunch()</code> builds a parabola in space. The curve must satisfy the height at 10 m and the landing distance. To do this it uses gravity reduced to <code>9.81 × 0.42</code>. <code>targetAt()</code> adds a simple lateral offset for wind. The shot uses 78% of the value shown by the cartridge control. It also uses 306 pellet directions, an exponential velocity loss with distance, and an internal minimum of <code>0.55 J</code>. <code>CLAY_RADIUS_M</code> is <code>0.055 m</code>, which is half the ISSF nominal diameter of 110 mm. The clay is approximated as a sphere because the model doesn't simulate its orientation.</p>
     <p>The recommended aim repeats the travel-time calculation and adjusts the horizontal and vertical angles, called <em>yaw</em> and <em>pitch</em>. To do this it uses the same core physics as the diagnostics. <strong>Repeat target</strong> copies the last release without increasing the counter or changing station. A normal round runs to 25 targets and rotates across five stations. <strong>Slow motion</strong> reduces the speed at which the simulation plays out. The visual aids keep real time so they can be read comfortably.</p>
     <p><code>pelletHitTarget()</code> doesn't check for impact only at the sampled instants. At each interval, <code>closestPointOnRelativeSegment()</code> calculates the shortest continuous distance between the pellet's motion and the clay's. It then works out the instant of possible contact and evaluates the distance and energy there. This avoids missing a crossing that happens between two time steps, within the linear approximation of each segment. Even so, contact is calculated using a sphere that envelops the clay. The disc's orientation, edge and real fracture aren't simulated.</p>
-    <p><code>scripts/verify-schemes.js</code>, with SHA-256 <code>a1e2e667…350946</code>, compares 200 records row by row against independent regulatory data. That's 50 records from FITASC Universal and 150 from ISSF Olympic. <code>scripts/verify-ballistics.js</code>, with SHA-256 <code>2d76d179…42d1fc</code>, tests the centre, the edge and the outside. It also checks energy and range, chokes, the seed, slow motion, rib gain and the yellow guide line. Lastly, it checks the relationship between shots 1 and 2. <code>scripts/verify-manual.js</code>, with SHA-256 <code>71d962f3…c699b8</code>, checks the 204 units, their images and their summaries. These tests always produce the same result for the same input and check the implementation and the edition. They aren't an experimental validation of the real ballistics, machine, cartridge or breakage.</p>
+    <p><code>scripts/verify-schemes.js</code>, with SHA-256 <code>a1e2e667…350946</code>, compares 200 records row by row against independent regulatory data. That's 50 records from FITASC Universal and 150 from ISSF Olympic. <code>scripts/verify-ballistics.js</code>, with SHA-256 <code>2d76d179…42d1fc</code>, tests the centre, the edge and the outside. It also checks energy and range, chokes, the seed, slow motion, rib gain and the yellow guide line. Lastly, it checks the relationship between shots 1 and 2. <code>scripts/verify-manual.js</code> checks the 226 units, their images and their summaries; its fingerprint must be calculated from the edition that is eventually published. These tests always produce the same result for the same input and check the implementation and the edition. They aren't an experimental validation of the real ballistics, machine, cartridge or breakage.</p>
     <aside class="field-note"><strong>Reproducible case.</strong> Select Universal, <code>fu1</code>, station 3, wind 0 and <code>1.00x</code>; record the three fingerprints and the controls before comparing. “I tested it yesterday” isn’t enough if the table, the browser or the code could have changed.</aside>
     <aside class="technical-note"><strong>Source rule.</strong> Comments explain intent; the expression that’s executed determines behaviour; the test verifies a specific property. If the three disagree, an issue is opened rather than picking whichever text is more convenient.</aside>
 </article>
@@ -4173,6 +4195,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <p>Each entry includes the actual publication date, the version or commit, the category, the affected item, the effect on the reader, the source or issue, and the evidence. The useful categories are <strong>Added</strong>, <strong>Changed</strong>, <strong>Fixed</strong>, <strong>Removed</strong>, <strong>Sources</strong>, <strong>Licence</strong> and <strong>Images</strong>. A phrase like “Various improvements” doesn't explain the effect and can't be assessed.</p>
     <p>A new feature must explain the control and where it appears. A changed parameter must state the previous value, the new one, the unit and the reason. A fixed formula must include the case that used to fail and the test it now passes. A regulatory change must identify the body, the edition, the article and the affected sections. If a screenshot or infographic is updated, it must explain whether the interface changed, the evidence used changed, or only the visual composition changed. A licence change must accurately reproduce the canonical file and receive legal review when necessary.</p>
     <p>The record for this production describes the finished integration as a documented edition, without inventing a release number: “02/08/2026. Full book incorporated across 17 chapters and 204 units. Includes visible sources, glossary, FAQ, document control, and a dedicated PNG for each subsection. The HTML structure, navigation and references have been reviewed. The schemes, internal ballistics and the book have been checked using <code>scripts/verify-schemes.js</code>, <code>scripts/verify-ballistics.js</code> and <code>scripts/verify-manual.js</code>. The technical review is fixed at commit <code>14a8bf6…</code>.” This entry reports on work that has been checked and the tests carried out. It's not equivalent to an external certification of the physical model.</p>
+    <p>The working copy dated 29/08/2026 adds Chapters 17 and 18 on applied psychology, integrated preparation and further disciplines; renumbers the conclusions as Chapter 19 and expands the manual to 226 units. It includes twenty-two localised pairs of generative infographics, specific scientific and regulatory references, and a Spanish–English parity check. This entry remains a “working copy” until a commit identifies the exact files that are published.</p>
     <p>Once a versioning policy exists, the <em>Unreleased</em> section, or “not yet published”, will gather the changes up to the next release. When the edition closes, it will be replaced by a date and a version, with a link to the comparison. The changelog doesn't copy every commit, doesn't attribute authorship by guesswork, and doesn't hide inconvenient corrections. Showing a correction increases trust, because it lets you know which information became outdated.</p>
     <p>Dates come from the act of publication or from the commit, never from the moment someone recalls having made the change.</p>
     <aside class="field-note"><strong>Example entry.</strong> “Fixed: the slow-motion FAQ clarifies that <code>1.00x</code> is normal-speed time. Affects 16.10. Evidence: <code>loop()</code> multiplies <code>realDt</code> by <code>params.slow</code>. Test: comparing duration at 0.50x and 1.00x.”</aside>
@@ -4190,7 +4213,7 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     </figure>
     <p><strong>Original author, concept and project.</strong> Plato was built by <strong>Roberto Canales Mora</strong>. The canonical notice identifies “Copyright (c) 2026 Roberto Canales Mora” and the original URL <a href="https://robertocanales.com/proyectos#plato" target="_blank" rel="noopener">https://robertocanales.com/proyectos#plato</a>. The public edition of the book and the simulator can be viewed at <a href="https://rcanalescoder.github.io/Plato/" target="_blank" rel="noopener">https://rcanalescoder.github.io/Plato/</a>.</p>
     <p><strong>Guidance and narrative material.</strong> The educational questions, the examples for beginners and the observations about La Bastida come from the author's personal experience. So do the repeated clays, the early frustration, the word “trillos” and part of the ground vocabulary. When they aren't rules or measurements, the manual presents them in their own boxes. Editing these memories doesn't turn them into universal data.</p>
-    <p><strong>Assisted production.</strong> The research, the organised writing and the fifteen generative infographics for chapter 16 were produced with OpenAI Codex, following the project's editorial instructions. Each image is an original composition created for its section. It doesn't copy the figures from the linked articles or regulations. Claims are checked against the visible sources and the code, not against the tool's supposed authority.</p>
+    <p><strong>Assisted production.</strong> The research, the organised writing and the fifteen generative infographics for Chapter 16, together with the eleven bilingual pairs for Chapter 17 and the eleven bilingual pairs for Chapter 18, were produced with OpenAI Codex, following the project's editorial instructions. Each image is an original raster composition made for its section, with a white background and a separately localised version for each language. It doesn't copy the figures from the linked articles or regulations. Claims are checked against the visible sources and the code, not against the tool's supposed authority.</p>
     <p><strong>Technologies.</strong> The simulator uses HTML, CSS, JavaScript and Canvas 2D; the book uses HTML, CSS, JavaScript and PNG. Git and GitHub maintain history and publishing; GitHub Pages serves the static site. The ISSF, FITASC, BOE, Guardia Civil, academic authors and manufacturers cited are sources, not sponsors or reviewers of Plato.</p>
     <p><strong>Contributors and review.</strong> As of 2 August 2026, the material reviewed contained no verifiable list of technical reviewers, teachers, clubs or contributors who had approved this chapter. That's why validation isn't attributed to La Bastida, to a federation, or to the people cited in the studies. When someone reviews an edition, their name, role, scope, date and version will be recorded. The word “reviewer” won't mean that person approves the whole project.</p>
     <p><strong>Editorial contract implemented.</strong> The reviewed edition has a recognisable cover, an explanatory subtitle and a real screenshot of the simulator in the header. It also includes a safety notice and one about its educational purpose. It offers a full table of contents, text search, buttons to open <code>app.html</code>, and side navigation through chapters and sections. Chapters can be expanded, and the active section is highlighted. Each section ends with references. There's also a cost calculator and a layout that adapts, via CSS, to desktop, tablet and mobile. The stylesheet includes a version for printing from the browser. All these features can be checked in the published files. They aren't presented as future work or as external contributions.</p>
@@ -4213,8 +4236,355 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     </ul>
   </div>
 </section>
-<section class="chapter book-chapter final-conclusions" id="conclusiones-finales">
+<section class="chapter book-chapter" id="mente">
   <p class="chapter-kicker">Chapter 17</p>
+  <h2>The shooter's mind</h2>
+  <p class="opening">So far we have organised safety, the shooting ground, the gun, misses and geometry. One piece is still missing: the part that decides whether all of that remains available when it matters. Clay shooting gives the shooter unusual control over the beginning of the action. Nobody tackles you or passes you a ball; the target is released only after your call. That freedom is also a difficulty. There is enough time between targets for useful preparation, but also enough time for comparison, doubt and prediction.</p>
+  <p class="opening">This chapter brings together findings from sport psychology and precision tasks, then translates them cautiously to the shooting ground. It does not replace a coach or a sport psychologist. Its purpose is to name familiar experiences, offer tools that can be practised, and distinguish research evidence from coaching tradition or commercial claims. It links directly to Chapters 6, 7 and 12 and keeps their central rule: one clear question for each attempt.</p>
+
+  <article class="book-section" id="s17-01" data-section="17.1">
+    <span class="section-number">17.1</span>
+    <h3>A sport played from within</h3>
+    <p class="section-bridge">Chapter 7 organised how the movement is learned. This chapter organises the person who performs it.</p>
+    <p class="section-lead">In an opposition sport, the rival applies pressure from outside. In shooting, much of the pressure travels with you: it is produced by your own nervous system.</p>
+    <p>Motor psychology describes shooting as a closed, self-initiated skill. Closed does not mean unchanging. Light, wind, trajectory, fatigue and surroundings still vary. It means that the action takes place within relatively predictable boundaries. Self-initiated means that the action waits for your call. There is no ball arriving unexpectedly. This structure provides time to prepare well, yet it also gives hesitation and self-monitoring room to grow.</p>
+    <p>That is why high-level shooters deliberately train psychological skills. A qualitative study involving eight Olympic rifle and pistol shooters highlighted preparation, competitive anxiety, professional support and the coach's role. It was a small sample and did not examine clay shooting, so it cannot be treated as a direct rule for Trap. It does, however, identify useful questions. Confidence, activation and attention can be observed, practised and recorded just as the gun mount was in Chapter 6.</p>
+    <p>This chapter asks for no leap of faith. Try one tool, record what happened, and compare like with like. It is the one-variable method from Chapter 12 applied to the processes between your ears.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-01-un-deporte-que-se-juega-por-dentro.png" width="1254" height="1254" alt="Comparison between an opposition sport with an external rival and clay shooting, where activation, attention and confidence add internal variation">
+      <figcaption>The gun and ground may be the same from one day to the next. The nervous system pulling the trigger is not.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-02" data-section="17.2">
+    <span class="section-number">17.2</span>
+    <h3>Shooting in front of other people</h3>
+    <p class="section-bridge">Once internal variation is visible, the most common source of pressure for a beginner becomes easier to address: the other people on the squad.</p>
+    <p class="section-lead">Everybody can hear the result of your shot. Feeling watched is normal, has a name, and can be managed.</p>
+    <p>Psychologists call it fear of negative evaluation: expecting other people to judge your performance unfavourably. In an experiment with experienced basketball players, those who scored higher on this fear showed a larger rise in anxiety and a greater performance decline when pressure increased. The task was not Trap and the result does not prove that every beginner will respond in the same way. It does support a useful principle: imagined judgement can occupy attention that the task itself needs.</p>
+    <p>Three actions can help without pretending the thought has disappeared. First, notice “I am imagining a judgement” and treat it as a thought rather than a result. Second, return to a controllable process goal and compare your own rounds over time, as Chapter 7 recommended. Third, apply the squad etiquette from Chapter 4: nobody comments on another person's shot unless invited to do so.</p>
+    <aside class="technical-note"><strong>Limit of the evidence.</strong> Fear of negative evaluation has been examined in other sports and in front of audiences. Applying the finding to a Trap squad is a reasoned transfer, not a direct measurement in beginner clay shooters.</aside>
+    <aside class="field-note"><strong>A concrete exercise.</strong> Before your next round, write one process target that does not depend on score: for example, completing your routine on all twenty-five targets. At the end, assess only that target. The round is no longer an examination in front of an audience.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-02-tirar-delante-de-otros.png" width="1254" height="1254" alt="A squad of five shooters, each attending to their own station, with the useful comparison pointing to a personal notebook rather than another shooter">
+      <figcaption>Each shooter watches their own target. The useful comparison points to your previous round, not the next station.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-03" data-section="17.3">
+    <span class="section-number">17.3</span>
+    <h3>Activation: your working range</h3>
+    <p class="section-bridge">Reducing social pressure does not mean becoming flat. Performance needs alertness, but the useful amount is individual.</p>
+    <p class="section-lead">Activation is the body's level of readiness. A sleeping shooter will not break the target; a badly rushed shooter may not either.</p>
+    <p>Each shooter can learn to recognise a range in which their routine works reliably. With too little activation, attention may drift: the call begins before the feet are settled, or the eyes arrive late. With too much, the signs may include hurry, raised shoulders, shallow breathing or early recoil anticipation. These are examples, not a diagnosis. The practical task is to record which signals appear before your best executions and which ones accompany a broken routine.</p>
+    <p>The goal is not always to lower the pulse. It is to recognise the current state, stop fighting every bodily sensation, and direct attention towards a controllable action: stance, gaze, breath or cue word. Acceptance-based approaches have reduced competitive anxiety in small athlete studies, and preliminary work exists with shooters. The evidence is promising but not strong enough to prescribe one universal sequence for every person or every discipline.</p>
+    <aside class="technical-note"><strong>Technical reading.</strong> The inverted U is a teaching picture, not a law that predicts an individual's score. An individual-zone model is more cautious: the same activation can help one shooter and hinder another, depending on the task, experience and moment.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-03-la-activacion.png" width="1254" height="1254" alt="Inverted-U relationship between activation and performance, with a personal working zone and warning signs on either side">
+      <figcaption>Neither sleepy nor rushed: each shooter learns a personal working range and the signals that mark its edges.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-04" data-section="17.4">
+    <span class="section-number">17.4</span>
+    <h3>Breathing as a tool</h3>
+    <p class="section-bridge">To move activation towards your useful range, you need a practical lever. Slow breathing is inexpensive, portable and comparatively well studied.</p>
+    <p class="section-lead">Breathing offers a simple way to influence activation. It is not an off switch, and the same rhythm does not suit everyone.</p>
+    <p>Many slow-breathing protocols work near six cycles per minute, although an individual's resonance frequency can differ. A small study of athletes reported psychomotor improvements after heart-rate-variability biofeedback training. An exploratory programme with five junior shooters also observed changes in confidence and autonomic response. These findings justify experimentation under sensible conditions; they do not guarantee extra hits simply because a shooter breathes at one fixed number.</p>
+    <p>A practical starting point between rounds is two or three minutes at a comfortable pace, without dizziness, allowing the outward breath to last slightly longer. On the station, one complete breath can be integrated into the pre-shot routine. If it disrupts timing, creates tension or becomes another thing to monitor, adjust it with the coach. Chapter 12 already used the pause between simulator attempts; here that pause becomes a variable that can be compared.</p>
+    <aside class="field-note"><strong>A concrete exercise.</strong> In the simulator, shoot ten targets with one complete breath before every call, then ten without it. Record both results and the feeling of hurry. You are testing a routine component, not trying to manufacture luck.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-04-la-respiracion-como-herramienta.png" width="1254" height="1254" alt="A slow-breathing rhythm of about six cycles per minute between rounds and a single complete breath before calling for the target">
+      <figcaption>Two doses: a comfortable slow rhythm between rounds and one complete breath before the call.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-05" data-section="17.5">
+    <span class="section-number">17.5</span>
+    <h3>The pre-shot routine</h3>
+    <p class="section-bridge">Breathing needs a stable place in the sequence. The pre-shot routine provides it and is one of the better-supported tools in this chapter.</p>
+    <p class="section-lead">A pre-shot routine is a short, repeatable sequence immediately before each target. Its job is to give every attempt the same beginning.</p>
+    <p>Reviews and a recent meta-analysis include pre-performance routines among the interventions that can protect performance under pressure, particularly for closed skills. The studies combine different sports, tasks and methods, so they do not prove a single recipe for Trap. A plausible explanation has two parts: a routine directs attention towards useful tasks and removes needless variation before movement begins.</p>
+    <p>A Trap routine might run as follows: place the feet, mount and check the fit, take the eyes to the visual pick-up zone from Chapter 8, release the breath, use one cue word and call. It must remain brief, comply with the rules and respect the squad's rhythm. The precise content should be tested with a coach. What matters is that each step has a purpose and can be completed calmly rather than performed as an empty ritual.</p>
+    <aside class="field-note"><strong>A concrete exercise.</strong> Write the routine in your notebook, step by step. In the simulator, complete it before every call throughout an entire set. The repeat button lets you rehearse the same flight until the beginning of the action becomes stable.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-05-la-rutina-previa-al-plato.png" width="1254" height="1254" alt="Five-step pre-shot routine: feet, mount, gaze at the pick-up point, breath and target call, repeated in the same order">
+      <figcaption>Feet, mount, gaze, breath, call. The exact order is yours; repeatability is the tool.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-06" data-section="17.6">
+    <span class="section-number">17.6</span>
+    <h3>Quiet eyes, quieter mind</h3>
+    <p class="section-bridge">One part of the routine has been measured closely: where the eyes settle, and when that final stable gaze begins.</p>
+    <p class="section-lead">Researchers use the term <em>quiet eye</em> for the final gaze fixation before movement. In shotgun research, better performers settled their gaze earlier and kept it stable for longer.</p>
+    <p>In a study of 48 Trap, Skeet and Double Trap shooters, the elite group began the final gaze earlier and maintained it for a greater relative duration. The same pattern also distinguished successful and unsuccessful attempts. A second experiment involving twenty international Skeet shooters trained a visual routine and reported improvements in gaze measures and performance. Those numbers belong to those groups; they do not establish a duration that every shooter should copy.</p>
+    <p>This connects two earlier lessons. Chapter 6 warned against staring at the barrel, while Chapter 8 defined the area in which the target should first become clear. Quiet-eye research supplies a scientific link between them: let the eyes settle in the chosen area before initiating the shot. The shooter is not trying to freeze vision or narrow it artificially. The aim is to begin from a stable visual state instead of calling while the gaze is still searching.</p>
+    <p>The exercise is simple to describe: do not call until the eyes have arrived and settled in your pick-up zone. The pre-shot routine gives that check a precise place. Work with the coach to select the visual location for the discipline and station rather than inventing a universal point.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-06-ojos-quietos.png" width="1254" height="1254" alt="Comparison of the final gaze before the call in expert and developing shotgun shooters, focused on the visual pick-up zone">
+      <figcaption>The last fixation before the call: a stable visual beginning supports the gun movement that follows.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-07" data-section="17.7">
+    <span class="section-number">17.7</span>
+    <h3>Choking: two ways to lose a round</h3>
+    <p class="section-bridge">Routine and gaze protect the learned movement. Understanding what they protect it from makes the tools easier to choose.</p>
+    <p class="section-lead">Choking means performing below your established level when the outcome feels especially important. Research describes two routes, and they require different corrections.</p>
+    <p>The first route is distraction. Anxiety pulls attention towards the score, the squad or the imagined judgement of others, leaving fewer resources for the target. The second is self-focus. Under pressure, the shooter consciously supervises a movement that had become automatic, breaking it into parts and disturbing its timing. This reverses the Shu-Ha-Ri progression from Chapter 7: pressure brings the shooter back to controlling a skill that normally runs without verbal supervision.</p>
+    <p>The chapter's tools address both routes. A pre-shot routine guides attention towards useful tasks. An external focus on the target, rather than on an elbow or trigger finger, reduces the temptation to dismantle an already learned movement. Pressure can also be introduced gradually: a watched round, a process target stated in advance or a competition simulation. It should be voluntary, safe and progressive, preferably with a coach, and never used as punishment or humiliation.</p>
+    <aside class="technical-note"><strong>Technical reading.</strong> The instruction overload described in Chapter 6 is self-focus imposed from outside. Keeping one process objective for a round limits both distraction and excessive movement monitoring.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-07-el-bloqueo.png" width="1254" height="1254" alt="Two routes to choking under pressure, distraction and self-focus, with pre-shot routine, external focus and gradual pressure practice as responses">
+      <figcaption>Distraction and self-focus disrupt performance by opposite routes. Routine and target focus address both.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-08" data-section="17.8">
+    <span class="section-number">17.8</span>
+    <h3>Self-talk and the cue word</h3>
+    <p class="section-bridge">Some of the noise that feeds pressure does not come from the squad. It comes from the way the shooter talks internally on the station.</p>
+    <p class="section-lead">Inner speech cannot simply be switched off, but it can be directed. There is an important difference between narrating and cueing.</p>
+    <p>Narrating means telling the story of the round while it is still happening: “eighteen out of twenty; if I hit these two…” The calculation turns the next target into an examination. Cueing is different. It is a short process instruction, chosen in advance: “smooth”, “target”, “through”. One word, used consistently at the same point before the call.</p>
+    <p>A brief cue can leave less room for score narration and return attention to a selected feature of the process. It is not magic and must not introduce a new technical correction in the middle of the round. Choose a word the coach understands, test it during ordinary practice, and retain it long enough to know whether it helps. Changing both the word and the movement after every miss makes the result impossible to interpret.</p>
+    <p>Consult the score when the rules or organisation require it. Outside those moments, repeatedly calculating consequences rarely improves the next action. The only result that can still be influenced is the next target, and the cue word exists to bring attention back to it.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-08-el-dialogo-interno.png" width="1254" height="1254" alt="Contrast between narrating the score during a round and using one short process cue before calling for the target">
+      <figcaption>Score narration examines; a cue word directs. Choose what the verbal channel carries.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-09" data-section="17.9">
+    <span class="section-number">17.9</span>
+    <h3>Leave the missed target behind</h3>
+    <p class="section-bridge">Even when the previous tools work, targets will be missed. What happens immediately afterwards determines whether one miss becomes several.</p>
+    <p class="section-lead">A single miss costs one point. A miss carried forward can cost the round. A closing routine marks the difference.</p>
+    <p>A miss naturally attracts attention towards an event that can no longer be changed. Frustration may then push the next attempt to begin with more hurry and less preparation. Many coaches use a short closing action to mark the boundary. Some call it a “mental shower”. That is a coaching metaphor, not a demonstrated clinical mechanism, and it should be presented as such.</p>
+    <p>The exact form can vary, but the function stays clear. Open the gun, remove the cartridge safely and let that physical action finish the target. Take one longer breath. Then begin the normal pre-shot routine again, as though the round were starting now. Chapter 4 already established the safety meaning: an open gun marks the end of an attempt. Here, without changing that primary purpose, it also provides a useful mental boundary.</p>
+    <aside class="field-note"><strong>A concrete exercise.</strong> Create misses in the simulator by increasing the Robot difficulty. After each one, complete the closing sequence before calling again. You are training the boundary between attempts, not trying to protect a percentage.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-09-el-plato-fallado-se-queda-atras.png" width="1254" height="1254" alt="Post-miss closing routine: open the gun, remove the cartridge, take a longer breath and restart the normal pre-shot routine">
+      <figcaption>The open gun ends the target in the rules and in the mind. The next one starts from zero.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-10" data-section="17.10">
+    <span class="section-number">17.10</span>
+    <h3>Mental rehearsal and self-image</h3>
+    <p class="section-bridge">Closing a miss well protects today's round. What is rehearsed and recorded influences the rounds that follow.</p>
+    <p class="section-lead">Mental rehearsal repeats the action without physically shooting. It becomes more useful when it includes timing and bodily sensation, not only a picture.</p>
+    <p>Motor imagery has been studied in many sports and can complement physical practice, although its effect depends on the task, the shooter's experience and the quality of the rehearsal. Lanny Bassham's coaching system recommends rehearsing successful execution and recording process successes to develop self-image. That is a named coaching framework; it does not demonstrate that self-image by itself determines the score.</p>
+    <p>The notebook from Chapter 12 fits this work with a balanced rule. Record one execution that went well, the process signal that accompanied it, and—when a miss contains useful information—one neutral fact to examine later. The error is neither hidden nor replayed emotionally during the round. Two jobs are separated: preserving a useful reference and correcting one variable when there is time to think.</p>
+    <p>The simulator offers an inexpensive rehearsal space without an audience. It can show repeatable trajectories while the shooter adds the timing and sensations of the movement. Its limits still matter. As Chapter 13 explained, the screen cannot reproduce recoil, gun balance, squad pressure or the full visual field of the ground. Mental rehearsal supplements safe physical coaching; it does not replace it.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-10-ensayo-mental-y-autoimagen.png" width="1254" height="1254" alt="Cycle linking multisensory mental rehearsal, a written record of process successes and the shooter's working self-image">
+      <figcaption>What is rehearsed becomes easier to retrieve: preserve the good execution and analyse corrections later.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s17-11" data-section="17.11">
+    <span class="section-number">17.11</span>
+    <h3>Approaches, systems and professional help</h3>
+    <p class="section-bridge">These tools are often packaged as named systems. Chapter 16's hierarchy of evidence helps place each one without dismissing experience or confusing it with research.</p>
+    <p class="section-lead">Coaching literature can be valuable and varied. It does not all carry the same scientific support, and the difference should remain visible.</p>
+    <p>Bassham's Mental Management centres on self-image and rehearsal of successful execution. Paul Hughes's 4R approach draws on acceptance and commitment therapy without treating activation as something that must disappear: it asks the shooter to let the sensation be present and return attention to one controllable action. Reinkemeier and Bühlmann's German school uses structured plans for bodily self-regulation. Anthony Matarese gives two practical priorities: build technique before mental tools, then devote the station to intense target focus.</p>
+    <p>Other proposals require more caution. Systems based on neuro-linguistic programming often make broad promises despite weak scientific support. Electroencephalographic neurofeedback is interesting but expensive, and published results remain mixed. None of these labels should overrule the hierarchy from Chapter 16: peer-reviewed research first, clearly identified coaching experience next, advertising claims last. A useful idea can be tested without promoting the whole system that sells it.</p>
+    <p>There is also an honest boundary. If anxiety on the ground causes marked distress, avoidance or problems beyond shooting, a book is not the right level of care. A qualified sport psychologist or mental-health professional can assess the whole situation and provide individual support. Seeking that help is not a failure of toughness; it is the correct use of specialist expertise.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/17-11-escuelas-y-ayuda-profesional.png" width="1254" height="1254" alt="Map of shooting mental-training approaches arranged by evidence level: peer-reviewed research, coaching literature and commercial systems, with professional help shown separately">
+      <figcaption>Named systems are sorted with the same evidence hierarchy used for every other source in the book.</figcaption>
+    </figure>
+  </article>
+
+  <div class="chapter-summary">
+    <h3>What we have learned</h3>
+    <ul>
+      <li>In a self-initiated sport, activation, attention and confidence add variation to that already produced by conditions, technique and equipment.</li>
+      <li>Fear of evaluation can increase anxiety; noticing it and returning to a process goal prevents the thought from becoming an instruction.</li>
+      <li>Slow breathing and pre-shot routines are promising tools whose timing and content need to be adjusted to the individual.</li>
+      <li>Choking can follow distraction or self-focus; routine, external focus and gradual pressure practice address both routes.</li>
+      <li>The missed target ends when the gun is opened; successful execution is what should be deliberately rehearsed and recorded.</li>
+    </ul>
+    <p class="expert-note"><strong>Expert reading.</strong> Claims follow the hierarchy from Chapter 16. Quiet-eye research includes shotgun-specific studies. Routines, gradual pressure, breathing and acceptance combine broader sport evidence with small samples or different tasks. Commercial systems are identified as coaching literature, not presented as scientific proof.</p>
+  </div>
+</section>
+
+<section class="chapter book-chapter" id="preparacion-integral">
+  <p class="chapter-kicker">Chapter 18</p>
+  <h2>Body, competition day and disciplines</h2>
+  <p class="opening">The mind from Chapter 17 does not work alone. It needs feet that leave room to turn, a body capable of repeating the movement, an organised day and an honest reading of the surroundings. It must also recognise that Skeet, Sporting and Compak are not decorative variations on trench shooting: they change the space, ready position, available information and the way movement is prepared.</p>
+  <p class="opening">This chapter gathers those loose ends that previously appeared in separate places. It offers neither one universal stance nor a one-size-fits-all fitness plan. Nor does it turn the weather forecast into a lead table. It organises observable decisions and identifies when an instructor, strength and conditioning professional or healthcare professional should become involved. The method remains the same: safety, one variable and a check on the ground.</p>
+
+  <article class="book-section" id="s18-01" data-section="18.1">
+    <span class="section-number">18.1</span>
+    <h3>Feet define the available movement</h3>
+    <p class="section-bridge">Chapter 8 explained the meeting point. Before the gun moves, the feet must leave enough room to reach it without losing balance.</p>
+    <p class="section-lead">Stance does not begin at the shoulders. It begins by orienting the base towards the area where the movement is intended to finish.</p>
+    <p>Setting up only for the release can leave the body with no movement at the end. Setting up solely for one extreme can make the opposite trajectory awkward. In trench disciplines, the base seeks a compromise that can answer several directions. In Skeet and Sporting, it may be oriented for a known or presented line. In every case, both feet remain within the station and the muzzle remains within the authorised area.</p>
+    <p>There is no universal angle. Handedness, ankle and hip mobility, station width, discipline and break point all change the solution. The CPSA handbook shows useful models while also recognising different stances. They are references that help an instructor observe a function: can the shooter reach the end without lifting a heel, twisting a knee or correcting with a step?</p>
+    <aside class="field-note"><strong>Supervised check.</strong> With the gun confirmed empty, unloaded and under the instructor's direction, take the stance for a central trajectory. Slowly follow a left, central and right release without touching the trigger. If one requires losing the base, change only the orientation of the feet and repeat.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-01-los-pies-definen-el-recorrido.png" width="1254" height="1254" alt="Top view of three foot positions and their movement arcs, with a useful zone that reaches the break point without lifting a heel or leaving the station">
+      <figcaption>The feet do not point at the clay: they reserve the movement the body will need to follow it.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-02" data-section="18.2">
+    <span class="section-number">18.2</span>
+    <h3>Balance without rigidity</h3>
+    <p class="section-bridge">Good orientation opens the movement. The next step is to preserve a stable base without turning the body into a statue.</p>
+    <p class="section-lead">Stable means being able to move gun and torso as one unit. Rigid means spending tension before the clay appears.</p>
+    <p>Weight is distributed so the shooter can turn, mount and absorb recoil without taking a step. The knees do not need to lock and the shoulders do not need to rise. The head meets the stock because gun and body fit together, not because the neck chases the rib. If contact requires leaning, pressing the face down or always loading one side, stance, mobility and stock fit need to be separated before more cartridges are fired.</p>
+    <p>An exploratory study involving nineteen Trap and Skeet shooters found associations between performance and symmetry of shoulder mobility, grip strength, flexibility and balance. Its sample was too small to turn those relationships into a causal prescription. It does not mean that one strength value produces a score. It does support a practical question: does the chosen solution allow the movement to be repeated comfortably to both sides?</p>
+    <aside class="technical-note"><strong>Two different problems.</strong> A base that shifts during movement is an observable technical problem. Pain, a marked loss of mobility or persistent weakness calls for professional assessment; forcing the body into a textbook stance is not a correction.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-02-equilibrio-sin-rigidez.png" width="1254" height="1254" alt="Comparison of an unstable stance, a rigid stance and mobile balance, with foot pressure, knees, pelvis, shoulders and head aligned to turn without tension">
+      <figcaption>Useful stability preserves contact and movement; rigidity only adds tension that will later have to be overcome.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-03" data-section="18.3">
+    <span class="section-number">18.3</span>
+    <h3>The body trains too</h3>
+    <p class="section-bridge">If the stance must be repeated through several rounds, technique needs a physical base that can endure without distorting it.</p>
+    <p class="section-lead">Physical preparation for a shooter need not imitate another sport. Its purpose is to preserve mobility, balance and control as fatigue accumulates.</p>
+    <p>The useful qualities are general: enough capacity to walk and remain attentive through the day, sufficient strength to handle the gun without bracing, trunk control, balance, and mobility at the shoulders, hips and ankles. A programme can combine aerobic work, whole-body strength, balance and mobility. The dose depends on age, experience, health, shooting load and the competition calendar. A qualified professional should therefore design it when systematic training is intended.</p>
+    <p>Clay-specific evidence remains limited. A 2018 review found only three studies directly concerned with Trap or Skeet. The 2021 study of nineteen shooters observed associations; it did not show that improving one particular test would automatically improve a score. A 2026 narrative review gathered heterogeneous studies from several shooting disciplines. The responsible message is not “do this circuit and you will break more clays”. It is that physical preparation deserves planning and evaluation through functional measures and actual transfer to the shooting movement.</p>
+    <aside class="field-note"><strong>Minimum record.</strong> Alongside the score, note mount stability, the perceived weight of the gun, mobility and pain at the end of each round. If the result falls as the movement loses its shape, that information can help the coach adjust load and recovery.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-03-el-cuerpo-tambien-se-entrena.png" width="1254" height="1254" alt="Physical preparation wheel for clay shooting with aerobic capacity, whole-body strength, trunk control, balance and mobility connected to a repeatable stance">
+      <figcaption>Physical preparation does not replace technique: it helps stop technique disappearing as the day grows longer.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-04" data-section="18.4">
+    <span class="section-number">18.4</span>
+    <h3>Warm up and recover</h3>
+    <p class="section-bridge">Fitness is built over weeks. Before a round, a shorter transition is needed between standing still and performing the movement.</p>
+    <p class="section-lead">Warming up is not becoming tired or trying new exercises. It means reaching the first clay with temperature, mobility, vision and routine already available.</p>
+    <p>A prudent sequence begins without the gun: comfortable general movement, the joints that person needs to mobilise, and controlled turns. Balance, trunk movement and supervised unloaded mounts may then be added. Practice shots or training clays are used only where authorised and in the referee's order. A general meta-analysis found performance improvements after appropriate warm-ups, but it did not study a clay-shooting recipe. The content should therefore be tested in training and kept brief.</p>
+    <p>Between rounds, recovery means neither staying still until cold nor training in secret. Depending on the environment, find shade or keep warm, drink and eat according to the familiar plan, and repeat a few gentle movements if the wait is long. Massage, cold, supplements or devices should not be presented as automatic solutions. Sleep, nutrition, hydration and load management remain the foundation, adapted by professionals when clinical or high-performance needs exist.</p>
+    <aside class="field-note"><strong>A ten-minute routine.</strong> Design a sequence with your conditioning professional that you can repeat. Record when it ends and how you arrive at the first station. If it leaves you tired, dizzy or changes the mount, it is not fulfilling its purpose.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-04-calentar-y-recuperar.png" width="1254" height="1254" alt="Progressive warm-up from general movement and mobility to a supervised mount, followed by between-round recovery with shade, warm clothing, water and gentle movement">
+      <figcaption>Before shooting, activate without fatigue; between rounds, preserve the state without improvising a new session.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-05" data-section="18.5">
+    <span class="section-number">18.5</span>
+    <h3>The evening before and the kit bag</h3>
+    <p class="section-bridge">A physical routine offers little if the morning begins by searching for documents, protection or cartridges that should already be packed.</p>
+    <p class="section-lead">Competition starts the evening before: confirm the programme and remove small decisions from the following day.</p>
+    <p>The checklist begins with the official competition notice. Timetable, discipline, venue, access, accreditation, licences, equipment control, permitted training and ammunition may all change from one event to another. Equipment follows: the gun transported and secured in accordance with the law, documents, permitted cartridges, eye and hearing protection, vest, footwear, layered clothing, water, familiar food and basic protection from sun or rain. Nothing on that list authorises handling the gun outside the designated areas.</p>
+    <p>The evening before is a poor time to alter the stock, try a new lens, test a supplement or double the training load. The athlete-sleep consensus recommends individualisation and sound habits, not treating one perfect night as a condition for competing. Preparing a reasonable schedule, reducing interruptions and keeping a familiar routine is more useful than turning sleep into another examination.</p>
+    <p>Anyone competing under anti-doping control must check medicines and supplements through official channels. The WADA list changes, and responsibility does not disappear because a product is sold over the counter. If there is any doubt, competent medical and anti-doping staff should be consulted beforehand.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-05-la-vispera-y-la-maleta.png" width="1254" height="1254" alt="Evening-before visual checklist with official programme, documents, legally transported gun, compliant ammunition, protection, clothing, water, familiar food and rest">
+      <figcaption>Preparation does not control the result. It stops an administrative or equipment omission taking the attention the clay needs.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-06" data-section="18.6">
+    <span class="section-number">18.6</span>
+    <h3>Competition day</h3>
+    <p class="section-bridge">With the bag packed, the day is organised around real schedules rather than anxiety about getting started.</p>
+    <p class="section-lead">Arriving with time allows observation, registration and a warm-up. Arriving excessively early does not require hours of watching scoreboards.</p>
+    <p>On arrival, confirm the schedule and look for early starts, delays or range changes. Locate registration, equipment control, the safe area, assigned field and waiting area. FITASC Compak rules make the shooter responsible for reporting in advance, confirming attendance and keeping informed of changes. The specific event notice also governs the other disciplines.</p>
+    <p>The warm-up is timed to finish near the round, without rushing or unauthorised shooting. Before the first station, one process goal and the routine from Chapter 17 are enough. Between rounds, attend to simple needs: protection from the weather, familiar food and drink, gentle movement and mental rest. The notebook receives one or two observations, not a technical autopsy of every miss.</p>
+    <p>After shooting, verify the score through the organiser's procedure, record any incident and secure the equipment. If there is a shoot-off, control or another round, check the schedule instead of assuming it. End the day by reviewing what worked in organisation, body, environment and process. That review prepares the next competition more effectively than an explanation built solely from the result.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-06-el-dia-de-competicion.png" width="1254" height="1254" alt="Competition-day timeline from arrival and confirmation through warm-up, round, recovery, score verification and safe closure">
+      <figcaption>The day has its own sequence: confirm, prepare, perform, recover and close; the scoreboard does not direct every step.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-07" data-section="18.7">
+    <span class="section-number">18.7</span>
+    <h3>Light, background and contrast</h3>
+    <p class="section-bridge">Good organisation frees attention. It can now be directed towards something the simulator simplifies: the background against which the real clay appears.</p>
+    <p class="section-lead">The same clay may appear sharp against the sky and disappear briefly as it crosses trees, shadow or ground.</p>
+    <p>Before shooting, observe the authorised presentations and divide the trajectory into three zones: appearance, reading and break. In each, ask whether the background changes, glare is present, the clay enters shadow, and where its direction becomes clearest. The visual pick-up zone from Chapter 8 is not a permanently painted point. It is adjusted with the coach so vision can wait where it detects movement without settling on the barrel.</p>
+    <p>FITASC requires target colours to stand out from the background in Sporting and Compak. That responsibility for the organiser does not remove every contrast change. Glasses and filters may alter comfort and perception, but there is no universal colour for each type of sky. They must comply with the rules, preserve protection and be tested beforehand. Visual problems, headaches or persistent difficulty locating a target require professional assessment, not a succession of new filters.</p>
+    <aside class="field-note"><strong>Contrast map.</strong> Without a gun and from the permitted area, draw the presented line using three colours: easy to see, transition and difficult. Decide with the instructor where to wait and where to break the target. Do not change stance, glasses and technique together.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-07-luz-fondo-y-contraste.png" width="1254" height="1254" alt="Clay trajectory crossing sky, trees and shadow, divided into appearance, reading and break zones with different levels of visual contrast">
+      <figcaption>Reading the background before calling helps place the eyes; it does not turn lens colour into a universal prescription.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-08" data-section="18.8">
+    <span class="section-number">18.8</span>
+    <h3>Wind, heat, cold and rain</h3>
+    <p class="section-bridge">Contrast changes what can be seen. Weather can also change the flight, the body, clothing and the surface of the station.</p>
+    <p class="section-lead">There is no table that says “this wind equals this many centimetres”. Observe the real clay first; then decide whether anything needs to change.</p>
+    <p>Wind does not act in the same way throughout a trajectory. Direction, gusts, shelter from trees or trenches, height and target type all matter. Plato's model uses a uniform crosswind and declares that simplification. On the ground, observe several presentations, listen to the referee and retain the technique unless a clear pattern emerges. Chasing each gust with a different correction can add more variation than the wind itself.</p>
+    <p>Heat, cold and rain also affect the shooter. Layered clothing must still permit the mount; gloves or wet fabric must not compromise grip or safe handling. Seek shade or shelter when appropriate, drink according to a familiar plan and maintain the warm-up during long waits. Dizziness, confusion, severe shivering, pain or loss of control are reasons to stop and tell someone. This book does not diagnose heat or cold illness.</p>
+    <p>The organiser and referee decide interruptions, irregular targets and restarts. A competitor does not adjust a machine or enter the flight area. Adapting to the weather means maintaining safety and process within those decisions, not replacing them.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-08-viento-calor-frio-y-lluvia.png" width="1254" height="1254" alt="Adaptation matrix for wind, heat, cold and rain that separates effects on the clay, body, clothing, station and referee decisions">
+      <figcaption>Read the environment in two layers: what it does to the clay and what it does to you. Range authority decides whether shooting can continue.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-09" data-section="18.9">
+    <span class="section-number">18.9</span>
+    <h3>Skeet: two houses and eight stations</h3>
+    <p class="section-bridge">After learning to read body and environment, we can enter disciplines that the simulator names but does not reproduce.</p>
+    <p class="section-lead">Skeet is not a trench that throws sideways. Its known geometry changes stance, mount and the complete sequence.</p>
+    <p>An ISSF Skeet range has a high house, a low house and eight stations. The targets cross near a common point, but the picture changes greatly around the arc. The high-house release dominates at the early stations and the low house at the later ones. Station 4 brings more lateral crossers, while station 8 concentrates two shots close to the houses. The current rule defines which single or double belongs at each station; that sequence should not be memorised from an old illustration.</p>
+    <p>Olympic Skeet begins from a regulated ready position and the target appears after a variable delay. Mounting is therefore part of the movement, not a preliminary formality. The feet are oriented towards the break area, vision waits outside the house and the gun follows a line that must be available before the call. Each station needs its own map, not one fixed lead.</p>
+    <aside class="technical-note"><strong>Limit of Plato.</strong> The simulator does not contain the two houses, eight stations, sequence or Skeet delay. It can teach interception and continuity, but it must not be used to claim that it rehearses this discipline.</aside>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-09-skeet-dos-casas-ocho-puestos.png" width="1254" height="1254" alt="Teaching plan of a Skeet range with high house, low house, eight stations on an arc, crossing point and changing visual problems around the layout">
+      <figcaption>Two known trajectories produce eight different visual problems; every station needs its own preparation.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-10" data-section="18.10">
+    <span class="section-number">18.10</span>
+    <h3>Sporting: read before moving</h3>
+    <p class="section-bridge">Skeet repeats a regulated geometry. Sporting presents the opposite operation: read a new presentation before constructing the response.</p>
+    <p class="section-lead">In Sporting, the first task is not calculating lead. It is recognising the target and finding the part of its trajectory that offers a safe break.</p>
+    <p>The FITASC rules describe courses that use the terrain and varied artificial targets. Presentations can include incomers, outgoers, crossers, oblique lines, different heights, partially hidden targets and special forms such as rabbit or battue. The station menu identifies machines and order; the authorised presentation shows the trajectories. That information becomes a short plan before loading.</p>
+    <p>Reading can follow five questions: where does it appear, when does its line become clear, where is there room and contrast to break it, what movement does the body need, and where should vision wait? Only then are the hold point, visual pick-up zone and movement method selected. In FITASC Sporting, the ready position keeps the heel of the stock below the prescribed vest line until the target appears. Other sporting variants may use different rules, so the event notice and referee govern.</p>
+    <p>Doubles add order and transition. Solving the first must not leave the body with no movement or the gun outside a safe direction for the second. Practise the individual trajectories first, then the relationship between them. Copying another shooter's apparent lead without sharing stance, method and break point confuses a result with its cause.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-10-sporting-leer-antes-de-mover.png" width="1254" height="1254" alt="Sporting station with varied trajectories and a five-question card covering appearance, line reading, break area, body movement and visual pick-up zone">
+      <figcaption>Variety becomes manageable through a constant reading: appearance, line, break, body and vision.</figcaption>
+    </figure>
+  </article>
+
+  <article class="book-section" id="s18-11" data-section="18.11">
+    <span class="section-number">18.11</span>
+    <h3>Compak: variety in a compact frame</h3>
+    <p class="section-bridge">Sporting changes station and landscape. Compak preserves the variety but organises it in front of a compact firing line.</p>
+    <p class="section-lead">Compact does not mean small or easy. It means that different trajectories are presented within a bounded, repeatable installation.</p>
+    <p>The FITASC rules consulted define five aligned stations, six traps and a rectangular target-overflight zone. They include three compulsory families—left-to-right crosser, right-to-left crosser and outgoing target—alongside free trajectories. Standard or special targets can be used, in singles, report doubles and simultaneous doubles. The station's angle limiters are part of its safety system.</p>
+    <p>For learning, the menu becomes a map. First identify the trap letter and flight family. Then mark appearance, reading zone and break area. In a report double, the shot at the first target releases the second; in a simultaneous double, both are released on the call. Planning changes, but the safety rule does not: every transition remains inside the authorised angle and control is not sacrificed while pursuing the second target.</p>
+    <p>Compak shares variety with Sporting and a five-station line with other disciplines, but it is not an unregulated mixture. Its procedures, ammunition, ready position, order and referee decisions belong to its FITASC edition. Plato does not simulate it. The manual includes it so a beginner knows what to ask before transferring an idea from trench shooting into a different discipline.</p>
+    <figure class="figure micro-figure">
+      <img loading="lazy" src="../docs/manual-libro/assets/images/infografias/en/subapartados/18-11-compak-variedad-en-un-marco-compacto.png" width="1254" height="1254" alt="Compak Sporting plan with five stations, six traps, rectangular flight zone, compulsory crossers, outgoing target, report double and simultaneous double">
+      <figcaption>Five stations and a common frame do not reduce variety: they make it visible, numbered and regulated.</figcaption>
+    </figure>
+  </article>
+
+  <div class="chapter-summary">
+    <h3>What we have learned</h3>
+    <ul>
+      <li>The feet reserve movement, and balance allows it to be used without rigidity.</li>
+      <li>Physical preparation supports technique, but clay-specific evidence remains limited.</li>
+      <li>Competition is organised from the evening before and performed as a sequence, not as continuous monitoring of the scoreboard.</li>
+      <li>Light and weather are observed on the real clay; they do not produce universal corrections.</li>
+      <li>Skeet, Sporting and Compak change geometry, ready position, information and planning.</li>
+    </ul>
+    <p class="expert-note"><strong>Expert reading.</strong> The disciplines are described from the current ISSF 2026 and FITASC rules consulted. Physical preparation combines scarce discipline-specific research with general sport evidence and states the transfer limit. Environmental guidance concerns observation and risk management, not a ballistic table or medical prescription.</p>
+  </div>
+</section>
+
+<section class="chapter book-chapter final-conclusions" id="conclusiones-finales">
+  <p class="chapter-kicker">Chapter 19</p>
   <h2>Useful conclusions from the book</h2>
   <p class="opening"><strong>This manual doesn't turn anyone into a shooter, but it offers an ordered way of watching.</strong> Breaking shooting down into parts helps you understand it; putting them back together lets you practise with purpose. Safety always comes before results.</p>
   <p class="opening">This journey has brought together responsible access, the shooting ground, the gun, the cartridge, mistakes, geometry, physics and disciplines. Physics explains the sport, but it doesn't replace physical learning or real experience.</p>
@@ -4291,13 +4661,11 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://www.beretta.com/content/dam/beretta/manuals/shotgun/sovrapposti/2022/EN_-_Sovrapposti_A4.pdf" target="_blank" rel="noopener">Beretta: over-and-under shotgun manual</a></li>
     <li><a href="https://dam.beretta.com/content/dam/beretta/manuals/shotgun/sovrapposti/2025/EN%20-%20Sovrapposti.pdf" target="_blank" rel="noopener">Beretta: official 2025 over-and-under shotgun manual</a></li>
     <li><a href="https://www.bipm.org/en/publications/si-brochure" target="_blank" rel="noopener">BIPM: International System of Units, updated 2026 edition</a></li>
-    <li><a href="https://www.boe.es/buscar/act.php?id=BOE-A-2022-24430" target="_blank" rel="noopener">BOE, Ley 39/2022, de 30 de diciembre, del Deporte</a></li>
     <li><a href="https://www.boe.es/buscar/act.php?id=BOE-A-2022-24430" target="_blank" rel="noopener">BOE: Ley 39/2022, de 30 de diciembre, del Deporte</a></li>
     <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-386" target="_blank" rel="noopener">BOE: security measures for storing firearms during transport</a></li>
     <li><a href="https://www.boe.es/buscar/doc.php?id=BOE-A-2025-387" target="_blank" rel="noopener">BOE: home storage security measures, 2025</a></li>
     <li><a href="https://www.boe.es/eli/es/o/2023/07/12/hfp793/con" target="_blank" rel="noopener">BOE: Order HFP/793/2023 on compensation for using a private vehicle</a></li>
     <li><a href="https://www.boe.es/eli/es/rd/1993/06/04/849/con" target="_blank" rel="noopener">BOE: Real Decreto 849/1993 on compulsory sports insurance</a></li>
-    <li><a href="https://www.boe.es/buscar/act.php?id=BOE-A-1993-6202" target="_blank" rel="noopener">BOE: Reglamento de Armas consolidado</a></li>
     <li><a href="https://www.boe.es/buscar/act.php?id=BOE-A-1993-6202" target="_blank" rel="noopener">BOE: Reglamento de Armas consolidado, articles 3 and 96 to 104</a></li>
     <li><a href="https://bop.diputoledo.es/webEbop/DocGet?anexo=0&amp;bop=16&amp;insert_year=2016&amp;publication_date=21012016" target="_blank" rel="noopener">Boletín Oficial de la Provincia de Toledo: rules for the use of La Bastida published in 2016</a></li>
     <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6443347/" target="_blank" rel="noopener">Branscheidt et al.: lasting effects of fatigue on motor learning</a></li>
@@ -4481,6 +4849,34 @@ python3 -m http.server --bind 127.0.0.1 8000</code></pre>
     <li><a href="https://doi.org/10.1080/00222899809601335" target="_blank" rel="noopener">Wulf and colleagues, feedback frequency in complex motor learning</a></li>
     <li><a href="https://doi.org/10.1080/00222899809601334" target="_blank" rel="noopener">Wulf, Höß and Prinz: effects of instructions with internal and external focus</a></li>
     <li><a href="https://doi.org/10.1177/00315125251359760" target="_blank" rel="noopener">Yazgan and colleagues: systematic review on motor imagery and action observation in sport</a></li>
+    <li><a href="https://doi.org/10.1016/j.psychsport.2011.07.007" target="_blank" rel="noopener">Mesagno and colleagues: fear of negative evaluation and choking under pressure</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/41951087/" target="_blank" rel="noopener">Meta-analysis of interventions to protect sports performance under pressure</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/42271117/" target="_blank" rel="noopener">Exercise and Sports Science Australia: position statement on performance under pressure</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3307964/" target="_blank" rel="noopener">Heart-rate-variability biofeedback and psychomotor performance in athletes</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/29997757/" target="_blank" rel="noopener">Randomised trial of mindfulness-acceptance-commitment training in athletes</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12838017/" target="_blank" rel="noopener">Development and preliminary validation of acceptance and commitment training for shooters</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/23211179/" target="_blank" rel="noopener">Systematic review of neuro-linguistic programming and health outcomes</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8123879/" target="_blank" rel="noopener">Psychological factors described by elite Olympic shooters</a></li>
+    <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9928995/" target="_blank" rel="noopener">Psychological-skills training and autonomic stress response in elite junior shooters</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12583207/" target="_blank" rel="noopener">Systematic review and meta-analysis of biofeedback in athletes</a></li>
+    <li><a href="https://www.tandfonline.com/doi/full/10.1080/1750984X.2017.1374432" target="_blank" rel="noopener">Review of distraction and self-focus theories of choking under pressure</a></li>
+    <li><a href="https://www.tandfonline.com/doi/full/10.1080/1750984X.2017.1408134" target="_blank" rel="noopener">Systematic review of interventions used to prevent choking in sport</a></li>
+    <li><a href="https://books.google.com/books/about/With_Winning_in_Mind.html?id=pIuSMAEACAAJ" target="_blank" rel="noopener">Bassham: <em>With Winning in Mind</em> and the Mental Management system</a></li>
+    <li><a href="https://sportshootingpsychologist.com/the-programme" target="_blank" rel="noopener">Hughes, The Shooting Mindset: 4R acceptance-and-commitment coaching approach</a></li>
+    <li><a href="https://claytargetinstruction.com/articles/simplifying-your-mental-game/" target="_blank" rel="noopener">Matarese, Clay Target Instruction: simplifying the mental game</a></li>
+    <li><a href="https://www.heinzlive.com/" target="_blank" rel="noopener">Reinkemeier and Bühlmann: shooting psychology and shooter self-regulation</a></li>
+    <li><a href="https://es.scribd.com/doc/7228209/Iniciacion-Tiro-Al-Plato" target="_blank" rel="noopener">Piñero Herrera: <em>Introduction to clay shooting</em>, consulted only for the comparative topic map</a></li>
+    <li><a href="https://tienda.solotiro.com/es/libros-de-tiro-al-plato/359-libro-manual-practico-de-tiro-al-plato-jose-manuel-alonso-diaz-.html" target="_blank" rel="noopener">Solo Tiro: commercial bibliographic record for José Manuel Alonso Díaz's practical manual; not used as access to the book's contents</a></li>
+    <li><a href="https://doi.org/10.14198/jhse.2018.133.06" target="_blank" rel="noopener">Peljha, Michaelides and Collins: review of physical preparation in clay shooting; only three discipline-specific studies identified</a></li>
+    <li><a href="https://doi.org/10.7752/jpes.2021.s6444" target="_blank" rel="noopener">Peljha and colleagues: exploratory study of strength, mobility, balance and performance in nineteen Trap and Skeet shooters</a></li>
+    <li><a href="https://doi.org/10.1016/j.orthtr.2026.05.001" target="_blank" rel="noopener">2026 narrative review of physical fitness and trunk control in shooting disciplines; heterogeneous studies and no universal prescription</a></li>
+    <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6926526/" target="_blank" rel="noopener">Olympic shooters' perceptions of physical training; descriptive evidence across several disciplines</a></li>
+    <li><a href="https://pubmed.ncbi.nlm.nih.gov/19996770/" target="_blank" rel="noopener">Fradkin, Zazryn and Smoliga: review and meta-analysis of warm-up and performance; general sporting transfer</a></li>
+    <li><a href="https://doi.org/10.1136/bjsports-2020-102025" target="_blank" rel="noopener">Expert consensus on sleep in athletes: individualised assessment and intervention</a></li>
+    <li><a href="https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=159658&amp;parentDocumentId=44461&amp;skipCopyright=true&amp;skipWatermark=true" target="_blank" rel="noopener">International Olympic Committee: practical guide to food and hydration for athletes; general principles, not an individual prescription</a></li>
+    <li><a href="https://www.wada-ama.org/sites/default/files/2025-09/2026list_en_final_clean_september_2025.pdf" target="_blank" rel="noopener">World Anti-Doping Agency: 2026 Prohibited List</a></li>
+    <li><a href="https://api.fitasc.com/media/2025-rglt-cs-eng-6825ccbed2a18275696578.pdf" target="_blank" rel="noopener">FITASC: 2025 Compak Sporting rules, five stations, traps, trajectories, doubles and safety</a></li>
+    <li><a href="https://api.fitasc.com/media/20260203-rglt-pc-eng-69c6aa08dfdfc995043715.pdf" target="_blank" rel="noopener">FITASC: Sporting rules consulted in 2026, layouts, presentations, ready position and doubles</a></li>
   </ol>
 </section>
 </main>
