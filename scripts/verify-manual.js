@@ -22,7 +22,7 @@ const articles = [...html.matchAll(
   /<article class="book-section"[^>]*id="([^"]+)"[^>]*data-section="(\d+\.\d+)"[^>]*>([\s\S]*?)<\/article>/g,
 )];
 
-if (articles.length !== 226) fail(`Se encontraron ${articles.length}/226 subapartados.`);
+if (articles.length !== 219) fail(`Se encontraron ${articles.length}/219 subapartados.`);
 
 const sectionNumbers = [];
 for (const article of articles) {
@@ -91,7 +91,7 @@ if (!bibliographyMatch) {
 const imageRefs = [...html.matchAll(
   /<img[^>]+src="([^"]*\/subapartados\/[^"]+\.png)"[^>]*>/g,
 )].map((match) => match[1]);
-if (imageRefs.length !== 226) fail(`El libro referencia ${imageRefs.length}/226 PNG de subapartado.`);
+if (imageRefs.length !== 219) fail(`El libro referencia ${imageRefs.length}/219 PNG de subapartado.`);
 if (new Set(imageRefs).size !== imageRefs.length) fail("Hay rutas PNG reutilizadas.");
 
 const hashes = new Map();

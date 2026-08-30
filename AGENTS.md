@@ -15,6 +15,7 @@ These instructions apply to the whole repository and must be followed in every C
 - Use a clean white outer background. Match the established Plato visual language: dense editorial composition, dark navy technical drawing, orange clays and accents, restrained green success cues, clear hierarchy and generous margins.
 - The English image must be a fully localised counterpart of the Spanish image. It may share composition but must be generated or edited as its own raster asset; all visible language must be English.
 - Store Spanish subsection images under `docs/manual-libro/assets/images/infografias/subapartados/` and English counterparts under `docs/manual-libro/assets/images/infografias/en/subapartados/`. Use the same filename for a pair.
+- In generic clay-shooting scenes, depict a modern, full-length over-under shotgun. From the shooter's eye, show one upper barrel or rib; in side or open-action views, keep the two barrels and chambers vertically stacked. Never make the gun resemble a sawn-off shotgun. Show a side-by-side only when the subsection explicitly explains or compares that shotgun type.
 - Inspect the final pixels at full size. Check spelling, white background, firearm handling, muzzle direction, open-gun states where appropriate, legibility and conceptual accuracy before integration.
 
 ## Research, copyright and evidence
@@ -29,6 +30,9 @@ These instructions apply to the whole repository and must be followed in every C
 
 - Preserve the book's beginner-first tone: plain language, one practical idea at a time, links to earlier chapters, concrete exercises and separate field or technical notes when useful.
 - Connect new material to concepts already taught rather than repeating them. Maintain the one-variable learning method used throughout the book.
+- Preserve the book's sport-first progression: foundations, access, safety, ground, equipment, errors, learning, geometry, mind, body and competition day, disciplines, costs, physical model, limitations, simulator, simulator training, installation, sources and conclusions. Human preparation, sporting context, economic expectations, theory and model limits must be established before the simulator.
+- Keep the simulator chapter limited to the reviewed interface and its operation. Put physical, ballistic, regulatory, perceptual and economic explanations in the earlier chapter where each belongs, then link back instead of teaching them again. Put structured exercises and training plans in the following training chapter.
+- Treat adjustable equipment as a measured fitting process: record a recoverable baseline, change one variable and verify it across comparable tests. Never teach readers to chase an isolated miss by repeatedly changing the stock, rib or other hardware.
 - Firearm safety, ground rules, qualified in-person coaching and professional health support take precedence over performance advice. A simulator, book or mental exercise never replaces them.
 
 ## Workflow and verification

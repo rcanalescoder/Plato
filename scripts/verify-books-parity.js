@@ -7,6 +7,27 @@ const path = require("node:path");
 
 const root = path.resolve(__dirname, "..");
 const failures = [];
+const expectedChapterOrder = [
+  "fundamento",
+  "empezar-espana",
+  "seguridad",
+  "cancha",
+  "equipamiento",
+  "fallos",
+  "aprendizaje",
+  "geometria",
+  "mente",
+  "preparacion-integral",
+  "modalidades",
+  "costes",
+  "ingenieria",
+  "limitaciones",
+  "simulador",
+  "entrenamiento",
+  "licencia",
+  "fuentes",
+  "conclusiones-finales",
+];
 
 function fail(message) {
   failures.push(message);
@@ -19,13 +40,25 @@ function audit(relativePath, language) {
     /<article class="book-section"[^>]*id="([^"]+)"[^>]*data-section="(\d+\.\d+)"[^>]*>([\s\S]*?)<\/article>/g,
   )];
   const sections = articles.map(([, id, number]) => ({ id, number }));
+  const chapterOrder = [...html.matchAll(
+    /^<section\b[^>]*class="[^"]*\bbook-chapter\b[^"]*"[^>]*id="([^"]+)"[^>]*>/gm,
+  )].map((match) => match[1]).filter((id) => id !== "bibliografia");
+  const navigationOrder = [...html.matchAll(
+    /<details class="nav-chapter"[^>]*><summary><a href="#([^"]+)"/g,
+  )].map((match) => match[1]);
   const images = articles.map(([, , number, block]) => {
     const matches = [...block.matchAll(/<img[^>]+src="([^"]*\/subapartados\/[^"]+\.png)"[^>]*>/g)];
     if (matches.length !== 1) fail(`${language} ${number}: ${matches.length} subsection images.`);
     return matches[0]?.[1] ?? "";
   });
 
-  if (articles.length !== 226) fail(`${language}: ${articles.length}/226 subsections.`);
+  if (articles.length !== 219) fail(`${language}: ${articles.length}/219 subsections.`);
+  if (JSON.stringify(chapterOrder) !== JSON.stringify(expectedChapterOrder)) {
+    fail(`${language}: chapter order is ${chapterOrder.join(" > ")}.`);
+  }
+  if (JSON.stringify(navigationOrder) !== JSON.stringify(expectedChapterOrder)) {
+    fail(`${language}: navigation order is ${navigationOrder.join(" > ")}.`);
+  }
   if (/\.svg(?:["')\s]|$)/i.test(html)) fail(`${language}: the book references an SVG.`);
   const conclusion = html.match(
     /<section class="chapter book-chapter final-conclusions"[\s\S]*?<p class="chapter-kicker">([^<]+)<\/p>/,
@@ -41,7 +74,7 @@ function audit(relativePath, language) {
     fail(`${language}: bibliography contains duplicate URLs.`);
   }
 
-  return { absolutePath, html, sections, images, bibliographyUrls };
+  return { absolutePath, html, sections, images, bibliographyUrls, chapterOrder, navigationOrder };
 }
 
 const es = audit("index.html", "ES");
@@ -96,6 +129,10 @@ const requiredPsychologySources = [
   "https://pubmed.ncbi.nlm.nih.gov/42271117/",
   "https://pmc.ncbi.nlm.nih.gov/articles/PMC12838017/",
   "https://pubmed.ncbi.nlm.nih.gov/23211179/",
+  "https://pubmed.ncbi.nlm.nih.gov/40455784/",
+  "https://www.frontiersin.org/journals/human-neuroscience/articles/10.3389/fnhum.2024.1476649/full",
+  "https://pubmed.ncbi.nlm.nih.gov/16531911/",
+  "https://link.springer.com/article/10.1007/s00180-024-01552-8",
 ];
 
 const requiredBodyAndCompetitionSources = [
@@ -128,5 +165,6 @@ if (failures.length) {
 
 console.log(
   `BILINGUAL PARITY: OK · ${es.sections.length} paired sections · `
-  + `${es.images.length * 2} localised PNG references · chapter 17 and 18 sources present in both books.`,
+  + `${es.images.length * 2} localised PNG references · sport-first chapter order · `
+  + `mind and body source groups present in both books.`,
 );
