@@ -38,6 +38,7 @@ These instructions apply to the whole repository and must be followed in every C
 ## Workflow and verification
 
 - Inspect `git status` and the relevant diff before editing. Preserve unrelated and pre-existing user changes.
+- After every completed user request, commit all finished in-scope changes and push the current branch to its configured remote, unless the user explicitly asks not to commit or push. Verify that the remote branch contains the new commit before reporting completion. If a test, commit or push fails, report the exact blocker instead of describing the work as published.
 - After bilingual book work, run at least:
   - `node scripts/verify-manual.js`
   - `node scripts/verify-books-parity.js`
