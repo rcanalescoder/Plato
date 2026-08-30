@@ -33,6 +33,49 @@ function fail(message) {
   failures.push(message);
 }
 
+function auditPlatoBranding(html, language) {
+  const withoutExecutableBlocks = html
+    .replace(/<script\b[\s\S]*?<\/script>/gi, (block) => block.replace(/[^\n]/g, " "))
+    .replace(/<style\b[\s\S]*?<\/style>/gi, (block) => block.replace(/[^\n]/g, " "));
+  const stack = [];
+  const voidElements = new Set(["meta", "link", "img", "br", "hr", "input"]);
+  const tokens = /<!--[\s\S]*?-->|<![^>]*>|<[^>]+>|[^<]+/g;
+  let match;
+
+  while ((match = tokens.exec(withoutExecutableBlocks))) {
+    const token = match[0];
+    if (token.startsWith("</")) {
+      stack.pop();
+      continue;
+    }
+    if (token.startsWith("<")) {
+      if (token.startsWith("<!--") || token.startsWith("<!")) continue;
+      const name = token.match(/^<\s*([\w-]+)/)?.[1]?.toLowerCase();
+      if (!name) continue;
+      const className = token.match(/\bclass\s*=\s*["']([^"']*)/)?.[1] ?? "";
+      if (!/\/\s*>$/.test(token) && !voidElements.has(name)) {
+        stack.push({ name, className });
+      }
+      continue;
+    }
+
+    if (!/\bPlato\b/.test(token)) continue;
+    if (stack.some(({ name }) => ["head", "code", "pre"].includes(name))) continue;
+    if (stack.some(({ className }) => className.split(/\s+/).includes("plato-tool"))) continue;
+    let unstyledText = token.replace(/https?:\/\/\S*Plato\S*/g, "");
+    if (language === "ES") {
+      unstyledText = unstyledText.replace(
+        /Plato válido|Plato frontal|Plato cruzado|Plato diagonal|Plato ascendente|Plato, disparo|«Plato»/g,
+        "",
+      );
+    }
+    if (!/\bPlato\b/.test(unstyledText)) continue;
+
+    const line = withoutExecutableBlocks.slice(0, match.index).split("\n").length;
+    fail(`${language} line ${line}: an unstyled visible reference to the Plato simulator remains.`);
+  }
+}
+
 function audit(relativePath, language) {
   const absolutePath = path.join(root, relativePath);
   const html = fs.readFileSync(absolutePath, "utf8");
@@ -60,6 +103,7 @@ function audit(relativePath, language) {
     fail(`${language}: navigation order is ${navigationOrder.join(" > ")}.`);
   }
   if (/\.svg(?:["')\s]|$)/i.test(html)) fail(`${language}: the book references an SVG.`);
+  auditPlatoBranding(html, language);
   const conclusion = html.match(
     /<section class="chapter book-chapter final-conclusions"[\s\S]*?<p class="chapter-kicker">([^<]+)<\/p>/,
   );
@@ -79,6 +123,14 @@ function audit(relativePath, language) {
 
 const es = audit("index.html", "ES");
 const en = audit("en/index.html", "EN");
+
+const manualCss = fs.readFileSync(
+  path.join(root, "docs/manual-libro/assets/css/manual.css"),
+  "utf8",
+);
+if (!/\.plato-tool\{[^}]*color:\s*#[0-9a-f]{6}!important;[^}]*font-weight:\s*900!important/i.test(manualCss)) {
+  fail("The .plato-tool style does not enforce bold green branding.");
+}
 
 for (let index = 0; index < Math.max(es.sections.length, en.sections.length); index += 1) {
   const esSection = es.sections[index];

@@ -9,7 +9,7 @@ html{scroll-behavior:smooth}
 body{margin:0;background:#fff;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.68}
 a{color:var(--blue);font-weight:700;text-decoration:none}
 a:hover{text-decoration:underline}
-.plato-tool{color:#1f5d35;font-weight:900}
+.plato-tool{color:#1f5d35!important;font-weight:900!important}
 .skip{position:absolute;left:-9999px}.skip:focus{left:12px;top:12px;background:#fff;padding:10px;z-index:99}
 .project-beta{background:#fff5e8;border-bottom:1px solid #efc99f;color:#4a2b12}
 .project-beta>div{max-width:var(--max);margin:auto;padding:8px 18px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:.84rem;line-height:1.4;text-align:center}
@@ -31,6 +31,7 @@ html[lang="en"] .hero{background-image:url("../../../screenshots/en/app-plato-en
 .eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;color:#ffb27f;font-weight:900}
 h1{font-size:clamp(2.6rem,7vw,6.2rem);line-height:.98;letter-spacing:0;margin:.1em 0 .2em;max-width:980px}
 .hero h1{color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.32)}
+.hero .plato-tool{color:#9edbaa!important;text-shadow:0 2px 18px rgba(0,0,0,.5)}
 .lead{font-size:clamp(1.12rem,2vw,1.45rem);color:#f1f7f3;max-width:760px}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 4px}
 .hero-primary{min-height:62px;padding:0 28px!important;background:var(--orange)!important;border-color:var(--orange)!important;color:#fff!important;font-size:1.15rem;font-weight:950;box-shadow:0 18px 34px rgba(232,92,13,.24)}
