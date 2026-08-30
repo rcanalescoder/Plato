@@ -35,6 +35,16 @@ These instructions apply to the whole repository and must be followed in every C
 - Treat adjustable equipment as a measured fitting process: record a recoverable baseline, change one variable and verify it across comparable tests. Never teach readers to chase an isolated miss by repeatedly changing the stock, rib or other hardware.
 - Firearm safety, ground rules, qualified in-person coaching and professional health support take precedence over performance advice. A simulator, book or mental exercise never replaces them.
 
+## Voice and continuity
+
+- Use the prologue as the reference voice. Roberto writes as a learner who observes carefully, tests ideas and uses his engineering background to understand them; he does not pose as an infallible coach.
+- Use first person for genuine experience, second person to accompany the reader, a firm normative voice only for rules and safety, and cautious language for technical interpretations that still need testing.
+- Prefer a natural sequence: a recognisable situation, an explanation of what may be happening, and one practical decision. Avoid strings of short categorical sentences, slogans, audit language and instructions that treat the reader as incapable of ordinary judgement.
+- A bridge between sections must carry forward a real question, action or variable from the preceding section. Do not insert a mechanical summary followed by “next we will see” merely to make every subsection look alike.
+- Do not force every subsection to contain a fictional character, a boxed example, a technical note and a moral. Use those devices only when they add information that ordinary prose cannot carry as clearly.
+- Separate experience, hypothesis and rule in the prose. Personal observations may illustrate a problem; they do not prove a general cause. Regulations and scientific claims remain attributed and dated.
+- Revise the corresponding English prose as an authored English version with the same warmth and degree of certainty, not as a sentence-by-sentence mechanical translation.
+
 ## Workflow and verification
 
 - Inspect `git status` and the relevant diff before editing. Preserve unrelated and pre-existing user changes.
