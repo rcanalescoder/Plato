@@ -52,7 +52,7 @@ function audit(relativePath, language) {
     return matches[0]?.[1] ?? "";
   });
 
-  if (articles.length !== 219) fail(`${language}: ${articles.length}/219 subsections.`);
+  if (articles.length !== 220) fail(`${language}: ${articles.length}/220 subsections.`);
   if (JSON.stringify(chapterOrder) !== JSON.stringify(expectedChapterOrder)) {
     fail(`${language}: chapter order is ${chapterOrder.join(" > ")}.`);
   }
