@@ -2,21 +2,24 @@
 :root{
   --ink:#13211a;--muted:#617169;--line:#dbe5dd;--soft:#f5f8f5;
   --orange:#e85c0d;--blue:#0c4d88;--green:#24743b;--red:#b42318;
-  --purple:#68419a;--teal:#087d82;--max:1220px;--side:310px;
+  --purple:#68419a;--teal:#087d82;
+  /* Maquetación fluida: el libro ocupa toda la pantalla y escala con ella. */
+  --max:min(100%,2400px);--side:clamp(280px,17vw,400px);
+  --gutter:clamp(18px,3.5vw,96px);--gap:clamp(28px,3vw,64px);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;font-size:clamp(16px,.8rem + .3vw,21px)}
 body{margin:0;background:#fff;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.68}
 a{color:var(--blue);font-weight:700;text-decoration:none}
 a:hover{text-decoration:underline}
 .plato-tool{color:#1f5d35!important;font-weight:900!important}
 .skip{position:absolute;left:-9999px}.skip:focus{left:12px;top:12px;background:#fff;padding:10px;z-index:99}
 .project-beta{background:#fff5e8;border-bottom:1px solid #efc99f;color:#4a2b12}
-.project-beta>div{max-width:var(--max);margin:auto;padding:8px 18px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:.84rem;line-height:1.4;text-align:center}
+.project-beta>div{max-width:var(--max);margin:auto;padding:8px var(--gutter);display:flex;align-items:center;justify-content:center;gap:10px;font-size:.84rem;line-height:1.4;text-align:center}
 .project-beta strong{flex:0 0 auto;padding:2px 7px;border-radius:4px;background:var(--orange);color:#fff;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
 .project-beta a{flex:0 0 auto;color:#7b3109;text-decoration:underline}
 .top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
-.top-inner{max-width:var(--max);margin:auto;padding:10px 18px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+.top-inner{max-width:var(--max);margin:auto;padding:10px var(--gutter);display:flex;align-items:center;gap:12px;justify-content:space-between}
 .brand{font-weight:900;color:var(--ink)}
 .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:9px 12px;border-radius:10px;background:#fff;color:var(--ink)}
@@ -26,20 +29,20 @@ a:hover{text-decoration:underline}
 /* El libro inglés usa su propia captura del simulador en el hero. */
 html[lang="en"] .hero{background-image:url("../../../screenshots/en/app-plato-en-vuelo.png")}
 .hero::before{content:"";position:absolute;inset:0;background:rgba(6,16,13,.58)}
-.hero-inner{position:relative;z-index:1;width:100%;max-width:var(--max);margin:auto;padding:54px 18px 42px;display:block}
-.hero-copy{min-width:0}
+.hero-inner{position:relative;z-index:1;width:100%;max-width:var(--max);margin:auto;padding:54px var(--gutter) 42px;display:block}
+.hero-copy{min-width:0;max-width:100%}
 .eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;color:#ffb27f;font-weight:900}
-h1{font-size:clamp(2.6rem,7vw,6.2rem);line-height:.98;letter-spacing:0;margin:.1em 0 .2em;max-width:980px}
+h1{font-size:clamp(2.6rem,7vw,6.2rem);line-height:.98;letter-spacing:0;margin:.1em 0 .2em;max-width:clamp(980px,65vw,1600px)}
 .hero h1{color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.32)}
 .hero .plato-tool{color:#9edbaa!important;text-shadow:0 2px 18px rgba(0,0,0,.5)}
-.lead{font-size:clamp(1.12rem,2vw,1.45rem);color:#f1f7f3;max-width:760px}
+.lead{font-size:clamp(1.12rem,2vw,1.45rem);color:#f1f7f3;max-width:clamp(760px,48vw,1200px)}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 4px}
 .hero-primary{min-height:62px;padding:0 28px!important;background:var(--orange)!important;border-color:var(--orange)!important;color:#fff!important;font-size:1.15rem;font-weight:950;box-shadow:0 18px 34px rgba(232,92,13,.24)}
 .hero-secondary{min-height:62px;padding:0 22px!important;font-size:1.05rem;font-weight:900;background:rgba(255,255,255,.94)!important}
 .hero-caption{margin:13px 0 0!important;color:#d9e8de!important;font-size:.9rem!important}
 .hero-size{font-size:.78rem;font-weight:800;color:var(--muted);letter-spacing:.03em}
-.warning{margin-top:22px;border-left:6px solid #ff6b5f;background:rgba(30,16,14,.84);color:#fff;padding:16px 18px;max-width:760px}
-.layout{max-width:var(--max);margin:auto;display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:36px;padding:30px 18px 80px}
+.warning{margin-top:22px;border-left:6px solid #ff6b5f;background:rgba(30,16,14,.84);color:#fff;padding:16px 18px;max-width:clamp(760px,48vw,1200px)}
+.layout{max-width:var(--max);margin:auto;display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:var(--gap);padding:30px var(--gutter) 80px}
 .sidebar{position:sticky;top:78px;align-self:start;max-height:calc(100vh - 95px);overflow:auto;border-right:1px solid var(--line);padding-right:18px}
 .sidebar h2{font-size:.92rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .sidebar a{display:block;padding:8px 10px;border-radius:8px;color:var(--ink);font-weight:650;font-size:.92rem}
@@ -57,7 +60,7 @@ main{min-width:0}
 .chapter-number{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900}
 .chapter h2{font-size:clamp(2rem,4.2vw,3.8rem);line-height:1.05;letter-spacing:-.035em;margin:12px 0 18px}
 .chapter h3{font-size:1.2rem;margin:0 0 10px}
-.book-chapter{max-width:880px;margin:0 auto;padding:58px 0 74px}
+.book-chapter{max-width:none;margin:0;padding:58px 0 74px}
 .book-chapter .chapter-kicker{margin:0 0 8px;color:var(--orange);font-size:.78rem;font-weight:950;text-transform:uppercase;letter-spacing:.09em}
 .book-chapter h2{font-size:clamp(2.15rem,4.4vw,4.25rem);line-height:1.04;letter-spacing:-.035em;margin:0 0 22px;color:var(--ink)}
 .book-chapter h3{font-size:clamp(1.35rem,2.2vw,1.85rem);line-height:1.18;margin:42px 0 12px;color:#1b2b22;letter-spacing:0;text-transform:none}
@@ -67,11 +70,12 @@ main{min-width:0}
 .section-number{display:inline-flex;align-items:center;min-height:28px;margin:0 8px 12px 0;padding:3px 9px;border:1px solid #c9d7ce;border-radius:999px;background:#f4f8f5;color:var(--green);font-size:.78rem;font-weight:950;letter-spacing:.04em;vertical-align:middle}
 .book-section>.section-number+h3{display:inline;margin:0;vertical-align:middle}
 .section-lead{font-size:1.18rem!important;line-height:1.72!important;color:#314139}
-.book-chapter p{font-size:1.08rem;line-height:1.82;margin:0 0 18px;max-width:78ch}
+.book-chapter p{font-size:1.08rem;line-height:1.82;margin:0 0 18px}
 .book-chapter p.opening{font-size:1.2rem;line-height:1.76;color:#314139;margin-bottom:20px}
 .book-figure{margin:34px 0 40px;border-radius:8px}
 .book-figure figcaption{font-size:.95rem;background:#fff}
-.micro-figure{width:100%;max-width:none;margin:20px 0 34px;border-radius:10px}
+/* Las infografías son PNG de 1254 px: no se estiran por encima de su resolución nativa. */
+.micro-figure{width:100%;max-width:min(100%,1254px);margin:20px auto 34px;border-radius:10px}
 .micro-figure img{display:block;width:100%;height:auto;max-width:100%;background:#fff}
 .micro-figure figcaption{font-size:.92rem;line-height:1.55;padding:12px 15px}
 .field-note,.technical-note,.source-note{margin:18px 0 24px;padding:15px 18px;border-left:4px solid var(--accent);background:#f7faf8;color:var(--ink);line-height:1.65}
@@ -85,7 +89,7 @@ main{min-width:0}
 .download-note .meta{display:block;margin-top:4px;color:var(--muted);font-size:.88rem}
 .source-note{border-left-color:#6b7280;background:#f7f7f8;font-size:.92rem;color:var(--muted)}
 .source-note a{overflow-wrap:anywhere}
-.book-chapter .section-bridge{max-width:76ch;margin:10px 0 24px;padding:14px 17px;border-left:4px solid var(--green);border-radius:0 6px 6px 0;background:#f3f8f4;color:#31483b;font-size:1rem;line-height:1.72}
+.book-chapter .section-bridge{margin:10px 0 24px;padding:14px 17px;border-left:4px solid var(--green);border-radius:0 6px 6px 0;background:#f3f8f4;color:#31483b;font-size:1rem;line-height:1.72}
 .section-sources{margin:24px 0 10px;padding:15px 18px 15px 38px;border:1px solid var(--line);border-radius:8px;background:#fafcfb;color:var(--muted);font-size:.9rem;line-height:1.55}
 .section-sources::before{content:"Fuentes y revisión · 2 agosto 2026";display:block;margin:0 0 8px -20px;color:var(--ink);font-weight:900}
 .section-sources li{margin:6px 0}
@@ -135,7 +139,7 @@ pre{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .book-chapter table{width:100%;border-collapse:collapse}
 .book-chapter th,.book-chapter td{padding:10px 12px;border:1px solid var(--line);text-align:left;vertical-align:top}
 mark{background:#fff0a6}
-footer{border-top:1px solid var(--line);padding:35px 18px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:35px var(--gutter);color:var(--muted)}
 footer>div{max-width:var(--max);margin:auto}
 @media(max-width:900px){
  .hero{min-height:680px;background-position:58% center}
