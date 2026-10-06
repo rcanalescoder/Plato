@@ -48,6 +48,9 @@ These instructions apply to the whole repository and must be followed in every C
 ## Workflow and verification
 
 - Inspect `git status` and the relevant diff before editing. Preserve unrelated and pre-existing user changes.
+- Before long AI-assisted work, condition the task into small, verifiable units: one subsection pair, one infographic pair, one citation group, one script, or one layout defect. Name the source files, expected output, validation commands and stopping point before delegating or continuing.
+- Keep context lean. Use local scripts, `rg`, focused diffs, compact logs and visual inspection notes instead of pasting whole books, generated HTML, large diffs or image inventories into the conversation. Store bulky evidence in project files when it must be retained.
+- Delegate only bounded, independent checks: parity for a named range, source verification for a citation cluster, spelling inside a specific image set, or a focused safety review. The main agent keeps final editorial judgement, bilingual consistency and commit responsibility.
 - After every completed user request, commit all finished in-scope changes and push the current branch to its configured remote, unless the user explicitly asks not to commit or push. Verify that the remote branch contains the new commit before reporting completion. If a test, commit or push fails, report the exact blocker instead of describing the work as published.
 - After bilingual book work, run at least:
   - `node scripts/verify-manual.js`
